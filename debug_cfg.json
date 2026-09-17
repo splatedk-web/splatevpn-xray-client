@@ -1,0 +1,245 @@
+{
+  "log": {
+    "loglevel": "debug"
+  },
+  "dns": {
+    "servers": [
+      "fakedns",
+      {
+        "address": "https+local://77.88.8.8/dns-query",
+        "domains": [
+          "geosite:category-ru",
+          "geosite:tld-ru",
+          "geosite:yandex",
+          "geosite:vk",
+          "geosite:mailru",
+          "domain:ru",
+          "domain:su",
+          "domain:xn--p1ai"
+        ]
+      },
+      {
+        "address": "https+local://1.1.1.1/dns-query"
+      },
+      "1.1.1.1"
+    ],
+    "queryStrategy": "UseIPv4"
+  },
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 65535
+    }
+  ],
+  "inbounds": [
+    {
+      "tag": "socks-in",
+      "protocol": "socks",
+      "port": 10811,
+      "listen": "127.0.0.1",
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "fakedns"
+        ],
+        "metadataOnly": false,
+        "routeOnly": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "89.125.28.77",
+            "port": 443,
+            "users": [
+              {
+                "id": "2dd1d527-3e57-491d-9574-551ed6cf454d",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "fingerprint": "chrome",
+          "serverName": "origin-www.amazon.com",
+          "publicKey": "UwI7vARowbleCsSJUgDCGjo8bgVB6V10JubeCWnKvAA",
+          "shortId": "3fda53cb874bdc",
+          "spiderX": "/375605bb36a789b"
+        },
+        "sockopt": {
+          "tcpKeepAliveInterval": 10,
+          "tcpKeepAliveIdle": 15
+        },
+        "xhttpSettings": {
+          "path": "/",
+          "mode": "auto",
+          "extra": {
+            "xPaddingBytes": "100-1000"
+          },
+          "xmux": {
+            "maxConcurrency": 16,
+            "maxConnections": 0,
+            "cMaxReuseTimes": 0,
+            "cMaxLifetimeMs": 0,
+            "hKeepAlivePeriod": 10
+          }
+        }
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIP"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "socks-in"
+        ],
+        "port": "53",
+        "outboundTag": "dns-out"
+      },
+      {
+        "type": "field",
+        "ip": [
+          "::/0"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "network": "udp",
+        "port": "443",
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "network": "udp",
+        "port": "123",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "domain": [
+          "geosite:category-ru",
+          "geosite:tld-ru",
+          "geosite:yandex",
+          "geosite:vk",
+          "geosite:mailru",
+          "domain:gosuslugi.ru",
+          "domain:sberbank.ru",
+          "domain:tinkoff.ru",
+          "domain:vtb.ru",
+          "domain:alfabank.ru",
+          "domain:raiffeisen.ru",
+          "domain:gazprombank.ru",
+          "domain:mos.ru",
+          "domain:nalog.ru",
+          "domain:ru",
+          "domain:su",
+          "domain:xn--p1ai"
+        ]
+      },
+      {
+        "type": "field",
+        "outboundTag": "direct",
+        "ip": [
+          "geoip:ru",
+          "geoip:private"
+        ]
+      },
+      {
+        "type": "field",
+        "outboundTag": "proxy",
+        "ip": [
+          "geoip:telegram"
+        ],
+        "network": "tcp"
+      },
+      {
+        "type": "field",
+        "outboundTag": "proxy",
+        "domain": [
+          "geosite:telegram"
+        ]
+      },
+      {
+        "type": "field",
+        "outboundTag": "proxy",
+        "domain": [
+          "geosite:youtube",
+          "geosite:google",
+          "geosite:discord",
+          "geosite:instagram",
+          "geosite:twitter",
+          "geosite:facebook",
+          "geosite:openai",
+          "geosite:notion",
+          "geosite:spotify",
+          "geosite:netflix",
+          "domain:rutracker.org",
+          "domain:nnmclub.to",
+          "domain:kinozal.tv"
+        ]
+      },
+      {
+        "type": "field",
+        "network": "udp",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "network": "tcp",
+        "outboundTag": "proxy"
+      }
+    ]
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "handshake": 4,
+        "connIdle": 120,
+        "uplinkOnly": 2,
+        "downlinkOnly": 5,
+        "bufferSize": 10240
+      }
+    },
+    "system": {
+      "statsOutboundUplink": false,
+      "statsOutboundDownlink": false
+    }
+  }
+}
