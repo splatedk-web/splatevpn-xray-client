@@ -5,12 +5,12 @@
 <h1 align="center">🛡️ SplateVPN (Android)</h1>
 
 <p align="center">
-  <b>Современный высокопроизводительный VPN-клиент нового поколения для Android на базе ядра Xray-core 26.9.9 и hev-socks5-tunnel.</b><br>
+  <b>Современный высокопроизводительный VPN-клиент нового поколения для Android на базе ядра Xray-core 26.9.30 и hev-socks5-tunnel.</b><br>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Android-8.0%2B%20(API%2026%2B)-brightgreen?style=flat-square&logo=android" alt="Android Version">
-  <img src="https://img.shields.io/badge/Xray--core-26.9.9-blue?style=flat-square&logo=go" alt="Xray Version">
+  <img src="https://img.shields.io/badge/Xray--core-26.9.30-blue?style=flat-square&logo=go" alt="Xray Version">
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose%20%7C%20Material%203-blueviolet?style=flat-square" alt="Compose">
   <img src="https://img.shields.io/badge/Kotlin-2.0%2B-purple?style=flat-square&logo=kotlin" alt="Kotlin">
   <img src="https://img.shields.io/badge/Status-Active%20Development-orange?style=flat-square" alt="Status">
@@ -173,7 +173,7 @@
 - [x] Пользовательская маршрутизация доменов (Direct / Proxy / Block)
 - [x] Сканирование QR-кодов для мгновенного добавления серверов
 - [x] Поддержка дополнительных архитектур процессоров (`armeabi-v7a`, `x86_64`)
-- [x] Десктопная версия клиента для ПК (Windows / Linux) в ветке `Splate_PC`
+- [x] Десктопная версия клиента для ПК (Windows / Linux) в ветке `splatevpn-xray-client-windows`
 
 ---
 
