@@ -10,12 +10,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ConcurrentLinkedDeque
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,22 +41,60 @@ class AppLogManager @Inject constructor(
     private val dateFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.US)
     private val reportDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
-    private val maxBufferEntries = 600
+    private val maxBufferEntries = 3000
+    private val maxErrorEntries = 1000
     private val logQueue = ConcurrentLinkedDeque<LogEntry>()
+    private val errorQueue = ConcurrentLinkedDeque<LogEntry>()
+    private val hasPendingFlowUpdate = AtomicBoolean(false)
 
     private val _logsFlow = MutableStateFlow<List<LogEntry>>(emptyList())
     val logsFlow: StateFlow<List<LogEntry>> = _logsFlow.asStateFlow()
+
+    private val _errorsFlow = MutableStateFlow<List<LogEntry>>(emptyList())
+    val errorsFlow: StateFlow<List<LogEntry>> = _errorsFlow.asStateFlow()
 
     private val logFile by lazy {
         File(context.filesDir, "splate_debug.log")
     }
 
+    private val logChannel = kotlinx.coroutines.channels.Channel<LogEntry>(capacity = 1000)
+
     init {
+        // Publish at most five snapshots per second, even when the disk writer
+        // catches up after each individual line. Always flush the final update.
+        scope.launch {
+            while (isActive) {
+                delay(200L)
+                if (hasPendingFlowUpdate.compareAndSet(true, false)) {
+                    _logsFlow.value = logQueue.toList()
+                    _errorsFlow.value = errorQueue.toList()
+                }
+            }
+        }
+        scope.launch {
+            for (entry in logChannel) {
+                try {
+                    // Rotate log file to .1 when reaching 5MB instead of deleting all history
+                    val maxLogFileSize = 5 * 1024 * 1024L
+                    if (logFile.length() > maxLogFileSize) {
+                        val backupFile = File(context.filesDir, "splate_debug.log.1")
+                        if (backupFile.exists()) backupFile.delete()
+                        logFile.renameTo(backupFile)
+                    }
+                    FileOutputStream(logFile, true).use { fos ->
+                        fos.write("${entry}\n".toByteArray(Charsets.UTF_8))
+                    }
+                } catch (e: Exception) {
+                    // ignore file write errors
+                }
+
+            }
+        }
         log("AppLogManager", "Диагностический логгер инициализирован")
     }
 
     fun log(tag: String, message: String, level: String = "INFO") {
-        val now = dateFormat.format(Date())
+        val now = synchronized(dateFormat) { dateFormat.format(Date()) }
         val entry = LogEntry(
             timestamp = now,
             level = level,
@@ -66,6 +107,13 @@ class AppLogManager @Inject constructor(
             logQueue.pollFirst()
         }
 
+        if (level == "ERROR" || level == "WARN") {
+            errorQueue.addLast(entry)
+            while (errorQueue.size > maxErrorEntries) {
+                errorQueue.pollFirst()
+            }
+        }
+
         // Also write to logcat
         when (level) {
             "ERROR" -> Log.e(tag, message)
@@ -74,20 +122,8 @@ class AppLogManager @Inject constructor(
             else -> Log.i(tag, message)
         }
 
-        // Async: update Flow and append to file
-        scope.launch {
-            _logsFlow.value = logQueue.toList()
-            try {
-                if (logFile.length() > 3 * 1024 * 1024) {
-                    logFile.delete()
-                }
-                FileOutputStream(logFile, true).use { fos ->
-                    fos.write("${entry}\n".toByteArray(Charsets.UTF_8))
-                }
-            } catch (e: Exception) {
-                // ignore file write errors
-            }
-        }
+        hasPendingFlowUpdate.set(true)
+        logChannel.trySend(entry)
     }
 
     fun i(tag: String, message: String) = log(tag, message, "INFO")
@@ -104,10 +140,14 @@ class AppLogManager @Inject constructor(
 
     fun clear() {
         logQueue.clear()
+        errorQueue.clear()
         _logsFlow.value = emptyList()
+        _errorsFlow.value = emptyList()
         scope.launch {
             try {
                 if (logFile.exists()) logFile.delete()
+                val backupFile = File(context.filesDir, "splate_debug.log.1")
+                if (backupFile.exists()) backupFile.delete()
             } catch (e: Exception) {
                 // ignore
             }
@@ -124,10 +164,10 @@ class AppLogManager @Inject constructor(
         ipDetails: String? = null
     ): String {
         val sb = StringBuilder()
-        val now = reportDateFormat.format(Date())
+        val now = synchronized(reportDateFormat) { reportDateFormat.format(Date()) }
 
         sb.appendLine("==========================================")
-        sb.appendLine("       SPLATE VPN - ДИАГНОСТИЧЕСКИЙ ОТЧЕТ       ")
+        sb.appendLine("       SplateVPN - ДИАГНОСТИЧЕСКИЙ ОТЧЕТ       ")
         sb.appendLine("==========================================")
         sb.appendLine("Дата и время: $now")
         sb.appendLine("Устройство: ${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})")
@@ -140,6 +180,17 @@ class AppLogManager @Inject constructor(
         if (!ipDetails.isNullOrBlank()) {
             sb.appendLine("Геолокация выхода: $ipDetails")
         }
+
+        val recentErrors = errorQueue.toList()
+        if (recentErrors.isNotEmpty()) {
+            sb.appendLine("------------------------------------------")
+            sb.appendLine("СОХРАНЕННЫЕ ОШИБКИ И ПРЕДУПРЕЖДЕНИЯ (${recentErrors.size} записей):")
+            sb.appendLine("------------------------------------------")
+            for (err in recentErrors) {
+                sb.appendLine(err.toString())
+            }
+        }
+
         sb.appendLine("------------------------------------------")
         sb.appendLine("ПОСЛЕДНИЕ СОБЫТИЯ И ЛОГИ СИСТЕМЫ (${logQueue.size} записей):")
         sb.appendLine("------------------------------------------")

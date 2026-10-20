@@ -1,0 +1,7 @@
+*.dat binary
+*.bin binary
+*.so binary
+*.png binary
+*.webp binary
+*.ttf binary
+*.dm binary

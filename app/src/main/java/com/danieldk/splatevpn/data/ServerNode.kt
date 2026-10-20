@@ -29,5 +29,7 @@ data class ServerNode(
     val rawLink: String = "",
     val isSelected: Boolean = false,
     val subId: String = "",
-    val subName: String = ""
+    val subName: String = "",
+    /** Original Xray JSON profile for subscription entries that provide a full config. */
+    val fullConfigJson: String? = ""
 )

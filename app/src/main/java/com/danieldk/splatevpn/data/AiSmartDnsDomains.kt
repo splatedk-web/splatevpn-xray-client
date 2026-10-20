@@ -1,0 +1,38 @@
+package com.danieldk.splatevpn.data
+
+/** Shared by the actual AI route and the isolated probe; no broad vendor bypass. */
+internal val aiSmartDnsDomains = listOf(
+    "full:gemini.google.com",
+    "full:generativelanguage.googleapis.com",
+    "full:proactivebackend-pa.googleapis.com",
+    "full:robinfrontend-pa.googleapis.com",
+    "full:alkalimakersuite-pa.googleapis.com",
+    "full:aistudio.google.com",
+    "full:makersuite.google.com",
+    "full:bard.google.com",
+    "full:deepmind.google",
+    "full:copilot.microsoft.com",
+    "full:poe.com",
+    "full:openai.com",
+    "full:chatgpt.com",
+    "full:oaistatic.com",
+    "full:oaiusercontent.com",
+    "full:sora.com",
+    "full:ai.com",
+    "full:chat.openai.com",
+    "full:api.openai.com",
+    "full:auth.openai.com",
+    "full:auth0.openai.com",
+    "full:platform.openai.com",
+    "full:ab.chatgpt.com",
+    "full:cdn.oaistatic.com",
+    "full:claude.ai",
+    "full:claude.com",
+    "full:anthropic.com",
+    "full:anthropic.ai",
+    "full:api.anthropic.com",
+    "full:console.anthropic.com",
+    "full:perplexity.ai",
+    "full:x.ai",
+    "full:grok.com"
+)

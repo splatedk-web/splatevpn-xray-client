@@ -11,5 +11,10 @@ data class SubscriptionEntity(
     val url: String,
     val lastUpdated: Long = System.currentTimeMillis(),
     val nodeCount: Int = 0,
-    val autoUpdate: Boolean = true
+    val autoUpdate: Boolean = true,
+    val uploadBytes: Long = 0L,
+    val downloadBytes: Long = 0L,
+    val totalBytes: Long = 0L,
+    val expireTimestamp: Long = 0L,
+    val enabled: Boolean = true
 )

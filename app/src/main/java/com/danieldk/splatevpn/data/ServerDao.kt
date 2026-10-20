@@ -50,6 +50,9 @@ interface ServerDao {
     @Query("DELETE FROM servers WHERE subId = :subId")
     suspend fun deleteServersBySubId(subId: String)
 
+    @Query("UPDATE servers SET subName = :name WHERE subId = :subId")
+    suspend fun updateSubscriptionName(subId: String, name: String)
+
     @Query("SELECT * FROM servers WHERE subId = :subId ORDER BY isSelected DESC, name ASC")
     fun getServersBySubId(subId: String): Flow<List<ServerNode>>
 

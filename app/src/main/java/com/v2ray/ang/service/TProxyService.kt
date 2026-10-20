@@ -33,6 +33,7 @@ class TProxyService(private val vpnInterface: ParcelFileDescriptor) {
             TProxyStartService(configPath, vpnInterface.fd)
         } catch (t: Throwable) {
             Log.e(TAG, "Error starting TProxy", t)
+            throw IllegalStateException("Failed to start native TUN tunnel", t)
         }
     }
 

@@ -1,0 +1,11 @@
+AdGuard DNS filter — AdGuard Software Ltd and filter contributors.
+Upstream: https://github.com/AdguardTeam/AdGuardSDNSFilter
+Update source: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+License: GPL-3.0; full text in AdGuard-DNS-filter-LICENSE.
+
+The bundled snapshot (2026-10-17) is retained verbatim, gzip-compressed,
+in assets/adguard-dns-source.bin, including upstream notices and source references.
+Splate's AdFilterCompiler extracts a conservative domain-only subset,
+respects exceptions, protects shared content roots, merges its RU additions,
+and produces a separate Xray GeoSite database at runtime.
+The original list is not represented as cosmetic or script filtering.

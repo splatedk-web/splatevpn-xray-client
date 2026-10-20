@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quick_widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@android:color/transparent" android:contentDescription="@string/widget_quick_name" android:padding="4dp">
+    <ImageView android:id="@+id/quick_widget_backdrop" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" android:contentDescription="@null" android:src="@drawable/bg_widget_quick_card" />
+    <TextView android:id="@+id/quick_widget_state_dot" android:layout_width="10dp" android:layout_height="10dp"
+        android:layout_gravity="top|end" android:layout_marginTop="2dp" android:layout_marginEnd="2dp"
+        android:gravity="center" android:text="●" android:textSize="7sp" android:textColor="#A8B5C9" android:includeFontPadding="false" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center"
+        android:gravity="center" android:orientation="vertical">
+        <FrameLayout android:id="@+id/quick_widget_ring" android:layout_width="32dp" android:layout_height="32dp"
+            android:layout_gravity="center_horizontal" android:background="@android:color/transparent">
+            <ImageView android:id="@+id/quick_widget_disc" android:layout_width="match_parent" android:layout_height="match_parent" android:contentDescription="@null" />
+            <ImageView android:id="@+id/quick_widget_icon" android:layout_width="22dp" android:layout_height="22dp"
+                android:layout_gravity="center" android:contentDescription="@null" android:src="@drawable/ic_widget_power" />
+        </FrameLayout>
+        <TextView android:id="@+id/quick_widget_label" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="5dp" android:ellipsize="end" android:fontFamily="sans-serif-medium"
+            android:gravity="center" android:includeFontPadding="false" android:maxLines="1"
+            android:text="@string/widget_quick_off" android:textColor="#94A3B8" android:textSize="10sp" />
+        <TextView android:id="@+id/quick_widget_detail" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:ellipsize="end" android:gravity="center" android:includeFontPadding="false"
+            android:maxLines="1" android:textColor="#91A9BF" android:textSize="10sp" android:visibility="gone" />
+    </LinearLayout>
+</FrameLayout>

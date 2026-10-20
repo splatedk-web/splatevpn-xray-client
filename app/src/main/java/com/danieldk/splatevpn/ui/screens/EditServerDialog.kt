@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.danieldk.splatevpn.data.ServerNode
+import com.danieldk.splatevpn.ui.components.liquidGlass
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 
@@ -49,23 +51,38 @@ fun EditServerDialog(
     var spiderX by remember { mutableStateOf(server.spiderX) }
     var fingerprint by remember { mutableStateOf(server.fingerprint.ifEmpty { "chrome" }) }
 
+    val validation = remember(address, portText) {
+        com.danieldk.splatevpn.data.validateServerEndpoint(address, portText)
+    }
     val scrollState = rememberScrollState()
 
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        Card(
+        Box(
             modifier = Modifier
-                .fillMaxWidth(0.94f)
-                .fillMaxHeight(0.88f)
-                .clip(RoundedCornerShape(20.dp))
-                .border(1.dp, colors.borderMedium, RoundedCornerShape(20.dp)),
-            colors = CardDefaults.cardColors(containerColor = colors.surface)
+                .fillMaxSize()
+                .background(colors.background.copy(alpha = 0.65f))
+                .systemBarsPadding()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth(0.96f)
+                    .fillMaxHeight(0.90f)
+                    .liquidGlass(
+                        cornerRadius = 24.dp,
+                        backgroundColor = colors.glassSurfaceElevated,
+                        borderBrush = Brush.linearGradient(
+                            listOf(
+                                colors.glassBorderLight.copy(alpha = 0.6f),
+                                colors.glassBorderDark.copy(alpha = 0.2f)
+                            )
+                        ),
+                        specularSheen = true
+                    )
                     .padding(20.dp)
             ) {
                 // Header
@@ -115,7 +132,7 @@ fun EditServerDialog(
                         protocols.forEach { p ->
                             val selected = protocol == p
                             SelectChip(
-                                label = p.uppercase(),
+                                label = if (p == "shadowsocks") "SS" else p.uppercase(),
                                 isSelected = selected,
                                 modifier = Modifier.weight(1f)
                             ) {
@@ -133,15 +150,26 @@ fun EditServerDialog(
                             EditTextField(
                                 label = strings.fieldAddress,
                                 value = address,
-                                onValueChange = { address = it }
+                                onValueChange = { address = it },
+                                error = if (!validation.isAddressValid) strings.fieldAddressError else null,
+                                showErrorText = false
                             )
                         }
                         Box(modifier = Modifier.weight(1f)) {
                             EditTextField(
                                 label = strings.fieldPort,
                                 value = portText,
-                                onValueChange = { portText = it }
+                                onValueChange = { portText = it },
+                                error = if (validation.port == null) strings.fieldPortError else null,
+                                showErrorText = false
                             )
+                        }
+                    }
+
+                    if (!validation.isValid) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            if (!validation.isAddressValid) Text(strings.fieldAddressError, color = colors.accentCrimson, fontSize = 12.sp)
+                            if (validation.port == null) Text(strings.fieldPortError, color = colors.accentCrimson, fontSize = 12.sp)
                         }
                     }
 
@@ -198,7 +226,7 @@ fun EditServerDialog(
                         label = strings.fieldSni,
                         value = sni,
                         onValueChange = { sni = it },
-                        placeholder = "domain.com (для Cloudflare/TLS)"
+                        placeholder = strings.fieldSniHint
                     )
 
                     // Path & Host Header (for WS, XHTTP, gRPC)
@@ -213,13 +241,13 @@ fun EditServerDialog(
                             label = strings.fieldHost,
                             value = host,
                             onValueChange = { host = it },
-                            placeholder = "Host HTTP заголовок"
+                            placeholder = strings.fieldHostHint
                         )
                     }
 
                     // UUID / Password
                     EditTextField(
-                        label = if (protocol == "trojan" || protocol == "shadowsocks") "Password" else strings.fieldUuid,
+                        label = if (protocol == "trojan" || protocol == "shadowsocks") strings.fieldPassword else strings.fieldUuid,
                         value = uuid,
                         onValueChange = { uuid = it }
                     )
@@ -281,13 +309,18 @@ fun EditServerDialog(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(
+                        onClick = onDismiss,
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
                         Text(strings.cancel, color = colors.textSecondary)
                     }
                     Spacer(modifier = Modifier.width(10.dp))
                     Button(
+                        enabled = validation.isValid,
                         onClick = {
-                            val parsedPort = portText.trim().toIntOrNull() ?: server.port
+                            val parsedPort = validation.port ?: return@Button
+                            if (!validation.isAddressValid) return@Button
                             val updated = server.copy(
                                 name = name.trim().ifEmpty { server.name },
                                 protocol = protocol.trim(),
@@ -307,12 +340,16 @@ fun EditServerDialog(
                             )
                             onSave(updated)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = colors.accentCyan),
-                        shape = RoundedCornerShape(10.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colors.accentCyan,
+                            disabledContainerColor = colors.surfaceElevated,
+                            disabledContentColor = colors.textSecondary
+                        ),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
                             text = strings.save,
-                            color = Color.Black,
+                            color = if (validation.isValid) colors.onAccent else colors.textSecondary,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -332,18 +369,24 @@ private fun SelectChip(
     val colors = LocalAppThemeColors.current
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(if (isSelected) colors.accentCyan.copy(alpha = 0.2f) else colors.surfaceElevated)
-            .border(1.dp, if (isSelected) colors.accentCyan else colors.borderSubtle, RoundedCornerShape(8.dp))
+            .liquidGlass(
+                cornerRadius = 10.dp,
+                backgroundColor = if (isSelected) colors.accentCyan.copy(alpha = 0.2f) else colors.glassSurface,
+                borderBrush = Brush.linearGradient(
+                    if (isSelected) listOf(colors.accentCyan.copy(alpha = 0.8f), colors.accentCyan.copy(alpha = 0.3f))
+                    else listOf(colors.glassBorderLight.copy(alpha = 0.4f), colors.glassBorderDark.copy(alpha = 0.1f))
+                ),
+                specularSheen = isSelected
+            )
             .clickable { onClick() }
             .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = if (isSelected) colors.accentCyan else colors.textPrimary,
+            color = if (isSelected) colors.accentCyan else colors.textSecondary,
             fontSize = 11.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )
     }
 }
@@ -353,7 +396,9 @@ private fun EditTextField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String = ""
+    placeholder: String = "",
+    error: String? = null,
+    showErrorText: Boolean = true
 ) {
     val colors = LocalAppThemeColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -367,8 +412,10 @@ private fun EditTextField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
+            isError = error != null,
+            supportingText = if (error != null && showErrorText) { { Text(error, color = colors.accentCrimson) } } else null,
             placeholder = if (placeholder.isNotEmpty()) {
-                { Text(placeholder, fontSize = 12.sp, color = colors.textTertiary) }
+                { Text(placeholder, fontSize = 12.sp, color = colors.textSecondary) }
             } else null,
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
@@ -377,9 +424,11 @@ private fun EditTextField(
                 unfocusedBorderColor = colors.borderSubtle,
                 focusedTextColor = colors.textPrimary,
                 unfocusedTextColor = colors.textPrimary,
-                cursorColor = colors.accentCyan
+                cursorColor = colors.accentCyan,
+                focusedContainerColor = colors.glassSurface.copy(alpha = 0.35f),
+                unfocusedContainerColor = colors.glassSurface.copy(alpha = 0.2f)
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(12.dp)
         )
     }
 }

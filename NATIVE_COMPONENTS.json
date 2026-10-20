@@ -1,0 +1,65 @@
+{
+  "checkedOn": "2026-10-12",
+  "xray": {
+    "version": "26.9.30",
+    "prerelease": true,
+    "commit": "b26a91d",
+    "source": "https://github.com/XTLS/Xray-core/releases/tag/v26.9.30",
+    "platforms": {
+      "arm64-v8a": {
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-android-arm64-v8a.zip",
+        "path": "app/src/main/jniLibs/arm64-v8a/libxray.so",
+        "sha256": "6de04c5f5492c0d050f520a1aad10b68ec6fd21907599b95572ad8807dd833cb"
+      },
+      "armeabi-v7a": {
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-linux-arm32-v7a.zip",
+        "path": "app/src/main/jniLibs/armeabi-v7a/libxray.so",
+        "sha256": "eee24a09ead49a326b953d3883cf2a7dfb3bd97462fea6399222dcbeef58f7b5"
+      },
+      "x86_64": {
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-android-amd64.zip",
+        "path": "app/src/main/jniLibs/x86_64/libxray.so",
+        "sha256": "c599dd642cc6063f5d87aa66295fec075cf101b680973f9a743f30705f651965"
+      }
+    }
+  },
+  "geodata": {
+    "revision": "202610062207",
+    "source": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/tag/202610062207",
+    "files": [
+      {
+        "path": "app/src/main/assets/geoip.dat",
+        "apkEntry": "assets/geoip.dat",
+        "sha256": "391b522361c52804e486a98b53d97f3d9c1d3e4e4217bb34954774a0b456b9fd"
+      },
+      {
+        "path": "app/src/main/assets/geosite.dat",
+        "apkEntry": "assets/geosite.dat",
+        "sha256": "282b6613f2a09e2c5b2ba357808abb7bb697f7f5c6cc957d8e5dc92bdc27fbbf"
+      }
+    ]
+  },
+  "hev": {
+    "source": "https://github.com/heiher/hev-socks5-tunnel/releases/tag/2.18.0",
+    "platforms": {
+      "arm64-v8a": {
+        "jniPath": "app/src/main/jniLibs/arm64-v8a/libhev-socks5-tunnel.so",
+        "jniSha256": "b80d639ba57fb557e05e17a7ecde81eca791cd1af89679adeca705de920287a4",
+        "executablePath": "app/src/main/jniLibs/arm64-v8a/libhevsockstun.so",
+        "executableSha256": "479dfc43601aaa58fd781959c67491e9307cfa44b68fb3187cd9dc0d69a699c1"
+      },
+      "armeabi-v7a": {
+        "jniPath": "app/src/main/jniLibs/armeabi-v7a/libhev-socks5-tunnel.so",
+        "jniSha256": "b64e1be8085254e9925c02df64906df0248fd4e5e8d0c3458584c35afe11b6f1",
+        "executablePath": "app/src/main/jniLibs/armeabi-v7a/libhevsockstun.so",
+        "executableSha256": "35d54cdca45fb7e830b8e1ce39158223b08c1dc7a6749d05abaaa9feb656b88f"
+      },
+      "x86_64": {
+        "jniPath": "app/src/main/jniLibs/x86_64/libhev-socks5-tunnel.so",
+        "jniSha256": "04275fb02894fd05adf25b606981af00abb78ac78399f19a123658c84f3aaaea",
+        "executablePath": "app/src/main/jniLibs/x86_64/libhevsockstun.so",
+        "executableSha256": "d6b61ae94dcfdf4df525507c4f4907941944cda242ce6225eea72adb446ebae0"
+      }
+    }
+  }
+}

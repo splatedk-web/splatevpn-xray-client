@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.db
+*.db-shm
+*.db-wal
+*.log
+
+# Local compiler caches and device diagnostics
+.kotlin/
+*.jks
+*.keystore
+/debug_cfg.json
+/test_cfg.json
+/app_icon_check.png
+/test_preview.png

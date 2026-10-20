@@ -23,7 +23,17 @@ object DatabaseModule {
             AppDatabase::class.java,
             "splatevpn.db"
         )
-        .fallbackToDestructiveMigration()
+        .addMigrations(
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_1_2,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_2_3,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_3_4,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_4_5,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_5_6,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_3_5,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_2_5,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_1_5
+        )
+        .fallbackToDestructiveMigrationOnDowngrade(true)
         .build()
     }
 

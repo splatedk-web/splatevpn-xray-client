@@ -1,0 +1,32 @@
+<resources>
+    <string name="widget_name">Splate · VPN status</string>
+    <string name="widget_quick_name">Splate · VPN button</string>
+    <string name="widget_description">VPN connection, selected server and speed. Resizable.</string>
+    <string name="widget_quick_description">Turn VPN on or off with one tap.</string>
+    <string name="widget_brand">SplateVPN</string>
+    <string name="widget_download">↓ Download</string>
+    <string name="widget_upload">↑ Upload</string>
+    <string name="widget_connected">CONNECTED</string>
+    <string name="widget_disconnected">DISCONNECTED</string>
+    <string name="widget_connecting">CONNECTING</string>
+    <string name="widget_disconnecting">DISCONNECTING</string>
+    <string name="widget_failed">CONNECTION FAILED</string>
+    <string name="widget_choose_server">Choose a server</string>
+    <string name="widget_tunnel_active">VPN is active</string>
+    <string name="widget_servers">Choose a server</string>
+    <string name="widget_on">ON</string>
+    <string name="widget_off">OFF</string>
+    <string name="widget_wait">···</string>
+    <string name="widget_tap_to_connect">Tap the power button to connect</string>
+    <string name="widget_tap_to_retry">Retry connection</string>
+    <string name="widget_starting">Connecting to the server…</string>
+    <string name="widget_stopping">Closing connection…</string>
+    <string name="widget_ping">%1$d ms</string>
+    <string name="widget_traffic">↓ %1$s   ↑ %2$s</string>
+    <string name="widget_quick_on">ON</string>
+    <string name="widget_start_vpn">Turn VPN on</string>
+    <string name="widget_stop_vpn">Turn VPN off</string>
+    <string name="widget_quick_off">OFF</string>
+    <string name="widget_quick_connecting">WAIT</string>
+    <string name="widget_quick_failed">FAILED</string>
+</resources>
