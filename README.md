@@ -14,6 +14,7 @@
   <img src="https://img.shields.io/badge/App-1.2.3-orange?style=flat-square" alt="Версия в исходниках: 1.2.3" />
   <img src="https://img.shields.io/badge/Xray--core-26.9.30-blue?style=flat-square" alt="Xray-core 26.9.30" />
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-blueviolet?style=flat-square" alt="Jetpack Compose" />
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client"><img src="https://img.shields.io/github/stars/splatedk-web/splatevpn-xray-client?style=flat-square&amp;logo=github&amp;label=Stars" alt="GitHub Stars" /></a>
 </p>
 
 <p align="center">
