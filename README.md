@@ -11,13 +11,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Android-8.0%2B-brightgreen?style=flat-square&logo=android" alt="Android 8.0 и новее" />
-  <img src="https://img.shields.io/badge/App-1.2.3-orange?style=flat-square" alt="Версия в исходниках: 1.2.3" />
-  <img src="https://img.shields.io/badge/Xray--core-26.9.30-blue?style=flat-square" alt="Xray-core 26.9.30" />
+  <img src="https://img.shields.io/badge/App-1.2.3-orange?style=flat-square" alt="Версия в исходниках: 1.2.7" />
+  <img src="https://img.shields.io/badge/Xray--core-26.9.30-blue?style=flat-square" alt="Xray-core 26.10.31" />
   <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-blueviolet?style=flat-square" alt="Jetpack Compose" />
   <a href="https://github.com/splatedk-web/splatevpn-xray-client"><img src="https://img.shields.io/github/stars/splatedk-web/splatevpn-xray-client?style=flat-square&amp;logo=github&amp;label=Stars" alt="GitHub Stars" /></a>
 </p>
 
 <p align="center">
+  <a href="https://splatevpn.wtpn.pro/">Официальный сайт</a> ·
   <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases">Скачать APK</a> ·
   <a href="#скриншоты">Скриншоты</a> ·
   <a href="#быстрый-старт">Быстрый старт</a> ·
@@ -117,7 +118,7 @@ SmartDNS зависит от доступности стороннего про�
 
 ## Быстрый старт
 
-1. Скачайте подходящий APK из [Releases](https://github.com/splatedk-web/splatevpn-xray-client/releases) и установите его.
+1. Скачайте подходящий APK с [официального сайта](https://splatevpn.wtpn.pro/) или из раздела [Releases](https://github.com/splatedk-web/splatevpn-xray-client/releases) и установите его.
 2. Откройте **«Серверы» → «+»**, добавьте ссылку сервера или URL подписки. Также можно вставить данные из буфера или отсканировать QR-код.
 3. Обновите подписку, проверьте серверы и выберите узел либо включите автоматический выбор.
 4. На главной выберите профиль маршрутизации. При необходимости настройте вкладку «Приложения».
