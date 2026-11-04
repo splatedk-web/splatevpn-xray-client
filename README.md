@@ -156,3 +156,12 @@ APK появляются в `app/build/outputs/apk/debug/`. Сборка `assemb
 Создайте [Issue](https://github.com/splatedk-web/splatevpn-xray-client/issues), укажите версию приложения и Android, шаги воспроизведения и приложите скриншот или диагностический журнал. Перед публикацией удалите из отчёта ключи, UUID, ссылки приватных подписок и другие личные данные.
 
 Предложения и pull request приветствуются.
+
+## История звёзд
+
+<a href="https://www.star-history.com/#splatedk-web/splatevpn-xray-client&amp;Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date&amp;theme=dark" />
+    <img src="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date" alt="График роста звёзд SplateVPN на GitHub" />
+  </picture>
+</a>
