@@ -158,11 +158,12 @@ APK появляются в `app/build/outputs/apk/debug/`. Сборка `assemb
 
 Предложения и pull request приветствуются.
 
-## История звёзд
+## Star History
 
-<a href="https://www.star-history.com/#splatedk-web/splatevpn-xray-client&amp;Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date&amp;theme=dark" />
-    <img src="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date" alt="График роста звёзд SplateVPN на GitHub" />
-  </picture>
+<a href="https://www.star-history.com/?type=date&repos=splatedk-web%2Fsplatevpn-xray-client">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=splatedk-web/splatevpn-xray-client&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=splatedk-web/splatevpn-xray-client&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=splatedk-web/splatevpn-xray-client&type=date&legend=top-left" />
+ </picture>
 </a>
