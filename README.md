@@ -22,6 +22,8 @@
   <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases">Скачать APK</a> ·
   <a href="#скриншоты">Скриншоты</a> ·
   <a href="#быстрый-старт">Быстрый старт</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client-windows">Версия для Windows</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client-linux">Версия для Linux</a> ·
   <a href="https://github.com/splatedk-web/splatevpn-xray-client/issues">Сообщить об ошибке</a>
 </p>
 
