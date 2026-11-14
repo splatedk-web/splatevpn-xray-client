@@ -1,31 +1,44 @@
 <p align="center">
-  <img src="design/app-icon/splate-launcher-preview.png" alt="SplateVPN" width="110" height="110" />
+  <img src="design/app-icon/splate-launcher-preview.png" alt="SplateVPN" width="112" height="112" />
 </p>
 
-<h1 align="center">SplateVPN для Android</h1>
+<h1 align="center">SplateVPN</h1>
 
 <p align="center">
-  VPN-клиент на Xray с поддержкой Tor и AmneziaWG. Root не требуется.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Android-8.0%2B-brightgreen?style=flat-square" alt="Android 8.0 и новее" />
-  <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases"><img src="https://img.shields.io/github/v/release/splatedk-web/splatevpn-xray-client?style=flat-square" alt="Последний опубликованный релиз" /></a>
-  <img src="https://img.shields.io/badge/Development-1.2.9-orange?style=flat-square" alt="Разрабатываемая версия 1.2.9" />
+  VPN-клиент для Android с поддержкой Xray, AmneziaWG и Tor.
 </p>
 
 <p align="center">
-  <a href="https://splatevpn.wtpn.pro/">Сайт</a> ·
-  <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases">Скачать APK</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases"><img src="https://img.shields.io/badge/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C_APK-8B6FD6?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Скачать APK" /></a>
+  <a href="https://splatevpn.wtpn.pro/"><img src="https://img.shields.io/badge/%D0%A1%D0%B0%D0%B9%D1%82-303545?style=for-the-badge&amp;logo=googlechrome&amp;logoColor=white" alt="Официальный сайт" /></a>
+  <a href="https://www.donationalerts.com/r/danieldkgt"><img src="https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C-D65C78?style=for-the-badge" alt="Поддержать проект" /></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/splatedk-web/splatevpn-xray-client-windows">Windows</a> ·
   <a href="https://github.com/splatedk-web/splatevpn-xray-client-linux">Linux</a> ·
-  <a href="https://github.com/splatedk-web/splatevpn-xray-client/issues">Сообщить об ошибке</a> ·
-  <a href="https://www.donationalerts.com/r/danieldkgt">Поддержать проект</a>
+  <a href="#протоколы-и-импорт">Протоколы</a> ·
+  <a href="#скриншоты">Скриншоты</a> ·
+  <a href="#установка">Установка</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client/issues">Обратная связь</a>
 </p>
 
-SplateVPN подключает устройство к вашим серверам, подпискам или сети Tor. Встроенные списки серверов используют сторонние источники: доступность и условия работы зависят от их владельцев.
+---
 
-Ниже описана разработка версии **1.2.9**, включая AmneziaWG, замеры скорости мостов и новые настройки подключения. Эти изменения ещё не опубликованы в исходниках `main`: на момент обновления README в его Gradle-конфигурации указана версия 1.2.3. Состав функций готового APK смотрите в [описании его релиза](https://github.com/splatedk-web/splatevpn-xray-client/releases).
+## Возможности
+
+<table>
+  <tr>
+    <td width="50%"><b>Подключение</b><br />Серверы и подписки, QR-коды, профили AmneziaWG и мосты Tor.</td>
+    <td width="50%"><b>Автоподбор</b><br />Проверка HTTPS через туннель, выбор по задержке или скорости, переключение на резерв.</td>
+  </tr>
+  <tr>
+    <td><b>Маршрутизация</b><br />Умный маршрут, правила для сайтов и выбор приложений, использующих VPN.</td>
+    <td><b>DNS и управление</b><br />Smart DNS, DoH, уведомления, виджеты, автоподключение и резервные копии.</td>
+  </tr>
+</table>
+
+Для подключения используйте свой сервер, подписку, встроенные источники или сеть Tor. Условия работы сторонних серверов зависят от их владельцев.
 
 ## Протоколы и импорт
 
@@ -45,6 +58,25 @@ SplateVPN подключает устройство к вашим сервера
 Серверы можно добавить ссылкой, из буфера обмена или QR-кода. Подписки обновляются вручную и по расписанию; доступны поиск, папки и отключение отдельных узлов. Полный импортированный Xray-профиль сохраняет параметры прокси и его цепочки, а входящие порты, DNS и маршрутизацию задаёт приложение.
 
 AmneziaWG поддерживает расширенные параметры профилей и ссылки `vpn://` с текстовой конфигурацией в Base64. Это не означает поддержку всех контейнеров Amnezia с таким префиксом. Адреса WARP без маски получают `/32` для IPv4 или `/128` для IPv6. Приватные AWG-профили в базе шифруются через Android Keystore.
+
+## Скриншоты
+
+Интерфейс на Android 15 с темой Sunset. Внешний вид отдельных экранов может отличаться.
+
+<table align="center">
+  <tr><th>Главная</th><th>Серверы</th><th>Подписки</th></tr>
+  <tr>
+    <td><img src="docs/screenshots/home.png" alt="Главная" width="250" /></td>
+    <td><img src="docs/screenshots/servers.png" alt="Серверы" width="250" /></td>
+    <td><img src="docs/screenshots/subscriptions.png" alt="Подписки" width="250" /></td>
+  </tr>
+  <tr><th>Приложения</th><th>Настройки</th><th>Оформление</th></tr>
+  <tr>
+    <td><img src="docs/screenshots/applications.png" alt="Раздельное туннелирование" width="250" /></td>
+    <td><img src="docs/screenshots/settings.png" alt="Настройки" width="250" /></td>
+    <td><img src="docs/screenshots/appearance.png" alt="Темы" width="250" /></td>
+  </tr>
+</table>
 
 ## Автоподбор серверов
 
@@ -93,27 +125,6 @@ Tor передаёт TCP и DNS. UDP, включая звонки и други�
 
 Системная блокировка соединений без VPN включается в настройках Android вместе с «Постоянной VPN». В приложении есть переход к этим настройкам. Сайты проверки IP подчиняются тем же маршрутам, что и остальные сайты; их результат не подтверждает маршрутизацию каждого приложения.
 
-Прежний модуль Anti-DPI удалён из разработки 1.2.9. Отдельная TLS-фрагментация сохранена.
-
-## Скриншоты
-
-Снимки показывают более раннюю версию интерфейса на Android 15 с темой Sunset.
-
-<table>
-  <tr><th>Главная</th><th>Серверы</th><th>Подписки</th></tr>
-  <tr>
-    <td><img src="docs/screenshots/home.png" alt="Главная" width="280" /></td>
-    <td><img src="docs/screenshots/servers.png" alt="Серверы" width="280" /></td>
-    <td><img src="docs/screenshots/subscriptions.png" alt="Подписки" width="280" /></td>
-  </tr>
-  <tr><th>Приложения</th><th>Настройки</th><th>Оформление</th></tr>
-  <tr>
-    <td><img src="docs/screenshots/applications.png" alt="Раздельное туннелирование" width="280" /></td>
-    <td><img src="docs/screenshots/settings.png" alt="Настройки" width="280" /></td>
-    <td><img src="docs/screenshots/appearance.png" alt="Темы" width="280" /></td>
-  </tr>
-</table>
-
 ## Установка
 
 1. Скачайте APK из [Releases](https://github.com/splatedk-web/splatevpn-xray-client/releases). Для большинства современных телефонов подходит `arm64-v8a`; доступны также ARMv7, x86_64 и универсальная сборка.
@@ -123,7 +134,10 @@ Tor передаёт TCP и DNS. UDP, включая звонки и други�
 
 Нужен Android 8.0 / API 26 или новее. 
 
-## Сборка
+## Для разработчиков
+
+<details>
+<summary><b>Сборка из исходников</b></summary>
 
 Нужны JDK 21 и Android SDK 35. Путь к SDK задаётся в `local.properties` или через окружение Android SDK.
 
@@ -135,7 +149,9 @@ cd splatevpn-xray-client
 
 В Windows PowerShell используйте `.\gradlew.bat assembleDebug`. APK появятся в `app/build/outputs/apk/debug/`. Для распространяемой release-сборки нужно настроить подпись своим ключом. 
 
-Стек: Kotlin, Jetpack Compose, Hilt, Room, WorkManager, Xray и hev-socks5-tunnel. В разработке 1.2.9 используется Xray **26.11.9**. Версии и контрольные суммы компонентов публичных исходников указаны в [NATIVE_COMPONENTS.json](NATIVE_COMPONENTS.json).
+Стек: Kotlin, Jetpack Compose, Hilt, Room, WorkManager, Xray и hev-socks5-tunnel. Версии и контрольные суммы компонентов указаны в [NATIVE_COMPONENTS.json](NATIVE_COMPONENTS.json).
+
+</details>
 
 ## Обратная связь и поддержка
 
