@@ -4,6 +4,8 @@
 
 <h1 align="center">SplateVPN</h1>
 
+<p align="center"><strong>Русский</strong> · <a href="README.en.md">English</a></p>
+
 <p align="center">
   VPN-клиент для Android с поддержкой Xray, AmneziaWG и Tor.
 </p>
