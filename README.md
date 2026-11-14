@@ -49,7 +49,7 @@
 | Trojan | Подключение с TLS. |
 | Shadowsocks | Импорт ссылок `ss://`. |
 | Hysteria2 | Ссылки `hy2://` и `hysteria2://`, Salamander и смена портов. |
-| AmneziaWG / WireGuard | Импорт `.conf`, ссылки `awg://` и `wireguard://`, редактор профиля. |
+| AmneziaWG / WireGuard | Импорт `.conf`, ссылки `awg://`, `vpn://` и `wireguard://`, редактор профиля. |
 | Tor | Без мостов либо с обычными мостами, obfs4, WebTunnel и Snowflake. |
 | SOCKS5 | Импорт ссылок `socks://` и `socks5://`. |
 
