@@ -12,6 +12,8 @@
 
 <p align="center">
   <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases"><img src="https://img.shields.io/badge/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C_APK-8B6FD6?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Скачать APK" /></a>
+  <a href="https://splatevpn.wtpn.pro/"><img src="https://img.shields.io/badge/Сайт-303545?style=for-the-badge&amp;logo=googlechrome&amp;logoColor=white" alt="Сайт" /></a>
+  <a href="https://t.me/splatevpn"><img src="https://img.shields.io/badge/Telegram-2AABEE?style=for-the-badge&amp;logo=telegram&amp;logoColor=white" alt="Telegram" /></a>
   <a href="https://www.donationalerts.com/r/danieldkgt"><img src="https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C-D65C78?style=for-the-badge" alt="Поддержать проект" /></a>
 </p>
 
@@ -169,6 +171,15 @@ cd splatevpn-xray-client
 [Поддержать разработку через DonationAlerts](https://www.donationalerts.com/r/danieldkgt).
 
 [Канал SplateVPN в Telegram](https://t.me/splatevpn).
+
+## История звёзд
+
+<a href="https://www.star-history.com/#splatedk-web/splatevpn-xray-client&amp;Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date&amp;theme=dark" />
+    <img src="https://api.star-history.com/svg?repos=splatedk-web/splatevpn-xray-client&amp;type=Date" alt="График роста звёзд SplateVPN на GitHub" />
+  </picture>
+</a>
 
 ## Лицензии
 
