@@ -1,44 +1,175 @@
-# SplateVPN для Android
+<p align="center">
+  <img src="design/app-icon/splate-launcher-preview.png" alt="SplateVPN" width="112" height="112" />
+</p>
 
-**Русский** · [English](README.en.md)
+<h1 align="center">SplateVPN</h1>
 
-VPN-клиент с Xray, AmneziaWG и Tor для Android 8.0 и новее, включая Android TV.
+<p align="center"><strong>Русский</strong> · <a href="README.en.md">English</a></p>
 
-[![Звёзды GitHub](https://img.shields.io/github/stars/splatedk-web/splatevpn-xray-client)](https://github.com/splatedk-web/splatevpn-xray-client/stargazers)
-![Просмотры README](https://komarev.com/ghpvc/?username=splatedk-web-splatevpn-xray-client&label=README%20views)
+<p align="center">
+  VPN-клиент для Android с поддержкой Xray, AmneziaWG и Tor.
+</p>
 
-[Скачать APK](https://github.com/splatedk-web/splatevpn-xray-client/releases) · [Windows](https://github.com/splatedk-web/splatevpn-xray-client-windows) · [Linux](https://github.com/splatedk-web/splatevpn-xray-client-linux) · [История изменений](CHANGELOG.md)
+<p align="center">
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client/releases"><img src="https://img.shields.io/badge/%D0%A1%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C_APK-8B6FD6?style=for-the-badge&amp;logo=android&amp;logoColor=white" alt="Скачать APK" /></a>
+  <a href="https://www.donationalerts.com/r/danieldkgt"><img src="https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C-D65C78?style=for-the-badge" alt="Поддержать проект" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client-windows">Windows</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client-linux">Linux</a> ·
+  <a href="#протоколы-и-импорт">Протоколы</a> ·
+  <a href="#скриншоты">Скриншоты</a> ·
+  <a href="#установка">Установка</a> ·
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client/issues">Обратная связь</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/splatedk-web/splatevpn-xray-client/stargazers"><img src="https://img.shields.io/github/stars/splatedk-web/splatevpn-xray-client?style=flat-square" alt="Звёзды GitHub" /></a>
+  <img src="https://komarev.com/ghpvc/?username=splatedk-web-splatevpn-xray-client&amp;label=README%20views&amp;style=flat-square" alt="Просмотры README" />
+</p>
+
+---
 
 ## Возможности
 
-- VLESS, VMess, Trojan, Shadowsocks, Hysteria2, AmneziaWG, WireGuard и SOCKS5. Импорт ссылок, QR-кодов, подписок, файлов AWG и JSON-профилей Xray.
-- Автоподбор по задержке или скорости и переключение на резервный сервер при сбое.
-- Маршрутизация по приложениям и доменам, Smart DNS, DoH и фильтрация рекламы по DNS.
-- Tor с прямым подключением или мостами obfs4, WebTunnel и Snowflake. Через Tor передаются TCP и DNS.
-- Виджеты, плитка быстрых настроек, статистика трафика, резервные копии и перенос настроек.
+<table>
+  <tr>
+    <td width="50%"><b>Подключение</b><br />Серверы и подписки, QR-коды, профили AmneziaWG и мосты Tor.</td>
+    <td width="50%"><b>Автоподбор</b><br />Проверка HTTPS через туннель, выбор по задержке или скорости, переключение на резерв.</td>
+  </tr>
+  <tr>
+    <td><b>Маршрутизация</b><br />Умный маршрут, правила для сайтов и выбор приложений, использующих VPN.</td>
+    <td><b>DNS и управление</b><br />Smart DNS, DoH, уведомления, виджеты, автоподключение и резервные копии.</td>
+  </tr>
+</table>
+
+Для подключения используйте свой сервер, подписку, встроенные источники или сеть Tor. Условия работы сторонних серверов зависят от их владельцев.
+
+## Протоколы и импорт
+
+| Протокол или режим | Поддержка |
+| --- | --- |
+| VLESS | TLS, Reality и Vision для совместимых конфигураций. |
+| XDrive | Транспорт VLESS через облачные хранилища: Google Drive, S3 и шаблоны API. Импорт готового JSON-профиля. |
+| VMess | Импорт ссылок и настройка профиля. |
+| Trojan | Подключение с TLS. |
+| Shadowsocks | Импорт ссылок `ss://`. |
+| Hysteria2 | Ссылки `hy2://` и `hysteria2://`, Salamander и смена портов. |
+| AmneziaWG / WireGuard | Импорт `.conf`, ссылки `awg://`, `vpn://` и `wireguard://`, редактор профиля. |
+| Tor | Без мостов либо с обычными мостами, obfs4, WebTunnel и Snowflake. |
+| SOCKS5 | Импорт ссылок `socks://` и `socks5://`. |
+
+Для профилей Xray доступны TCP, WebSocket, gRPC, XHTTP, XDrive и другие поддерживаемые ядром транспорты. Параметры клиента должны соответствовать настройкам сервера.
+
+Серверы можно добавить ссылкой, из буфера обмена или QR-кода. Подписки обновляются вручную и по расписанию; доступны поиск, папки и отключение отдельных узлов. Полный импортированный Xray-профиль сохраняет параметры прокси и его цепочки, а входящие порты, DNS и маршрутизацию задаёт приложение.
+
+AmneziaWG поддерживает расширенные параметры профилей и ссылки `vpn://` с текстовой конфигурацией в Base64. Это не означает поддержку всех контейнеров Amnezia с таким префиксом. Адреса WARP без маски получают `/32` для IPv4 или `/128` для IPv6. Приватные AWG-профили в базе шифруются через Android Keystore.
+
+**XDrive** использует облачное хранилище для передачи данных VLESS. Поддерживаются Google Drive, S3 и провайдеры с шаблоном API. Для подключения нужен готовый JSON-профиль с параметрами хранилища и шифрованием VLESS; обычной ссылки `vless://` с `type=xdrive` недостаточно.
 
 ## Скриншоты
 
-| Главная | Tor | Приложения |
-| --- | --- | --- |
-| <img src="docs/screenshots/home.png" alt="Главный экран" width="240"> | <img src="docs/screenshots/tor.png" alt="Подключение Tor" width="240"> | <img src="docs/screenshots/applications.png" alt="Маршрутизация приложений" width="240"> |
 
-| Настройки | Темы | Светлая тема |
-| --- | --- | --- |
-| <img src="docs/screenshots/settings.png" alt="Настройки" width="240"> | <img src="docs/screenshots/appearance.png" alt="Выбор темы" width="240"> | <img src="docs/screenshots/light.png" alt="Светлая тема" width="240"> |
+<table align="center">
+  <tr><th>Главная</th><th>Tor</th><th>Светлая тема</th></tr>
+  <tr>
+    <td><img src="docs/screenshots/home.png" alt="Главная" width="250" /></td>
+    <td><img src="docs/screenshots/tor.png" alt="Tor" width="250" /></td>
+    <td><img src="docs/screenshots/light.png" alt="Светлая тема" width="250" /></td>
+  </tr>
+  <tr><th>Приложения</th><th>Настройки</th><th>Оформление</th></tr>
+  <tr>
+    <td><img src="docs/screenshots/applications.png" alt="Раздельное туннелирование" width="250" /></td>
+    <td><img src="docs/screenshots/settings.png" alt="Настройки" width="250" /></td>
+    <td><img src="docs/screenshots/appearance.png" alt="Темы" width="250" /></td>
+  </tr>
+</table>
 
-## Установка и сборка
+## Автоподбор серверов
 
-Скачайте APK для своего устройства из [Releases](https://github.com/splatedk-web/splatevpn-xray-client/releases). Для большинства современных телефонов подходит `arm64-v8a`. После запуска добавьте свой сервер или подписку либо выберите Tor.
+Балансировщик проверяет HTTPS через туннель кандидата. Открытый порт или успешный TCP-пинг сами по себе не делают сервер рабочим. VLESS, Hysteria2 и AmneziaWG участвуют в общем подборе.
 
-Для сборки нужны JDK 21 и Android SDK 35. Укажите каталог SDK в переменной `ANDROID_HOME` или в локальном `local.properties`.
+- Выбор по задержке или скорости, с отдельными проверками для выбранных сервисов.
+- Режимы: подбор при подключении, переключение при сбое или периодический поиск лучшего узла.
+- Проверенный резерв, временный карантин отказавших серверов и учёт смены сети.
+- Сохранение ручного выбора при фоновых проверках.
 
-```sh
-./gradlew :app:assembleDebug
+В режиме скорости выполняется реальная загрузка данных через кандидата. Замеры идут последовательно. Быстрый список показывает до десяти проверенных узлов; за обновление выполняется до шести замеров скорости. Один тест расходует до 4 МиБ, часовой лимит по умолчанию — 64 МиБ. При его исчерпании отображается время возобновления. «Нет замера Mbps» не означает, что сервер не работает.
+
+Подбор ограничен временем и доступными результатами. Он не перебирает все узлы при каждом подключении и не гарантирует выбор самого быстрого из всей подписки.
+
+## Маршрутизация и DNS
+
+**Умный маршрут** отправляет региональные сервисы напрямую, остальные направления — по правилам VPN. Регион выбирается отдельно от языка: Россия, Китай, Иран или международный вариант. Сайт с прямым маршрутом видит IP вашего провайдера.
+
+**Весь трафик** направляет соединения выбранных приложений через VPN с учётом заданных исключений. Во вкладке «Приложения» можно включить VPN для всех, только выбранных или всех, кроме выбранных приложений. Для сайтов и адресов доступны правила «напрямую», «через VPN», «блокировать» и назначение серверов.
+
+Для AI-сервисов есть три варианта: обычный VPN, Smart DNS напрямую или Smart DNS через VPN. Доступны выбор провайдера, автоподбор, обновление его адресов и переключение при подтверждённом сбое. Проверка DNS отдельно от проверки сервиса помогает не принимать страницу входа или защитную заглушку за успешный доступ.
+
+Также доступны DoH, FakeDNS, настройки IPv6 и QUIC, TLS-фрагментация и DNS-фильтрация рекламы с исключениями. Smart DNS зависит от стороннего провайдера; фильтрация по доменам не удаляет рекламу, которая загружается с того же домена, что и основной контент.
+
+## Tor
+
+Выберите Tor во вкладке «Серверы». Мосты можно вставить, отсканировать из QR, загрузить по HTTPS-ссылке или импортировать из списка TOP-100. Есть ручной выбор моста, автоматический подбор и запрос новой цепочки.
+
+- **По задержке:** используется время TCP-подключения до моста. Это не задержка всей Tor-цепочки.
+- **По скорости:** небольшая группа до трёх кандидатов сравнивается загрузкой данных через настоящие Tor-цепочки. Сохраняются только успешные замеры для текущего контекста сети.
+- **Восстановление:** проверяется не только процесс Tor, но и HTTPS-трафик. После нескольких последовательных отказов клиент перестраивает подключение, сохраняя VPN-интерфейс на время восстановления.
+
+Tor передаёт TCP и DNS. UDP, включая звонки и другие функции, которым нужен UDP, через него не работает. Smart DNS и прямые региональные маршруты в этом режиме не используются. Скорость и доступность сервисов зависят от мостов и выходных узлов.
+
+## Управление и интерфейс
+
+- Подключение при открытии приложения и отдельная настройка автозапуска после загрузки устройства.
+- Возобновление VPN после двухминутной паузы.
+- Плитка быстрых настроек, виджеты и уведомление с задержкой, трафиком и длительностью соединения. Категории уведомлений настраиваются отдельно.
+- Журнал, диагностика, тест скорости и статистика трафика.
+- Резервные копии, перенос настроек, WebDAV и сохранение сетевых профилей.
+- Локальная раздача прокси с настройкой адреса, порта и авторизации. SOCKS для внутренней работы VPN остаётся на loopback.
+- Русский, английский, китайский и персидский интерфейс; необязательное обучение и рекомендации по разрешениям Android.
+- Темы с анимированными изображениями, настройка прозрачности, размытия и анимаций.
+
+Системная блокировка соединений без VPN включается в настройках Android вместе с «Постоянной VPN». В приложении есть переход к этим настройкам. Сайты проверки IP подчиняются тем же маршрутам, что и остальные сайты; их результат не подтверждает маршрутизацию каждого приложения.
+
+## Установка
+
+1. Скачайте APK из [Releases](https://github.com/splatedk-web/splatevpn-xray-client/releases). Для большинства современных телефонов подходит `arm64-v8a`; доступны также ARMv7, x86_64 и универсальная сборка.
+2. Пройдите начальную настройку или выберите регион и режим без обучения.
+3. Добавьте сервер, подписку, AWG-профиль либо выберите Tor.
+4. Выберите сервер или включите «Авто», затем нажмите подключение и подтвердите запрос Android.
+
+Нужен Android 8.0 / API 26 или новее.
+
+## Для разработчиков
+
+<details>
+<summary><b>Сборка из исходников</b></summary>
+
+Нужны JDK 21 и Android SDK 35. Путь к SDK задаётся в `local.properties` или через окружение Android SDK.
+
+```bash
+git clone https://github.com/splatedk-web/splatevpn-xray-client.git
+cd splatevpn-xray-client
+./gradlew assembleDebug
 ```
 
-В PowerShell используйте `.gradlew.bat :app:assembleDebug`. APK появятся в `app/build/outputs/apk/debug/`.
+В Windows PowerShell используйте `.\gradlew.bat assembleDebug`. APK появятся в `app/build/outputs/apk/debug/`.
 
 Чтобы подписать свою release-сборку, укажите `storeFile` (абсолютный путь), `storePassword`, `keyAlias` и `keyPassword` в локальном `splate-private.properties` в корне проекта. Для обычной сборки этот файл не нужен.
 
-[Ошибки и предложения](https://github.com/splatedk-web/splatevpn-xray-client/issues) · [Политика конфиденциальности](PRIVACY_POLICY.md) · [Лицензии](LICENSING.md)
+Стек: Kotlin, Jetpack Compose, Hilt, Room, WorkManager, Xray и hev-socks5-tunnel. Версии и контрольные суммы компонентов указаны в [NATIVE_COMPONENTS.json](NATIVE_COMPONENTS.json).
+
+</details>
+
+## Обратная связь и поддержка
+
+В [Issue](https://github.com/splatedk-web/splatevpn-xray-client/issues) укажите версию APK, Android, протокол, тип сети и шаги воспроизведения. Перед публикацией отчёта удалите ключи, UUID и ссылки приватных подписок.
+
+[Поддержать разработку через DonationAlerts](https://www.donationalerts.com/r/danieldkgt).
+
+[Канал SplateVPN в Telegram](https://t.me/splatevpn).
+
+## Лицензии
+
+Собственный код: [Apache License 2.0](LICENSE). Область действия и лицензии сторонних компонентов описаны в [LICENSING.md](LICENSING.md).
