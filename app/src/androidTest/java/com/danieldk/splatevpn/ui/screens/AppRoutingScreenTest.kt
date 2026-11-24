@@ -1,10 +1,14 @@
 package com.danieldk.splatevpn.ui.screens
 
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.test.platform.app.InstrumentationRegistry
+import java.io.File
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Density
 import com.danieldk.splatevpn.data.AppRoutingMode
 import com.danieldk.splatevpn.ui.theme.SplateVPNTheme
@@ -15,6 +19,23 @@ import org.junit.Test
 class AppRoutingScreenTest {
     @get:Rule val compose = createComposeRule()
     private val apps = listOf(AppItem("Browser", "test.browser", null), AppItem("Bank", "test.bank", null))
+
+    @Test fun listDrawsToScreenBottomButLastCardScrollsAboveDock() {
+        val manyApps = (1..40).map { AppItem("Application $it", "test.app$it", null) }
+        compose.setContent {
+            SplateVPNTheme(languageSetting = "en") {
+                CompositionLocalProvider(LocalBottomDockInset provides 96.dp) {
+                    AppRoutingContent(AppRoutingMode.EXCLUDE, emptySet(), false, manyApps, false, {}, { _, _ -> })
+                }
+            }
+        }
+        val root = compose.onRoot().getUnclippedBoundsInRoot()
+        val list = compose.onNodeWithTag("appRoutingList")
+        assertEquals(root.bottom.value, list.getUnclippedBoundsInRoot().bottom.value, .5f)
+        list.performScrollToKey("app:test.app40")
+        val last = compose.onNodeWithTag("app:test.app40").assertIsDisplayed().getUnclippedBoundsInRoot()
+        assertTrue("Last card must clear the dock", last.bottom <= root.bottom - 96.dp)
+    }
 
     @Test fun checkboxesAreDraftsAndApplyCommitsOneCompleteRule() {
         val mode = mutableStateOf(AppRoutingMode.ALL)
@@ -40,7 +61,7 @@ class AppRoutingScreenTest {
             assertEquals(AppRoutingMode.INCLUDE, mode.value)
             assertEquals(setOf("test.browser"), packages.value)
         }
-        compose.onNodeWithTag("appRoutingApply").assertIsNotEnabled()
+        compose.onNodeWithTag("appRoutingApply").assertDoesNotExist()
     }
 
     @Test fun exclusionsAndDiscardRemainClearWithLargeRussianText() {
@@ -55,8 +76,12 @@ class AppRoutingScreenTest {
         }
         compose.onNodeWithTag("appModeEXCLUDE").performScrollTo().performClick()
         compose.onNodeWithTag("appRoutingApply").assertIsDisplayed().assertIsEnabled()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        File(context.cacheDir, "app-routing-compact-review.png").outputStream().use {
+            compose.onRoot().captureToImage().asAndroidBitmap().compress(android.graphics.Bitmap.CompressFormat.PNG, 100, it)
+        }
         compose.onNodeWithTag("appRoutingDiscard").performClick()
-        compose.onNodeWithTag("appRoutingApply").assertIsNotEnabled()
+        compose.onNodeWithTag("appRoutingApply").assertDoesNotExist()
         compose.runOnIdle { assertEquals(0, applied) }
     }
 

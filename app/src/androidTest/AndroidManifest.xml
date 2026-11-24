@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <!-- Installed test APK has a different Android UID from the app under test. -->
+        <service android:name="com.danieldk.splatevpn.vpn.AppIdentityTestSocketService"
+            android:exported="true" />
+    </application>
+</manifest>

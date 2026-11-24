@@ -1,0 +1,15 @@
+<resources>
+    <string name="qr_close">بستن</string>
+    <string name="qr_torch_on">روشن کردن چراغ</string>
+    <string name="qr_torch_off">خاموش کردن چراغ</string>
+    <string name="qr_zoom">بزرگ‌نمایی %1$d×</string>
+    <string name="qr_zoom_value">بزرگ‌نمایی %1$.1f×</string>
+    <string name="qr_scanner_help">کل کد QR را در تصویر نگه دارید. برای کد کوچک نزدیک‌تر شوید یا بزرگ‌نمایی کنید.</string>
+    <string name="qr_camera_permission">برای اسکن کد QR دسترسی دوربین را مجاز کنید یا تصویر انتخاب کنید.</string>
+    <string name="qr_camera_unavailable">دوربین در دسترس نیست. می‌توانید کد QR را از تصویر وارد کنید.</string>
+    <string name="qr_image_open_error">باز کردن تصویر ممکن نشد. PNG، JPEG یا تصویر صفحه انتخاب کنید.</string>
+    <string name="qr_payload_error">کد QR خالی یا برای وارد کردن بسیار بزرگ است.</string>
+    <string name="qr_choose_payload">چند کد QR پیدا شد. یکی را برای وارد کردن انتخاب کنید.</string>
+    <string name="qr_payload_number">کد QR %1$d</string>
+</resources>
+

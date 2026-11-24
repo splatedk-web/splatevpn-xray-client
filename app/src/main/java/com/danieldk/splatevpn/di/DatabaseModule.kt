@@ -24,6 +24,11 @@ object DatabaseModule {
             "splatevpn.db"
         )
         .addMigrations(
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_10_11,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_9_10,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_8_9,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_7_8,
+            com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_6_7,
             com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_1_2,
             com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_2_3,
             com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_3_4,
@@ -33,7 +38,6 @@ object DatabaseModule {
             com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_2_5,
             com.danieldk.splatevpn.data.DatabaseMigrations.MIGRATION_1_5
         )
-        .fallbackToDestructiveMigrationOnDowngrade(true)
         .build()
     }
 

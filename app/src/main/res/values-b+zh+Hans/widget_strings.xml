@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">Splate · VPN 状态</string>
+    <string name="widget_quick_name">Splate · VPN 按钮</string>
+    <string name="widget_description">VPN 连接、所选服务器和速度。可调整大小。</string>
+    <string name="widget_quick_description">轻点即可开关 VPN。</string>
+    <string name="widget_brand">SplateVPN</string>
+    <string name="widget_download">↓ 下载</string>
+    <string name="widget_upload">↑ 上传</string>
+    <string name="widget_connected">已连接</string>
+    <string name="widget_disconnected">已断开</string>
+    <string name="widget_connecting">正在连接</string>
+    <string name="widget_disconnecting">正在断开</string>
+    <string name="widget_failed">连接失败</string>
+    <string name="widget_choose_server">选择服务器</string>
+    <string name="widget_tunnel_active">VPN 已启用</string>
+    <string name="widget_servers">选择服务器</string>
+    <string name="widget_on">开</string>
+    <string name="widget_off">关</string>
+    <string name="widget_wait">···</string>
+    <string name="widget_tap_to_connect">点击电源按钮连接</string>
+    <string name="widget_tap_to_retry">重试连接</string>
+    <string name="widget_starting">正在连接服务器…</string>
+    <string name="widget_stopping">正在关闭连接…</string>
+    <string name="widget_ping">%1$d 毫秒</string>
+    <string name="widget_traffic">↓ %1$s   ↑ %2$s</string>
+    <string name="widget_quick_on">开</string>
+    <string name="widget_start_vpn">开启 VPN</string>
+    <string name="widget_stop_vpn">关闭 VPN</string>
+    <string name="widget_quick_off">关</string>
+    <string name="widget_quick_connecting">等待</string>
+    <string name="widget_quick_failed">失败</string>
+</resources>

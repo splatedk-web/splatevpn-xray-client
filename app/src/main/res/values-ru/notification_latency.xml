@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_ping">Пинг: %1$d мс</string>
+    <string name="notification_ping_unknown">Пинг: —</string>
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="onboarding_preset_failed">无法准备内置服务器列表，请重试完成设置。</string>
+    <string name="profile_import_invalid_reality_key">REALITY 验证密钥（pqv）已损坏。请导入原始链接或二维码，无法自动恢复缺失字符。</string>
+    <string name="profile_import_invalid">无法导入此配置，请检查原始配置。</string>
+</resources>

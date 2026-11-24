@@ -1,0 +1,8 @@
+<resources>
+    <string name="tls_mixed_sni_title">SNI با حروف ترکیبی TLS</string>
+    <string name="tls_mixed_sni_hint">بزرگی و کوچکی حروف SNI را در اتصالات TLS ترکیب می‌کند.</string>
+    <string name="vpn_mtu_title">MTU وی‌پی‌ان</string>
+    <string name="vpn_mtu_value">MTU وی‌پی‌ان · %1$d بایت</string>
+    <string name="vpn_mtu_range">۱۲۸۰ تا ۱۵۰۰ بایت</string>
+    <string name="tls_two_parts">ارسال ClientHello در دو بخش (آزمایشی)</string>
+</resources>

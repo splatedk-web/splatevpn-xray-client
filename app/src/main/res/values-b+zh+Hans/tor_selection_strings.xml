@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tor_metric_title">网桥选择</string>
+    <string name="tor_metric_latency">延迟优先</string>
+    <string name="tor_metric_speed">速度优先</string>
+    <string name="tor_metric_latency_hint">按 TCP 连接时间快速排序，由 Tor 确认网桥是否可用。</string>
+    <string name="tor_metric_speed_hint">通过 Tor 比较最多三个候选网桥的下载速度。首次测试较慢，结果有效期为 10 分钟。</string>
+    <string name="tor_speed_progress">已测试线路：%1$d/%2$d</string>
+    <string name="tor_metric_probe">测试速度</string>
+    <string name="tor_metric_speed_value">%1$.2f Mbps</string>
+    <string name="tor_metric_saved">已保存网桥选择方式</string>
+    <string name="tor_speed_unavailable">未能测得下载速度，将按网桥可达性选择。</string>
+</resources>

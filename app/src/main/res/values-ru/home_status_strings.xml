@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_searching">Сервера не найдены. Поиск…</string>
+    <string name="connection_waiting_network">Ожидание сети. Поиск серверов…</string>
+    <string name="connection_core_failed">Не удалось запустить ядро Xray</string>
+    <string name="connection_tun_failed">Не удалось создать VPN-интерфейс</string>
+    <string name="connection_timeout">Время подключения истекло</string>
+    <string name="connection_tor_limit">Достигнут лимит переподключений Tor</string>
+    <string name="connection_tor_changed">Настройки Tor изменены</string>
+    <string name="connection_tor_failed">Не удалось восстановить Tor</string>
+    <string name="folder_update">Обновить подписку</string>
+    <string name="folder_ping">Проверить пинг</string>
+    <string name="preset_lte_name">Белый список (LTE Checked)</string>
+    <string name="preset_black_name">Черный список (Black VLESS)</string>
+    <string name="release_translating">Переводим описание обновления… Может потребоваться загрузка языковой модели.</string>
+    <string name="release_translation_failed">Перевод недоступен. Показан исходный текст.</string>
+    <string name="release_original">Показать оригинал</string>
+    <string name="release_translated">Показать перевод</string>
+    <string name="release_machine_translation">Автоматический перевод</string>
+</resources>

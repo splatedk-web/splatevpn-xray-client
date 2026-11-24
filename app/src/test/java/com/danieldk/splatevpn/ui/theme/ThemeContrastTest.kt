@@ -28,7 +28,7 @@ class ThemeContrastTest {
     @Test fun filledControlsHaveReadableForegroundInEveryTheme() {
         palettes.forEach { (name, colors) ->
             assertTrue("$name primary", contrast(colors.onAccent, colors.accentCyan) >= 4.5f)
-            listOf(colors.accentSecondary, colors.accentViolet, colors.accentCrimson).forEach { fill ->
+            listOf(colors.accentSecondary, colors.accentViolet, colors.accentCrimson, colors.accentAmber, colors.accentEmerald).forEach { fill ->
                 assertTrue("$name filled accent", contrast(contentColorOn(fill), fill) >= 4.5f)
             }
         }

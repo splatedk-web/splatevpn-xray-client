@@ -1,0 +1,6 @@
+<resources>
+    <string name="geodata_result_updated">پایگاه‌های داده مسیریابی به %1$s به‌روزرسانی شدند. در اتصال بعدی اعمال می‌شود.</string>
+    <string name="geodata_result_current">پایگاه‌های داده مسیریابی شما به‌روز هستند.</string>
+    <string name="geodata_result_rollback">پایگاه‌های داده قبلی بازیابی شدند: %1$s. در اتصال بعدی اعمال می‌شود.</string>
+    <string name="geodata_result_no_previous">هیچ پایگاه داده قبلی برای بازیابی موجود نیست.</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="awg_import_file">Import AmneziaWG file (.conf)</string>
+    <string name="awg_config">AmneziaWG configuration</string>
+    <string name="awg_show_keys">Show keys</string>
+    <string name="awg_profile_help">The profile contains private keys. Routing and Smart mode are managed by the app.</string>
+</resources>

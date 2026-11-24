@@ -1,5 +1,9 @@
 package com.danieldk.splatevpn.ui.components
 
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+
+import com.danieldk.splatevpn.ui.components.SplateTonalButton as FilledTonalButton
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,9 +15,10 @@ import com.danieldk.splatevpn.data.*
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 import com.danieldk.splatevpn.ui.theme.aiDnsTools
+import com.danieldk.splatevpn.ui.theme.connectionTools
 
 @Composable
-internal fun AiDnsSelectionCard(state: AiDnsSelectionState, onStart: () -> Unit, onStop: () -> Unit) {
+internal fun AiDnsSelectionCard(state: AiDnsSelectionState, onStart: () -> Unit, onStop: () -> Unit, startEnabled: Boolean = true) {
     val strings = LocalAppStrings.current.aiDnsTools
     val colors = LocalAppThemeColors.current
     var expanded by remember { mutableStateOf(false) }
@@ -39,7 +44,10 @@ internal fun AiDnsSelectionCard(state: AiDnsSelectionState, onStart: () -> Unit,
             }
             message?.let { Text(it, fontSize = 11.sp, lineHeight = 16.sp, color = colors.textPrimary) }
         }
-        FilledTonalButton(onClick = if (state.running) onStop else onStart, modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp)) {
+        if (!startEnabled && !state.running) Text(LocalAppStrings.current.connectionTools.vpnRequired,
+            color = colors.textSecondary, style = MaterialTheme.typography.bodySmall)
+        FilledTonalButton(onClick = if (state.running) onStop else onStart, enabled = state.running || startEnabled,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp)) {
             Text(if (state.running) strings.stop else strings.start, fontSize = 12.sp)
         }
         if (state.results.isNotEmpty()) {

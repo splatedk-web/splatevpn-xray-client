@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -42,6 +43,7 @@ import androidx.compose.ui.graphics.lerp
 import com.danieldk.splatevpn.ui.theme.AppThemeColors
 import com.danieldk.splatevpn.ui.theme.BackdropStyle
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
+import com.danieldk.splatevpn.ui.theme.LocalUiPerformanceSettings
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -54,7 +56,9 @@ private val STATIC_PREVIEW_PHASE: () -> Float = { 0.18f }
 /** Theme cards use the same artwork as the full-screen background. */
 @Composable
 fun ThemeBackdropPreview(colors: AppThemeColors, modifier: Modifier = Modifier) {
-    BackdropArtwork(colors, colors.accentCyan, modifier.clipToBounds(), phase = STATIC_PREVIEW_PHASE)
+    if (LocalUiPerformanceSettings.current.decorativeBackgroundEnabled) {
+        BackdropArtwork(colors, colors.accentCyan, modifier.clipToBounds(), phase = STATIC_PREVIEW_PHASE)
+    } else Box(modifier.background(colors.background))
 }
 
 /** Cached geometry and gradients; animation state is read only during drawing. */
@@ -66,6 +70,10 @@ private fun BackdropArtwork(
     intensity: Float = 1f,
     phase: () -> Float
 ) {
+    if (colors.backdrop == BackdropStyle.WINTER) {
+        WinterBackdrop(colors, modifier, phase)
+        return
+    }
     if (hasThemeObject(colors.backdrop)) {
         ThemeObjectBackdrop(colors, modifier, phase, glow)
         return
@@ -301,6 +309,7 @@ private fun BackdropArtwork(
                     val shifted = Offset(center.x + drift * unit * 0.025f, center.y + cos(angle) * unit * 0.025f)
                     drawCircle(if (i % 13 == 0) colors.accentSecondary.opacity(twinkle) else Color(0xFFD7E3F4).opacity(twinkle), starRadii[i], shifted)
                 }
+                BackdropStyle.WINTER -> Unit // Rendered by WinterBackdrop before this generic scene.
                 BackdropStyle.SOFT, BackdropStyle.PASTEL -> {
                     translate(top = drift * unit * 0.05f) {
                         drawPath(silkPath, silkBrush, style = Stroke(width = unit * 0.12f))
@@ -327,43 +336,63 @@ fun LiquidAmbientBackground(
     content: @Composable BoxScope.() -> Unit
 ) {
     val colors = LocalAppThemeColors.current
+    val performance = LocalUiPerformanceSettings.current
+    CompositionLocalProvider(LocalGlassTransparency provides glassTransparency,
+        LocalGlassBlurEnabled provides glassBlurEnabled) {
+        val targetGlow = accentGlow ?: colors.accentCyan
+        val animateBackground = performance.decorativeBackgroundEnabled && performance.animationsEnabled
+        val glow = if (animateBackground) {
+            animateColorAsState(targetGlow, tween(300), label = "ambient_glow").value
+        } else targetGlow
+        val phase: () -> Float = if (animateBackground) {
+            val transition = rememberInfiniteTransition(label = "ambient_motion")
+            val animated = transition.animateFloat(0f, 1f,
+                infiniteRepeatable(tween(28000, easing = LinearEasing), RepeatMode.Restart),
+                label = "ambient_phase")
+            remember(animated) { { animated.value } }
+        } else STATIC_PREVIEW_PHASE
+        val (capture, backdrop) = rememberAmbientBlurCapture(
+            performance.decorativeBackgroundEnabled && glassBlurEnabled, glassTransparency)
+        // Keep the content at one composition location when effects change. Recreating it
+        // would discard settings navigation, scroll positions and other remembered state.
+        CompositionLocalProvider(LocalGlassBackdrop provides backdrop) {
+            Box(modifier.fillMaxSize().background(colors.background)) {
+                if (performance.decorativeBackgroundEnabled) {
+                        BackdropArtwork(colors, glow, Modifier.fillMaxSize().then(capture),
+                            intensity = if (isConnected) 1.08f else if (isConnecting) 1.04f else 1f,
+                            phase = phase)
+                }
+                content()
+            }
+        }
+    }
+}
+
+/** Allocate offscreen layers only when the background is actually sampled with blur. */
+@Composable
+private fun rememberAmbientBlurCapture(
+    glassBlurEnabled: Boolean,
+    glassTransparency: Float
+): Pair<Modifier, GlassBackdrop?> {
+    val blurEnabled = glassBlurEnabled && glassTransparency > .001f && android.os.Build.VERSION.SDK_INT >= 31
+    if (!blurEnabled) {
+        return Modifier to null
+    }
     val sourceLayer = rememberGraphicsLayer()
     val blurredLayer = rememberGraphicsLayer()
     val view = LocalView.current
     val backdrop = remember(blurredLayer, view) { GlassBackdrop(blurredLayer, view) }
     val location = remember { IntArray(2) }
-    val blurEnabled = glassBlurEnabled && glassTransparency > .001f && android.os.Build.VERSION.SDK_INT >= 31
     val blurRadius = with(LocalDensity.current) { (14 + glassTransparency * 14).dp.toPx() }
-    blurredLayer.renderEffect = if (blurEnabled) BlurEffect(blurRadius, blurRadius, TileMode.Clamp) else null
-    val capture = if (blurEnabled) Modifier.onGloballyPositioned { coordinates ->
+    blurredLayer.renderEffect = remember(blurRadius) { BlurEffect(blurRadius, blurRadius, TileMode.Clamp) }
+    val capture = Modifier.onGloballyPositioned { coordinates ->
         view.getLocationOnScreen(location)
         backdrop.origin = coordinates.positionInRoot() + Offset(location[0].toFloat(), location[1].toFloat())
     }.drawWithContent {
         sourceLayer.record { this@drawWithContent.drawContent() }
         blurredLayer.record { drawLayer(sourceLayer) }
         drawLayer(sourceLayer)
-        backdrop.ready = true
-        backdrop.revision++
-    } else Modifier
-    val glow = animateColorAsState(accentGlow ?: colors.accentCyan, tween(300), label = "ambient_glow")
-    val transition = rememberInfiniteTransition(label = "ambient_motion")
-    val phase = transition.animateFloat(
-        0f, 1f,
-        infiniteRepeatable(tween(28000, easing = LinearEasing), RepeatMode.Restart),
-        label = "ambient_phase"
-    )
-    CompositionLocalProvider(LocalGlassTransparency provides glassTransparency,
-        LocalGlassBlurEnabled provides glassBlurEnabled,
-        LocalGlassBackdrop provides if (blurEnabled) backdrop else null) {
-    Box(modifier.fillMaxSize()) {
-        BackdropArtwork(
-            colors = colors,
-            glow = glow.value,
-            modifier = Modifier.fillMaxSize().then(capture),
-            intensity = if (isConnected) 1.08f else if (isConnecting) 1.04f else 1f,
-            phase = { phase.value }
-        )
-        content()
+        backdrop.markRecorded()
     }
-    }
+    return capture to backdrop
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_back">Back</string>
+    <string name="server_stop_checks_short">Stop</string>
+    <string name="server_stop_checks">Stop checks</string>
+    <string name="server_check_servers">Check servers</string>
+    <string name="server_folder_options">Folder options</string>
+</resources>

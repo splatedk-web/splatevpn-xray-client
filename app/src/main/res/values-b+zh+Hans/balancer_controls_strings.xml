@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bqc_goal_title">用途</string>
+    <string name="bqc_metric_title">选择依据</string>
+    <string name="bqc_goal_general">通用</string>
+    <string name="bqc_goal_youtube_ru">YouTube（俄罗斯）</string>
+    <string name="bqc_metric_latency">延迟</string>
+    <string name="bqc_metric_download">速度</string>
+    <string name="bqc_metric_download_traffic">速度 · 消耗流量</string>
+    <string name="bqc_hint_general">不优先特定服务。</string>
+    <string name="bqc_hint_telegram">检测真实的 Telegram MTProto 连接。</string>
+    <string name="bqc_hint_youtube">检测 YouTube 元数据并下载视频片段。</string>
+    <string name="bqc_hint_tiktok">检测 TikTok 网站，不保证账号和应用可用。</string>
+    <string name="bqc_hint_youtube_ru">检测 YouTube 元数据、视频片段，并确认出口 IP 位于俄罗斯。</string>
+    <string name="bqc_hint_download">每次实际下载 4 MiB，每小时最多 %1$d MiB。</string>
+    <string name="bqc_expanded">选项已展开</string>
+    <string name="bqc_collapsed">打开选项</string>
+    <string name="balancer_warm_standby">备用服务器</string>
+    <string name="balancer_warm_standby_hint">在后台检测备用服务器，不更改当前连接。手动选择时也可使用。</string>
+    <string name="balancer_speed_budget">测速流量上限</string>
+    <string name="balancer_speed_budget_value">%1$d MiB/小时</string>
+    <string name="bqc_hint_https_service">检查 %1$s 是否通过 HTTPS 响应。不检查登录、通话和播放。</string>
+</resources>

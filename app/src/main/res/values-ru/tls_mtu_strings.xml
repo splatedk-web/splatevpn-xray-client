@@ -1,0 +1,8 @@
+<resources>
+    <string name="tls_mixed_sni_title">TLS Mixed SNI</string>
+    <string name="tls_mixed_sni_hint">Меняет регистр букв в SNI для TLS-подключений.</string>
+    <string name="vpn_mtu_title">MTU VPN</string>
+    <string name="vpn_mtu_value">MTU VPN · %1$d байт</string>
+    <string name="vpn_mtu_range">1280–1500 байт</string>
+    <string name="tls_two_parts">ClientHello в двух частях (эксперимент)</string>
+</resources>

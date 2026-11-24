@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="extra_000" formatted="false">共享 VPN</string>
+    <string name="extra_001" formatted="false">通过手机连接另一台设备</string>
+    <string name="extra_002" formatted="false">要连接哪种设备？</string>
+    <string name="extra_003" formatted="false">应用内</string>
+    <string name="extra_004" formatted="false">手机</string>
+    <string name="extra_005" formatted="false">设备</string>
+    <string name="extra_006" formatted="false">检查</string>
+    <string name="extra_007" formatted="false">上一步</string>
+    <string name="extra_008" formatted="false">下一步</string>
+    <string name="extra_009" formatted="false">完成</string>
+    <string name="extra_010" formatted="false">Wi-Fi / USB / LAN</string>
+    <string name="extra_011" formatted="false">您的设备</string>
+    <string name="extra_012" formatted="false">先设置运行 SplateVPN 的手机</string>
+    <string name="extra_013" formatted="false">连接 VPN</string>
+    <string name="extra_014" formatted="false">在 SplateVPN 中选择可用服务器并连接。测试共享时可选择全部流量模式。</string>
+    <string name="extra_015" formatted="false">在 SplateVPN 中开启共享</string>
+    <string name="extra_016" formatted="false">设置 → 局域网共享 VPN。选择接口并等待重连。在另一台设备上启用代理认证，用户名为 splate，密码见共享设置。</string>
+    <string name="extra_017" formatted="false">连接设备</string>
+    <string name="extra_018" formatted="false">开启手机热点，让另一台设备通过 Wi-Fi 连接。支持 Android USB 网络共享的电脑也可使用 USB。也可使用未启用客户端隔离的局域网。</string>
+    <string name="extra_019" formatted="false">Android 和 iPhone/iPad 可通过 Wi-Fi 连接手机热点，并为该网络配置代理。</string>
+    <string name="extra_020" formatted="false">Mac 推荐使用 Wi-Fi 或局域网。Android USB 共享取决于手机及驱动支持。</string>
+    <string name="extra_021" formatted="false">此功能共享代理连接。支持系统代理或独立代理设置的浏览器和应用可使用它。游戏、通话等可能绕过代理；不会自动代理整台设备的流量。</string>
+    <string name="extra_022" formatted="false">VPN 未连接。请在首页连接。</string>
+    <string name="extra_023" formatted="false">共享尚未运行。请启用并等待 VPN 重连。</string>
+    <string name="extra_024" formatted="false">尚未检测到地址</string>
+    <string name="extra_025" formatted="false">请开启热点或 USB 网络共享。现在可以阅读说明，检测到地址后即可复制连接参数。地址下次可能变化。</string>
+    <string name="extra_026" formatted="false">连接参数</string>
+    <string name="extra_027" formatted="false">手机在当前网络的地址</string>
+    <string name="extra_028" formatted="false">选择另一台设备使用的网络。Wi-Fi 和 USB 的地址可能不同。</string>
+    <string name="extra_029" formatted="false">手机 IP 地址</string>
+    <string name="extra_030" formatted="false">手机 IP</string>
+    <string name="extra_031" formatted="false">端口</string>
+    <string name="extra_032" formatted="false">身份验证</string>
+    <string name="extra_033" formatted="false">关闭</string>
+    <string name="extra_034" formatted="false">手动</string>
+    <string name="extra_035" formatted="false">服务器</string>
+    <string name="extra_036" formatted="false">代理主机名</string>
+    <string name="extra_037" formatted="false">代理端口</string>
+    <string name="extra_038" formatted="false">保存</string>
+    <string name="extra_039" formatted="false">应用</string>
+    <string name="extra_040" formatted="false">代理</string>
+    <string name="extra_041" formatted="false">网页代理 (HTTP)</string>
+    <string name="extra_042" formatted="false">安全网页代理 (HTTPS)</string>
+    <string name="extra_043" formatted="false">设置示意图</string>
+    <string name="extra_044" formatted="false">此为示意图，名称和外观可能因系统版本不同而变化。</string>
+    <string name="extra_045" formatted="false">地址栏只填写 IP，不含 http:// 或端口。请使用用户名 splate 及共享设置中的密码。HTTP 和 HTTPS 使用相同的 HTTP 代理端口，SOCKS5 使用独立端口。</string>
+    <string name="extra_046" formatted="false">命令及其他方式</string>
+    <string name="extra_047" formatted="false">在 PowerShell 中启用</string>
+    <string name="extra_048" formatted="false">在 PowerShell 中关闭</string>
+    <string name="extra_049" formatted="false">在此终端启用</string>
+    <string name="extra_050" formatted="false">在此终端关闭</string>
+    <string name="extra_051" formatted="false">适用于 bash/zsh 及支持这些变量的程序。仅影响此终端及其启动的程序；图形应用及 sudo 可能不使用这些设置。</string>
+    <string name="extra_052" formatted="false">请使用 PowerShell。此操作修改当前用户的系统代理，替换原代理地址，仅影响遵循 Windows 代理设置的应用。</string>
+    <string name="extra_053" formatted="false">使用 curl 测试 HTTP 代理</string>
+    <string name="extra_054" formatted="false">响应应包含 example.com 的 HTML。这仅验证代理连接，并非整台设备的路由。</string>
+    <string name="extra_055" formatted="false">检查连接</string>
+    <string name="extra_056" formatted="false">在另一台设备打开网站</string>
+    <string name="extra_057" formatted="false">使用支持系统代理的浏览器，尝试应通过 VPN 打开的网站。流量遵循 SplateVPN 中选择的路由。</string>
+    <string name="extra_058" formatted="false">如果应用无法使用</string>
+    <string name="extra_059" formatted="false">应用可能忽略系统代理。若有代理设置，请选择 SOCKS5 并填写手机地址和端口；否则此方法可能不适用。</string>
+    <string name="extra_060" formatted="false">无法连接？</string>
+    <string name="extra_061" formatted="false">检查地址与端口</string>
+    <string name="extra_062" formatted="false">重启热点后 IP 可能变化，请使用设备步骤中的当前地址。HTTP 和 HTTPS 使用 HTTP 端口，而非 SOCKS5 端口。</string>
+    <string name="extra_063" formatted="false">检查网络</string>
+    <string name="extra_064" formatted="false">两台设备必须可在同一网络互通。访客网络、客户端隔离、手机休眠或接收设备的其他 VPN 可能影响连接。</string>
+    <string name="extra_065" formatted="false">检查手机</string>
+    <string name="extra_066" formatted="false">确保 SplateVPN 已连接并开启共享。若手机本身无法打开网站，先修复 VPN 连接。只与可信设备共享，并使用共享设置中的代理密码。</string>
+    <string name="extra_067" formatted="false">如果导入了完整 JSON 配置</string>
+    <string name="extra_068" formatted="false">应用管理本地代理端口。共享时请使用本页面提供的 HTTP/SOCKS5 地址。</string>
+    <string name="extra_069" formatted="false">使用后关闭代理</string>
+    <string name="extra_070" formatted="false">官方文档</string>
+    <string name="extra_071" formatted="false">打开已连接的 Wi-Fi 网络</string>
+    <string name="extra_072" formatted="false">设置 → Wi-Fi / 网络 → 手机热点网络 → 设置或编辑图标。</string>
+    <string name="extra_073" formatted="false">选择手动代理</string>
+    <string name="extra_074" formatted="false">修改网络或高级选项 → 代理 → 手动。不同品牌的名称可能不同。</string>
+    <string name="extra_075" formatted="false">填写并保存</string>
+    <string name="extra_076" formatted="false">代理主机名填写 SplateVPN 手机的 IP，端口使用下方 HTTP 端口。网络 IP 设置保持 DHCP / 自动。</string>
+    <string name="extra_077" formatted="false">打开网络详情</string>
+    <string name="extra_078" formatted="false">设置 → Wi-Fi → 手机热点旁的 ⓘ。</string>
+    <string name="extra_079" formatted="false">配置 HTTP 代理</string>
+    <string name="extra_080" formatted="false">向下滚动 → 配置代理 → 手动。</string>
+    <string name="extra_081" formatted="false">输入服务器与端口</string>
+    <string name="extra_082" formatted="false">服务器填写手机 IP，端口使用下方 HTTP 端口。开启身份验证，使用 splate 及共享设置中的密码，再保存。</string>
+    <string name="extra_083" formatted="false">打开代理设置</string>
+    <string name="extra_084" formatted="false">Windows 10/11：设置 → 网络和 Internet → 代理。</string>
+    <string name="extra_085" formatted="false">开启手动设置</string>
+    <string name="extra_086" formatted="false">手动代理设置 → 设置 / 使用代理服务器 → 开启。</string>
+    <string name="extra_087" formatted="false">输入 IP 和 HTTP 端口</string>
+    <string name="extra_088" formatted="false">按下方示意填写并保存。这是当前用户的代理设置，不是 Windows VPN 连接。</string>
+    <string name="extra_089" formatted="false">选择当前连接</string>
+    <string name="extra_090" formatted="false">系统设置 → 网络 → Wi-Fi 或以太网 → 详细信息 → 代理。</string>
+    <string name="extra_091" formatted="false">启用 HTTP 和 HTTPS</string>
+    <string name="extra_092" formatted="false">开启 HTTP 网页代理及 HTTPS 安全网页代理，两项填写相同 IP 和 HTTP 端口。</string>
+    <string name="extra_093" formatted="false">保存设置</string>
+    <string name="extra_094" formatted="false">启用代理认证，填写 splate 和共享密码。点击完成，并在提示时应用。无需同时启用 SOCKS。</string>
+    <string name="extra_095" formatted="false">打开网络代理</string>
+    <string name="extra_096" formatted="false">Ubuntu / GNOME：设置 → 网络 → 网络代理 → 手动。</string>
+    <string name="extra_097" formatted="false">填写 HTTP 和 HTTPS</string>
+    <string name="extra_098" formatted="false">两行填写相同手机 IP 和 HTTP 端口后保存。部分应用需要重启。</string>
+    <string name="extra_099" formatted="false">打开代理模块</string>
+    <string name="extra_100" formatted="false">KDE Plasma：在系统设置中搜索代理，选择手动配置。</string>
+    <string name="extra_101" formatted="false">配置 HTTP 和 HTTPS</string>
+    <string name="extra_102" formatted="false">填写手机 IP 和 HTTP 端口后应用。部分应用使用独立代理设置。</string>
+    <string name="extra_103" formatted="false">打开 bash 或 zsh</string>
+    <string name="extra_104" formatted="false">复制下方命令到终端执行，再从同一窗口运行所需命令。</string>
+    <string name="extra_105" formatted="false">找到代理设置</string>
+    <string name="extra_106" formatted="false">打开应用的代理设置，通常位于网络或数据设置中。</string>
+    <string name="extra_107" formatted="false">选择 SOCKS5</string>
+    <string name="extra_108" formatted="false">填写手机 IP 和下方 SOCKS5 端口。用户名为 splate，密码见共享设置。仅支持 HTTP 时使用 HTTP 端口。</string>
+    <string name="extra_109" formatted="false">在此 Wi-Fi 网络设置中，将代理设为无并保存。</string>
+    <string name="extra_110" formatted="false">设置 → Wi-Fi → ⓘ → 配置代理 → 关闭 → 保存。</string>
+    <string name="extra_111" formatted="false">设置 → 网络和 Internet → 代理 → 使用代理服务器 → 关闭。</string>
+    <string name="extra_112" formatted="false">网络 → 当前连接 → 详细信息 → 代理，关闭 HTTP 和 HTTPS 后保存。</string>
+    <string name="extra_113" formatted="false">执行下方 unset 命令或关闭终端。</string>
+    <string name="extra_114" formatted="false">将网络代理恢复为无或停用。</string>
+    <string name="extra_115" formatted="false">关闭应用内的代理。</string>
+    <string name="extra_116" formatted="false">否则手机断开后，这些应用可能无法联网。</string>
+    <string name="extra_117" formatted="false">SmartDNS 故障切换</string>
+    <string name="extra_118" formatted="false">连接后，每5分钟通过所选 SmartDNS 模式检查公开网页。重复失败后会验证替代方案并短暂重连 VPN。验证码和登录要求不视为故障。</string>
+    <string name="extra_119" formatted="false">通过 VPN 使用 SmartDNS</string>
+    <string name="extra_120" formatted="false">DNS 查询和 SmartDNS 代理连接通过所选 VPN 服务器。自动选择会检查同一路径。服务访问还取决于 SmartDNS 出口地区和账户设置。</string>
+    <string name="extra_121" formatted="false">自动选择 SmartDNS</string>
+    <string name="extra_122" formatted="false">在所选模式下测试提供商并应用已验证的选项。直连模式还会测试 TLS 分片，可能需要几分钟。</string>
+    <string name="extra_123" formatted="false">检查 DNS、HTTPS 以及 Gemini、ChatGPT、Claude 的公开页面。最终候选还会加载 Gemini JavaScript。不会验证账户登录和功能。</string>
+    <string name="extra_124" formatted="false">查找并应用</string>
+    <string name="extra_125" formatted="false">停止选择</string>
+    <string name="extra_126" formatted="false">正在确认结果</string>
+    <string name="extra_127" formatted="false">自动检查无法确认 Gemini，但浏览器仍可能可用。登录和 WebView 限制可能影响验证。设置未改变，详情如下。</string>
+    <string name="extra_128" formatted="false">已停止选择，设置未改变。</string>
+    <string name="extra_129" formatted="false">网络已变化，请重新选择。</string>
+    <string name="extra_130" formatted="false">没有网络连接。</string>
+    <string name="extra_131" formatted="false">检查未完成，设置未改变。</string>
+    <string name="extra_132" formatted="false">DoH 被拒绝</string>
+    <string name="extra_133" formatted="false">DNS 连接失败</string>
+    <string name="extra_134" formatted="false">DNS 超时</string>
+    <string name="extra_135" formatted="false">DNS 未返回有效公网 IPv4</string>
+    <string name="extra_136" formatted="false">不是 DNS 响应</string>
+    <string name="extra_137" formatted="false">连接 / TLS 失败</string>
+    <string name="extra_138" formatted="false">网站超时</string>
+    <string name="extra_139" formatted="false">网站 TLS 握手失败</string>
+    <string name="extra_140" formatted="false">DNS 已检查 · 网站响应</string>
+    <string name="extra_141" formatted="false">JavaScript 页面已加载，未检查账户</string>
+    <string name="extra_142" formatted="false">JavaScript：登录、验证码或页面错误</string>
+    <string name="extra_143" formatted="false">JavaScript：地区被限制</string>
+    <string name="extra_144" formatted="false">JavaScript：检查超时</string>
+    <string name="extra_145" formatted="false">浏览器检查需要 Android 9+ 及最新 Android System WebView</string>
+    <string name="extra_146" formatted="false">浏览器检查未完成</string>
+    <string name="extra_147" formatted="false">可访问</string>
+    <string name="extra_148" formatted="false">受限</string>
+    <string name="extra_149" formatted="false">地区被限制</string>
+    <string name="extra_150" formatted="false">失败</string>
+    <string name="extra_151" formatted="false">统计与工具</string>
+    <string name="extra_152" formatted="false">流量统计</string>
+    <string name="extra_153" formatted="false">今天</string>
+    <string name="extra_154" formatted="false">服务可用性</string>
+    <string name="extra_155" formatted="false">8 项服务 · 通过 VPN 检查</string>
+    <string name="extra_156" formatted="false">一键诊断</string>
+    <string name="extra_157" formatted="false">网络、DNS、服务器和隧道</string>
+    <string name="extra_158" formatted="false">关闭</string>
+    <string name="extra_159" formatted="false">连接诊断</string>
+    <string name="extra_160" formatted="false">正在检查连接…</string>
+    <string name="extra_161" formatted="false">检查已停止</string>
+    <string name="extra_162" formatted="false">检查完成</string>
+    <string name="extra_163" formatted="false">结果不完整。</string>
+    <string name="extra_164" formatted="false">停止检查</string>
+    <string name="extra_165" formatted="false">再次检查</string>
+    <string name="extra_166" formatted="false">测试使用当前连接与路由。网站可访问不代表可以登录、播放或通话。</string>
+    <string name="extra_167" formatted="false">DNS 和服务器端口通过物理网络测试，HTTPS 通过 VPN。端口开放不代表凭据有效。</string>
+    <string name="extra_168" formatted="false">网络</string>
+    <string name="extra_169" formatted="false">系统 DNS</string>
+    <string name="extra_170" formatted="false">服务器端口</string>
+    <string name="extra_171" formatted="false">可用</string>
+    <string name="extra_172" formatted="false">失败</string>
+    <string name="extra_173" formatted="false">访问受限</string>
+    <string name="extra_174" formatted="false">已跳过</string>
+    <string name="extra_175" formatted="false">先连接 VPN 再重试</string>
+    <string name="extra_176" formatted="false">VPN 已连接</string>
+    <string name="extra_177" formatted="false">已找到可联网的网络</string>
+    <string name="extra_178" formatted="false">无网络：检查 Wi-Fi 或移动数据</string>
+    <string name="extra_179" formatted="false">域名可解析为 IP</string>
+    <string name="extra_180" formatted="false">域名解析失败：检查 DNS</string>
+    <string name="extra_181" formatted="false">TCP 连接已建立</string>
+    <string name="extra_182" formatted="false">端口不可达：检查地址和端口，或更换服务器</string>
+    <string name="extra_183" formatted="false">选择服务器</string>
+    <string name="extra_184" formatted="false">TLS 失败：检查设备时间和 TLS 设置</string>
+    <string name="extra_185" formatted="false">超时：重试或更换服务器</string>
+    <string name="extra_186" formatted="false">连接失败：检查网络和服务器</string>
+    <string name="extra_187" formatted="false">详情</string>
+    <string name="extra_188" formatted="false">连接模式</string>
+    <string name="extra_189" formatted="false">保存当前设置</string>
+    <string name="extra_190" formatted="false">撤销上次配置</string>
+    <string name="extra_191" formatted="false">应用后 VPN 将重新连接。</string>
+    <string name="extra_192" formatted="false">正在应用…</string>
+    <string name="extra_193" formatted="false">新配置</string>
+    <string name="extra_194" formatted="false">名称</string>
+    <string name="extra_195" formatted="false">无法保存配置。</string>
+    <string name="extra_196" formatted="false">取消</string>
+    <string name="extra_197" formatted="false">智能路由</string>
+    <string name="extra_198" formatted="false">全部流量</string>
+    <string name="extra_199" formatted="false">当前模式</string>
+    <string name="extra_200" formatted="false">正在更新…</string>
+    <string name="extra_201" formatted="false">更改</string>
+    <string name="extra_202" formatted="false">搜索设置…</string>
+    <string name="extra_203" formatted="false">清除搜索</string>
+    <string name="extra_204" formatted="false">没有结果，请尝试 DNS、主题或备份。</string>
+    <string name="extra_205" formatted="false">全部设置</string>
+    <string name="extra_206" formatted="false">共享接口</string>
+    <string name="extra_207" formatted="false">自动</string>
+    <string name="extra_208" formatted="false">需要代理认证。用户名：splate</string>
+    <string name="extra_209" formatted="false">密码</string>
+    <string name="extra_210" formatted="false">显示密码</string>
+    <string name="extra_211" formatted="false">更换密码</string>
+    <string name="extra_212" formatted="false">如何恢复备份？</string>
+    <string name="extra_213" formatted="false">合并</string>
+    <string name="extra_214" formatted="false">替换数据</string>
+    <string name="extra_215" formatted="false">添加服务器及路由，并应用文件中的设置。</string>
+    <string name="extra_216" formatted="false">替换服务器、订阅、应用列表及路由，包括空列表。</string>
+    <string name="extra_217" formatted="false">选择文件</string>
+    <string name="extra_218" formatted="false">连接</string>
+    <string name="extra_219" formatted="false">自动选择、负载均衡、启动及订阅</string>
+    <string name="extra_220" formatted="false">网络与 DNS</string>
+    <string name="extra_221" formatted="false">路由、通用 DNS 及服务器检查</string>
+    <string name="extra_222" formatted="false">AI 服务</string>
+    <string name="extra_223" formatted="false">SmartDNS、Gemini、ChatGPT 与自动选择</string>
+    <string name="extra_224" formatted="false">安全与广告</string>
+    <string name="extra_225" formatted="false">断网保护、IPv6 与广告拦截</string>
+    <string name="extra_226" formatted="false">外观与语言</string>
+    <string name="extra_227" formatted="false">主题、透明度及模糊效果</string>
+    <string name="extra_228" formatted="false">备份与恢复</string>
+    <string name="extra_229" formatted="false">导出、恢复及自动快照</string>
+    <string name="extra_230" formatted="false">诊断</string>
+    <string name="extra_231" formatted="false">连接检查、统计及日志</string>
+    <string name="extra_232" formatted="false">高级</string>
+    <string name="extra_233" formatted="false">XHTTP、FakeDNS、QUIC、嗅探及自定义路由</string>
+    <string name="extra_234" formatted="false">VPN 共享</string>
+    <string name="extra_235" formatted="false">局域网代理及网络共享</string>
+    <string name="extra_236" formatted="false">关于</string>
+    <string name="extra_237" formatted="false">内核版本与应用更新</string>
+    <string name="extra_238" formatted="false">应用</string>
+    <string name="extra_239" formatted="false">选择哪些应用使用 VPN</string>
+    <string name="extra_240" formatted="false">1. 选择模式</string>
+    <string name="extra_241" formatted="false">更改模式</string>
+    <string name="extra_242" formatted="false">所有应用</string>
+    <string name="extra_243" formatted="false">仅所选应用</string>
+    <string name="extra_244" formatted="false">除所选外的全部应用</string>
+    <string name="extra_245" formatted="false">VPN 路由规则对所有应用生效。</string>
+    <string name="extra_246" formatted="false">所选应用使用 VPN，其他应用直连。</string>
+    <string name="extra_247" formatted="false">所选应用直连，其他应用使用 VPN。</string>
+    <string name="extra_248" formatted="false">2. 选择使用 VPN 的应用</string>
+    <string name="extra_249" formatted="false">2. 选择绕过 VPN 的应用</string>
+    <string name="extra_250" formatted="false">遵循 VPN 路由规则</string>
+    <string name="extra_251" formatted="false">无 VPN · 直连</string>
+    <string name="extra_252" formatted="false">应用遵循首页选择的模式。智能路由可能让部分网站直连。</string>
+    <string name="extra_253" formatted="false">无需逐个选择应用。若要添加例外，请选择“除所选外的全部应用”。</string>
+    <string name="extra_254" formatted="false">至少选择一个应用，或选择“所有应用”。</string>
+    <string name="extra_255" formatted="false">没有例外：所有应用均可使用 VPN。</string>
+    <string name="extra_256" formatted="false">有尚未应用的更改</string>
+    <string name="extra_257" formatted="false">设置已保存</string>
+    <string name="extra_258" formatted="false">应用更改将重连 VPN 一次。</string>
+    <string name="extra_259" formatted="false">规则将在连接 VPN 后生效。</string>
+    <string name="extra_260" formatted="false">应用更改</string>
+    <string name="extra_261" formatted="false">放弃更改</string>
+    <string name="extra_262" formatted="false">仅显示所选</string>
+    <string name="extra_263" formatted="false">选择搜索结果</string>
+    <string name="extra_264" formatted="false">全选</string>
+    <string name="extra_265" formatted="false">清除选择</string>
+    <string name="extra_266" formatted="false">未找到应用，请更改搜索。</string>
+    <string name="extra_267" formatted="false">尚未选择应用。显示全部以进行选择。</string>
+    <string name="extra_268" formatted="false">显示全部应用</string>
+    <string name="extra_269" formatted="false">应用列表为空，请尝试刷新。</string>
+    <string name="extra_270" formatted="false">负载均衡设置</string>
+    <string name="extra_271" formatted="false">自动 · 默认</string>
+    <string name="extra_272" formatted="false">连接时选择服务器，替换失效节点，并在连接质量下降时寻找更快服务器。</string>
+    <string name="extra_273" formatted="false">仅在故障时</string>
+    <string name="extra_274" formatted="false">保留可用服务器，仅在连续检查确认故障后切换。</string>
+    <string name="extra_275" formatted="false">仅连接时</string>
+    <string name="extra_276" formatted="false">仅在连接时选择一次服务器。会话中即使服务器失去响应也不切换。</string>
+    <string name="extra_277" formatted="false">连接检查间隔</string>
+    <string name="extra_278" formatted="false">切换前的失败检查次数</string>
+    <string name="extra_279" formatted="false">定期寻找更好服务器</string>
+    <string name="extra_280" formatted="false">优化间隔</string>
+    <string name="extra_281" formatted="false">最低延迟改善幅度</string>
+    <string name="extra_282" formatted="false">恢复默认设置</string>
+    <string name="extra_283" formatted="false">这些选项在自动选择启用时生效。</string>
+    <string name="extra_284" formatted="false">通过 VPN 下载 · 2 线程 · 10 秒 · 最多 128 MB</string>
+    <string name="extra_285" formatted="false">开始速度测试</string>
+    <string name="extra_286" formatted="false">停止测试</string>
+    <string name="extra_287" formatted="false">请先连接 VPN</string>
+    <string name="extra_288" formatted="false">连接已变化，请重新测试。</string>
+    <string name="extra_289" formatted="false">测试服务器超时</string>
+    <string name="extra_290" formatted="false">无法解析测试服务器地址</string>
+    <string name="extra_291" formatted="false">测试服务器不可达，请尝试其他 VPN 节点。</string>
+    <string name="extra_292" formatted="false">数据不足，无法可靠测速</string>
+    <string name="extra_293" formatted="false">%.1f MB · 测量 %.1f 秒</string>
+    <string name="extra_294" formatted="false">MB/s</string>
+    <string name="extra_295" formatted="false">MB</string>
+    <string name="extra_296" formatted="false">已选择：%d</string>
+    <string name="extra_297" formatted="false">已检查 %d / %d</string>
+    <string name="extra_298" formatted="false">已应用 %s · 可访问页面：%d/3</string>
+    <string name="extra_299" formatted="false">结果 (%d)</string>
+    <string name="extra_300" formatted="false">%d 秒</string>
+    <string name="extra_301" formatted="false">%d 分钟</string>
+    <string name="extra_302" formatted="false">GitHub 源代码</string>
+    <string name="extra_303" formatted="false">最近更新</string>
+    <string name="extra_304" formatted="false">组合规则 · AND / OR</string>
+    <string name="extra_305" formatted="false">AND 要求所有已填写的条件都匹配；OR 只需匹配任一条件。同一栏中的多行是备选项。应用第一个匹配的规则。</string>
+    <string name="extra_306" formatted="false">可匹配应用、域名、IP、端口和协议。应用条件需要 Android 10+，并须在“应用”页面中纳入 VPN。</string>
+    <string name="extra_307" formatted="false">规则已保存，但在 Tor 模式下不生效。</string>
+    <string name="extra_308" formatted="false">"应用： "</string>
+    <string name="extra_309" formatted="false">"后缀： "</string>
+    <string name="extra_310" formatted="false">"域名： "</string>
+    <string name="extra_311" formatted="false">"关键词： "</string>
+    <string name="extra_312" formatted="false">"端口： "</string>
+    <string name="extra_313" formatted="false">编辑</string>
+    <string name="extra_314" formatted="false">上移</string>
+    <string name="extra_315" formatted="false">下移</string>
+    <string name="extra_316" formatted="false">添加组合规则</string>
+    <string name="extra_317" formatted="false">自定义例外和必要的 DNS 规则优先。组合规则先于订阅和地区规则应用。</string>
+    <string name="extra_318" formatted="false">已保存的规则无效。VPN 不会使用未经验证的规则。</string>
+    <string name="extra_319" formatted="false">清除无效规则</string>
+    <string name="extra_320" formatted="false">组合规则</string>
+    <string name="extra_321" formatted="false">所有已填写的条件都必须匹配。</string>
+    <string name="extra_322" formatted="false">匹配任一已填写的条件即可。</string>
+    <string name="extra_323" formatted="false">直连</string>
+    <string name="extra_324" formatted="false">阻止</string>
+    <string name="extra_325" formatted="false">匹配的流量将直接连接，不经过 VPN 服务器。</string>
+    <string name="extra_326" formatted="false">应用包名</string>
+    <string name="extra_327" formatted="false">选择已安装的应用</string>
+    <string name="extra_328" formatted="false">每行一个包名，区分大小写。未安装的应用仍保留在规则中。不支持共用 UID 的应用。</string>
+    <string name="extra_329" formatted="false">应用条件需要 Android 10 或更高版本。</string>
+    <string name="extra_330" formatted="false">域名后缀</string>
+    <string name="extra_331" formatted="false">每行一个域名，匹配该域名及其子域名。开头的点可省略。</string>
+    <string name="extra_332" formatted="false">完整域名</string>
+    <string name="extra_333" formatted="false">域名关键词</string>
+    <string name="extra_334" formatted="false">同一栏中的多行表示 OR，空栏会被忽略。</string>
+    <string name="extra_335" formatted="false">IP、端口和协议</string>
+    <string name="extra_336" formatted="false">端口：443,8000-8100</string>
+    <string name="extra_337" formatted="false">协议：http, tls, quic</string>
+    <string name="extra_338" formatted="false">为这些规则启用域名识别</string>
+    <string name="extra_339" formatted="false">此规则的应用</string>
+    <string name="extra_340" formatted="false">名称或包名</string>
+    <string name="extra_341" formatted="false">已选择：%d / %d</string>
+    <string name="extra_342" formatted="false">没有匹配的应用</string>
+    <string name="extra_343" formatted="false">手动输入的包名会保留，即使不在此列表中。</string>
+    <string name="extra_344" formatted="false">错误报告</string>
+    <string name="extra_345" formatted="false">征得同意后，报告仅包含错误类型、代码位置和应用版本，不含 IP、设备数据、异常消息、日志、订阅或设置。</string>
+    <string name="extra_346" formatted="false">保存在此设备</string>
+    <string name="extra_347" formatted="false">没有接收服务器，不会自动发送。设备上最多保留五份报告，关闭收集将删除它们。</string>
+    <string name="extra_348" formatted="false">"功能： "</string>
+    <string name="extra_349" formatted="false">记录问题</string>
+    <string name="extra_350" formatted="false">"查看报告 "</string>
+    <string name="extra_351" formatted="false">没有保存的报告</string>
+    <string name="extra_352" formatted="false">全部删除</string>
+    <string name="extra_353" formatted="false">导出前查看</string>
+    <string name="extra_354" formatted="false">导出会打开系统分享菜单，由你选择接收者。</string>
+    <string name="extra_355" formatted="false">导出</string>
+    <string name="extra_356" formatted="false">复制</string>
+    <string name="extra_357" formatted="false">删除</string>
+    <string name="extra_358" formatted="false">从云端链接恢复</string>
+    <string name="extra_359" formatted="false">粘贴 JSON 备份文件的链接。客户端会先下载并显示内容，再恢复设置。无需选择文件夹。</string>
+    <string name="extra_360" formatted="false">备份文件链接</string>
+    <string name="extra_361" formatted="false">粘贴链接</string>
+    <string name="extra_362" formatted="false">备份已加密时填写密码</string>
+    <string name="extra_363" formatted="false">支持 Google 云端硬盘、Yandex Disk、Dropbox 和直接 HTTPS 链接。文件必须无需登录即可访问。未加密备份无需密码。</string>
+    <string name="extra_364" formatted="false">打开已下载的备份</string>
+    <string name="extra_365" formatted="false">下载并查看</string>
+    <string name="extra_366" formatted="false">文件夹自动备份已关闭</string>
+    <string name="extra_367" formatted="false">云端备份已移除文件夹选择。已有文件和加密密码均保留。请通过备份链接恢复，或设置 WebDAV 以进行后台备份。</string>
+    <string name="extra_368" formatted="false">知道了</string>
+    <string name="extra_369" formatted="false">WebDAV 自动备份</string>
+    <string name="extra_370" formatted="false">每 6 或 24 小时加密备份。恢复前需查看并确认。本设备最近的 10 份快照会单独保留。</string>
+    <string name="extra_371" formatted="false">使用“传输设置”中保存的 WebDAV。如果共享副本冲突，会保留该副本；请下载并查看后再同步。</string>
+    <string name="extra_372" formatted="false">新密码（留空保留原密码）</string>
+    <string name="extra_373" formatted="false">加密密码，至少 8 个字符</string>
+    <string name="extra_374" formatted="false">确认密码</string>
+    <string name="extra_375" formatted="false">后台备份密码仅在此设备上使用 Android Keystore 加密保存。请另行保管：其他设备恢复时需要此密码。</string>
+    <string name="extra_376" formatted="false">已启用自动备份</string>
+    <string name="extra_377" formatted="false">仅限不限流量的网络</string>
+    <string name="extra_378" formatted="false">每 %d 小时</string>
+    <string name="extra_379" formatted="false">两次密码必须相同，且至少包含 8 个字符</string>
+    <string name="extra_380" formatted="false">保存设置</string>
+    <string name="extra_381" formatted="false">立即备份</string>
+    <string name="extra_382" formatted="false">关闭并忘记密码</string>
+    <string name="extra_383" formatted="false">"上次备份： "</string>
+    <string name="extra_384" formatted="false">删除 %s</string>
+    <string name="extra_385" formatted="false">已收到设置，导入前请查看。</string>
+    <string name="extra_386" formatted="false">请核对接收设备并确认发送。</string>
+    <string name="extra_387" formatted="false">设备间传输</string>
+    <string name="extra_388" formatted="false">将手机和电视连接到同一 Wi-Fi 或以太网。服务器、订阅、Tor 和代理设置均加密传输。</string>
+    <string name="extra_389" formatted="false">应用接收的设置前请断开 VPN。</string>
+    <string name="extra_390" formatted="false">发送设置</string>
+    <string name="extra_391" formatted="false">在此设备／电视上接收</string>
+    <string name="extra_392" formatted="false">设备配对二维码</string>
+    <string name="extra_393" formatted="false">用保存设置的手机扫描此二维码，然后在此设备确认导入。</string>
+    <string name="extra_394" formatted="false">在接收设备上扫描。电视没有摄像头时，请在电视上选择“接收”，再用手机扫描电视二维码。</string>
+    <string name="extra_395" formatted="false">"配对码剩余时间： "</string>
+    <string name="extra_396" formatted="false">" 秒 · 仅限一次"</string>
+    <string name="extra_397" formatted="false">复制配对码</string>
+    <string name="extra_398" formatted="false">关闭传输</string>
+    <string name="extra_399" formatted="false">配对码或链接</string>
+    <string name="extra_400" formatted="false">使用配对码</string>
+    <string name="extra_401" formatted="false">二维码包含配对密钥，请仅向自己的设备展示。接收的设置需经确认后才会应用。</string>
+    <string name="extra_402" formatted="false">收起 WebDAV</string>
+    <string name="extra_403" formatted="false">WebDAV 同步</string>
+    <string name="extra_404" formatted="false">加密的 splate-settings.v1.json 文件保存在已有 WebDAV 文件夹中。上传和下载由你手动执行。</string>
+    <string name="extra_405" formatted="false">WebDAV 文件夹的 HTTPS 地址</string>
+    <string name="extra_406" formatted="false">WebDAV 用户名</string>
+    <string name="extra_407" formatted="false">WebDAV 密码</string>
+    <string name="extra_408" formatted="false">WebDAV 已保存</string>
+    <string name="extra_409" formatted="false">保存 WebDAV</string>
+    <string name="extra_410" formatted="false">备份加密密码（至少 8 个字符）</string>
+    <string name="extra_411" formatted="false">加密密码不会保存，请在另一设备输入同一密码。WebDAV 凭据仅保存在此设备，不会写入备份。</string>
+    <string name="extra_412" formatted="false">加密备份已上传</string>
+    <string name="extra_413" formatted="false">替换副本</string>
+    <string name="extra_414" formatted="false">备份已下载，请确认导入。</string>
+    <string name="extra_415" formatted="false">下载</string>
+    <string name="extra_416" formatted="false">将设置发送到此设备？</string>
+    <string name="extra_417" formatted="false">导入设置</string>
+    <string name="extra_418" formatted="false">"来源： "</string>
+    <string name="extra_419" formatted="false">"局域网中的设备： "</string>
+    <string name="extra_420" formatted="false">"服务器： "</string>
+    <string name="extra_421" formatted="false">" · 订阅： "</string>
+    <string name="extra_422" formatted="false">未加密的 JSON 备份</string>
+    <string name="extra_423" formatted="false">"组合规则： "</string>
+    <string name="extra_424" formatted="false">包含 Tor 和网桥</string>
+    <string name="extra_425" formatted="false">包含代理设置和共享密码</string>
+    <string name="extra_426" formatted="false">通用设置将应用到此设备。默认情况下，服务器会添加到现有列表中。</string>
+    <string name="extra_427" formatted="false">将发送服务器、订阅、Tor 设置和代理密码。仅向显示此二维码的自有设备继续发送。</string>
+    <string name="extra_428" formatted="false">替换现有服务器和订阅</string>
+    <string name="extra_429" formatted="false">请先断开 VPN</string>
+    <string name="extra_430" formatted="false">应用设置</string>
+    <string name="extra_431" formatted="false">本地代理 · Mixed</string>
+    <string name="extra_432" formatted="false">HTTP 和 SOCKS 共用一个本地端口。默认启用认证；客户端会生成凭据并自动提供给 VPN。局域网共享独立设置。</string>
+    <string name="extra_433" formatted="false">收起设置</string>
+    <string name="extra_434" formatted="false">设置登录凭据</string>
+    <string name="extra_435" formatted="false">关闭认证后，此手机上的其他应用可以访问本地代理。</string>
+    <string name="extra_436" formatted="false">用户名</string>
+    <string name="extra_437" formatted="false">隐藏密码</string>
+    <string name="extra_438" formatted="false">已保存。正在连接的 VPN 将重新连接。</string>
+    <string name="extra_439" formatted="false">新凭据已保存。正在连接的 VPN 将重新连接。</string>
+    <string name="extra_440" formatted="false">生成新凭据</string>
+    <string name="extra_441" formatted="false">这些凭据仅保存在此设备，不包含在云端备份中。代理认证不会向运营商隐藏 VPN 连接。</string>
+    <string name="extra_442" formatted="false">仅通过 VPN 下载</string>
+    <string name="extra_443" formatted="false">适用于订阅、网桥、地理数据、过滤规则、云端链接和 WebDAV。VPN 不可用时下载失败，不会切换为直连。</string>
+    <string name="extra_444" formatted="false">仅通过 Wi-Fi 更新</string>
+    <string name="extra_445" formatted="false">仅通过 Wi-Fi 测延迟和检查</string>
+    <string name="extra_446" formatted="false">使用移动数据时，这些操作会等待。当前 VPN 仍可使用；跳过检查不会将服务器标为不可用。</string>
+    <string name="extra_447" formatted="false">运营商可以看到对其他服务器的直接检查。故障切换模式会停止定期搜索更快服务器，但仍会执行连接时和故障后的检查。</string>
+    <string name="extra_448" formatted="false">减少后台检查</string>
+    <string name="extra_449" formatted="false">"当前模式： "</string>
+    <string name="extra_450" formatted="false">定期优化</string>
+    <string name="extra_451" formatted="false">故障切换</string>
+    <string name="extra_452" formatted="false">仅连接时选择</string>
+    <string name="extra_453" formatted="false">无法切换模式，请重试。</string>
+    <string name="extra_454" formatted="false">操作失败</string>
+    <string name="extra_455" formatted="false">网址已添加，请点按“下载订阅”。</string>
+    <string name="extra_456" formatted="false">网桥已添加</string>
+    <string name="extra_457" formatted="false">可以连接</string>
+    <string name="extra_458" formatted="false">正在连接</string>
+    <string name="extra_459" formatted="false">已连接</string>
+    <string name="extra_460" formatted="false">已保存的网桥均连接失败。请刷新列表或手动选择网桥。</string>
+    <string name="extra_461" formatted="false">无法连接，请尝试其他网桥。</string>
+    <string name="extra_462" formatted="false">自动网桥：%d/%d</string>
+    <string name="extra_463" formatted="false">已用时：%d 秒 · 无进展：%d 秒</string>
+    <string name="extra_464" formatted="false">Tor 报告此连接阶段出现问题。</string>
+    <string name="extra_465" formatted="false">此网桥暂未响应。如果进度仍停滞，应用会尝试下一个。</string>
+    <string name="extra_466" formatted="false">TLS 握手尚未完成。此网桥可能无法在当前网络中使用。请等待，或尝试其他网桥或 WebTunnel。</string>
+    <string name="extra_467" formatted="false">此阶段已停滞一段时间，请等待或尝试其他网桥。</string>
+    <string name="extra_468" formatted="false">其他网桥</string>
+    <string name="extra_469" formatted="false">已选择 WebTunnel</string>
+    <string name="extra_470" formatted="false">点按“连接 Tor”，应用会从列表选择网桥。首次连接可能需要几分钟。</string>
+    <string name="extra_471" formatted="false">在此连接。首次连接可能需要一分钟以上。</string>
+    <string name="extra_472" formatted="false">已选择 Tor</string>
+    <string name="extra_473" formatted="false">连接 Tor</string>
+    <string name="extra_474" formatted="false">取消连接</string>
+    <string name="extra_475" formatted="false">断开连接</string>
+    <string name="extra_476" formatted="false">无法读取已保存的 Tor 设置。请导入网桥或重新保存设置。</string>
+    <string name="extra_477" formatted="false">连接网桥</string>
+    <string name="extra_478" formatted="false">自动选择</string>
+    <string name="extra_479" formatted="false">没有此类型的网桥，请选择其他类型。</string>
+    <string name="extra_480" formatted="false">不使用网桥 · 直连 Tor</string>
+    <string name="extra_481" formatted="false">自动逐一尝试已保存的网桥。自动模式会依次尝试 Vanilla、WebTunnel 和 obfs4。</string>
+    <string name="extra_482" formatted="false">此网桥已手动固定。选择“自动”可自动尝试其他已保存网桥。</string>
+    <string name="extra_483" formatted="false">自动</string>
+    <string name="extra_484" formatted="false">网桥已选择</string>
+    <string name="extra_485" formatted="false">选择网桥</string>
+    <string name="extra_486" formatted="false">网桥已关闭</string>
+    <string name="extra_487" formatted="false">不使用网桥</string>
+    <string name="extra_488" formatted="false">快速导入</string>
+    <string name="extra_489" formatted="false">GitHub 的 TOP-100 网桥列表。点按后下载，网桥是否可用取决于网络。</string>
+    <string name="extra_490" formatted="false">网桥列表已下载</string>
+    <string name="extra_491" formatted="false">刷新网桥列表前请断开连接。</string>
+    <string name="extra_492" formatted="false">粘贴</string>
+    <string name="extra_493" formatted="false">"已下载： "</string>
+    <string name="extra_494" formatted="false">"已跳过无效网桥： "</string>
+    <string name="extra_495" formatted="false">自定义订阅和中继</string>
+    <string name="extra_496" formatted="false">断开连接后可编辑高级设置。</string>
+    <string name="extra_497" formatted="false">GitHub／HTTPS 订阅</string>
+    <string name="extra_498" formatted="false">每 12 小时更新</string>
+    <string name="extra_499" formatted="false">订阅已下载</string>
+    <string name="extra_500" formatted="false">下载订阅</string>
+    <string name="extra_501" formatted="false">网桥：每行一个</string>
+    <string name="extra_502" formatted="false">留空下方字段可自动选择。手动选择时，请输入以逗号分隔的 40 字符中继指纹。</string>
+    <string name="extra_503" formatted="false">严格排除中继</string>
+    <string name="extra_504" formatted="false">Tor 为选定应用传输 TCP 和 DNS。此模式不支持 UDP、直连规则和 SmartDNS。</string>
+    <string name="extra_505" formatted="false">Tor 设置已保存</string>
+    <string name="extra_506" formatted="false">选择一个网桥</string>
+    <string name="extra_507" formatted="false">性能</string>
+    <string name="extra_508" formatted="false">减少视觉效果可降低设备负载，修改立即生效。</string>
+    <string name="extra_509" formatted="false">界面动画</string>
+    <string name="extra_510" formatted="false">页面切换、移动和反馈动画</string>
+    <string name="extra_511" formatted="false">装饰背景</string>
+    <string name="extra_512" formatted="false">主题网格、粒子、插图和装饰</string>
+    <string name="extra_513" formatted="false">玻璃高光</string>
+    <string name="extra_514" formatted="false">装饰高光和面板渐变</string>
+    <string name="extra_515" formatted="false">轻量模式</string>
+    <string name="extra_516" formatted="false">启用全部效果</string>
+    <string name="extra_517" formatted="false">轻量模式也会关闭玻璃模糊，可在下方单独调整模糊效果。</string>
+    <string name="extra_518" formatted="false">成功：%d / %d</string>
+    <string name="extra_519" formatted="false">检查已暂停，等待 Wi-Fi 连接</string>
+    <string name="extra_520" formatted="false">"正在连接 Tor： "</string>
+    <string name="extra_521" formatted="false">"网桥： "</string>
+    <string name="extra_522" formatted="false">Tor 网络 · 打开设置</string>
+    <string name="extra_523" formatted="false">设置后可通过二维码接收手机上的设置。传输完成后再连接。</string>
+    <string name="extra_524" formatted="false">服务器：+%d</string>
+    <string name="extra_525" formatted="false">服务器：%d</string>
+    <string name="extra_526" formatted="false">没有变化</string>
+    <string name="extra_527" formatted="false">保留节点 · 当前订阅中已不存在</string>
+    <string name="extra_528" formatted="false">1 小时</string>
+    <string name="extra_529" formatted="false">3 小时</string>
+    <string name="extra_530" formatted="false">从云端恢复时，请在上方粘贴文件链接。下方按钮通过系统文件选择器保存或打开文件。</string>
+    <string name="extra_531" formatted="false">"成功下载于： "</string>
+    <string name="extra_532" formatted="false">尚未从网络下载</string>
+    <string name="extra_533" formatted="false">"上次尝试： "</string>
+    <string name="extra_534" formatted="false">" • 成功"</string>
+    <string name="extra_535" formatted="false">订阅成功下载后才会更新下载日期。更新失败时，已保存服务器仍可使用。</string>
+    <string name="extra_536" formatted="false">可用服务器保留区</string>
+    <string name="extra_537" formatted="false">保留更新后消失的可用节点</string>
+    <string name="extra_538" formatted="false">最多保留 100 个节点，自隧道检查成功后保留最多 30 天。仅 TCP 测延迟不足以保留。已保留：%d。</string>
+    <string name="extra_539" formatted="false">清空此订阅的保留节点</string>
+    <string name="extra_540" formatted="false">订阅规则</string>
+    <string name="extra_541" formatted="false">使用订阅规则</string>
+    <string name="extra_542" formatted="false">不支持的条件：%d。无法安全启用此规则集。支持的规则：%d。</string>
+    <string name="extra_543" formatted="false">未找到规则。旧订阅请先刷新。仅包含服务器链接的列表不含路由规则。</string>
+    <string name="extra_544" formatted="false">规则：%d。仅在使用此订阅的服务器时应用。规则变化后需要重新确认。</string>
+    <string name="extra_545" formatted="false">查看规则</string>
+    <string name="extra_546" formatted="false">选项立即生效。修改网址会清除原来源的规则和保留节点。</string>
+    <string name="extra_547" formatted="false">规则：%s</string>
+    <string name="extra_548" formatted="false">DIRECT 表示直连，PROXY 表示使用所选服务器。不导入 DNS、分应用设置和组内服务器选择。自定义规则优先。</string>
+    <string name="extra_549" formatted="false">存在不支持的规则，无法启用。</string>
+    <string name="extra_550" formatted="false">订阅已更改，请关闭此窗口并查看新规则。</string>
+    <string name="extra_551" formatted="false">批准并启用</string>
+    <string name="extra_552" formatted="false">删除保留节点？</string>
+    <string name="extra_553" formatted="false">将删除当前订阅中已不存在的 %d 个节点。现有节点会保留。</string>
+    <string name="extra_554" formatted="false">%d 小时 %d 分钟</string>
+    <string name="extra_555" formatted="false">日</string>
+    <string name="extra_556" formatted="false">月</string>
+    <string name="extra_557" formatted="false">上一时段</string>
+    <string name="extra_558" formatted="false">每月合计</string>
+    <string name="extra_559" formatted="false">每日合计</string>
+    <string name="extra_560" formatted="false">下一时段</string>
+    <string name="extra_561" formatted="false">选择日期</string>
+    <string name="extra_562" formatted="false">总流量</string>
+    <string name="extra_563" formatted="false">"已连接： "</string>
+    <string name="extra_564" formatted="false">已接收</string>
+    <string name="extra_565" formatted="false">已发送</string>
+    <string name="extra_566" formatted="false">按日</string>
+    <string name="extra_567" formatted="false">7 天</string>
+    <string name="extra_568" formatted="false">全部</string>
+    <string name="extra_569" formatted="false">接收</string>
+    <string name="extra_570" formatted="false">发送</string>
+    <string name="extra_571" formatted="false">点按柱状图或在图表上拖动</string>
+    <string name="extra_572" formatted="false">此时段暂无数据，连接 VPN 后将记录统计。</string>
+    <string name="extra_573" formatted="false">当前时段</string>
+    <string name="extra_574" formatted="false">清除历史</string>
+    <string name="extra_575" formatted="false">VPN 接口流量，包括直连规则的流量。历史保留 400 天，从本版本开始记录。应用崩溃可能丢失最后 15 秒的数据。</string>
+    <string name="extra_576" formatted="false">清除统计？</string>
+    <string name="extra_577" formatted="false">所有流量和连接时长历史都将删除。</string>
+    <string name="extra_578" formatted="false">选择</string>
+    <string name="extra_579" formatted="false">每日流量。在图表上选择日期</string>
+    <string name="extra_580" formatted="false">无法生成二维码。请将电视连接到 Wi-Fi 或以太网，再到“传输设置”中重试。</string>
+    <string name="extra_581" formatted="false">无法保存选择，请重试。</string>
+    <string name="extra_582" formatted="false">服务器</string>
+    <string name="extra_583" formatted="false">传输设置</string>
+    <string name="extra_584" formatted="false">设置</string>
+    <string name="extra_585" formatted="false">使用遥控器的方向键和确定键。</string>
+    <string name="extra_586" formatted="false">选择服务器</string>
+    <string name="extra_587" formatted="false">接收手机设置</string>
+    <string name="extra_588" formatted="false">选择连接方式</string>
+    <string name="extra_589" formatted="false">通过“传输设置”接收手机上的服务器和设置。</string>
+    <string name="extra_590" formatted="false">将手机和电视连接到同一 Wi-Fi，无需电视摄像头。</string>
+    <string name="extra_591" formatted="false">正在连接 Tor</string>
+    <string name="extra_592" formatted="false">Tor 首次连接可能需要一分钟以上，请等待完成。</string>
+    <string name="extra_593" formatted="false">从手机传输设置？</string>
+    <string name="extra_594" formatted="false">将手机和电视连接到同一 Wi-Fi 或以太网。电视会显示二维码，请用手机上的 SplateVPN 扫描。应用设置前可以先查看。</string>
+    <string name="extra_595" formatted="false">通过二维码接收</string>
+    <string name="extra_596" formatted="false">稍后设置</string>
+    <string name="extra_597" formatted="false">正在导入服务器…</string>
+    <string name="extra_598" formatted="false">导入订阅</string>
+    <string name="extra_599" formatted="false">导入全部服务器</string>
+    <string name="extra_600" formatted="false">添加服务器</string>
+    <string name="extra_601" formatted="false">此处可以重命名 JSON 配置。要更改连接设置，请编辑原始 JSON 并重新导入。</string>
+    <string name="extra_602" formatted="false">内置规则库 · 可离线使用</string>
+    <string name="extra_603" formatted="false">更新于：%s</string>
+    <string name="extra_604" formatted="false">每天更新。后台更新在下次连接时生效；手动更新会重新加载正在运行的 VPN。</string>
+    <string name="extra_605" formatted="false">无法更新或加载扩展列表，已有本地保护仍保留。</string>
+    <string name="extra_606" formatted="false">更新过滤规则</string>
+    <string name="extra_607" formatted="false">例外（%d）</string>
+    <string name="extra_608" formatted="false">来源和许可证：AdGuard · GPL-3.0</string>
+    <string name="extra_609" formatted="false">广告拦截例外</string>
+    <string name="extra_610" formatted="false">每行一个域名，不含 https:// 或路径。仅在广告拦截器中放行该域名及其子域名，最多 100 个。</string>
+    <string name="extra_611" formatted="false">请检查域名及数量</string>
+    <string name="extra_612" formatted="false">将应用配置“%s”的网络设置。</string>
+    <string name="extra_613" formatted="false">应用选择和 AI 设置保持不变。</string>
+    <string name="extra_614" formatted="false">我的配置</string>
+    <string name="extra_615" formatted="false">配置保存全部网络设置，包括应用和 DNS。</string>
+    <string name="extra_616" formatted="false">无法保存更改，请检查设置和可用存储空间。</string>
+    <string name="extra_617" formatted="false">选定应用通过 VPN，保留自定义例外。</string>
+    <string name="extra_618" formatted="false">查看诊断报告</string>
+    <string name="extra_619" formatted="false">链接、密钥、IP 和服务器名称已自动隐藏。分享前请检查其余内容。</string>
+    <string name="extra_620" formatted="false">分享</string>
+    <string name="extra_621" formatted="false">可用 DNS：%s</string>
+    <string name="extra_622" formatted="false">DNS 检查未通过</string>
+    <string name="extra_623" formatted="false">正在检查 DNS 服务器…</string>
+    <string name="extra_624" formatted="false">%s 未通过 VPN 响应，正在检查其他 DoH 服务器…</string>
+    <string name="extra_625" formatted="false">" （%d 毫秒）"</string>
+    <string name="extra_626" formatted="false">%s 未通过 VPN 响应。%s 可以响应%s。</string>
+    <string name="extra_627" formatted="false">测试的 DoH 服务器未通过 VPN 响应，请尝试其他服务器或 DNS。</string>
+    <string name="extra_628" formatted="false">切换至 %s</string>
+    <string name="extra_629" formatted="false">启用 FakeDNS</string>
+    <string name="extra_630" formatted="false">恢复设置</string>
+    <string name="extra_631" formatted="false">设置已损坏，没有可用快照。原文件已保留。是否创建新设置？服务器和订阅会保留。作出选择前无法连接 VPN。</string>
+    <string name="extra_632" formatted="false">设置已从最近的可用快照恢复，损坏的原文件已单独保存。</string>
+    <string name="extra_633" formatted="false">无法保存设置，请检查可用存储空间。</string>
+    <string name="extra_634" formatted="false">创建新设置</string>
+    <string name="extra_635" formatted="false">退出</string>
+    <string name="extra_636" formatted="false">关闭</string>
+    <string name="extra_637" formatted="false">当前分片设置导致连接失败</string>
+    <string name="extra_638" formatted="false">同一服务器使用当前参数检查两次失败，使用标准分片均成功。请尝试标准配置。</string>
+    <string name="extra_639" formatted="false">使用标准分片</string>
+    <string name="extra_640" formatted="false">隧道提醒和诊断</string>
+    <string name="extra_641" formatted="false">隧道连接问题和建议处理方法的通知</string>
+    <string name="extra_642" formatted="false">VPN 连接检查失败</string>
+    <string name="extra_643" formatted="false">网络可用，但两次隧道检查均失败。原因尚不明确，请尝试其他服务器。</string>
+    <string name="extra_644" formatted="false">切换服务器</string>
+    <string name="extra_645" formatted="false">数据包大小错误</string>
+    <string name="extra_646" formatted="false">收到数据包大小错误。请尝试 MTU 1280；限制来源尚不明确。</string>
+    <string name="extra_647" formatted="false">将 MTU 设为 1280</string>
+    <string name="extra_648" formatted="false">可能存在路由循环</string>
+    <string name="extra_649" formatted="false">日志显示可能存在路由问题，尚未确认自动恢复。</string>
+    <string name="extra_650" formatted="false">无法验证互联网连接</string>
+    <string name="extra_651" formatted="false">VPN 正在运行，但外部网络检查失败且未收到流量。请检查 Wi-Fi 或移动数据，无需修改网站路由。</string>
+    <string name="extra_652" formatted="false">需要登录 Wi-Fi</string>
+    <string name="extra_653" formatted="false">网络要求通过浏览器登录，可暂时暂停 VPN 以登录。</string>
+    <string name="extra_654" formatted="false">暂停 2 分钟</string>
+    <string name="extra_655" formatted="false">打开登录页面</string>
+    <string name="extra_656" formatted="false">时钟相差 %d 秒</string>
+    <string name="extra_657" formatted="false">设备时间与检测服务器不同，请检查自动时间同步设置。</string>
+    <string name="extra_658" formatted="false">日期设置</string>
+    <string name="extra_659" formatted="false">%s 多次检查失败，%s 可以响应。原因尚不明确。</string>
+    <string name="extra_660" formatted="false">测试的 DNS 服务器均未响应，原因尚不明确。可以尝试 FakeDNS。</string>
+    <string name="extra_661" formatted="false">测试的 DNS 服务器均未响应，FakeDNS 已启用。请检查所选服务器的连接。</string>
+    <string name="extra_662" formatted="false">快速选择</string>
+    <string name="extra_663" formatted="false">显示本次启动中在当前网络上最近十分钟内通过真实延迟测试的最多十个节点。</string>
+    <string name="extra_664" formatted="false">暂无近期验证的节点。请打开所有服务器并运行真实延迟测试。</string>
+    <string name="extra_665" formatted="false">结果已过期，请刷新列表。</string>
+    <string name="extra_666" formatted="false">无法切换连接。</string>
+    <string name="extra_667" formatted="false">所有节点</string>
+    <string name="extra_668" formatted="false">订阅</string>
+    <string name="extra_669" formatted="false">个人</string>
+    <string name="extra_670" formatted="false">刷新列表</string>
+    <string name="extra_671" formatted="false">所有服务器</string>
+    <string name="extra_672" formatted="false">最多 10 个节点 · 最近 10 分钟的真实延迟检测</string>
+    <string name="extra_673" formatted="false">%d 毫秒</string>
+    <string name="extra_674" formatted="false">服务器更新间隔：%d 小时</string>
+    <string name="extra_675" formatted="false">网站</string>
+    <string name="extra_676" formatted="false">支持</string>
+    <string name="extra_677" formatted="false">无法打开链接</string>
+    <string name="extra_678" formatted="false">需要重新检测</string>
+    <string name="extra_679" formatted="false">连接模式：%s</string>
+    <string name="extra_680" formatted="false">留空时自动生成</string>
+    <string name="extra_681" formatted="false">此规则使用的服务器</string>
+    <string name="extra_682" formatted="false">默认 VPN（当前活动）</string>
+    <string name="extra_683" formatted="false">请至少填写一个条件（域名、应用、IP 或端口）</string>
+    <string name="extra_684" formatted="false">规则：%s</string>
+    <string name="extra_685" formatted="false">规则校验错误</string>
+    <string name="extra_686" formatted="false">为规则选择服务器</string>
+    <string name="extra_687" formatted="false">搜索服务器</string>
+    <string name="extra_688" formatted="false">默认 VPN（自动选择）</string>
+    <string name="extra_689" formatted="false">使用当前已连接的节点</string>
+    <string name="extra_690" formatted="false">网络与检查</string>
+    <string name="extra_691" formatted="false">订阅、网桥、地理数据库、过滤规则和 WebDAV。不会回退到直连。</string>
+    <string name="extra_692" formatted="false">服务器地址已隐藏。显示 15 秒</string>
+    <string name="extra_693" formatted="false">网桥列表为空。请在下方下载 TOP-100 网桥，或关闭网桥后再连接。</string>
+    <string name="extra_694" formatted="false">测试延迟</string>
+    <string name="extra_695" formatted="false">正在检测网桥可用性与延迟…</string>
+    <string name="extra_696" formatted="false">切换 Tor 链路（新身份）</string>
+    <string name="extra_697" formatted="false">来自 GitHub 的 TOP-100 网桥。首次下载后可自动更新。</string>
+    <string name="extra_698" formatted="false">每 12 小时更新一次 TOP-100</string>
+    <string name="extra_699" formatted="false">更新计划已保存</string>
+    <string name="extra_700" formatted="false">普通网桥</string>
+    <string name="extra_701" formatted="false">乐观数据传输（OptimisticData）</string>
+    <string name="extra_702" formatted="false">按延迟自动选择最快的网桥</string>
+    <string name="extra_703" formatted="false">自定义 SNI / 域前置（可选）</string>
+    <string name="extra_704" formatted="false">测试</string>
+    <string name="extra_705" formatted="false">不可达</string>
+    <string name="extra_706" formatted="false">高级选项</string>
+    <string name="extra_707" formatted="false">专业模式</string>
+    <string name="extra_708" formatted="false">隐藏工具</string>
+    <string name="extra_709" formatted="false">连接工具</string>
+    <string name="extra_710" formatted="false">正在等待网络请求...</string>
+    <string name="extra_711" formatted="false">全部 (%d)</string>
+    <string name="extra_712" formatted="false">活跃 (%d)</string>
+    <string name="extra_713" formatted="false">历史 (%d)</string>
+    <string name="extra_714" formatted="false">状态</string>
+    <string name="extra_715" formatted="false">活跃</string>
+    <string name="extra_716" formatted="false">已结束</string>
+    <string name="extra_717" formatted="false">传输协议</string>
+    <string name="extra_718" formatted="false">来源</string>
+    <string name="extra_719" formatted="false">路由</string>
+    <string name="extra_720" formatted="false">请求数</string>
+    <string name="extra_721" formatted="false">时间</string>
+    <string name="extra_722" formatted="false">已复制：%s</string>
+    <string name="extra_723" formatted="false">复制地址</string>
+    <string name="extra_724" formatted="false">已添加到直连：%s</string>
+    <string name="extra_725" formatted="false">已添加到代理：%s</string>
+    <string name="extra_726" formatted="false">已拦截：%s</string>
+    <string name="extra_727" formatted="false">已加载 %d 个 Tor 网桥（WebTunnel · obfs4 · Vanilla）！</string>
+    <string name="extra_728" formatted="false">获取 Tor 网桥列表失败</string>
+    <string name="extra_729" formatted="false">需要功能导览吗？</string>
+    <string name="extra_730" formatted="false">了解连接方式、快速自动选节点和应用分流。自动选择会通过服务器检测 HTTPS，并在监控模式下于节点失效时自动切换。您随时可以在主页关闭它。</string>
+    <string name="extra_731" formatted="false">开始导览</string>
+    <string name="extra_732" formatted="false">跳过导览继续</string>
+    <string name="extra_733" formatted="false">快速设置</string>
+    <string name="extra_734" formatted="false">确认您的地区和路由模式。将跳过详细导览。</string>
+    <string name="extra_735" formatted="false">智能模式将本地流量直连以提升速度；全局模式会加密 100% 的流量。</string>
+    <string name="extra_736" formatted="false">服务器与连接</string>
+    <string name="extra_737" formatted="false">igareck 的 Tor TOP-100 网桥</string>
+    <string name="extra_738" formatted="false">无需自建 VPS 的开箱即用方案</string>
+    <string name="extra_739" formatted="false">受限地区通常会封锁普通 Tor 入口节点。此网桥池包含经过验证的 WebTunnel（HTTPS 伪装）和 obfs4 网桥，可绕过深度包检测。</string>
+    <string name="extra_740" formatted="false">刷新 TOP-100 网桥</string>
+    <string name="extra_741" formatted="false">下载 Tor TOP-100 网桥</string>
+    <string name="extra_742" formatted="false">正在从 GitHub 获取并验证网桥…</string>
+    <string name="extra_743" formatted="false">默认模式：Tor</string>
+    <string name="extra_744" formatted="false">设置完成后直接通过 Tor 连接</string>
+    <string name="extra_745" formatted="false">应用</string>
+    <string name="extra_746" formatted="false">语言</string>
+    <string name="extra_747" formatted="false">规则地区</string>
+    <string name="extra_748" formatted="false">路由模式</string>
+    <string name="extra_749" formatted="false">VPN 链接</string>
+    <string name="extra_750" formatted="false">准备导入</string>
+    <string name="extra_751" formatted="false">备份</string>
+    <string name="extra_752" formatted="false">已选择备份文件</string>
+    <string name="extra_753" formatted="false">Tor 网桥</string>
+    <string name="extra_754" formatted="false">%d 个 TOP-100 网桥</string>
+    <string name="extra_755" formatted="false">启动模式</string>
+    <string name="extra_756" formatted="false">应用</string>
+    <string name="extra_757" formatted="false">设置完成后，您可以通过二维码从手机传输配置。</string>
+    <string name="extra_758" formatted="false">完成并连接</string>
+    <string name="extra_759" formatted="false">跳过</string>
+    <string name="extra_760" formatted="false">交互式教程</string>
+    <string name="extra_761" formatted="false">安全演示 · 不会更改真实设置</string>
+    <string name="extra_762" formatted="false">任务</string>
+    <string name="extra_763" formatted="false">演示模式</string>
+    <string name="extra_764" formatted="false">连接 VPN</string>
+    <string name="extra_765" formatted="false">德国</string>
+    <string name="extra_766" formatted="false">荷兰</string>
+    <string name="extra_767" formatted="false">延迟</string>
+    <string name="extra_768" formatted="false">速度</string>
+    <string name="extra_769" formatted="false">添加服务器 (+)</string>
+    <string name="extra_770" formatted="false">从链接（剪贴板）</string>
+    <string name="extra_771" formatted="false">扫描二维码</string>
+    <string name="extra_772" formatted="false">德国 (VLESS)</string>
+    <string name="extra_773" formatted="false">示例服务器已添加 ✓</string>
+    <string name="extra_774" formatted="false">100 个已验证网桥就绪</string>
+    <string name="extra_775" formatted="false">绕过严格的 DPI 封锁</string>
+    <string name="extra_776" formatted="false">快速导入 TOP-100（igareck 网桥）</string>
+    <string name="extra_777" formatted="false">来自 igareck 仓库的最新网桥（WebTunnel、obfs4）。</string>
+    <string name="extra_778" formatted="false">正在从 GitHub 下载 100 个 igareck 网桥…</string>
+    <string name="extra_779" formatted="false">网桥传输类型：</string>
+    <string name="extra_780" formatted="false">自动 · 100</string>
+    <string name="extra_781" formatted="false">突破封锁原理</string>
+    <string name="extra_782" formatted="false">WebTunnel 将流量伪装成普通 HTTPS 网页流量，obfs4 则进行混淆，从而顺利通过 DPI 检测！</string>
+    <string name="extra_783" formatted="false">仅选定应用使用 VPN</string>
+    <string name="extra_784" formatted="false">网页浏览器（Chrome / Firefox）</string>
+    <string name="extra_785" formatted="false">外观与主题</string>
+    <string name="extra_786" formatted="false">做得好！本课已完成。</string>
+    <string name="extra_787" formatted="false">点击“继续”进入下一步。</string>
+    <string name="extra_788" formatted="false">点击演示屏幕上高亮显示的控件</string>
+    <string name="extra_789" formatted="false">将相机对准服务商的二维码。实际使用时客户端会在本机即时解析配置。</string>
+    <string name="extra_790" formatted="false">示例配置</string>
+    <string name="extra_791" formatted="false">复制 VLESS/Shadowsocks 服务器或订阅链接，粘贴到输入框并点击添加。</string>
+    <string name="extra_792" formatted="false">添加示例</string>
+    <string name="extra_793" formatted="false">快速选择服务器</string>
+    <string name="extra_794" formatted="false">德国（法兰克福）</string>
+    <string name="extra_795" formatted="false">荷兰（阿姆斯特丹）</string>
+    <string name="extra_796" formatted="false">点击</string>
+    <string name="extra_797" formatted="false">测速流量配额已用尽。%s 后可进行新测速。您可以在负载均衡设置中提高配额。</string>
+    <string name="extra_798" formatted="false">最多 10 个节点 · 每次刷新在流量配额内最多测速 6 个节点</string>
+    <string name="extra_799" formatted="false">未测速</string>
+    <string name="extra_800" formatted="false">“%s”：错误（%s 不可用）</string>
+    <string name="extra_801" formatted="false">已恢复 %d 个服务器</string>
+    <string name="extra_802" formatted="false">已恢复 %d 个预设节点</string>
+    <string name="extra_803" formatted="false">赛博朋克</string>
+    <string name="extra_804" formatted="false">交互式导览</string>
+    <string name="extra_805" formatted="false">打开应用时自动连接</string>
+    <string name="extra_806" formatted="false">进入应用时自动启动已选的 VPN 或 Tor 模式</string>
+    <string name="extra_807" formatted="false">支持项目</string>
+    <string name="extra_808" formatted="false">自愿捐赠有助于 SplateVPN 的持续开发。感谢您的支持！</string>
+    <string name="extra_809" formatted="false">通过 DonationAlerts 捐赠</string>
+    <string name="extra_810" formatted="false">个人服务器</string>
+    <string name="extra_811" formatted="false">订阅</string>
+    <string name="extra_812" formatted="false">服务器 (%d)</string>
+    <string name="extra_813" formatted="false">添加</string>
+    <string name="extra_814" formatted="false">停止</string>
+    <string name="extra_815" formatted="false">延迟测试</string>
+    <string name="extra_816" formatted="false">搜索服务器…</string>
+    <string name="extra_817" formatted="false">未找到匹配的服务器</string>
+    <string name="extra_818" formatted="false">暂无可用服务器</string>
+    <string name="extra_819" formatted="false">添加服务器或订阅</string>
+    <string name="extra_820" formatted="false">节点 (%d)</string>
+    <string name="extra_821" formatted="false">测试订阅延迟</string>
+    <string name="extra_822" formatted="false">显示更多 (%d)</string>
+    <string name="extra_823" formatted="false">界面模式</string>
+    <string name="extra_824" formatted="false">简洁模式</string>
+    <string name="extra_825" formatted="false">极简界面：连接按钮、服务器选择和基础防护。</string>
+    <string name="extra_826" formatted="false">完整功能：服务器、路由规则、Tor、负载均衡、DNS 和诊断工具。</string>
+</resources>

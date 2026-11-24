@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_camera_private">اسکن آفلاین · بدون ارسال تصویر</string>
+    <string name="qr_camera_zoom_ratio">%1$.1f×</string>
+    <string name="qr_camera_light">چراغ</string>
+    <string name="setup_country_suggested">کشور پیشنهادی: %1$s</string>
+    <string name="setup_country_network">بر اساس کشور شبکهٔ تلفن همراه و فقط روی دستگاه. این گزینه قوانین مسیریابی محلی را تعیین می‌کند، نه کشور سرور VPN. می‌توانید آن را تغییر دهید.</string>
+    <string name="setup_country_sim">بر اساس کشور سیم‌کارت و فقط روی دستگاه. این گزینه قوانین مسیریابی محلی را تعیین می‌کند، نه کشور سرور VPN. می‌توانید آن را تغییر دهید.</string>
+    <string name="setup_country_device">بر اساس منطقهٔ دستگاه. این گزینه قوانین مسیریابی محلی را تعیین می‌کند، نه کشور سرور VPN. می‌توانید آن را تغییر دهید.</string>
+    <string name="setup_tour_title">کنترل‌های اصلی را امتحان کنید</string>
+    <string name="setup_tour_demo">این بخش نمایشی است؛ لمس گزینه‌ها VPN را وصل نمی‌کند و تنظیمات را تغییر نمی‌دهد.</string>
+    <string name="setup_tour_quick">انتخاب سریع</string>
+    <string name="setup_tour_import">افزودن سرور</string>
+    <string name="setup_tour_settings">تنظیمات</string>
+    <string name="setup_tour_server_card">کارت سرور را در صفحهٔ اصلی لمس کنید</string>
+    <string name="setup_tour_quick_help">انتخاب سریع، سرورهای جایگزینِ اخیراً بررسی‌شده را نشان می‌دهد. سرور دیگری را در زیر انتخاب کنید. فهرست کامل در زبانهٔ سرورها است.</string>
+    <string name="setup_tour_germany">آلمان</string>
+    <string name="setup_tour_netherlands">هلند</string>
+    <string name="setup_tour_ping">%1$s میلی‌ثانیه</string>
+    <string name="setup_tour_ping_note">نتایج نمونه هستند. تأخیر کمتر به پاسخ‌گویی کمک می‌کند، اما سرعت دانلود یا دسترسی به همهٔ سرویس‌ها را تضمین نمی‌کند.</string>
+    <string name="setup_tour_add_server">یک کد QR یا پیوند کافی است</string>
+    <string name="setup_tour_link">پیوند</string>
+    <string name="setup_tour_qr_help">واردکردن QR را باز کنید، دوربین را مقابل کد بگیرید یا تصویر ذخیره‌شده را انتخاب کنید. کد روی دستگاه خوانده می‌شود.</string>
+    <string name="setup_tour_link_help">در زبانهٔ سرورها، افزودن را بزنید و پیوند سرور یا اشتراک را وارد کنید. اشتراک فهرستی از سرورها دارد که می‌توان آن را به‌روز کرد.</string>
+    <string name="setup_tour_protocols">VLESS، Hysteria 2 و Tor چه هستند؟</string>
+    <string name="setup_tour_protocol_help">VLESS و Hysteria 2 پروتکل اتصال هستند و پیوند واردشده پارامترهای لازم را دارد. Tor شبکه‌ای جداگانه است و گاهی به پل نیاز دارد؛ اتصال نخست ممکن است طولانی‌تر شود.</string>
+    <string name="setup_tour_routing">مسیریابی</string>
+    <string name="setup_tour_dns">DNS</string>
+    <string name="setup_tour_appearance">ظاهر</string>
+    <string name="setup_tour_routing_help">تونل کامل، ترافیک را از VPN عبور می‌دهد. مسیریابی هوشمند استثناها، از جمله منطقهٔ انتخابی را اعمال می‌کند. قوانین برنامه تعیین می‌کنند کدام برنامه‌ها از تونل استفاده کنند.</string>
+    <string name="setup_tour_dns_help">DNS نشانی سایت را پیدا می‌کند. اگر تونل وصل است ولی سایت‌ها باز نمی‌شوند، پیش از تغییر گزینه‌های پیشرفته از عیب‌یابی اتصال استفاده کنید.</string>
+    <string name="setup_tour_appearance_help">پوسته و جلوه‌ها را انتخاب کنید. در دستگاه‌های کندتر می‌توانید پویانمایی، پس‌زمینهٔ تزئینی یا درخشش شیشه را خاموش کنید.</string>
+</resources>

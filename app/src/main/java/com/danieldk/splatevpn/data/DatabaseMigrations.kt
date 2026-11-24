@@ -5,6 +5,44 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DatabaseMigrations {
+    val MIGRATION_10_11 = object : Migration(10, 11) {
+        override fun migrate(db: SupportSQLiteDatabase) { db.execSQL("ALTER TABLE servers ADD COLUMN amneziaWg TEXT") }
+    }
+
+    val MIGRATION_9_10 = object : Migration(9, 10) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS backup_import_commit (slot INTEGER NOT NULL PRIMARY KEY, token TEXT NOT NULL)")
+        }
+    }
+
+    val MIGRATION_8_9 = object : Migration(8, 9) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN publisherMetadataJson TEXT NOT NULL DEFAULT ''")
+        }
+    }
+    val MIGRATION_7_8 = object : Migration(7, 8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE servers ADD COLUMN lastVerifiedAt INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE servers ADD COLUMN lastVerificationFailedAt INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE servers ADD COLUMN isRetained INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE servers ADD COLUMN retainedAt INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN retainWorkingNodes INTEGER NOT NULL DEFAULT 1")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN retainedNodeCount INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN useSubscriptionRules INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN importedRulesJson TEXT NOT NULL DEFAULT ''")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN importedRulesSkipped INTEGER NOT NULL DEFAULT 0")
+        }
+    }
+    val MIGRATION_6_7 = object : Migration(6, 7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN lastAttemptAt INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN lastError TEXT NOT NULL DEFAULT ''")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN lastFailureRetryable INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE subscriptions ADD COLUMN previousNodeCount INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("CREATE TABLE IF NOT EXISTS subscription_updates (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, subscriptionId TEXT NOT NULL, attemptedAt INTEGER NOT NULL, successful INTEGER NOT NULL, previousNodeCount INTEGER NOT NULL, nodeCount INTEGER NOT NULL, error TEXT NOT NULL, retryable INTEGER NOT NULL)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS index_subscription_updates_subscriptionId_attemptedAt ON subscription_updates (subscriptionId, attemptedAt)")
+        }
+    }
     private const val TAG = "DatabaseMigrations"
 
     private fun addColumnIfNotExists(

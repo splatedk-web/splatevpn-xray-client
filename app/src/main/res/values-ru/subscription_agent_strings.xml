@@ -1,0 +1,5 @@
+<resources>
+    <string name="subscription_agent_title">Клиент для подписки: %1$s</string>
+    <string name="subscription_agent_auto">Автоматически</string>
+    <string name="subscription_agent_hint">Меняет User-Agent при загрузке этой подписки. Передача HWID настраивается отдельно.</string>
+</resources>

@@ -1,5 +1,14 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+import com.danieldk.splatevpn.ui.components.SplateRadioButton as RadioButton
+import com.danieldk.splatevpn.ui.components.SplateCheckbox as Checkbox
+
+import com.danieldk.splatevpn.ui.components.SplateButton as Button
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -21,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +48,7 @@ import com.danieldk.splatevpn.ui.components.liquidGlass
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 import com.danieldk.splatevpn.ui.theme.appRouting
+import com.danieldk.splatevpn.ui.theme.contentColorOn
 
 data class AppItem(val name: String, val packageName: String, val icon: Bitmap?)
 
@@ -80,6 +91,9 @@ internal fun AppRoutingContent(
     val valid = mode.canApply(selected)
     val accent = if (mode == AppRoutingMode.EXCLUDE) colors.accentAmber else colors.accentCyan
     val bottomInset = 8.dp + if (WindowInsets.ime.getBottom(LocalDensity.current) > 0) 0.dp else LocalBottomDockInset.current
+    val density = LocalDensity.current
+    var actionHeightPx by remember { mutableIntStateOf(0) }
+    val listBottomPadding = if (dirty) maxOf(bottomInset + 64.dp, with(density) { actionHeightPx.toDp() } + 16.dp) else bottomInset + 16.dp
     val matching = remember(apps, search) {
         apps.filter { search.isBlank() || it.name.contains(search, true) || it.packageName.contains(search, true) }
     }
@@ -92,16 +106,16 @@ internal fun AppRoutingContent(
     }
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-        Column(Modifier.widthIn(max = 680.dp).fillMaxSize().imePadding()) {
+        Box(Modifier.widthIn(max = 680.dp).fillMaxSize().imePadding()) {
             LazyColumn(
-                modifier = Modifier.weight(1f).fillMaxWidth().testTag("appRoutingList"),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp, bottom = 16.dp),
+                modifier = Modifier.fillMaxSize().testTag("appRoutingList"),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 20.dp, bottom = listBottomPadding),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item("header") {
                     PageHeader(strings.title, strings.subtitle, trailing = {
                         IconButton(onClick = onRefresh, enabled = !isLoadingApps,
-                            modifier = Modifier.size(48.dp).liquidGlass(cornerRadius = 12)) {
+                            modifier = Modifier.size(48.dp).liquidGlass(cornerRadius = 12).tvFocusOutline(!isLoadingApps)) {
                             if (isLoadingApps) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp, color = accent)
                             else Icon(Icons.Default.Refresh, common.refresh, tint = colors.textSecondary)
                         }
@@ -112,7 +126,7 @@ internal fun AppRoutingContent(
                         Text(strings.modeHeading, color = colors.textPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                         if (!modesExpanded) {
                             Row(Modifier.fillMaxWidth().testTag("appModeSelector").liquidGlass(cornerRadius = 18)
-                                .clickable(role = Role.Button) { modesExpanded = true }.padding(16.dp),
+                                .tvFocusOutline().clickable(role = Role.Button) { modesExpanded = true }.padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically) {
                                 Column(Modifier.weight(1f)) {
                                     Text(strings.title(mode), color = colors.textPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
@@ -125,7 +139,7 @@ internal fun AppRoutingContent(
                             AppRoutingMode.entries.forEachIndexed { index, option ->
                                 if (index > 0) HorizontalDivider(color = colors.borderSubtle, modifier = Modifier.padding(horizontal = 16.dp))
                                 Row(Modifier.fillMaxWidth().testTag("appMode${option.name}")
-                                    .selectable(selected = mode == option, role = Role.RadioButton, onClick = { draftName = option.name; modesExpanded = false })
+                                    .tvFocusOutline().selectable(selected = mode == option, role = Role.RadioButton, onClick = { draftName = option.name; modesExpanded = false })
                                     .padding(horizontal = 12.dp, vertical = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically) {
                                     RadioButton(selected = mode == option, onClick = null,
@@ -197,15 +211,11 @@ internal fun AppRoutingContent(
                     }
                 }
             }
-            Column(Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = bottomInset)
-                .liquidGlass(cornerRadius = 16).padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(if (dirty) strings.pending else strings.saved, color = if (dirty) accent else colors.textPrimary,
-                    fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                Text(if (isConnected) strings.connectedHint else strings.disconnectedHint,
-                    color = colors.textSecondary, fontSize = 11.sp, lineHeight = 16.sp)
+            if (dirty) Column(Modifier.align(Alignment.BottomCenter).fillMaxWidth().onSizeChanged { actionHeightPx = it.height }.padding(start = 16.dp, end = 16.dp, bottom = bottomInset)
+                .liquidGlass(cornerRadius = 16).padding(horizontal = 8.dp, vertical = 4.dp)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (dirty) TextButton(onClick = ::discard, modifier = Modifier.weight(1f).testTag("appRoutingDiscard")) {
-                        Text(strings.discard, fontSize = 12.sp)
+                        Text(LocalAppStrings.current.cancel, fontSize = 12.sp)
                     }
                     Button(onClick = { onApply(mode, selected) }, enabled = dirty && valid,
                         modifier = Modifier.weight(1f).heightIn(min = 48.dp).testTag("appRoutingApply"),
@@ -225,7 +235,7 @@ fun AppRow(modifier: Modifier = Modifier, app: AppItem, isChecked: Boolean, uses
     val accent = if (excludeMode) colors.accentAmber else colors.accentCyan
     Row(modifier.fillMaxWidth().testTag("app:${app.packageName}").liquidGlass(cornerRadius = 14,
         accentBorder = if (isChecked) accent.copy(alpha = .45f) else null)
-        .toggleable(isChecked, role = Role.Checkbox, onValueChange = { onToggle() }).padding(12.dp),
+        .tvFocusOutline().toggleable(isChecked, role = Role.Checkbox, onValueChange = { onToggle() }).padding(12.dp),
         verticalAlignment = Alignment.CenterVertically) {
         if (app.icon != null) Image(app.icon.asImageBitmap(), null, Modifier.size(36.dp).clip(RoundedCornerShape(9.dp)))
         else Box(Modifier.size(36.dp).background(colors.surfaceElevated, RoundedCornerShape(9.dp)), contentAlignment = Alignment.Center) {
@@ -238,7 +248,7 @@ fun AppRow(modifier: Modifier = Modifier, app: AppItem, isChecked: Boolean, uses
             Text(app.packageName, color = colors.textTertiary, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         Spacer(Modifier.width(8.dp))
-        Checkbox(isChecked, onCheckedChange = null, colors = CheckboxDefaults.colors(checkedColor = accent, checkmarkColor = colors.onAccent))
+        Checkbox(isChecked, onCheckedChange = null, colors = CheckboxDefaults.colors(checkedColor = accent, checkmarkColor = contentColorOn(accent)))
     }
 }
 

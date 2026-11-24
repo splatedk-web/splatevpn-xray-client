@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_appname" formatted="false">SplateVPN</string>
+    <string name="app_cancel" formatted="false">Отмена</string>
+    <string name="app_save" formatted="false">Сохранить</string>
+    <string name="app_delete" formatted="false">Удалить</string>
+    <string name="app_close" formatted="false">Закрыть</string>
+    <string name="app_add" formatted="false">Добавить</string>
+    <string name="app_refresh" formatted="false">Обновить</string>
+    <string name="app_edit" formatted="false">Редактировать</string>
+    <string name="app_tabcontrol" formatted="false">Главная</string>
+    <string name="app_tabnodes" formatted="false">Серверы</string>
+    <string name="app_tabrouting" formatted="false">Приложения</string>
+    <string name="app_tabconfig" formatted="false">Настройки</string>
+    <string name="app_standbyunprotected" formatted="false">Ожидание • не защищено</string>
+    <string name="app_encryptedsession" formatted="false">Подключено • %s</string>
+    <string name="app_resolvinglocation" formatted="false">Определение местоположения…</string>
+    <string name="app_protectedgateway" formatted="false">Защищённый туннель</string>
+    <string name="app_egressip" formatted="false">Внешний IP: %s</string>
+    <string name="app_ping" formatted="false">Пинг</string>
+    <string name="app_download" formatted="false">Скачивание</string>
+    <string name="app_upload" formatted="false">Отправка</string>
+    <string name="app_routingprofile" formatted="false">Профиль маршрутизации</string>
+    <string name="app_smartroute" formatted="false">Умный маршрут</string>
+    <string name="app_smartroutedesc" formatted="false">Местные сервисы напрямую</string>
+    <string name="app_globaltunnel" formatted="false">Весь трафик</string>
+    <string name="app_globaltunneldesc" formatted="false">Все назначения через VPN</string>
+    <string name="app_activegateway" formatted="false">Активный сервер</string>
+    <string name="app_autofastest" formatted="false">Авто: выкл</string>
+    <string name="app_pingnoresponse" formatted="false">Нет ответа</string>
+    <string name="app_pinguntested" formatted="false">Не проверен</string>
+    <string name="app_pinging" formatted="false">Пинг...</string>
+    <string name="app_noserverselected" formatted="false">Сервер не выбран</string>
+    <string name="app_taptochoosenode" formatted="false">Нажмите для выбора сервера</string>
+    <string name="app_coreconnected" formatted="false">Подключено</string>
+    <string name="app_coreconnect" formatted="false">Подключить</string>
+    <string name="app_latencylabel" formatted="false">Пинг</string>
+    <string name="app_downlinklabel" formatted="false">Приём</string>
+    <string name="app_uplinklabel" formatted="false">Отдача</string>
+    <string name="app_coresubtitle" formatted="false">Xray %s</string>
+    <string name="app_stateselectingserver" formatted="false">Поиск сервера...</string>
+    <string name="app_corediscselect" formatted="false">Поиск...</string>
+    <string name="app_statestartingcore" formatted="false">Запуск ядра...</string>
+    <string name="app_stateconnecting" formatted="false">Подключение...</string>
+    <string name="app_statehealthchecking" formatted="false">Проверка связи...</string>
+    <string name="app_statereconnecting" formatted="false">Переподключение...</string>
+    <string name="app_statefailed" formatted="false">Сбой подключения</string>
+    <string name="app_corediscboot" formatted="false">Запуск...</string>
+    <string name="app_coredisclink" formatted="false">Соединение...</string>
+    <string name="app_corediscverify" formatted="false">Проверка...</string>
+    <string name="app_corediscretry" formatted="false">Повтор...</string>
+    <string name="app_corediscerror" formatted="false">Ошибка</string>
+    <string name="app_tagsplittunnel" formatted="false">Раздельный</string>
+    <string name="app_tagfullencap" formatted="false">Глобальный</string>
+    <string name="app_searchservers" formatted="false">Поиск по имени, IP, протоколу...</string>
+    <string name="app_noserversmatchingquery" formatted="false">Серверы по запросу не найдены</string>
+    <string name="app_linkcopied" formatted="false">Ссылка скопирована в буфер</string>
+    <string name="app_sessiondownloaded" formatted="false">Получено</string>
+    <string name="app_sessionuploaded" formatted="false">Отправлено</string>
+    <string name="app_networknodes" formatted="false">Серверы</string>
+    <string name="app_presetserverstitle" formatted="false">Предустановленные</string>
+    <string name="app_availablenodes" formatted="false">ДОСТУПНО: %d / %d</string>
+    <string name="app_pingall" formatted="false">Проверить все</string>
+    <string name="app_pastelink" formatted="false">Вставить ссылку</string>
+    <string name="app_subs" formatted="false">ПОДПИСКИ (%d)</string>
+    <string name="app_allchip" formatted="false">Все (%d)</string>
+    <string name="app_builtinchip" formatted="false">⚡ Предустановленные</string>
+    <string name="app_noserversfound" formatted="false">Нет доступных серверов.\nДобавьте ссылку или подписку.</string>
+    <string name="app_noserversinfilter" formatted="false">В этой категории нет серверов</string>
+    <string name="app_addservertitle" formatted="false">Добавить сервер</string>
+    <string name="app_addserverprompt" formatted="false">Вставьте vless://, trojan://, vmess:// или ss:// ссылку:</string>
+    <string name="app_serveraddedsuccess" formatted="false">Сервер успешно добавлен!</string>
+    <string name="app_invalidlinkformat" formatted="false">Неверный формат ссылки</string>
+    <string name="app_editservertitle" formatted="false">Настройки сервера</string>
+    <string name="app_serverupdatedsuccess" formatted="false">Параметры сервера сохранены!</string>
+    <string name="app_managesubstitle" formatted="false">Управление подписками</string>
+    <string name="app_activesubsheader" formatted="false">Активные подписки:</string>
+    <string name="app_serverscountsub" formatted="false">%d серверов</string>
+    <string name="app_subbuiltintag" formatted="false">Предустановленная</string>
+    <string name="app_subupdatedsuccess" formatted="false">Обновлено: %d серверов</string>
+    <string name="app_subdeletedsuccess" formatted="false">Подписка удалена</string>
+    <string name="app_addnewsubheader" formatted="false">Добавить новую подписку:</string>
+    <string name="app_servertoolsfolders" formatted="false">Папки</string>
+    <string name="app_servertoolslist" formatted="false">Список</string>
+    <string name="app_servertoolsgrouping" formatted="false">Группировка серверов</string>
+    <string name="app_servertoolsgrouped" formatted="false">Группировка по источникам</string>
+    <string name="app_servertoolsungrouped" formatted="false">Общий список узлов</string>
+    <string name="app_servertoolssort" formatted="false">Порядок</string>
+    <string name="app_servertoolssortdescription" formatted="false">Сортировка по задержке</string>
+    <string name="app_servertoolsauto" formatted="false">Авто</string>
+    <string name="app_servertoolstest" formatted="false">Проверить</string>
+    <string name="app_serverspagetitle" formatted="false">Серверы</string>
+    <string name="app_presetspagetitle" formatted="false">Предустановки</string>
+    <string name="app_serverspagesubtitle" formatted="false">Выбор сервера и проверка задержки</string>
+    <string name="app_subscriptionspagesubtitle" formatted="false">Источники и обновление списков серверов</string>
+    <string name="app_personalpagesubtitle" formatted="false">Ваши собственные конфигурации VPN</string>
+    <string name="app_subscriptionstitle" formatted="false">Подписки</string>
+    <string name="app_subscriptionssearch" formatted="false">Поиск по имени или URL…</string>
+    <string name="app_subscriptionsnoresults" formatted="false">Подписки не найдены</string>
+    <string name="app_subscriptiondetails" formatted="false">Настройки подписки</string>
+    <string name="app_subscriptionname" formatted="false">Название</string>
+    <string name="app_subscriptionurl" formatted="false">URL подписки</string>
+    <string name="app_subscriptionurlinvalid" formatted="false">Введите корректную ссылку на подписку</string>
+    <string name="app_subscriptionedithint" formatted="false">Изменение ссылки применяется при следующем обновлении. Существующие узлы сохраняются.</string>
+    <string name="app_subscriptionautoupdate" formatted="false">Автообновление</string>
+    <string name="app_subscriptionmanual" formatted="false">Вручную</string>
+    <string name="app_subscriptionscheduleoff" formatted="false">Общее расписание отключено в настройках</string>
+    <string name="app_subscriptionschedule" formatted="false">Обновление каждые %s</string>
+    <string name="app_subscriptionupdateall" formatted="false">Обновить все</string>
+    <string name="app_subscriptionrefreshsummary" formatted="false">Обновлено подписок: %d. Ошибок: %d.</string>
+    <string name="app_subscriptionnoupdates" formatted="false">Нет включённых подписок для обновления</string>
+    <string name="app_subscriptionbuiltin" formatted="false">Встроенная</string>
+    <string name="app_subscriptiondisabled" formatted="false">Отключена</string>
+    <string name="app_subscriptionnodes" formatted="false">Узлы (%d)</string>
+    <string name="app_subscriptiondeletetitle" formatted="false">Удалить подписку?</string>
+    <string name="app_subscriptiondeletemessage" formatted="false">Удалить «%s» и все её узлы (%d)?</string>
+    <string name="app_subscriptionnever" formatted="false">Никогда</string>
+    <string name="app_subscriptionjustnow" formatted="false">Только что</string>
+    <string name="app_subscriptionminutesago" formatted="false">%d мин назад</string>
+    <string name="app_subscriptionhoursago" formatted="false">%d ч назад</string>
+    <string name="app_subscriptionstab" formatted="false">Подписки (%d/%d)</string>
+    <string name="app_personalnodestab" formatted="false">Личные (%d)</string>
+    <string name="app_subscriptionenabledmessage" formatted="false">«%s»: включена</string>
+    <string name="app_subscriptiondisabledmessage" formatted="false">«%s»: отключена, узлы скрыты</string>
+    <string name="app_subscriptionautoenabledmessage" formatted="false">Автообновление включено</string>
+    <string name="app_subscriptionautodisabledmessage" formatted="false">Автообновление выключено</string>
+    <string name="app_subscriptionnodeslabel" formatted="false">Узлы</string>
+    <string name="app_subscriptionslabel" formatted="false">Подписки</string>
+    <string name="app_personalnodeslabel" formatted="false">Личные</string>
+    <string name="app_uipause" formatted="false">Пауза</string>
+    <string name="app_uiresume" formatted="false">Продолжить</string>
+    <string name="app_uiclear" formatted="false">Очистить</string>
+    <string name="app_uimonitoring" formatted="false">Мониторинг</string>
+    <string name="app_uipaused" formatted="false">Приостановлено</string>
+    <string name="app_uinomatches" formatted="false">Ничего не найдено по запросу</string>
+    <string name="app_uinopersonal" formatted="false">Нет личных конфигураций</string>
+    <string name="app_uipersonalhint" formatted="false">Вставьте ссылку vless://, vmess://, trojan:// или shadowsocks:// из буфера обмена или QR-кода.</string>
+    <string name="app_uiaddconfig" formatted="false">Добавить конфигурацию</string>
+    <string name="app_uinosubscriptions" formatted="false">Нет подписок</string>
+    <string name="app_uisubscriptionhint" formatted="false">Подписка позволяет автоматически обновлять десятки узлов по одной ссылке.</string>
+    <string name="app_uiaddsubscription" formatted="false">Добавить подписку</string>
+    <string name="app_uirestorepresets" formatted="false">Восстановить встроенные подписки</string>
+    <string name="app_uipresetsempty" formatted="false">Встроенные подписки ещё не загружены или были удалены.</string>
+    <string name="app_uipersonalsearch" formatted="false">Поиск по личным…</string>
+    <string name="app_uipresetsearch" formatted="false">Поиск по предустановленным…</string>
+    <string name="app_uiallactive" formatted="false">Все активные (%d)</string>
+    <string name="app_uipersonalservers" formatted="false">Личные серверы</string>
+    <string name="app_uisubscriptionprefix" formatted="false">Подписка: %s</string>
+    <string name="app_uidisablednodeshidden" formatted="false">Отключена — узлы скрыты</string>
+    <string name="app_uiexpand" formatted="false">Развернуть</string>
+    <string name="app_uicollapse" formatted="false">Свернуть</string>
+    <string name="app_uipresettag" formatted="false">Предустановленный • %s</string>
+    <string name="app_uisubscriptiontag" formatted="false">Подписка • %s</string>
+    <string name="app_uipersonaltag" formatted="false">Личный конфиг</string>
+    <string name="app_uiactions" formatted="false">Действия</string>
+    <string name="app_uiautoselect" formatted="false">Автовыбор</string>
+    <string name="app_uifastest" formatted="false">быстрейший</string>
+    <string name="app_uioff" formatted="false">выключен</string>
+    <string name="app_uipingsummary" formatted="false">«%s»: проверено %d узлов</string>
+    <string name="app_uicamera" formatted="false">Камера</string>
+    <string name="app_uiautoimport" formatted="false">Автоимпорт</string>
+    <string name="app_uilinkhint" formatted="false">vless://…, vmess://… или https://…</string>
+    <string name="app_uipresetharvester" formatted="false">Harvester (Рабочие узлы)</string>
+    <string name="app_uipresetcidr" formatted="false">Белый список (CIDR RU)</string>
+    <string name="app_uipresetuniversal" formatted="false">Белый список (Universal)</string>
+    <string name="app_approutingconnected" formatted="false">VPN подключён. Для приложений действуют выбранные правила маршрутизации.</string>
+    <string name="app_approutingdisconnected" formatted="false">VPN отключён. Подключитесь на главной вкладке, чтобы применить маршрутизацию.</string>
+    <string name="app_fieldaddresserror" formatted="false">Введите домен или IP-адрес без протокола, пути и пробелов</string>
+    <string name="app_fieldporterror" formatted="false">Укажите порт от 1 до 65535</string>
+    <string name="app_fieldpassword" formatted="false">Пароль</string>
+    <string name="app_fieldsnihint" formatted="false">domain.com (для Cloudflare/TLS)</string>
+    <string name="app_fieldhosthint" formatted="false">HTTP-заголовок Host</string>
+    <string name="app_tlspresetstandard" formatted="false">Стандарт</string>
+    <string name="app_tlspresetaggressive" formatted="false">Мелкие фрагменты (50–100)</string>
+    <string name="app_tlspresetcustom" formatted="false">Свой</string>
+    <string name="app_tlscustomtitle" formatted="false">Фрагментация TLS</string>
+    <string name="app_tlsparameterssummary" formatted="false">Параметры: length=%s, interval=%s ms, packets=%s</string>
+    <string name="app_sharelannotready" formatted="false">Раздача ещё не готова. Когда появится реальный адрес точки доступа или USB-модема, здесь будут доступны адреса и команды подключения.</string>
+    <string name="app_sharelancopyenable" formatted="false">Скопировать команду включения</string>
+    <string name="app_sharelandisable" formatted="false">Выключить прокси</string>
+    <string name="app_uicopied" formatted="false">Скопировано</string>
+    <string name="app_uicopy" formatted="false">Копировать</string>
+    <string name="app_lanendpointusb" formatted="false">USB-модем (%s)</string>
+    <string name="app_lanendpointhotspot" formatted="false">Точка доступа Wi-Fi (%s)</string>
+    <string name="app_lanendpointwifi" formatted="false">Сеть Wi-Fi (%s)</string>
+    <string name="app_lanendpointother" formatted="false">Интерфейс %s</string>
+    <string name="app_subnameplaceholder" formatted="false">Название (например: Мой VPN)</string>
+    <string name="app_suburlplaceholder" formatted="false">https://example.com/sub/...</string>
+    <string name="app_subloading" formatted="false">Загрузка серверов...</string>
+    <string name="app_splashsubtitle" formatted="false">Безопасный прокси-туннель</string>
+    <string name="app_splashinitializing" formatted="false">Инициализация серверов...</string>
+    <string name="app_subaddedsuccess" formatted="false">Добавлено серверов: %d</string>
+    <string name="app_errorprefix" formatted="false">Ошибка: %s</string>
+    <string name="app_autoselectselected" formatted="false">Выбран: %s</string>
+    <string name="app_fieldname" formatted="false">Название сервера</string>
+    <string name="app_fieldprotocol" formatted="false">Протокол</string>
+    <string name="app_fieldaddress" formatted="false">Адрес / IP</string>
+    <string name="app_fieldport" formatted="false">Порт</string>
+    <string name="app_fieldnetwork" formatted="false">Транспорт / Сеть (type)</string>
+    <string name="app_fieldsecurity" formatted="false">Безопасность (security)</string>
+    <string name="app_fieldsni" formatted="false">SNI домен</string>
+    <string name="app_fieldpath" formatted="false">Путь (path / serviceName)</string>
+    <string name="app_fieldhost" formatted="false">Host заголовок</string>
+    <string name="app_fielduuid" formatted="false">UUID / Пароль</string>
+    <string name="app_fieldpublickey" formatted="false">Публичный ключ (pbk / Reality)</string>
+    <string name="app_fieldshortid" formatted="false">Short ID (sid)</string>
+    <string name="app_fieldspiderx" formatted="false">SpiderX (spx)</string>
+    <string name="app_fieldfingerprint" formatted="false">Fingerprint (fp)</string>
+    <string name="app_approutingtitle" formatted="false">Приложения</string>
+    <string name="app_approutingsubtitle" formatted="false">Выберите приложения, для которых действуют правила VPN</string>
+    <string name="app_proxiedappscount" formatted="false">ПРИЛОЖЕНИЯ В VPN: %d / %d</string>
+    <string name="app_selectedappscount" formatted="false">Выбрано: %d</string>
+    <string name="app_proxymodeall" formatted="false">Все приложения</string>
+    <string name="app_proxymodealldesc" formatted="false">При подключении VPN для всех приложений действуют выбранные правила маршрутизации</string>
+    <string name="app_proxymodeselected" formatted="false">Выборочный режим (Per-App)</string>
+    <string name="app_proxymodeselecteddesc" formatted="false">Только отмеченные приложения идут через VPN</string>
+    <string name="app_globalmodeactive" formatted="false">Выбраны все приложения</string>
+    <string name="app_allappsprotected" formatted="false">Правила VPN применяются ко всем приложениям</string>
+    <string name="app_searchapps" formatted="false">Поиск приложений...</string>
+    <string name="app_statusproxied" formatted="false">В VPN</string>
+    <string name="app_statusdirect" formatted="false">Напрямую</string>
+    <string name="app_statusbypassed" formatted="false">В обход</string>
+    <string name="app_perappmodeinclude" formatted="false">Только выбранные</string>
+    <string name="app_perappmodeincludedesc" formatted="false">Через VPN идут только отмеченные приложения</string>
+    <string name="app_perappmodeexclude" formatted="false">Все, кроме выбранных (Обход)</string>
+    <string name="app_perappmodeexcludedesc" formatted="false">Отмеченные приложения (банки, Госуслуги) пойдут в обход VPN</string>
+    <string name="app_perappmodeheader" formatted="false">Режим раздельного туннелирования</string>
+    <string name="app_settingstitle" formatted="false">Настройки</string>
+    <string name="app_settingssubtitle" formatted="false">Конфигурация обхода блокировок, оформления и ядра</string>
+    <string name="app_sectionappearance" formatted="false">Оформление и интерфейс</string>
+    <string name="app_themetitle" formatted="false">Тема оформления</string>
+    <string name="app_themesubtitle" formatted="false">Цветовая палитра и визуальный стиль</string>
+    <string name="app_themedark" formatted="false">Тёмная</string>
+    <string name="app_themeamoled" formatted="false">AMOLED</string>
+    <string name="app_themelight" formatted="false">Светлая</string>
+    <string name="app_themesystem" formatted="false">Системная</string>
+    <string name="app_themewinter" formatted="false">Зима тёмная</string>
+    <string name="app_themewinterlight" formatted="false">Зима светлая</string>
+    <string name="app_themered" formatted="false">Red</string>
+    <string name="app_themeaurora" formatted="false">Северное сияние</string>
+    <string name="app_themeocean" formatted="false">Океан</string>
+    <string name="app_themesakura" formatted="false">Сакура</string>
+    <string name="app_themepony" formatted="false">Пони</string>
+    <string name="app_themewinx" formatted="false">Винкс · Блум</string>
+    <string name="app_glasstransparencytitle" formatted="false">Прозрачность карточек</string>
+    <string name="app_glasstransparencysubtitle" formatted="false">Прозрачность карточек и нижнего дока. Текст и кнопки остаются чёткими.</string>
+    <string name="app_glassblurtitle" formatted="false">Размытие фона</string>
+    <string name="app_glassblursubtitle" formatted="false">Блюр за карточками и нижним доком. Прозрачность регулируется отдельно.</string>
+    <string name="app_glassdefault" formatted="false">По умолчанию</string>
+    <string name="app_glassmoresolid" formatted="false">Плотнее</string>
+    <string name="app_glassmoreclear" formatted="false">Прозрачнее</string>
+    <string name="app_glasslegacyhint" formatted="false">Размытие фона доступно на Android 12 и новее.</string>
+    <string name="app_themeshowall" formatted="false">Показать все темы (%d)</string>
+    <string name="app_themeshowless" formatted="false">Свернуть темы</string>
+    <string name="app_themecurrent" formatted="false">Выбрана: %s</string>
+    <string name="app_themesunset" formatted="false">Закат</string>
+    <string name="app_languagetitle" formatted="false">Язык приложения</string>
+    <string name="app_languagesubtitle" formatted="false">Выбор языка интерфейса</string>
+    <string name="app_langru" formatted="false">Русский</string>
+    <string name="app_langen" formatted="false">English</string>
+    <string name="app_langsystem" formatted="false">Системный</string>
+    <string name="app_sectionautomation" formatted="false">Автоматизация и подписки</string>
+    <string name="app_autoselecttitle" formatted="false">Автовыбор сервера</string>
+    <string name="app_autoselectsubtitle" formatted="false">Автоматически проверять пинг и подключаться к самому быстрому серверу.</string>
+    <string name="app_autoupdatetitle" formatted="false">Автообновление подписок</string>
+    <string name="app_autoupdatesubtitle" formatted="false">Периодичность фонового обновления серверов</string>
+    <string name="app_intervaloff" formatted="false">Выкл</string>
+    <string name="app_interval6h" formatted="false">6 ч</string>
+    <string name="app_interval12h" formatted="false">12 ч</string>
+    <string name="app_interval24h" formatted="false">24 ч</string>
+    <string name="app_updateallsubsnow" formatted="false">Обновить все подписки сейчас</string>
+    <string name="app_updating" formatted="false">Обновление...</string>
+    <string name="app_updatedcount" formatted="false">Обновлено подписок: %d</string>
+    <string name="app_sectionrouting" formatted="false">Маршрутизация и обход блокировок</string>
+    <string name="app_dnsprovidertitle" formatted="false">Основной DNS</string>
+    <string name="app_dnsprovidersubtitle" formatted="false">Основной DNS. Местный DNS зависит от региона и режима. Для ИИ есть отдельные настройки. Свой DNS браузера может иметь приоритет.</string>
+    <string name="app_xhttpmodetitle" formatted="false">Режим XHTTP (SplitHTTP)</string>
+    <string name="app_xhttpmodesubtitle" formatted="false">Способ передачи запросов XHTTP. Обычно достаточно режима auto; другие режимы должны поддерживаться сервером.</string>
+    <string name="app_fakednstitle" formatted="false">FakeDNS (198.18.0.0/15)</string>
+    <string name="app_fakednssubtitle" formatted="false">Выдаёт виртуальные IP-адреса, а домены разрешает через Xray.</string>
+    <string name="app_blockquictitle" formatted="false">Блокировка QUIC (UDP 443)</string>
+    <string name="app_blockquicsubtitle" formatted="false">Блокирует UDP на порту 443. Приложения с поддержкой TCP могут перейти на него.</string>
+    <string name="app_sniffingtitle" formatted="false">Определение доменов</string>
+    <string name="app_sniffingsubtitle" formatted="false">Определяет домен по SNI или HTTP Host для правил маршрутизации. HTTPS-трафик не расшифровывается.</string>
+    <string name="app_blockipv6title" formatted="false">Защита от утечек IPv6</string>
+    <string name="app_blockipv6subtitle" formatted="false">Блокирует весь IPv6-трафик, попадающий в VPN.</string>
+    <string name="app_bypassaititle" formatted="false">Разблокировка нейросетей (AI)</string>
+    <string name="app_bypassaisubtitle" formatted="false">SmartDNS: выбранный DNS и прямой маршрут. VPN: через VPN-сервер.</string>
+    <string name="app_aidnsprovidertitle" formatted="false">SmartDNS для нейросетей</string>
+    <string name="app_aidnsproviderhint" formatted="false">Выбирается отдельно от общего DNS. Доступность Gemini и ChatGPT зависит от провайдера SmartDNS, сети и аккаунта.</string>
+    <string name="app_aitlsfragmenttitle" formatted="false">TLS-фрагментация SmartDNS</string>
+    <string name="app_aitlsfragmenthint" formatted="false">Дополнительный режим для сетей с фильтрацией TLS. По умолчанию выключен: некоторые прокси Gemini с ним несовместимы.</string>
+    <string name="app_adblockertitle" formatted="false">Блокировщик рекламы</string>
+    <string name="app_adblockersubtitle" formatted="false">Блокирует рекламные домены и трекеры в трафике через VPN: Яндекс, VK / Mail.ru и другие сети. Встроенная реклама в ленте VK и видео YouTube может оставаться.</string>
+    <string name="app_sectioncore" formatted="false">Ядро XRAY-core</string>
+    <string name="app_coreversion" formatted="false">Версия ядра</string>
+    <string name="app_corearch" formatted="false">Архитектура</string>
+    <string name="app_coretunnel" formatted="false">Туннель</string>
+    <string name="app_coreprotocols" formatted="false">Протоколы</string>
+    <string name="app_corefakedns" formatted="false">FakeDNS Pool</string>
+    <string name="app_sectiondiagnostics" formatted="false">Диагностика и отладка</string>
+    <string name="app_diagnosticsdesc" formatted="false">Журнал работы ядра Xray, событий VPN и сетевых ошибок. Позволяет скопировать или отправить диагностический отчёт.</string>
+    <string name="app_openlogsbutton" formatted="false">Открыть журнал</string>
+    <string name="app_logsdialogtitle" formatted="false">Журнал событий</string>
+    <string name="app_copyreport" formatted="false">Скопировать отчёт</string>
+    <string name="app_sharereport" formatted="false">Поделиться</string>
+    <string name="app_clearlogs" formatted="false">Очистить логи</string>
+    <string name="app_reportcopied" formatted="false">Отчёт скопирован в буфер обмена!</string>
+    <string name="app_recordscount" formatted="false">Записей</string>
+    <string name="app_logscleared" formatted="false">Логи очищены</string>
+    <string name="app_logsempty" formatted="false">Логи отсутствуют</string>
+    <string name="app_logsfilterall" formatted="false">Все</string>
+    <string name="app_logsfiltererrors" formatted="false">Ошибки</string>
+    <string name="app_logsfilterxray" formatted="false">Xray</string>
+    <string name="app_logsfiltervpn" formatted="false">VPN Служба</string>
+    <string name="app_logssearchhint" formatted="false">Поиск по логам и ключевым словам...</string>
+    <string name="app_logsautoscroll" formatted="false">Автопрокрутка</string>
+    <string name="app_logsclose" formatted="false">Закрыть журнал</string>
+    <string name="app_logscopiedline" formatted="false">Строка лога скопирована</string>
+    <string name="app_logsstatstotal" formatted="false">Всего</string>
+    <string name="app_logsstatserrors" formatted="false">Ошибки</string>
+    <string name="app_logsstatswarnings" formatted="false">Внимание</string>
+    <string name="app_sectioncustomroutes" formatted="false">Кастомные маршруты по домену</string>
+    <string name="app_customroutessubtitle" formatted="false">Введите домен и выберите режим: напрямую, через VPN или заблокировать</string>
+    <string name="app_customroutesdomainhint" formatted="false">example.com или domain:example.com</string>
+    <string name="app_customroutesaddbtn" formatted="false">Добавить маршрут</string>
+    <string name="app_customroutesempty" formatted="false">Кастомных маршрутов нет</string>
+    <string name="app_customroutessaved" formatted="false">Маршрут добавлен</string>
+    <string name="app_customroutesremoved" formatted="false">Маршрут удален</string>
+    <string name="app_customroutedirect" formatted="false">Напрямую</string>
+    <string name="app_customrouteproxy" formatted="false">Через VPN</string>
+    <string name="app_customrouteblock" formatted="false">Блокировать</string>
+    <string name="app_updateavailabletitle" formatted="false">Доступно обновление</string>
+    <string name="app_updateavailabledesc" formatted="false">Версия %s готова к загрузке</string>
+    <string name="app_updatedownload" formatted="false">Скачать</string>
+    <string name="app_updatedownloadandinstall" formatted="false">Скачать и установить</string>
+    <string name="app_updateinstall" formatted="false">Установить</string>
+    <string name="app_updatedownloading" formatted="false">Загрузка обновления...</string>
+    <string name="app_updatedownloaded" formatted="false">Обновление готово к установке</string>
+    <string name="app_updatetaptoinstall" formatted="false">Нажмите для установки</string>
+    <string name="app_updatechangelog" formatted="false">Что нового</string>
+    <string name="app_updatescrollhint" formatted="false">Листайте вниз для подробностей ↓</string>
+    <string name="app_updateexpandnotes" formatted="false">Развернуть</string>
+    <string name="app_updatecollapsenotes" formatted="false">Свернуть</string>
+    <string name="app_updatepermissionrequired" formatted="false">Разрешите установку приложений для SplateVPN</string>
+    <string name="app_updatefailed" formatted="false">Ошибка скачивания обновления</string>
+    <string name="app_updateretry" formatted="false">Повторить</string>
+    <string name="app_updatecheck" formatted="false">Проверить обновления</string>
+    <string name="app_updatechecking" formatted="false">Проверка...</string>
+    <string name="app_updatelatest" formatted="false">У вас установлена последняя версия</string>
+    <string name="app_liveconnectionstitle" formatted="false">Монитор соединений</string>
+    <string name="app_liveconnectionssubtitle" formatted="false">Маршрутизация трафика по доменам и IP в реальном времени</string>
+    <string name="app_liveconnectionshudbadge" formatted="false">Соединения</string>
+    <string name="app_liveconnectionssearchplaceholder" formatted="false">Поиск домена или IP адреса...</string>
+    <string name="app_filterall" formatted="false">Все</string>
+    <string name="app_filterproxy" formatted="false">Прокси</string>
+    <string name="app_filterdirect" formatted="false">Прямые</string>
+    <string name="app_filterblock" formatted="false">Блок</string>
+    <string name="app_filterdns" formatted="false">DNS</string>
+    <string name="app_clearconnections" formatted="false">Очистить список</string>
+    <string name="app_noconnectionsyet" formatted="false">Нет активных соединений</string>
+    <string name="app_noconnectionsdesc" formatted="false">Подключите VPN для отслеживания входящих и исходящих потоков трафика в реальном времени</string>
+    <string name="app_liveconnectionscount" formatted="false">%d активных узлов</string>
+    <string name="app_liveconnectionssummary" formatted="false">%d узлов • %d запросов</string>
+    <string name="app_connectionoutboundlabel" formatted="false">Маршрут</string>
+    <string name="app_connectiondestlabel" formatted="false">Назначение</string>
+    <string name="app_connectionprotocollabel" formatted="false">Протокол</string>
+    <string name="app_autoconnectonboottitle" formatted="false">Автозапуск при старте</string>
+    <string name="app_autoconnectonbootsubtitle" formatted="false">Автоматически подключать VPN при включении устройства</string>
+    <string name="app_batteryoptimizationtitle" formatted="false">Работа в фоне (Батарея)</string>
+    <string name="app_batteryoptimizationdisabled" formatted="false">Оптимизация отключена — служба защищена от закрытия</string>
+    <string name="app_batteryoptimizationprompt" formatted="false">Нажмите для отключения ограничений батареи</string>
+    <string name="app_batterysettingsopenerror" formatted="false">Не удалось открыть настройки батареи</string>
+    <string name="app_pingmodetitle" formatted="false">Режим пинга (Ping Mode)</string>
+    <string name="app_pingmodesubtitle" formatted="false">Метод проверки доступности серверов</string>
+    <string name="app_pingmoderealdelay" formatted="false">Real Delay</string>
+    <string name="app_pingmodetcp" formatted="false">TCP Ping</string>
+    <string name="app_pingmodeicmp" formatted="false">Icmp</string>
+    <string name="app_pingmoderealdelaydesc" formatted="false">HTTP 204 через туннель — проверяет реальную проходимость данных и выявляет блокировки ТСПУ</string>
+    <string name="app_pingmodetcpdesc" formatted="false">Быстрое измерение сетевой задержки подключения к IP и порту сервера</string>
+    <string name="app_pingmodeicmpdesc" formatted="false">Прямой ICMP эхо-запрос к хосту сервера (может блокироваться фаерволом)</string>
+    <string name="app_tlsfragmenttitle" formatted="false">Фрагментация пакетов TLS (Fragment)</string>
+    <string name="app_tlsfragmentsubtitle" formatted="false">Дробит пакеты рукопожатия TLS на фрагменты 100-200 байт с микрозадержкой. Защищает от блокировок ТСПУ/DPI по SNI даже на незамаскированных TLS-серверах.</string>
+    <string name="app_killswitchactive" formatted="false">Защита включена</string>
+    <string name="app_killswitchalwaysonly" formatted="false">Только постоянная VPN</string>
+    <string name="app_killswitchoff" formatted="false">Блокировка выключена</string>
+    <string name="app_killswitchunknown" formatted="false">Статус не подтверждён</string>
+    <string name="app_killswitchunknownhint" formatted="false">Android не предоставил статус защиты. Он может быть недоступен без активного туннеля. Проверьте параметры VPN в настройках Android.</string>
+    <string name="app_killswitchbody" formatted="false">При включении Android блокирует подключения без VPN, в том числе при остановке приложения.</string>
+    <string name="app_killswitchstepone" formatted="false">Откройте параметры %s в списке VPN Android.</string>
+    <string name="app_killswitchsteptwo" formatted="false">Включите «Постоянная VPN».</string>
+    <string name="app_killswitchstepthree" formatted="false">Включите «Блокировать соединения без VPN».</string>
+    <string name="app_killswitchconfigure" formatted="false">Настроить защиту</string>
+    <string name="app_killswitchmanage" formatted="false">Управление защитой</string>
+    <string name="app_killswitchexcludedapps" formatted="false">Приложения, исключённые из VPN, потеряют доступ к интернету при включённой блокировке.</string>
+    <string name="app_killswitchtitle" formatted="false">Kill Switch</string>
+    <string name="app_sectionappupdates" formatted="false">Обновления приложения</string>
+    <string name="app_sectionquicksettings" formatted="false">Быстрые настройки (шторка)</string>
+    <string name="app_quicksettingsdesc" formatted="false">Плитка быстрого переключения VPN прямо из верхней шторки уведомлений Android без необходимости открывать приложение.</string>
+    <string name="app_quicksettingsaddtile" formatted="false">Добавить плитку в шторку</string>
+    <string name="app_quicksettingstileadded" formatted="false">Плитка SplateVPN успешно добавлена в шторку!</string>
+    <string name="app_quicksettingstilealreadyadded" formatted="false">Плитка SplateVPN уже есть в шторке</string>
+    <string name="app_quicksettingsmanualprompt" formatted="false">Опустите шторку уведомлений дважды, нажмите значок карандаша (Редактировать) и перетащите плитку SplateVPN на панель.</string>
+    <string name="app_sectionbackuprestore" formatted="false">Резервное копирование и восстановление</string>
+    <string name="app_backuprestoredesc" formatted="false">Сохраните серверы, подписки, правила и настройки в JSON-файл или восстановите их из резервной копии.</string>
+    <string name="app_exportbtn" formatted="false">Экспорт</string>
+    <string name="app_importbtn" formatted="false">Импорт</string>
+    <string name="app_backupexportsuccess" formatted="false">Конфигурация успешно экспортирована!</string>
+    <string name="app_backupexporterror" formatted="false">Ошибка экспорта: %s</string>
+    <string name="app_backupimportsuccess" formatted="false">Успешно импортировано серверов: %d</string>
+    <string name="app_backupimporterror" formatted="false">Ошибка импорта: %s</string>
+    <string name="app_autorestorebtn" formatted="false">Восстановить автоматическую копию</string>
+    <string name="app_autorestoresuccess" formatted="false">Успешно восстановлено серверов: %d</string>
+    <string name="app_autorestorenotfound" formatted="false">Автоматическая резервная копия не найдена или пуста</string>
+    <string name="app_autoselecton" formatted="false">⚡ авто: вкл</string>
+    <string name="app_speedtesttitle" formatted="false">Тест скорости</string>
+    <string name="app_speedtestdesc" formatted="false">Замер реальной скорости загрузки через VPN</string>
+    <string name="app_speedtestrunning" formatted="false">ТЕСТИРОВАНИЕ: %d%%</string>
+    <string name="app_speedtestspeedunit" formatted="false">Мбит/с</string>
+    <string name="app_speedtestresult" formatted="false">СКОРОСТЬ: %s Мбит/с</string>
+    <string name="app_speedtestlatency" formatted="false">Отклик HTTPS: %s мс</string>
+    <string name="app_speedtesterror" formatted="false">Ошибка теста: %s</string>
+    <string name="app_serversaddedcount" formatted="false">Добавлено серверов: %d</string>
+    <string name="app_qrscanerror" formatted="false">Ошибка сканирования: %s</string>
+    <string name="app_scanqr" formatted="false">Сканировать QR</string>
+    <string name="app_copylink" formatted="false">Копировать ссылку</string>
+    <string name="app_autoselectbalancer" formatted="false">Автовыбор сервера</string>
+    <string name="app_activenodeprefix" formatted="false">Активен: %s</string>
+    <string name="app_autoselectbalancerdesc" formatted="false">Выбор и замена сервера по настройкам подключения</string>
+    <string name="app_onupper" formatted="false">Вкл</string>
+    <string name="app_offupper" formatted="false">Выкл</string>
+    <string name="app_filterselected" formatted="false">Выбранные</string>
+    <string name="app_selectall" formatted="false">Все</string>
+    <string name="app_resetall" formatted="false">Сброс</string>
+    <string name="app_unifiedaddtitle" formatted="false">Добавить сервер или подписку</string>
+    <string name="app_unifiedaddsubtitle" formatted="false">Вставьте ссылку VLESS/VMess/SS/Trojan или URL подписки</string>
+    <string name="app_pastefromclipboard" formatted="false">Вставить из буфера</string>
+    <string name="app_scanqrcode" formatted="false">Сканировать QR</string>
+    <string name="app_clipboardempty" formatted="false">Буфер обмена пуст</string>
+    <string name="app_detectedsubscription" formatted="false">🔗 Ссылка на подписку</string>
+    <string name="app_detectedservernode" formatted="false">⚡ Конфигурация сервера</string>
+    <string name="app_detectedmultiplenodes" formatted="false">📦 Найдено серверов: %d</string>
+    <string name="app_emptyserverscta" formatted="false">Добавить первый сервер или подписку</string>
+    <string name="app_emptyservershint" formatted="false">Вставьте ссылку из буфера обмена или сканируйте QR-код для начала работы</string>
+    <string name="app_importaction" formatted="false">Импортировать</string>
+    <string name="app_subnameoptional" formatted="false">Название подписки (необязательно)</string>
+    <string name="app_addserverorsub" formatted="false">Добавить сервер или подписку</string>
+    <string name="app_subquotaused" formatted="false">Использовано: %s из %s</string>
+    <string name="app_subquotaremaining" formatted="false">Осталось %s из %s</string>
+    <string name="app_subquotaunlimited" formatted="false">Без лимита трафика</string>
+    <string name="app_subexpiredate" formatted="false">Истекает: %s</string>
+    <string name="app_subexpired" formatted="false">Срок подписки истёк</string>
+    <string name="app_shareservertitle" formatted="false">Экспорт сервера</string>
+    <string name="app_shareqrprompt" formatted="false">Отсканируйте камерой другого устройства</string>
+    <string name="app_sharecopylink" formatted="false">Копировать ссылку</string>
+    <string name="app_sharesend" formatted="false">Поделиться</string>
+    <string name="app_shareaction" formatted="false">Поделиться / QR</string>
+    <string name="app_sharepayloadtoolarge" formatted="false">Конфигурация слишком велика для QR-кода (%d байт). Скопируйте ссылку или поделитесь текстом.</string>
+    <string name="app_sharesubscriptiontitle" formatted="false">Экспорт подписки</string>
+    <string name="app_sharesubqrprompt" formatted="false">Отсканируйте камерой другого устройства для импорта подписки</string>
+    <string name="app_sectionsharelan" formatted="false">Раздача VPN (Точка доступа / USB)</string>
+    <string name="app_sharelantitle" formatted="false">Раздача VPN в локальную сеть</string>
+    <string name="app_sharelansubtitle" formatted="false">Запускает HTTP и SOCKS5 прокси для подключений по Wi-Fi точке доступа и USB-модему</string>
+    <string name="app_sharelanactiveendpoints" formatted="false">Обнаруженные адреса раздачи</string>
+    <string name="app_sharelannoendpoints" formatted="false">Точка доступа или USB-модем не обнаружены. Включите раздачу в настройках телефона.</string>
+    <string name="app_sharelaninstructionsbtn" formatted="false">Как подключить телефон или компьютер</string>
+    <string name="app_sharelanhttpproxy" formatted="false">HTTP Прокси (Windows / Mac / ТВ)</string>
+    <string name="app_sharelansocksproxy" formatted="false">SOCKS5 Прокси</string>
+    <string name="app_sharelancopied" formatted="false">Адрес прокси скопирован: %s</string>
+    <string name="app_sharelandialogtitle" formatted="false">Подключение ПК и устройств через телефон</string>
+    <string name="app_sharelanstep1" formatted="false">1. Включите на телефоне Точку доступа Wi-Fi или USB-модем и подключите к нему компьютер/ноутбук.</string>
+    <string name="app_sharelanstep2" formatted="false">2. Убедитесь, что VPN в SplateVPN подключен.</string>
+    <string name="app_sharelanstep3windows" formatted="false">3. В Windows откройте Параметры → Сеть и Интернет → Прокси-сервер → Настройка вручную. Укажите IP телефона и HTTP-порт из настроек раздачи.</string>
+    <string name="app_sharelanstep3mac" formatted="false">4. В macOS или Linux откройте настройки сетевого прокси. Для HTTP и HTTPS укажите IP телефона и HTTP-порт из настроек раздачи.</string>
+    <string name="app_sharelanstep3telegram" formatted="false">5. В Telegram откройте Настройки → Данные и память → Прокси. Добавьте SOCKS5 с IP телефона и SOCKS5-портом из настроек раздачи. При включённой авторизации укажите логин splate и пароль раздачи.</string>
+    <string name="app_sharelanwindowstitle" formatted="false">Настройка на Windows (Wi-Fi или USB)</string>
+    <string name="app_sharelanwindowssettingsguide" formatted="false">В Windows 10/11: Параметры ➔ Сеть и Интернет ➔ Прокси-сервер ➔ Настройка вручную ➔ включите «Использовать прокси-сервер».</string>
+    <string name="app_sharelanwindowsinetcplguide" formatted="false">Либо нажмите Win+R ➔ введите inetcpl.cpl ➔ вкладка «Подключения» ➔ «Настройка сети».</string>
+    <string name="app_sharelanwindowsproxystring" formatted="false">Строка прокси (HTTP / HTTPS):</string>
+    <string name="app_sharelanwindowsexceptions" formatted="false">Исключения для локальных адресов (не проксировать):</string>
+    <string name="app_sharelanwindowsexceptionsvalue" formatted="false">localhost;127.*;10.*;192.168.*;172.16.*</string>
+    <string name="app_sharelanwindowscmdenable" formatted="false">Включить прокси в PowerShell:</string>
+    <string name="app_sharelanwindowscmddisable" formatted="false">Выключить прокси в PowerShell:</string>
+    <string name="app_sharelanexceptionscopied" formatted="false">Исключения скопированы</string>
+    <string name="app_sharelancommandcopied" formatted="false">Команда для Windows скопирована</string>
+    <string name="app_tlsfragmentpresettitle" formatted="false">Профиль фрагментации</string>
+    <string name="app_tlsfragmentpresetstandard" formatted="false">Стандарт (100-200, 10-20)</string>
+    <string name="app_tlsfragmentpresetaggressive" formatted="false">Агрессивный (50-100, 20-40, 1-3)</string>
+    <string name="app_tlsfragmentpresetcustom" formatted="false">Пользовательский</string>
+    <string name="app_tlsfragmentlengthlabel" formatted="false">Размер фрагментов (байт)</string>
+    <string name="app_tlsfragmentintervallabel" formatted="false">Интервал (мс)</string>
+    <string name="app_tlsfragmentpacketslabel" formatted="false">Пакеты</string>
+    <string name="app_dnscustom" formatted="false">Свой DoH DNS</string>
+    <string name="app_dnscustomurlhint" formatted="false">https://dns.nextdns.io/...</string>
+    <string name="app_dnscustomurldialogtitle" formatted="false">Пользовательский DNS-over-HTTPS</string>
+    <string name="app_muxtitle" formatted="false">Мультиплексирование (Mux)</string>
+    <string name="app_muxsubtitle" formatted="false">Объединение TCP-потоков в один туннель (ускоряет открытие страниц, несовместимо с Vision)</string>
+    <string name="app_muxconcurrencylabel" formatted="false">Параллельных сессий</string>
+</resources>

@@ -3,6 +3,7 @@ package com.danieldk.splatevpn.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,15 @@ internal data class LayerArt(val resource: Int, val aspect: Float, val parts: Li
 private fun part(l: Float, t: Float, r: Float, b: Float, polygon: List<Offset> = emptyList()) = ArtPart(Rect(l,t,r,b), polygon)
 
 internal fun themeLayerArtFor(style: BackdropStyle): LayerArt = when(style) {
+    BackdropStyle.GRID -> LayerArt(R.drawable.theme_cyberpunk_layers_v2, 1.50f, listOf(
+        part(0f,0f,.60f,.58f), part(.60f,0f,1f,.57f),
+        part(0f,.58f,.61f,1f), part(.53f,.64f,1f,.82f)
+    ), listOf(
+        ArtLayer(1,.88f,.94f,.58f,.92f,alpha=.65f,moveX=.004f,cycles=1,shift=.8f),
+        ArtLayer(0,.56f,1.03f,1.18f,.88f,alpha=.84f,moveX=.006f,cycles=1),
+        ArtLayer(2,.70f,1.06f,1.16f,.35f,alpha=.25f,moveX=.025f,cycles=1,shift=1.4f),
+        ArtLayer(3,.73f,.43f,.23f,.12f,alpha=.78f,moveX=.085f,moveY=.012f,cycles=2,shift=.6f)
+    ))
     BackdropStyle.SAKURA -> LayerArt(R.drawable.theme_sakura_object, 1.6f, listOf(
         part(.09f,0f,.45f,.495f), part(.50f,.04f,.98f,.49f),
         part(0f,.56f,.49f,.91f), part(.58f,.59f,.91f,.91f)
@@ -46,23 +57,14 @@ internal fun themeLayerArtFor(style: BackdropStyle): LayerArt = when(style) {
         ArtLayer(1,.89f,.40f,.65f,.32f,anchorX=.95f,pivotX=.95f,pivotY=.94f,turn=4.4f,cycles=2,shift=1.3f,alpha=.65f),
         ArtLayer(3,.41f,.72f,.14f,.14f,moveX=.045f,moveY=.055f,turn=24f,cycles=2,shift=1.1f,alpha=.7f)
     ))
-    BackdropStyle.OCEAN -> LayerArt(R.drawable.theme_ocean_object, 1.05f, listOf(
-        part(0f,.07f,.535f,.49f), part(.535f,.035f,1f,.535f),
-        part(0f,.535f,.44f,.95f), part(.58f,.58f,.92f,.92f)
+    BackdropStyle.OCEAN -> LayerArt(R.drawable.theme_ocean_layers_v2, 1.35f, listOf(
+        part(0f,.12f,.50f,.46f), part(.50f,0f,1f,.50f),
+        part(0f,.50f,.50f,1f), part(.50f,.52f,1f,.96f)
     ), listOf(
-        ArtLayer(2,.52f,.56f,.31f,.42f,moveX=.024f,moveY=.045f,turn=6f,cycles=2,shift=2.4f,alpha=.58f,breathe=.025f),
-        ArtLayer(1,.83f,.65f,.43f,.59f,moveX=.035f,moveY=.065f,turn=7f,cycles=3,shift=.4f,breathe=.04f),
-        ArtLayer(0,.53f,1f,1.03f,.56f,moveX=.012f,moveY=.012f,turn=1.8f,cycles=2,shift=.7f,alpha=.70f,breathe=.012f),
-        ArtLayer(3,.25f,.77f,.14f,.20f,moveX=.018f,moveY=.07f,cycles=3,shift=1.6f,alpha=.42f,pulse=.12f)
-    ))
-    BackdropStyle.GRID -> LayerArt(R.drawable.theme_cyberpunk_object, 1.55f, listOf(
-        part(.17f,0f,.38f,.68f),part(.63f,.07f,.88f,.66f),
-        part(0f,.68f,.52f,.98f),part(.57f,.72f,.98f,.95f)
-    ), listOf(
-        ArtLayer(0,.86f,.94f,.44f,.97f,moveX=.008f,cycles=1,alpha=.67f,pulse=.045f),
-        ArtLayer(1,.60f,.98f,.38f,.74f,moveX=.015f,cycles=1,shift=.5f,alpha=.76f,pulse=.06f),
-        ArtLayer(3,.73f,.73f,.40f,.20f,moveX=.011f,cycles=1,shift=.2f,alpha=.8f,pulse=.05f),
-        ArtLayer(2,.43f,1f,.88f,.28f,moveX=.023f,cycles=1,shift=.8f,alpha=.85f,pulse=.035f)
+        ArtLayer(0,.57f,1.10f,1.16f,.46f,alpha=.78f),
+        ArtLayer(1,.89f,1.02f,.47f,.88f,pivotX=.42f,pivotY=.95f,turn=2.8f,cycles=2,shift=.4f,alpha=.76f),
+        ArtLayer(2,.13f,1.06f,.36f,.56f,pivotY=.96f,turn=1.2f,cycles=2,shift=1.8f,alpha=.62f),
+        ArtLayer(3,.52f,.44f,.19f,.23f,pivotY=.5f,moveX=.065f,moveY=.020f,turn=2f,cycles=2,shift=2.2f,alpha=.62f)
     ))
     BackdropStyle.SUNSET -> LayerArt(R.drawable.theme_sunset_object,.90f,listOf(
         part(0f,0f,.49f,.49f),part(.48f,.16f,.99f,.45f),
@@ -77,16 +79,15 @@ internal fun themeLayerArtFor(style: BackdropStyle): LayerArt = when(style) {
     BackdropStyle.AURORA -> LayerArt(R.drawable.theme_aurora_object,1.65f,listOf(
         part(.14f,.03f,.44f,.50f),part(.62f,.03f,.91f,.50f),part(.02f,.60f,.50f,.91f)
     ),listOf(
-        ArtLayer(1,.70f,.91f,.68f,.92f,moveX=.037f,moveY=.02f,turn=5.5f,cycles=2,shift=1.4f,alpha=.35f,pulse=.09f,breathe=.04f),
-        ArtLayer(0,.79f,.88f,.56f,.96f,moveX=.028f,moveY=.016f,turn=6f,cycles=3,shift=.3f,alpha=.44f,pulse=.08f,breathe=.035f),
-        ArtLayer(2,.70f,1f,.68f,.28f,moveX=.008f,cycles=1,alpha=.62f)
+        // Broad mountain silhouette anchors the scene; aurora curtains are drawn in the sky.
+        ArtLayer(2,.50f,1f,1.20f,.58f,moveX=.003f,cycles=1,alpha=.82f)
     ))
     else -> LayerArt(R.drawable.theme_red_object,1.25f,listOf(
         part(.02f,.01f,.50f,.51f),part(.55f,.02f,.98f,.51f),part(.06f,.54f,.46f,.97f)
     ),listOf(
         // Two smaller sculptures at the edge leave the central controls and left labels quiet.
-        ArtLayer(1,.84f,.57f,.43f,.45f,pivotY=.5f,moveX=.008f,moveY=.010f,turn=4.5f,cycles=1,shift=1.8f,alpha=.40f,pulse=.02f),
-        ArtLayer(0,.79f,.98f,.47f,.48f,pivotY=.5f,moveX=.009f,moveY=.008f,turn=-3.5f,cycles=2,shift=.3f,alpha=.52f)
+        ArtLayer(1,.84f,.57f,.43f,.45f,pivotY=.5f,moveX=.022f,moveY=.028f,turn=14f,cycles=2,shift=1.8f,alpha=.64f,pulse=.035f,breathe=.025f),
+        ArtLayer(0,.79f,.98f,.47f,.48f,pivotY=.5f,moveX=.018f,moveY=.022f,turn=-12f,cycles=2,shift=.3f,alpha=.72f,breathe=.018f)
     ))
 }
 
@@ -97,16 +98,18 @@ private data class DrawLayer(val layer: ArtLayer, val source: IntOffset, val sou
 @Composable
 internal fun ThemeLayeredObjects(style: BackdropStyle, modifier: Modifier, phase: () -> Float, preview: Boolean) {
     val art = remember(style) { themeLayerArtFor(style) }
-    val bitmap = ImageBitmap.imageResource(art.resource)
-    Box(modifier.drawWithCache {
-        val sceneWidth = size.width * if(preview) .76f else .94f
-        val sceneHeight = if(preview) size.height * .98f else min(size.height * .74f, sceneWidth * art.aspect)
+    val bitmap by rememberThemeBitmap(art.resource, preview)
+    val image = bitmap ?: return
+    Box(modifier.testTag("themeLayerScene").drawWithCache {
+        val sceneWidth = size.width * if (preview) 1f else if (style == BackdropStyle.AURORA) 1.1f else 1.02f
+        val sceneHeight = if (preview) size.height * (if (style == BackdropStyle.AURORA) 1.75f else .98f)
+            else min(size.height * .82f, sceneWidth * (if (style == BackdropStyle.OCEAN) 1.35f else art.aspect))
         val sceneLeft = size.width - sceneWidth
         val sceneTop = size.height - sceneHeight - if(preview) 0f else 74.dp.toPx()
         val plans = art.layers.map { layer ->
             val part = art.parts[layer.part]
-            val source = IntOffset((part.source.left * bitmap.width).roundToInt(),(part.source.top * bitmap.height).roundToInt())
-            val sourceSize = IntSize((part.source.width * bitmap.width).roundToInt(),(part.source.height * bitmap.height).roundToInt())
+            val source = IntOffset((part.source.left * image.width).roundToInt(),(part.source.top * image.height).roundToInt())
+            val sourceSize = IntSize((part.source.width * image.width).roundToInt(),(part.source.height * image.height).roundToInt())
             val fit = min(sceneWidth * layer.width / sourceSize.width, sceneHeight * layer.height / sourceSize.height)
             val dst = IntSize((sourceSize.width * fit).roundToInt().coerceAtLeast(1),(sourceSize.height * fit).roundToInt().coerceAtLeast(1))
             val origin = Offset(sceneLeft + layer.x * sceneWidth - dst.width * layer.anchorX,sceneTop + layer.y * sceneHeight - dst.height * layer.anchorY)
@@ -132,7 +135,7 @@ internal fun ThemeLayeredObjects(style: BackdropStyle, modifier: Modifier, phase
                     rotate(wave * layer.turn, plan.pivot)
                     scale(1f + wave * layer.breathe,1f - wave * layer.breathe * .5f,plan.pivot)
                 }) {
-                    fun drawPart() { drawImage(bitmap,plan.source,plan.sourceSize,IntOffset.Zero,plan.destination,alpha=opacity,filterQuality=FilterQuality.Medium) }
+                    fun drawPart() { drawImage(image,plan.source,plan.sourceSize,IntOffset.Zero,plan.destination,alpha=opacity,filterQuality=FilterQuality.Medium) }
                     if(plan.mask == null) drawPart() else clipPath(plan.mask) { drawPart() }
                 }
             }

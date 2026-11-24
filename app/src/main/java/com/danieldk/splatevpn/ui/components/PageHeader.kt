@@ -25,7 +25,7 @@ internal fun PageHeader(
 ) {
     val colors = LocalAppThemeColors.current
     Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(title, Modifier.weight(1f, fill = false), color = colors.textPrimary,
                     fontSize = 24.sp, lineHeight = 30.sp, fontWeight = FontWeight.Bold)
@@ -36,7 +36,9 @@ internal fun PageHeader(
                             .padding(horizontal = 8.dp, vertical = 4.dp))
                 }
             }
-            Text(subtitle, color = colors.textSecondary, fontSize = 12.sp, lineHeight = 17.sp)
+            if (subtitle.isNotBlank()) {
+                Text(subtitle, color = colors.textSecondary, fontSize = 12.sp, lineHeight = 17.sp)
+            }
         }
         if (trailing != null) {
             Spacer(Modifier.width(12.dp))

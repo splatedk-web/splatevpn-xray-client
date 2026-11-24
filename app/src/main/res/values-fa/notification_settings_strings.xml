@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notice_title">اعلان‌ها</string>
+    <string name="notice_health">هشدارهای تشخیصی</string>
+    <string name="notice_connection">خطاهای اتصال</string>
+    <string name="notice_dns">مشکلات DNS</string>
+    <string name="notice_access">محدودیت دسترسی و TLS</string>
+    <string name="notice_device">پیشنهادهای شبکه و دستگاه</string>
+    <string name="notice_banner_hint">خاموش کردن هشدارها پیشنهادهای داخل برنامه را پنهان نمی‌کند. مجوز Android نیز لازم است.</string>
+    <string name="notice_status">اعلان وضعیت VPN / Tor</string>
+    <string name="notice_speed">سرعت و تأخیر</string>
+    <string name="notice_server">نام سرور</string>
+    <string name="notice_duration">مدت اتصال</string>
+    <string name="notice_required">هنگام اجرای VPN یا Tor، اعلان سرویس در Android الزامی است. نمایش و صدای آن را در تنظیمات سیستم مدیریت کنید.</string>
+    <string name="notice_android">تنظیمات اعلان Android</string>
+    <string name="recommended_title">پیشنهاد می‌شود</string>
+    <string name="recommended_optional">اختیاری است. بدون این مجوزها هم می‌توانید ادامه دهید و بعداً بازگردید.</string>
+    <string name="recommended_notifications">اجازه اعلان‌ها</string>
+    <string name="recommended_enabled">فعال است</string>
+    <string name="recommended_notifications_hint">دریافت عیب‌یابی اتصال هنگام اجرای برنامه در پس‌زمینه.</string>
+    <string name="recommended_battery">غیرفعال کردن بهینه‌سازی باتری</string>
+    <string name="recommended_battery_hint">به حفظ اتصال VPN و Tor هنگام خاموش بودن صفحه کمک می‌کند.</string>
+    <string name="recommended_background">فعالیت پس‌زمینه و شروع خودکار</string>
+    <string name="recommended_background_restricted">Android اکنون فعالیت پس‌زمینه برنامه را محدود می‌کند.</string>
+    <string name="recommended_background_hint">محدودیت‌های سازنده و شروع خودکار را در تنظیمات برنامه بررسی کنید.</string>
+    <string name="recommended_vpn">VPN همیشه روشن</string>
+    <string name="recommended_vpn_hint">اختیاری. بازیابی VPN و مسدودسازی اتصال بدون VPN را در Android تنظیم کنید.</string>
+    <string name="recommended_manage">مدیریت</string>
+    <string name="recommended_open">باز کردن تنظیمات</string>
+    <string name="recommended_open_failed">این صفحه تنظیمات در دستگاه در دسترس نیست.</string>
+    <string name="recommended_battery_enabled">بهینه‌سازی باتری غیرفعال است</string>
+</resources>

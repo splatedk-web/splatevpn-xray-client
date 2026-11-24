@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_search_failed">服务器搜索失败。请检查订阅和网络连接，然后重试。</string>
+</resources>

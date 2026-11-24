@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_connectivity_unverified_title">ارتباط از طریق VPN تأیید نشده است</string>
+    <string name="health_connectivity_unverified_description">رابط VPN ایجاد شد، اما بررسی‌های اتصال موفق نبود. علت هنوز مشخص نیست. سرور دیگری را امتحان کنید یا تنظیمات DNS را بررسی کنید.</string>
+</resources>

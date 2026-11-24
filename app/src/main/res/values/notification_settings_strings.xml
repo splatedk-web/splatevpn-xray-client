@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notice_title">Notifications</string>
+    <string name="notice_health">Diagnostic alerts</string>
+    <string name="notice_connection">Connection failures</string>
+    <string name="notice_dns">DNS problems</string>
+    <string name="notice_access">Restrictions and TLS</string>
+    <string name="notice_device">Network and device advice</string>
+    <string name="notice_banner_hint">Disabling alerts does not hide advice inside the app. Android permission is also required.</string>
+    <string name="notice_status">VPN / Tor status notification</string>
+    <string name="notice_speed">Speed and latency</string>
+    <string name="notice_server">Server name</string>
+    <string name="notice_duration">Connection duration</string>
+    <string name="notice_required">Android requires a service notification while VPN or Tor is running. Manage its visibility and sound in Android settings.</string>
+    <string name="notice_android">Notification settings in Android</string>
+    <string name="recommended_title">Recommended</string>
+    <string name="recommended_optional">Optional. You can continue without granting these permissions and return here later.</string>
+    <string name="recommended_notifications">Allow notifications</string>
+    <string name="recommended_enabled">Enabled</string>
+    <string name="recommended_notifications_hint">Receive connection diagnostics when the app is in the background.</string>
+    <string name="recommended_battery">Disable battery optimization</string>
+    <string name="recommended_battery_hint">Helps Android keep VPN and Tor running when the screen is off.</string>
+    <string name="recommended_background">Background activity and autostart</string>
+    <string name="recommended_background_restricted">Android currently restricts background activity.</string>
+    <string name="recommended_background_hint">Check manufacturer restrictions and autostart manually in app settings.</string>
+    <string name="recommended_vpn">Always-on VPN</string>
+    <string name="recommended_vpn_hint">Optional. Configure automatic VPN recovery and blocking without VPN in Android.</string>
+    <string name="recommended_manage">Manage</string>
+    <string name="recommended_open">Open settings</string>
+    <string name="recommended_open_failed">This settings page is unavailable on this device.</string>
+    <string name="recommended_battery_enabled">Battery optimization is disabled</string>
+</resources>

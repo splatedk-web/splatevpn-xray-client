@@ -153,7 +153,7 @@ class SplateQuickWidgetProvider : AppWidgetProvider() {
             } else {
                 val prepareIntent = VpnService.prepare(context)
                 if (prepareIntent != null) {
-                    val appIntent = Intent(context, MainActivity::class.java).apply {
+                    val appIntent = com.danieldk.splatevpn.InternalActivityEntry.intent(context).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         putExtra("AUTO_CONNECT", true)
                     }

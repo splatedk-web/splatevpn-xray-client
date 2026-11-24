@@ -39,13 +39,14 @@ class LanShareManager @Inject constructor(
                 val name = iface.name.lowercase()
 
                 // Игнорируем туннели VPN и сотовые интерфейсы
-                if (name.startsWith("tun") || name.startsWith("rmnet") || name.startsWith("dummy") || name.startsWith("p2p")) {
+                if (iface.isVirtual || !(name.startsWith("wlan") || name.startsWith("ap") || name.contains("softap") ||
+                    name.startsWith("rndis") || name.startsWith("usb") || name.startsWith("ncm") || name.startsWith("eth"))) {
                     continue
                 }
 
                 val addresses = iface.inetAddresses
                 for (addr in addresses) {
-                    if (addr is Inet4Address && !addr.isLoopbackAddress) {
+                    if (addr is Inet4Address && !addr.isLoopbackAddress && addr.isSiteLocalAddress) {
                         val host = addr.hostAddress ?: continue
                         // Игнорируем link-local (169.254.x.x)
                         if (host.startsWith("169.254.")) continue

@@ -22,4 +22,39 @@ class BoundedNetworkTaskTest {
         job.cancelAndJoin()
         assertFalse(returned)
     }
+
+    @Test fun errorInsideTaskImmediatelyUnblocksContinuationWithoutWaitingTimeout() = runBlocking {
+        val started = System.currentTimeMillis()
+        var caught: Throwable? = null
+        try {
+            BoundedNetworkTask.run(4000) {
+                throw AssertionError("Simulated JVM assertion error")
+            }
+        } catch (t: Throwable) {
+            caught = t
+        }
+        val elapsed = System.currentTimeMillis() - started
+        assertNotNull(caught)
+        assertTrue(caught is AssertionError)
+        assertTrue("Expected rapid completion, took: $elapsed ms", elapsed < 2000)
+    }
+
+    @Test fun hungTaskDoesNotBlockConcurrentProbes() = runBlocking {
+        val latch = java.util.concurrent.CountDownLatch(1)
+        val hungJob = launch(Dispatchers.IO) {
+            BoundedNetworkTask.run(200) {
+                latch.countDown()
+                Thread.sleep(3000)
+                "hung"
+            }
+        }
+        assertTrue(latch.await(1, java.util.concurrent.TimeUnit.SECONDS))
+        val normalResult = withTimeout(1000) {
+            BoundedNetworkTask.run(500) {
+                "active"
+            }
+        }
+        assertEquals("active", normalResult)
+        hungJob.join()
+    }
 }

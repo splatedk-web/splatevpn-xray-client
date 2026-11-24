@@ -29,6 +29,10 @@
     native <methods>;
 }
 -keep class com.v2ray.ang.service.TProxyService { *; }
+-keep class com.v2ray.ang.service.TProxyService$FlowIdentityResolver { *; }
+-keepclassmembers class * implements com.v2ray.ang.service.TProxyService$FlowIdentityResolver {
+    public java.lang.String resolve(int,java.lang.String,int,java.lang.String,int);
+}
 -keepclassmembers class com.v2ray.ang.service.TProxyService {
     private static native <methods>;
     public static native <methods>;

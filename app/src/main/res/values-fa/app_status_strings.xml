@@ -1,0 +1,9 @@
+<resources>
+    <string name="about_app_version">نسخه برنامه</string>
+    <string name="about_transports">روش‌های انتقال</string>
+    <string name="update_result_available">به‌روزرسانی %1$s پیدا شد</string>
+    <string name="update_result_current">از آخرین نسخه استفاده می‌کنید</string>
+    <string name="update_result_wifi">برای بررسی به‌روزرسانی به وای‌فای متصل شوید</string>
+    <string name="update_result_failed">بررسی به‌روزرسانی انجام نشد. دوباره تلاش کنید.</string>
+    <string name="server_ping_result">%1$s · بررسی‌شده: %2$d · در دسترس: %3$d</string>
+</resources>

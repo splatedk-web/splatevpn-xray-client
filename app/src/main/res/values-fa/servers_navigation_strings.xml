@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_back">بازگشت</string>
+    <string name="server_stop_checks_short">توقف</string>
+    <string name="server_stop_checks">توقف بررسی</string>
+    <string name="server_check_servers">بررسی گره‌ها</string>
+    <string name="server_folder_options">گزینه‌های پوشه</string>
+</resources>

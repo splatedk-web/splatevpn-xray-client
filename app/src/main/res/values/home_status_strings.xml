@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_searching">No servers found. Searching…</string>
+    <string name="connection_waiting_network">Waiting for network. Searching for servers…</string>
+    <string name="connection_core_failed">Xray core failed to start</string>
+    <string name="connection_tun_failed">Could not create the VPN interface</string>
+    <string name="connection_timeout">Connection timed out</string>
+    <string name="connection_tor_limit">Tor reconnect limit reached</string>
+    <string name="connection_tor_changed">Tor configuration changed</string>
+    <string name="connection_tor_failed">Tor reconnect failed</string>
+    <string name="folder_update">Update subscription</string>
+    <string name="folder_ping">Test ping</string>
+    <string name="preset_lte_name">Allowlist (LTE Checked)</string>
+    <string name="preset_black_name">Blacklist (Black VLESS)</string>
+    <string name="release_translating">Translating release notes… The language model may need to download.</string>
+    <string name="release_translation_failed">Translation is unavailable. Showing the original text.</string>
+    <string name="release_original">Show original</string>
+    <string name="release_translated">Show translation</string>
+    <string name="release_machine_translation">Automatic translation</string>
+</resources>

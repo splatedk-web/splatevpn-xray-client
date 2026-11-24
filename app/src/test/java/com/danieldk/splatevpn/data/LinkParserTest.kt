@@ -5,6 +5,85 @@ import org.junit.Test
 import java.util.Base64
 
 class LinkParserTest {
+    @Test fun vlessServerDescriptionIsSeparateFromTheName() {
+        val link = "vless://00000000-0000-0000-0000-000000000001@example.com:443?type=ws#Gcore?serverDescription=Q0RO"
+        val node = requireNotNull(LinkParser.parse(link))
+        assertEquals("Gcore", node.name)
+        assertEquals("CDN", LinkParser.vlessServerDescription(node.rawLink))
+        assertEquals("Gcore" to "CDN", LinkParser.splitVlessLabel("Gcore?serverDescription=Q0RO"))
+        assertEquals("Gcore" to "CDN", LinkParser.splitVlessLabel("Gcore?serverDescription=UTBSTw=="))
+        assertEquals("CDN", LinkParser.jsonServerDescription("""{"meta":{"serverDescription":"**CDN**"}}"""))
+        assertEquals("Q0RO", LinkParser.jsonServerDescription("""{"meta":{"serverDescription":"Q0RO"}}"""))
+        assertEquals("Gcore" to "CDN", LinkParser.splitVlessLabel("Gcore?serverDescription=KipDRE4qKg=="))
+        assertEquals("Gcore?serverDescription=??" to null, LinkParser.splitVlessLabel("Gcore?serverDescription=??"))
+    }
+
+    @Test fun socksSharingKeepsUserPasswordEncodingAndIpv6Endpoint() {
+        val source = ServerNode("socks", "Proxy name", "socks", "2001:db8::1", 1080,
+            uuid = "pass:@/#?+ %25", encryption = "user:@/+ %25")
+        val link = LinkParser.toShareLink(source)
+        val restored = requireNotNull(LinkParser.parse(link))
+        assertEquals(source.encryption, restored.encryption)
+        assertEquals(source.uuid, restored.uuid)
+        assertEquals(source.address, restored.address)
+        assertEquals(source.port, restored.port)
+        assertEquals(source.name, restored.name)
+        assertTrue(link.contains("@[2001:db8::1]:1080"))
+    }
+
+    @Test fun socksSharingUsesCurrentProfileInsteadOfStaleRawCredentials() {
+        val source = requireNotNull(LinkParser.parse("socks5://old:secret@old.example:1080#old"))
+            .copy(name = "New", address = "new.example", port = 2080, encryption = "new", uuid = "password")
+        val restored = requireNotNull(LinkParser.parse(LinkParser.toShareLink(source)))
+        assertEquals(source.encryption, restored.encryption)
+        assertEquals(source.uuid, restored.uuid)
+        assertEquals(source.address, restored.address)
+        assertEquals(source.port, restored.port)
+        assertEquals(source.name, restored.name)
+        val anonymous = source.copy(encryption = "", uuid = "", rawLink = "")
+        val withoutAuth = requireNotNull(LinkParser.parse(LinkParser.toShareLink(anonymous)))
+        assertEquals("", withoutAuth.encryption)
+        assertEquals("", withoutAuth.uuid)
+    }
+
+    @Test fun exportedRealityKeySurvivesMessengerUnderscoreFormatting() {
+        val key = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(1952) { -1 })
+        assertTrue(key.contains("__"))
+        val node = requireNotNull(LinkParser.parse("vless://00000000-0000-0000-0000-000000000000@vpn.example:443?security=reality&type=xhttp&pqv=$key"))
+        val exported = LinkParser.toShareLink(node)
+        assertFalse(exported.contains("__"))
+        assertEquals(key, LinkParser.extractRealityVerificationKey(exported.replace("__", "")))
+    }
+    @Test fun realityKeySurvivesLiteralPlusPercentEncodingPaddingAndSharing() {
+        val bytes = ByteArray(1952) { (it % 251).toByte() }
+        val canonical = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+        val standard = Base64.getEncoder().encodeToString(bytes)
+        assertTrue(standard.contains('+'))
+        for (parameter in listOf("pqv", "mldsa65Verify")) {
+            for (value in listOf(standard, java.net.URLEncoder.encode(standard, "UTF-8"), "$canonical=")) {
+                val link = "vless://00000000-0000-0000-0000-000000000000@vpn.example:443?security=reality&type=xhttp&$parameter=$value"
+                val node = requireNotNull(LinkParser.parse(link))
+                assertEquals(canonical, LinkParser.extractRealityVerificationKey(node.rawLink))
+                assertEquals(canonical, LinkParser.extractRealityVerificationKey(LinkParser.toShareLink(node)))
+            }
+        }
+    }
+
+    @Test fun invalidRealityKeyIsRetainedForExplicitValidation() {
+        assertEquals("truncated-key", LinkParser.extractRealityVerificationKey("vless://test@vpn.example:443?pqv=truncated-key"))
+        assertEquals(" ", LinkParser.extractRealityVerificationKey("vless://test@vpn.example:443?pqv=%20"))
+    }
+
+    @Test fun longRealityVerificationKeySurvivesCanonicalSharing() {
+        val key = Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(1952) { (it % 251).toByte() })
+        val link = "vless://00000000-0000-0000-0000-000000000000@vpn.example:443?security=reality&pbk=test&pqv=$key&type=xhttp#test"
+        val node = requireNotNull(LinkParser.parse(link))
+        assertEquals(key, LinkParser.extractRealityVerificationKey(node.rawLink))
+        assertEquals(key, LinkParser.extractRealityVerificationKey(LinkParser.toShareLink(node)))
+        assertEquals(key, LinkParser.extractRealityVerificationKey(link.replace("pqv=", "mldsa65Verify=")))
+        assertNull(LinkParser.extractRealityVerificationKey(""))
+        assertNull(LinkParser.extractRealityVerificationKey(link.substringBefore("&pqv=")))
+    }
 
     @Test
     fun testParseBatch_emptyOrBlank() {
@@ -136,5 +215,12 @@ class LinkParserTest {
         assertEquals(2, subNodes.size)
         assertEquals("VLESS-WS-Cloudflare-oneplus", subNodes[0].name)
         assertEquals("VLESS-XHTTP-Reality", subNodes[1].name)
+    }
+    @org.junit.Test
+    fun rejectsOversizedNodeListsBeforeBuildingTheEntireSubscription() {
+        val link = "vless://11111111-2222-3333-4444-555555555555@example.com:443?security=tls\n"
+        org.junit.Assert.assertThrows(IllegalArgumentException::class.java) {
+            LinkParser.parseSubscription(link.repeat(LinkParser.MAX_SUBSCRIPTION_NODES + 1))
+        }
     }
 }

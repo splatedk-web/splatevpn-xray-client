@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_appname" formatted="false">SplateVPN</string>
+    <string name="app_cancel" formatted="false">取消</string>
+    <string name="app_save" formatted="false">保存</string>
+    <string name="app_delete" formatted="false">删除</string>
+    <string name="app_close" formatted="false">关闭</string>
+    <string name="app_add" formatted="false">添加</string>
+    <string name="app_refresh" formatted="false">刷新</string>
+    <string name="app_edit" formatted="false">编辑</string>
+    <string name="app_tabcontrol" formatted="false">首页</string>
+    <string name="app_tabnodes" formatted="false">服务器</string>
+    <string name="app_tabrouting" formatted="false">应用</string>
+    <string name="app_tabconfig" formatted="false">设置</string>
+    <string name="app_standbyunprotected" formatted="false">待机 • 未保护</string>
+    <string name="app_encryptedsession" formatted="false">已连接 • %s</string>
+    <string name="app_resolvinglocation" formatted="false">正在查询位置…</string>
+    <string name="app_protectedgateway" formatted="false">安全隧道</string>
+    <string name="app_egressip" formatted="false">出口 IP：%s</string>
+    <string name="app_ping" formatted="false">延迟</string>
+    <string name="app_download" formatted="false">下载</string>
+    <string name="app_upload" formatted="false">上传</string>
+    <string name="app_routingprofile" formatted="false">路由配置</string>
+    <string name="app_smartroute" formatted="false">智能路由</string>
+    <string name="app_smartroutedesc" formatted="false">本地服务直连</string>
+    <string name="app_globaltunnel" formatted="false">全部流量</string>
+    <string name="app_globaltunneldesc" formatted="false">所有目标通过 VPN</string>
+    <string name="app_activegateway" formatted="false">当前服务器</string>
+    <string name="app_autofastest" formatted="false">自动：关</string>
+    <string name="app_pingnoresponse" formatted="false">无响应</string>
+    <string name="app_pinguntested" formatted="false">未测试</string>
+    <string name="app_pinging" formatted="false">正在测试延迟…</string>
+    <string name="app_noserverselected" formatted="false">未选择服务器</string>
+    <string name="app_taptochoosenode" formatted="false">点击选择服务器</string>
+    <string name="app_coreconnected" formatted="false">已连接</string>
+    <string name="app_coreconnect" formatted="false">连接</string>
+    <string name="app_latencylabel" formatted="false">延迟</string>
+    <string name="app_downlinklabel" formatted="false">下载</string>
+    <string name="app_uplinklabel" formatted="false">上传</string>
+    <string name="app_coresubtitle" formatted="false">Xray %s</string>
+    <string name="app_stateselectingserver" formatted="false">正在寻找服务器…</string>
+    <string name="app_corediscselect" formatted="false">搜索…</string>
+    <string name="app_statestartingcore" formatted="false">正在启动内核…</string>
+    <string name="app_stateconnecting" formatted="false">正在连接…</string>
+    <string name="app_statehealthchecking" formatted="false">正在验证连接…</string>
+    <string name="app_statereconnecting" formatted="false">正在重新连接…</string>
+    <string name="app_statefailed" formatted="false">连接失败</string>
+    <string name="app_corediscboot" formatted="false">启动…</string>
+    <string name="app_coredisclink" formatted="false">连接…</string>
+    <string name="app_corediscverify" formatted="false">验证…</string>
+    <string name="app_corediscretry" formatted="false">重试…</string>
+    <string name="app_corediscerror" formatted="false">错误</string>
+    <string name="app_tagsplittunnel" formatted="false">分流</string>
+    <string name="app_tagfullencap" formatted="false">全局</string>
+    <string name="app_searchservers" formatted="false">搜索名称、IP、协议…</string>
+    <string name="app_noserversmatchingquery" formatted="false">未找到匹配的服务器</string>
+    <string name="app_linkcopied" formatted="false">链接已复制</string>
+    <string name="app_sessiondownloaded" formatted="false">已接收</string>
+    <string name="app_sessionuploaded" formatted="false">已发送</string>
+    <string name="app_networknodes" formatted="false">服务器</string>
+    <string name="app_presetserverstitle" formatted="false">预设</string>
+    <string name="app_availablenodes" formatted="false">可用：%d / %d</string>
+    <string name="app_pingall" formatted="false">测试全部</string>
+    <string name="app_pastelink" formatted="false">粘贴链接</string>
+    <string name="app_subs" formatted="false">订阅 (%d)</string>
+    <string name="app_allchip" formatted="false">全部 (%d)</string>
+    <string name="app_builtinchip" formatted="false">⚡ 预设</string>
+    <string name="app_noserversfound" formatted="false">暂无服务器。\n请添加链接或订阅。</string>
+    <string name="app_noserversinfilter" formatted="false">此分类中没有服务器</string>
+    <string name="app_addservertitle" formatted="false">添加服务器</string>
+    <string name="app_addserverprompt" formatted="false">粘贴 vless://、trojan://、vmess:// 或 ss:// 链接：</string>
+    <string name="app_serveraddedsuccess" formatted="false">服务器已添加！</string>
+    <string name="app_invalidlinkformat" formatted="false">链接格式无效</string>
+    <string name="app_editservertitle" formatted="false">编辑服务器参数</string>
+    <string name="app_serverupdatedsuccess" formatted="false">服务器参数已更新！</string>
+    <string name="app_managesubstitle" formatted="false">订阅管理</string>
+    <string name="app_activesubsheader" formatted="false">启用的订阅：</string>
+    <string name="app_serverscountsub" formatted="false">%d 个节点</string>
+    <string name="app_subbuiltintag" formatted="false">预设</string>
+    <string name="app_subupdatedsuccess" formatted="false">已更新：%d 个节点</string>
+    <string name="app_subdeletedsuccess" formatted="false">订阅已删除</string>
+    <string name="app_addnewsubheader" formatted="false">添加订阅：</string>
+    <string name="app_servertoolsfolders" formatted="false">文件夹</string>
+    <string name="app_servertoolslist" formatted="false">列表</string>
+    <string name="app_servertoolsgrouping" formatted="false">服务器分组</string>
+    <string name="app_servertoolsgrouped" formatted="false">按来源分组</string>
+    <string name="app_servertoolsungrouped" formatted="false">所有节点显示在一个列表</string>
+    <string name="app_servertoolssort" formatted="false">排序</string>
+    <string name="app_servertoolssortdescription" formatted="false">按延迟排序</string>
+    <string name="app_servertoolsauto" formatted="false">自动</string>
+    <string name="app_servertoolstest" formatted="false">测试</string>
+    <string name="app_serverspagetitle" formatted="false">服务器</string>
+    <string name="app_presetspagetitle" formatted="false">预设</string>
+    <string name="app_serverspagesubtitle" formatted="false">选择服务器并检查延迟</string>
+    <string name="app_subscriptionspagesubtitle" formatted="false">管理来源并更新服务器列表</string>
+    <string name="app_personalpagesubtitle" formatted="false">您的 VPN 配置</string>
+    <string name="app_subscriptionstitle" formatted="false">订阅</string>
+    <string name="app_subscriptionssearch" formatted="false">搜索名称或网址…</string>
+    <string name="app_subscriptionsnoresults" formatted="false">未找到匹配订阅</string>
+    <string name="app_subscriptiondetails" formatted="false">订阅详情</string>
+    <string name="app_subscriptionname" formatted="false">名称</string>
+    <string name="app_subscriptionurl" formatted="false">订阅链接</string>
+    <string name="app_subscriptionurlinvalid" formatted="false">请输入有效订阅链接</string>
+    <string name="app_subscriptionedithint" formatted="false">链接将在下次更新时生效。现有节点将保留。</string>
+    <string name="app_subscriptionautoupdate" formatted="false">自动更新</string>
+    <string name="app_subscriptionmanual" formatted="false">手动</string>
+    <string name="app_subscriptionscheduleoff" formatted="false">全局更新计划已在设置中关闭</string>
+    <string name="app_subscriptionschedule" formatted="false">每 %s 更新</string>
+    <string name="app_subscriptionupdateall" formatted="false">全部更新</string>
+    <string name="app_subscriptionrefreshsummary" formatted="false">已更新订阅：%d。失败：%d。</string>
+    <string name="app_subscriptionnoupdates" formatted="false">没有可更新的已启用订阅</string>
+    <string name="app_subscriptionbuiltin" formatted="false">内置</string>
+    <string name="app_subscriptiondisabled" formatted="false">已停用</string>
+    <string name="app_subscriptionnodes" formatted="false">节点 (%d)</string>
+    <string name="app_subscriptiondeletetitle" formatted="false">删除订阅？</string>
+    <string name="app_subscriptiondeletemessage" formatted="false">删除“%s”及其全部节点 (%d)？</string>
+    <string name="app_subscriptionnever" formatted="false">从未</string>
+    <string name="app_subscriptionjustnow" formatted="false">刚刚</string>
+    <string name="app_subscriptionminutesago" formatted="false">%d 分钟前</string>
+    <string name="app_subscriptionhoursago" formatted="false">%d 小时前</string>
+    <string name="app_subscriptionstab" formatted="false">订阅 (%d/%d)</string>
+    <string name="app_personalnodestab" formatted="false">个人 (%d)</string>
+    <string name="app_subscriptionenabledmessage" formatted="false">“%s”：已启用</string>
+    <string name="app_subscriptiondisabledmessage" formatted="false">“%s”：已停用，节点已隐藏</string>
+    <string name="app_subscriptionautoenabledmessage" formatted="false">已启用自动更新</string>
+    <string name="app_subscriptionautodisabledmessage" formatted="false">已关闭自动更新</string>
+    <string name="app_subscriptionnodeslabel" formatted="false">节点</string>
+    <string name="app_subscriptionslabel" formatted="false">订阅</string>
+    <string name="app_personalnodeslabel" formatted="false">个人</string>
+    <string name="app_uipause" formatted="false">暂停</string>
+    <string name="app_uiresume" formatted="false">继续</string>
+    <string name="app_uiclear" formatted="false">清除</string>
+    <string name="app_uimonitoring" formatted="false">监控中</string>
+    <string name="app_uipaused" formatted="false">已暂停</string>
+    <string name="app_uinomatches" formatted="false">没有搜索结果</string>
+    <string name="app_uinopersonal" formatted="false">没有个人配置</string>
+    <string name="app_uipersonalhint" formatted="false">从剪贴板粘贴 vless://、vmess://、trojan:// 或 shadowsocks:// 链接，或扫描二维码。</string>
+    <string name="app_uiaddconfig" formatted="false">添加配置</string>
+    <string name="app_uinosubscriptions" formatted="false">暂无订阅</string>
+    <string name="app_uisubscriptionhint" formatted="false">通过一个订阅链接更新多个节点。</string>
+    <string name="app_uiaddsubscription" formatted="false">添加订阅</string>
+    <string name="app_uirestorepresets" formatted="false">恢复内置订阅</string>
+    <string name="app_uipresetsempty" formatted="false">内置订阅尚未加载或已删除。</string>
+    <string name="app_uipersonalsearch" formatted="false">搜索个人配置…</string>
+    <string name="app_uipresetsearch" formatted="false">搜索预设节点…</string>
+    <string name="app_uiallactive" formatted="false">全部已启用 (%d)</string>
+    <string name="app_uipersonalservers" formatted="false">个人服务器</string>
+    <string name="app_uisubscriptionprefix" formatted="false">订阅：%s</string>
+    <string name="app_uidisablednodeshidden" formatted="false">已停用 — 节点已隐藏</string>
+    <string name="app_uiexpand" formatted="false">展开</string>
+    <string name="app_uicollapse" formatted="false">收起</string>
+    <string name="app_uipresettag" formatted="false">预设 • %s</string>
+    <string name="app_uisubscriptiontag" formatted="false">订阅 • %s</string>
+    <string name="app_uipersonaltag" formatted="false">个人配置</string>
+    <string name="app_uiactions" formatted="false">操作</string>
+    <string name="app_uiautoselect" formatted="false">自动选择</string>
+    <string name="app_uifastest" formatted="false">最快</string>
+    <string name="app_uioff" formatted="false">关闭</string>
+    <string name="app_uipingsummary" formatted="false">“%s”：已测试 %d 个节点</string>
+    <string name="app_uicamera" formatted="false">相机</string>
+    <string name="app_uiautoimport" formatted="false">自动导入</string>
+    <string name="app_uilinkhint" formatted="false">vless://…、vmess://… 或 https://…</string>
+    <string name="app_uipresetharvester" formatted="false">Harvester（可用节点）</string>
+    <string name="app_uipresetcidr" formatted="false">白名单 (CIDR RU)</string>
+    <string name="app_uipresetuniversal" formatted="false">白名单（通用）</string>
+    <string name="app_approutingconnected" formatted="false">VPN 已连接。应用遵循所选路由规则。</string>
+    <string name="app_approutingdisconnected" formatted="false">VPN 未连接。请在首页连接以应用路由。</string>
+    <string name="app_fieldaddresserror" formatted="false">请输入主机名或 IP，不含协议、路径或空格</string>
+    <string name="app_fieldporterror" formatted="false">请输入 1 至 65535 的端口号</string>
+    <string name="app_fieldpassword" formatted="false">密码</string>
+    <string name="app_fieldsnihint" formatted="false">domain.com（用于 Cloudflare/TLS）</string>
+    <string name="app_fieldhosthint" formatted="false">HTTP Host 标头</string>
+    <string name="app_tlspresetstandard" formatted="false">标准</string>
+    <string name="app_tlspresetaggressive" formatted="false">小分片（50–100）</string>
+    <string name="app_tlspresetcustom" formatted="false">自定义</string>
+    <string name="app_tlscustomtitle" formatted="false">TLS 分片</string>
+    <string name="app_tlsparameterssummary" formatted="false">参数：长度=%s，间隔=%s 毫秒，数据包=%s</string>
+    <string name="app_sharelannotready" formatted="false">共享尚未就绪。获得热点或 USB 网络地址后将显示代理地址及配置命令。</string>
+    <string name="app_sharelancopyenable" formatted="false">复制启用命令</string>
+    <string name="app_sharelandisable" formatted="false">关闭代理</string>
+    <string name="app_uicopied" formatted="false">已复制</string>
+    <string name="app_uicopy" formatted="false">复制</string>
+    <string name="app_lanendpointusb" formatted="false">USB 网络共享 (%s)</string>
+    <string name="app_lanendpointhotspot" formatted="false">Wi-Fi 热点 (%s)</string>
+    <string name="app_lanendpointwifi" formatted="false">Wi-Fi 网络 (%s)</string>
+    <string name="app_lanendpointother" formatted="false">接口 %s</string>
+    <string name="app_subnameplaceholder" formatted="false">名称（如：我的 VPN）</string>
+    <string name="app_suburlplaceholder" formatted="false">https://example.com/sub/...</string>
+    <string name="app_subloading" formatted="false">正在同步节点…</string>
+    <string name="app_splashsubtitle" formatted="false">安全代理隧道</string>
+    <string name="app_splashinitializing" formatted="false">正在初始化节点…</string>
+    <string name="app_subaddedsuccess" formatted="false">已添加节点：%d</string>
+    <string name="app_errorprefix" formatted="false">错误：%s</string>
+    <string name="app_autoselectselected" formatted="false">已选择：%s</string>
+    <string name="app_fieldname" formatted="false">节点名称</string>
+    <string name="app_fieldprotocol" formatted="false">协议</string>
+    <string name="app_fieldaddress" formatted="false">地址 / IP</string>
+    <string name="app_fieldport" formatted="false">端口</string>
+    <string name="app_fieldnetwork" formatted="false">传输方式 (type)</string>
+    <string name="app_fieldsecurity" formatted="false">安全模式</string>
+    <string name="app_fieldsni" formatted="false">SNI 域名</string>
+    <string name="app_fieldpath" formatted="false">路径 (path / serviceName)</string>
+    <string name="app_fieldhost" formatted="false">Host 标头</string>
+    <string name="app_fielduuid" formatted="false">UUID / 密码</string>
+    <string name="app_fieldpublickey" formatted="false">公钥 (pbk / Reality)</string>
+    <string name="app_fieldshortid" formatted="false">短 ID (sid)</string>
+    <string name="app_fieldspiderx" formatted="false">SpiderX (spx)</string>
+    <string name="app_fieldfingerprint" formatted="false">指纹 (fp)</string>
+    <string name="app_approutingtitle" formatted="false">应用路由</string>
+    <string name="app_approutingsubtitle" formatted="false">选择遵循 VPN 路由规则的应用</string>
+    <string name="app_proxiedappscount" formatted="false">代理应用：%d / %d</string>
+    <string name="app_selectedappscount" formatted="false">已选择：%d</string>
+    <string name="app_proxymodeall" formatted="false">所有应用</string>
+    <string name="app_proxymodealldesc" formatted="false">连接 VPN 后，所有应用遵循所选路由规则</string>
+    <string name="app_proxymodeselected" formatted="false">按应用选择</string>
+    <string name="app_proxymodeselecteddesc" formatted="false">仅所选应用通过 VPN</string>
+    <string name="app_globalmodeactive" formatted="false">已选择所有应用</string>
+    <string name="app_allappsprotected" formatted="false">VPN 规则适用于所有应用</string>
+    <string name="app_searchapps" formatted="false">搜索应用…</string>
+    <string name="app_statusproxied" formatted="false">代理</string>
+    <string name="app_statusdirect" formatted="false">直连</string>
+    <string name="app_statusbypassed" formatted="false">绕过</string>
+    <string name="app_perappmodeinclude" formatted="false">仅所选应用</string>
+    <string name="app_perappmodeincludedesc" formatted="false">仅所选应用通过 VPN</string>
+    <string name="app_perappmodeexclude" formatted="false">绕过所选应用</string>
+    <string name="app_perappmodeexcludedesc" formatted="false">所选应用（银行、本地服务）绕过 VPN</string>
+    <string name="app_perappmodeheader" formatted="false">分应用隧道模式</string>
+    <string name="app_settingstitle" formatted="false">设置</string>
+    <string name="app_settingssubtitle" formatted="false">访问限制绕过、界面及内核设置</string>
+    <string name="app_sectionappearance" formatted="false">界面与外观</string>
+    <string name="app_themetitle" formatted="false">应用主题</string>
+    <string name="app_themesubtitle" formatted="false">视觉风格与配色</string>
+    <string name="app_themedark" formatted="false">深色</string>
+    <string name="app_themeamoled" formatted="false">AMOLED</string>
+    <string name="app_themelight" formatted="false">浅色</string>
+    <string name="app_themesystem" formatted="false">跟随系统</string>
+    <string name="app_themewinter" formatted="false">冬日深色</string>
+    <string name="app_themewinterlight" formatted="false">冬日浅色</string>
+    <string name="app_themered" formatted="false">红色</string>
+    <string name="app_themeaurora" formatted="false">极光</string>
+    <string name="app_themeocean" formatted="false">深海</string>
+    <string name="app_themesakura" formatted="false">月下樱花</string>
+    <string name="app_themepony" formatted="false">小马</string>
+    <string name="app_themewinx" formatted="false">Winx · Bloom</string>
+    <string name="app_glasstransparencytitle" formatted="false">卡片透明度</string>
+    <string name="app_glasstransparencysubtitle" formatted="false">调整卡片与底栏透明度，文字和控件保持清晰。</string>
+    <string name="app_glassblurtitle" formatted="false">背景模糊</string>
+    <string name="app_glassblursubtitle" formatted="false">模糊卡片和底栏后方背景，可独立调整透明度。</string>
+    <string name="app_glassdefault" formatted="false">默认</string>
+    <string name="app_glassmoresolid" formatted="false">更不透明</string>
+    <string name="app_glassmoreclear" formatted="false">更透明</string>
+    <string name="app_glasslegacyhint" formatted="false">背景模糊需要 Android 12 或更高版本。</string>
+    <string name="app_themeshowall" formatted="false">显示全部主题 (%d)</string>
+    <string name="app_themeshowless" formatted="false">收起主题</string>
+    <string name="app_themecurrent" formatted="false">当前：%s</string>
+    <string name="app_themesunset" formatted="false">落日幻境</string>
+    <string name="app_languagetitle" formatted="false">语言</string>
+    <string name="app_languagesubtitle" formatted="false">选择界面语言</string>
+    <string name="app_langru" formatted="false">Русский</string>
+    <string name="app_langen" formatted="false">English</string>
+    <string name="app_langsystem" formatted="false">跟随系统</string>
+    <string name="app_sectionautomation" formatted="false">自动化与订阅</string>
+    <string name="app_autoselecttitle" formatted="false">自动选择服务器</string>
+    <string name="app_autoselectsubtitle" formatted="false">自动测试延迟并选择最快节点。</string>
+    <string name="app_autoupdatetitle" formatted="false">自动更新订阅</string>
+    <string name="app_autoupdatesubtitle" formatted="false">后台同步服务器列表的频率</string>
+    <string name="app_intervaloff" formatted="false">关闭</string>
+    <string name="app_interval6h" formatted="false">6 小时</string>
+    <string name="app_interval12h" formatted="false">12 小时</string>
+    <string name="app_interval24h" formatted="false">24 小时</string>
+    <string name="app_updateallsubsnow" formatted="false">立即更新全部订阅</string>
+    <string name="app_updating" formatted="false">正在更新…</string>
+    <string name="app_updatedcount" formatted="false">已更新订阅：%d</string>
+    <string name="app_sectionrouting" formatted="false">路由与访问限制绕过</string>
+    <string name="app_dnsprovidertitle" formatted="false">主要 DNS</string>
+    <string name="app_dnsprovidersubtitle" formatted="false">主要 DNS。智能路由可为本地网站使用地区 DNS；AI 使用单独设置。浏览器安全 DNS 可能优先生效。</string>
+    <string name="app_xhttpmodetitle" formatted="false">XHTTP (SplitHTTP) 模式</string>
+    <string name="app_xhttpmodesubtitle" formatted="false">XHTTP 请求的传输方式。通常使用 auto 即可；其他模式需要服务器支持。</string>
+    <string name="app_fakednstitle" formatted="false">FakeDNS (198.18.0.0/15)</string>
+    <string name="app_fakednssubtitle" formatted="false">返回虚拟 IP 地址，并通过 Xray 解析域名。</string>
+    <string name="app_blockquictitle" formatted="false">阻止 QUIC (UDP 443)</string>
+    <string name="app_blockquicsubtitle" formatted="false">阻止端口 443 上的 UDP。支持 TCP 的应用可能会改用 TCP。</string>
+    <string name="app_sniffingtitle" formatted="false">域名识别</string>
+    <string name="app_sniffingsubtitle" formatted="false">从 SNI 或 HTTP Host 识别域名以应用路由规则，不解密 HTTPS 流量。</string>
+    <string name="app_blockipv6title" formatted="false">IPv6 泄漏保护</string>
+    <string name="app_blockipv6subtitle" formatted="false">阻止进入 VPN 的所有 IPv6 流量。</string>
+    <string name="app_bypassaititle" formatted="false">AI 服务 (ChatGPT、Claude、Gemini)</string>
+    <string name="app_bypassaisubtitle" formatted="false">SmartDNS：所选 DNS 与直连。VPN：通过 VPN 服务器。</string>
+    <string name="app_aidnsprovidertitle" formatted="false">AI 服务 SmartDNS</string>
+    <string name="app_aidnsproviderhint" formatted="false">独立于主要 DNS。Gemini 和 ChatGPT 的可用性取决于 SmartDNS、网络和账户。</string>
+    <string name="app_aitlsfragmenttitle" formatted="false">SmartDNS TLS 分片</string>
+    <string name="app_aitlsfragmenthint" formatted="false">适用于过滤 TLS 的网络，默认关闭；部分 Gemini 代理与此不兼容。</string>
+    <string name="app_adblockertitle" formatted="false">广告拦截</string>
+    <string name="app_adblockersubtitle" formatted="false">拦截 VPN 流量中的广告和跟踪域名。VK 信息流及 YouTube 视频内广告可能仍会出现。</string>
+    <string name="app_sectioncore" formatted="false">XRAY 内核</string>
+    <string name="app_coreversion" formatted="false">内核版本</string>
+    <string name="app_corearch" formatted="false">架构</string>
+    <string name="app_coretunnel" formatted="false">隧道引擎</string>
+    <string name="app_coreprotocols" formatted="false">协议</string>
+    <string name="app_corefakedns" formatted="false">FakeDNS 地址池</string>
+    <string name="app_sectiondiagnostics" formatted="false">诊断与调试</string>
+    <string name="app_diagnosticsdesc" formatted="false">Xray 内核、VPN 事件及连接错误日志。</string>
+    <string name="app_openlogsbutton" formatted="false">打开日志</string>
+    <string name="app_logsdialogtitle" formatted="false">事件日志</string>
+    <string name="app_copyreport" formatted="false">复制报告</string>
+    <string name="app_sharereport" formatted="false">分享</string>
+    <string name="app_clearlogs" formatted="false">清除日志</string>
+    <string name="app_reportcopied" formatted="false">报告已复制！</string>
+    <string name="app_recordscount" formatted="false">记录</string>
+    <string name="app_logscleared" formatted="false">日志已清除</string>
+    <string name="app_logsempty" formatted="false">暂无日志</string>
+    <string name="app_logsfilterall" formatted="false">全部</string>
+    <string name="app_logsfiltererrors" formatted="false">错误</string>
+    <string name="app_logsfilterxray" formatted="false">Xray</string>
+    <string name="app_logsfiltervpn" formatted="false">VPN 服务</string>
+    <string name="app_logssearchhint" formatted="false">搜索日志与关键词…</string>
+    <string name="app_logsautoscroll" formatted="false">自动滚动</string>
+    <string name="app_logsclose" formatted="false">关闭日志</string>
+    <string name="app_logscopiedline" formatted="false">日志行已复制</string>
+    <string name="app_logsstatstotal" formatted="false">总计</string>
+    <string name="app_logsstatserrors" formatted="false">错误</string>
+    <string name="app_logsstatswarnings" formatted="false">警告</string>
+    <string name="app_sectioncustomroutes" formatted="false">自定义域名路由</string>
+    <string name="app_customroutessubtitle" formatted="false">输入域名并选择路由：直连、VPN 或阻止</string>
+    <string name="app_customroutesdomainhint" formatted="false">example.com 或 domain:example.com</string>
+    <string name="app_customroutesaddbtn" formatted="false">添加路由</string>
+    <string name="app_customroutesempty" formatted="false">暂无自定义路由</string>
+    <string name="app_customroutessaved" formatted="false">路由已添加</string>
+    <string name="app_customroutesremoved" formatted="false">路由已删除</string>
+    <string name="app_customroutedirect" formatted="false">直连</string>
+    <string name="app_customrouteproxy" formatted="false">通过 VPN</string>
+    <string name="app_customrouteblock" formatted="false">阻止</string>
+    <string name="app_updateavailabletitle" formatted="false">有可用更新</string>
+    <string name="app_updateavailabledesc" formatted="false">版本 %s 可供下载</string>
+    <string name="app_updatedownload" formatted="false">下载</string>
+    <string name="app_updatedownloadandinstall" formatted="false">下载并安装</string>
+    <string name="app_updateinstall" formatted="false">安装</string>
+    <string name="app_updatedownloading" formatted="false">正在下载更新…</string>
+    <string name="app_updatedownloaded" formatted="false">更新已准备好安装</string>
+    <string name="app_updatetaptoinstall" formatted="false">点击安装</string>
+    <string name="app_updatechangelog" formatted="false">更新内容</string>
+    <string name="app_updatescrollhint" formatted="false">向下滚动查看详情 ↓</string>
+    <string name="app_updateexpandnotes" formatted="false">展开</string>
+    <string name="app_updatecollapsenotes" formatted="false">收起</string>
+    <string name="app_updatepermissionrequired" formatted="false">请允许 SplateVPN 安装未知应用</string>
+    <string name="app_updatefailed" formatted="false">更新下载失败</string>
+    <string name="app_updateretry" formatted="false">重试</string>
+    <string name="app_updatecheck" formatted="false">检查更新</string>
+    <string name="app_updatechecking" formatted="false">正在检查…</string>
+    <string name="app_updatelatest" formatted="false">已是最新版本</string>
+    <string name="app_liveconnectionstitle" formatted="false">实时连接监控</string>
+    <string name="app_liveconnectionssubtitle" formatted="false">按域名和 IP 实时查看路由</string>
+    <string name="app_liveconnectionshudbadge" formatted="false">连接</string>
+    <string name="app_liveconnectionssearchplaceholder" formatted="false">搜索域名或 IP 地址…</string>
+    <string name="app_filterall" formatted="false">全部</string>
+    <string name="app_filterproxy" formatted="false">代理</string>
+    <string name="app_filterdirect" formatted="false">直连</string>
+    <string name="app_filterblock" formatted="false">阻止</string>
+    <string name="app_filterdns" formatted="false">DNS</string>
+    <string name="app_clearconnections" formatted="false">清空列表</string>
+    <string name="app_noconnectionsyet" formatted="false">暂无活动连接</string>
+    <string name="app_noconnectionsdesc" formatted="false">连接 VPN 后查看实时流量</string>
+    <string name="app_liveconnectionscount" formatted="false">%d 个活动目标</string>
+    <string name="app_liveconnectionssummary" formatted="false">%d 个目标 • %d 次请求</string>
+    <string name="app_connectionoutboundlabel" formatted="false">出站</string>
+    <string name="app_connectiondestlabel" formatted="false">目标</string>
+    <string name="app_connectionprotocollabel" formatted="false">协议</string>
+    <string name="app_autoconnectonboottitle" formatted="false">开机自动连接</string>
+    <string name="app_autoconnectonbootsubtitle" formatted="false">设备启动时自动连接 VPN</string>
+    <string name="app_batteryoptimizationtitle" formatted="false">后台运行（电池）</string>
+    <string name="app_batteryoptimizationdisabled" formatted="false">已停用优化 — 服务可持续运行</string>
+    <string name="app_batteryoptimizationprompt" formatted="false">点击取消电池限制</string>
+    <string name="app_batterysettingsopenerror" formatted="false">无法打开电池设置</string>
+    <string name="app_pingmodetitle" formatted="false">延迟测试方式</string>
+    <string name="app_pingmodesubtitle" formatted="false">检查服务器可达性及延迟的方法</string>
+    <string name="app_pingmoderealdelay" formatted="false">实际延迟</string>
+    <string name="app_pingmodetcp" formatted="false">TCP 延迟</string>
+    <string name="app_pingmodeicmp" formatted="false">ICMP</string>
+    <string name="app_pingmoderealdelaydesc" formatted="false">通过代理请求 HTTP 204，测试真实传输及 DPI 拦截</string>
+    <string name="app_pingmodetcpdesc" formatted="false">快速测量到服务器 IP:端口的 TCP 连接延迟</string>
+    <string name="app_pingmodeicmpdesc" formatted="false">直接向服务器发送 ICMP 请求，可能被防火墙阻止</string>
+    <string name="app_tlsfragmenttitle" formatted="false">TLS 数据包分片 (Fragment)</string>
+    <string name="app_tlsfragmentsubtitle" formatted="false">将 TLS 握手拆成小片并添加短暂延迟，可能绕过基于 SNI 的 DPI。</string>
+    <string name="app_killswitchactive" formatted="false">保护已启用</string>
+    <string name="app_killswitchalwaysonly" formatted="false">仅始终开启 VPN</string>
+    <string name="app_killswitchoff" formatted="false">断网保护已关闭</string>
+    <string name="app_killswitchunknown" formatted="false">状态未确认</string>
+    <string name="app_killswitchunknownhint" formatted="false">Android 未提供保护状态，可能需要活动隧道。请在 Android VPN 设置中确认。</string>
+    <string name="app_killswitchbody" formatted="false">启用后，Android 将阻止无 VPN 的连接，包括应用停止时。</string>
+    <string name="app_killswitchstepone" formatted="false">在 Android VPN 列表中打开 %s 选项。</string>
+    <string name="app_killswitchsteptwo" formatted="false">启用“始终开启 VPN”。</string>
+    <string name="app_killswitchstepthree" formatted="false">启用“屏蔽未使用 VPN 的所有连接”。</string>
+    <string name="app_killswitchconfigure" formatted="false">设置保护</string>
+    <string name="app_killswitchmanage" formatted="false">管理保护</string>
+    <string name="app_killswitchexcludedapps" formatted="false">启用阻止功能时，被排除的应用将无法联网。</string>
+    <string name="app_killswitchtitle" formatted="false">断网保护</string>
+    <string name="app_sectionappupdates" formatted="false">应用更新</string>
+    <string name="app_sectionquicksettings" formatted="false">快捷设置磁贴</string>
+    <string name="app_quicksettingsdesc" formatted="false">通过 Android 通知栏直接开关 VPN，无需打开应用。</string>
+    <string name="app_quicksettingsaddtile" formatted="false">添加到快捷设置</string>
+    <string name="app_quicksettingstileadded" formatted="false">SplateVPN 磁贴已添加！</string>
+    <string name="app_quicksettingstilealreadyadded" formatted="false">SplateVPN 磁贴已存在</string>
+    <string name="app_quicksettingsmanualprompt" formatted="false">下拉通知栏两次，点击编辑，将 SplateVPN 磁贴拖入面板。</string>
+    <string name="app_sectionbackuprestore" formatted="false">备份与恢复</string>
+    <string name="app_backuprestoredesc" formatted="false">将服务器、订阅、规则和设置保存为 JSON 文件，或从备份恢复。</string>
+    <string name="app_exportbtn" formatted="false">导出</string>
+    <string name="app_importbtn" formatted="false">导入</string>
+    <string name="app_backupexportsuccess" formatted="false">配置已导出！</string>
+    <string name="app_backupexporterror" formatted="false">导出错误：%s</string>
+    <string name="app_backupimportsuccess" formatted="false">已导入 %d 个服务器</string>
+    <string name="app_backupimporterror" formatted="false">导入错误：%s</string>
+    <string name="app_autorestorebtn" formatted="false">恢复自动备份</string>
+    <string name="app_autorestoresuccess" formatted="false">已恢复 %d 个服务器</string>
+    <string name="app_autorestorenotfound" formatted="false">自动备份不存在或为空</string>
+    <string name="app_autoselecton" formatted="false">⚡ 自动：开</string>
+    <string name="app_speedtesttitle" formatted="false">速度测试</string>
+    <string name="app_speedtestdesc" formatted="false">测试通过 VPN 的实际下载速度</string>
+    <string name="app_speedtestrunning" formatted="false">测试中：%d%%</string>
+    <string name="app_speedtestspeedunit" formatted="false">Mbps</string>
+    <string name="app_speedtestresult" formatted="false">速度：%s Mbps</string>
+    <string name="app_speedtestlatency" formatted="false">HTTPS 响应：%s 毫秒</string>
+    <string name="app_speedtesterror" formatted="false">测试错误：%s</string>
+    <string name="app_serversaddedcount" formatted="false">已添加服务器：%d</string>
+    <string name="app_qrscanerror" formatted="false">二维码扫描错误：%s</string>
+    <string name="app_scanqr" formatted="false">扫描二维码</string>
+    <string name="app_copylink" formatted="false">复制链接</string>
+    <string name="app_autoselectbalancer" formatted="false">自动选择服务器</string>
+    <string name="app_activenodeprefix" formatted="false">当前：%s</string>
+    <string name="app_autoselectbalancerdesc" formatted="false">根据连接设置选择和切换服务器</string>
+    <string name="app_onupper" formatted="false">开</string>
+    <string name="app_offupper" formatted="false">关</string>
+    <string name="app_filterselected" formatted="false">已选择</string>
+    <string name="app_selectall" formatted="false">全选</string>
+    <string name="app_resetall" formatted="false">重置</string>
+    <string name="app_unifiedaddtitle" formatted="false">添加服务器或订阅</string>
+    <string name="app_unifiedaddsubtitle" formatted="false">粘贴 VLESS/VMess/SS/Trojan 或订阅链接</string>
+    <string name="app_pastefromclipboard" formatted="false">从剪贴板粘贴</string>
+    <string name="app_scanqrcode" formatted="false">扫描二维码</string>
+    <string name="app_clipboardempty" formatted="false">剪贴板为空</string>
+    <string name="app_detectedsubscription" formatted="false">🔗 检测到订阅链接</string>
+    <string name="app_detectedservernode" formatted="false">⚡ 检测到服务器配置</string>
+    <string name="app_detectedmultiplenodes" formatted="false">📦 找到服务器：%d</string>
+    <string name="app_emptyserverscta" formatted="false">添加第一个服务器或订阅</string>
+    <string name="app_emptyservershint" formatted="false">粘贴链接或扫描二维码开始使用</string>
+    <string name="app_importaction" formatted="false">导入</string>
+    <string name="app_subnameoptional" formatted="false">订阅名称（可选）</string>
+    <string name="app_addserverorsub" formatted="false">添加服务器或订阅</string>
+    <string name="app_subquotaused" formatted="false">已用：%s / %s</string>
+    <string name="app_subquotaremaining" formatted="false">剩余 %s / %s</string>
+    <string name="app_subquotaunlimited" formatted="false">不限流量</string>
+    <string name="app_subexpiredate" formatted="false">到期：%s</string>
+    <string name="app_subexpired" formatted="false">订阅已到期</string>
+    <string name="app_shareservertitle" formatted="false">导出节点</string>
+    <string name="app_shareqrprompt" formatted="false">用另一设备的相机扫描</string>
+    <string name="app_sharecopylink" formatted="false">复制链接</string>
+    <string name="app_sharesend" formatted="false">分享</string>
+    <string name="app_shareaction" formatted="false">分享 / 二维码</string>
+    <string name="app_sharepayloadtoolarge" formatted="false">配置过大，无法生成二维码 (%d 字节)。请复制链接或分享文本。</string>
+    <string name="app_sharesubscriptiontitle" formatted="false">导出订阅</string>
+    <string name="app_sharesubqrprompt" formatted="false">用另一设备扫描以导入订阅</string>
+    <string name="app_sectionsharelan" formatted="false">VPN 共享（热点与 USB）</string>
+    <string name="app_sharelantitle" formatted="false">通过局域网共享 VPN</string>
+    <string name="app_sharelansubtitle" formatted="false">在所选本地接口启用带认证的 HTTP 和 SOCKS5 代理</string>
+    <string name="app_sharelanactiveendpoints" formatted="false">已检测到的共享接口</string>
+    <string name="app_sharelannoendpoints" formatted="false">尚未检测到热点或 USB 共享。请在手机设置中启用。</string>
+    <string name="app_sharelaninstructionsbtn" formatted="false">连接手机或电脑</string>
+    <string name="app_sharelanhttpproxy" formatted="false">HTTP 代理 (Windows / Mac / TV)</string>
+    <string name="app_sharelansocksproxy" formatted="false">SOCKS5 代理</string>
+    <string name="app_sharelancopied" formatted="false">代理地址已复制：%s</string>
+    <string name="app_sharelandialogtitle" formatted="false">通过手机连接电脑与设备</string>
+    <string name="app_sharelanstep1" formatted="false">1. 开启手机热点或 USB 共享，并连接电脑。</string>
+    <string name="app_sharelanstep2" formatted="false">2. 确保 SplateVPN 已连接。</string>
+    <string name="app_sharelanstep3windows" formatted="false">3. 在 Windows 中打开设置 → 网络和 Internet → 代理 → 手动设置。填写共享设置中的手机 IP 和 HTTP 端口。</string>
+    <string name="app_sharelanstep3mac" formatted="false">4. 在 macOS 或 Linux 中打开网络代理设置。为 HTTP 和 HTTPS 填写共享设置中的手机 IP 和 HTTP 端口。</string>
+    <string name="app_sharelanstep3telegram" formatted="false">5. 在 Telegram 中打开设置 → 数据与存储 → 代理。添加 SOCKS5，填写共享设置中的手机 IP 和 SOCKS5 端口。若已启用认证，用户名为 splate，密码为共享密码。</string>
+    <string name="app_sharelanwindowstitle" formatted="false">Windows 设置（Wi-Fi 或 USB）</string>
+    <string name="app_sharelanwindowssettingsguide" formatted="false">Windows 10/11：设置 → 网络和 Internet → 代理 → 手动设置 → 使用代理服务器。</string>
+    <string name="app_sharelanwindowsinetcplguide" formatted="false">或按 Win+R → 输入 inetcpl.cpl → 连接 → 局域网设置。</string>
+    <string name="app_sharelanwindowsproxystring" formatted="false">代理地址（HTTP / HTTPS）：</string>
+    <string name="app_sharelanwindowsexceptions" formatted="false">本地地址不使用代理：</string>
+    <string name="app_sharelanwindowsexceptionsvalue" formatted="false">localhost;127.*;10.*;192.168.*;172.16.*</string>
+    <string name="app_sharelanwindowscmdenable" formatted="false">在 PowerShell 中启用代理：</string>
+    <string name="app_sharelanwindowscmddisable" formatted="false">在 PowerShell 中关闭代理：</string>
+    <string name="app_sharelanexceptionscopied" formatted="false">例外已复制</string>
+    <string name="app_sharelancommandcopied" formatted="false">Windows 命令已复制</string>
+    <string name="app_tlsfragmentpresettitle" formatted="false">分片配置</string>
+    <string name="app_tlsfragmentpresetstandard" formatted="false">标准 (100-200, 10-20)</string>
+    <string name="app_tlsfragmentpresetaggressive" formatted="false">激进 (50-100, 20-40, 1-3)</string>
+    <string name="app_tlsfragmentpresetcustom" formatted="false">自定义</string>
+    <string name="app_tlsfragmentlengthlabel" formatted="false">分片大小（字节）</string>
+    <string name="app_tlsfragmentintervallabel" formatted="false">间隔（毫秒）</string>
+    <string name="app_tlsfragmentpacketslabel" formatted="false">数据包</string>
+    <string name="app_dnscustom" formatted="false">自定义 DoH DNS</string>
+    <string name="app_dnscustomurlhint" formatted="false">https://dns.nextdns.io/...</string>
+    <string name="app_dnscustomurldialogtitle" formatted="false">自定义 DNS-over-HTTPS</string>
+    <string name="app_muxtitle" formatted="false">多路复用 (Mux)</string>
+    <string name="app_muxsubtitle" formatted="false">在单条隧道中复用多个 TCP 连接（不兼容 Vision）</string>
+    <string name="app_muxconcurrencylabel" formatted="false">并发连接上限</string>
+</resources>

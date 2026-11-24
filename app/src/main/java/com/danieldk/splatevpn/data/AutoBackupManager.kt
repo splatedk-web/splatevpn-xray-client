@@ -2,6 +2,11 @@ package com.danieldk.splatevpn.data
 
 import android.content.Context
 import android.util.Log
+import android.util.AtomicFile
+import androidx.room.withTransaction
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
@@ -19,11 +24,31 @@ class AutoBackupManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val serverDao: ServerDao,
     private val subscriptionDao: SubscriptionDao,
-    private val appLogManager: AppLogManager
+    private val appLogManager: AppLogManager,
+    private val database: AppDatabase
 ) {
     private val TAG = "AutoBackupManager"
     private val VAULT_FILE_NAME = "auto_backup_vault.json"
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+    private val vaultMutex = Mutex()
+    private val metadata = context.getSharedPreferences("vault_metadata", Context.MODE_PRIVATE)
+
+    /** Persist before deleting: an interrupted delete must never resurrect credentials. */
+    fun prepareForDeletion() {
+        check(metadata.edit().putBoolean("intentional_deletion", true).commit())
+    }
+
+    suspend fun <T> deleteAndBackup(afterCommit: () -> Unit = {}, block: suspend () -> T): T = withContext(Dispatchers.IO) {
+        vaultMutex.withLock {
+            prepareForDeletion()
+            kotlinx.coroutines.withContext(kotlinx.coroutines.NonCancellable) {
+                val result = database.withTransaction { block() }
+                afterCommit()
+                backupLocked()
+                result
+            }
+        }
+    }
 
     data class VaultPayload(
         val version: Int = 1,
@@ -37,23 +62,23 @@ class AutoBackupManager @Inject constructor(
     /**
      * Сохраняет текущее состояние серверов и подписок в защищённый локальный файл-снапшот.
      */
-    suspend fun backupToVault() = withContext(Dispatchers.IO) {
+    suspend fun backupToVault() = withContext(Dispatchers.IO) { vaultMutex.withLock { backupLocked() } }
+
+    private suspend fun backupLocked() {
         try {
-            val servers = serverDao.getAllServersSync()
-            val subscriptions = subscriptionDao.getAllSubscriptionsSync()
-
-            if (servers.isEmpty() && subscriptions.isEmpty()) {
-                // Не перезаписываем существующий снапшот пустыми данными при случайном старте
-                return@withContext
+            val payload = database.withTransaction {
+                VaultPayload(servers = serverDao.getAllServersSync(), subscriptions = subscriptionDao.getAllSubscriptionsSync())
             }
-
-            val payload = VaultPayload(
-                servers = servers,
-                subscriptions = subscriptions
-            )
-            val json = gson.toJson(payload)
-            getVaultFile().writeText(json)
-            Log.d(TAG, "Снапшот базы данных успешно сохранён (${servers.size} узлов, ${subscriptions.size} подписок)")
+            val json = AwgLocalVault.seal(gson.toJsonTree(payload).asJsonObject).toString()
+            require(json.toByteArray(Charsets.UTF_8).size <= 32 * 1024 * 1024) { "Vault exceeds 32 MB" }
+            val file = AtomicFile(getVaultFile())
+            val output = file.startWrite()
+            try { output.write(json.toByteArray(Charsets.UTF_8)); file.finishWrite(output) }
+            catch (error: Exception) { file.failWrite(output); throw error }
+            if (payload.servers.isNotEmpty()) metadata.edit().putBoolean("intentional_deletion", false).commit()
+            Log.d(TAG, "Снапшот базы данных сохранён (${payload.servers.size} узлов)")
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Ошибка сохранения снапшота базы данных: ${e.message}", e)
         }
@@ -64,37 +89,51 @@ class AutoBackupManager @Inject constructor(
      */
     fun hasVaultBackup(): Boolean {
         val file = getVaultFile()
-        return file.exists() && file.length() > 10L
+        return file.exists() || File(file.path + ".bak").exists()
     }
 
     /**
      * Восстанавливает узлы и подписки из локального снапшота.
      */
-    suspend fun restoreFromVault(): Result<Int> = withContext(Dispatchers.IO) {
+    suspend fun restoreFromVault(): Result<Int> = withContext(Dispatchers.IO) { vaultMutex.withLock { restoreLocked() } }
+
+    private suspend fun restoreLocked(onlyIfEmpty: Boolean = false): Result<Int> {
         try {
             val file = getVaultFile()
             if (!file.exists()) {
-                return@withContext Result.failure(Exception("Файл резервной автокопии не найден"))
+                if (!File(file.path + ".bak").exists()) return Result.failure(Exception("Файл резервной автокопии не найден"))
             }
 
-            val content = file.readText()
-            val payload = gson.fromJson(content, VaultPayload::class.java)
-                ?: return@withContext Result.failure(Exception("Не удалось прочитать резервную автокопию"))
+            val content = AtomicFile(file).openRead().use { it.readLimited(32 * 1024 * 1024).toString(Charsets.UTF_8) }
+            val document = AwgLocalVault.open(JsonParser.parseString(content).asJsonObject)
+            require(document["version"]?.asInt == 1) { "Unsupported vault version" }
+            document.addProperty("app", "SplateVPN")
+            document.add("settings", JsonObject())
+            document.add("perAppPackages", com.google.gson.JsonArray())
+            document.add("customRoutes", com.google.gson.JsonArray())
+            val validated = BackupValidation.decode(document.toString())
+            val payload = gson.fromJson(document, VaultPayload::class.java)
+                ?: return Result.failure(Exception("Не удалось прочитать резервную автокопию"))
 
             var restoredCount = 0
-            if (payload.servers.isNotEmpty()) {
-                serverDao.insertServers(payload.servers)
+            database.withTransaction {
+            if (onlyIfEmpty && serverDao.getAllServersSync().isNotEmpty()) return@withTransaction
+            if (validated.servers.isNotEmpty()) {
+                val selected = serverDao.getSelectedServerSync()?.id ?: validated.servers.firstOrNull { it.isSelected }?.id
+                serverDao.insertServers(validated.servers.map { it.copy(isSelected = it.id == selected) })
                 restoredCount += payload.servers.size
             }
             if (payload.subscriptions.isNotEmpty()) {
-                subscriptionDao.insertSubscriptions(payload.subscriptions)
+                subscriptionDao.insertSubscriptions(validated.subscriptions)
+            }
             }
 
             appLogManager.i(TAG, "Восстановлено из автокопии: $restoredCount серверов, ${payload.subscriptions.size} подписок")
-            Result.success(restoredCount)
+            return Result.success(restoredCount)
+        } catch (e: CancellationException) { throw e
         } catch (e: Exception) {
             Log.e(TAG, "Ошибка восстановления из автокопии: ${e.message}", e)
-            Result.failure(e)
+            return Result.failure(e)
         }
     }
 
@@ -102,40 +141,49 @@ class AutoBackupManager @Inject constructor(
      * Аварийное самовосстановление: вызывается при инициализации, если база данных пуста.
      * Проверяет снапшот, а если его нет — пытается спасти узел из последнего конфига Xray.
      */
-    suspend fun tryAutoRestoreIfEmpty(): Int = withContext(Dispatchers.IO) {
+    suspend fun tryAutoRestoreIfEmpty(): Int = withContext(Dispatchers.IO) { vaultMutex.withLock {
         try {
             val currentServers = serverDao.getAllServersSync()
             if (currentServers.isNotEmpty()) {
                 // База не пуста, обновляем снапшот на всякий случай
-                backupToVault()
-                return@withContext 0
+                backupLocked()
+                return@withLock 0
             }
+            if (metadata.getBoolean("intentional_deletion", false)) return@withLock 0
 
             // 1. Попытка восстановить из vault-снапшота
             if (hasVaultBackup()) {
-                val res = restoreFromVault()
+                val res = restoreLocked(onlyIfEmpty = true)
                 if (res.isSuccess && (res.getOrNull() ?: 0) > 0) {
                     val count = res.getOrNull() ?: 0
                     appLogManager.w(TAG, "🛡️ База данных была пуста. Автоматически восстановлено $count серверов из резервной автокопии!")
-                    return@withContext count
+                    return@withLock count
                 }
+                // A valid empty snapshot records an intentionally empty database.
+                if (res.isSuccess) return@withLock 0
             }
 
             // 2. Если автокопии нет (первый запуск после неудачной миграции), ищем последний рабочий xray_config.json
             val rescuedServer = rescueFromXrayConfig()
             if (rescuedServer != null) {
-                serverDao.insertServer(rescuedServer.copy(isSelected = true))
+                val inserted = database.withTransaction {
+                    if (serverDao.getAllServersSync().isNotEmpty()) false else {
+                        serverDao.insertServer(rescuedServer.copy(isSelected = true)); true
+                    }
+                }
+                if (!inserted) return@withLock 0
                 appLogManager.w(TAG, "🛡️ База данных была пуста после обновления. Автоматически спасён и восстановлен рабочий узел: ${rescuedServer.name} (${rescuedServer.address}:${rescuedServer.port})")
-                backupToVault()
-                return@withContext 1
+                backupLocked()
+                return@withLock 1
             }
 
             0
+        } catch (e: CancellationException) { throw e
         } catch (e: Exception) {
             Log.e(TAG, "Ошибка в tryAutoRestoreIfEmpty: ${e.message}", e)
             0
         }
-    }
+    } }
 
     /**
      * Извлекает узел из последнего сохранённого xray_config.json, если база была стёрта.

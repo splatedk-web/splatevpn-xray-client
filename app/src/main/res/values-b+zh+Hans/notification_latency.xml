@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_ping">延迟：%1$d ms</string>
+    <string name="notification_ping_unknown">延迟：—</string>
+</resources>

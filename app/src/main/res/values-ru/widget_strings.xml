@@ -1,0 +1,32 @@
+<resources>
+    <string name="widget_name">Splate · Статус VPN</string>
+    <string name="widget_quick_name">Splate · Кнопка VPN</string>
+    <string name="widget_description">Подключение VPN, выбранный сервер и скорость. Можно изменить размер.</string>
+    <string name="widget_quick_description">Включение и отключение VPN одним нажатием.</string>
+    <string name="widget_brand">SplateVPN</string>
+    <string name="widget_download">↓ Загрузка</string>
+    <string name="widget_upload">↑ Отдача</string>
+    <string name="widget_connected">ПОДКЛЮЧЕНО</string>
+    <string name="widget_disconnected">ОТКЛЮЧЕНО</string>
+    <string name="widget_connecting">ПОДКЛЮЧЕНИЕ</string>
+    <string name="widget_disconnecting">ОТКЛЮЧЕНИЕ</string>
+    <string name="widget_failed">СБОЙ СОЕДИНЕНИЯ</string>
+    <string name="widget_choose_server">Выберите сервер</string>
+    <string name="widget_tunnel_active">VPN активен</string>
+    <string name="widget_servers">Выбрать сервер</string>
+    <string name="widget_on">ВКЛ</string>
+    <string name="widget_off">ВЫКЛ</string>
+    <string name="widget_wait">···</string>
+    <string name="widget_tap_to_connect">Нажмите кнопку питания для подключения</string>
+    <string name="widget_tap_to_retry">Повторить подключение</string>
+    <string name="widget_starting">Подключаемся к серверу…</string>
+    <string name="widget_stopping">Завершаем соединение…</string>
+    <string name="widget_ping">%1$d мс</string>
+    <string name="widget_traffic">↓ %1$s   ↑ %2$s</string>
+    <string name="widget_start_vpn">Включить VPN</string>
+    <string name="widget_stop_vpn">Отключить VPN</string>
+    <string name="widget_quick_on">ВКЛ</string>
+    <string name="widget_quick_off">ВЫКЛ</string>
+    <string name="widget_quick_connecting">ЖДИТЕ</string>
+    <string name="widget_quick_failed">СБОЙ</string>
+</resources>

@@ -6,6 +6,8 @@ import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,8 +19,6 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,17 +35,19 @@ data class LogEntry(
 
 @Singleton
 class AppLogManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val anonymousReports: AnonymousReportStore? = null
 ) {
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val dateFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.US)
     private val reportDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
     private val maxBufferEntries = 3000
     private val maxErrorEntries = 1000
-    private val logQueue = ConcurrentLinkedDeque<LogEntry>()
-    private val errorQueue = ConcurrentLinkedDeque<LogEntry>()
-    private val hasPendingFlowUpdate = AtomicBoolean(false)
+    private val bufferLock = Any()
+    private val logQueue = ArrayDeque<LogEntry>()
+    private val errorQueue = ArrayDeque<LogEntry>()
+    private var hasPendingFlowUpdate = false
 
     private val _logsFlow = MutableStateFlow<List<LogEntry>>(emptyList())
     val logsFlow: StateFlow<List<LogEntry>> = _logsFlow.asStateFlow()
@@ -57,37 +59,49 @@ class AppLogManager @Inject constructor(
         File(context.filesDir, "splate_debug.log")
     }
 
-    private val logChannel = kotlinx.coroutines.channels.Channel<LogEntry>(capacity = 1000)
+    private val writes = LogWriteQueue<LogEntry>(capacity = 1000)
+    private val writerWakeup = Channel<Unit>(Channel.CONFLATED)
 
     init {
-        // Publish at most five snapshots per second, even when the disk writer
-        // catches up after each individual line. Always flush the final update.
         scope.launch {
             while (isActive) {
                 delay(200L)
-                if (hasPendingFlowUpdate.compareAndSet(true, false)) {
-                    _logsFlow.value = logQueue.toList()
-                    _errorsFlow.value = errorQueue.toList()
+                synchronized(bufferLock) {
+                    if (hasPendingFlowUpdate) {
+                        hasPendingFlowUpdate = false
+                        _logsFlow.value = logQueue.toList()
+                        _errorsFlow.value = errorQueue.toList()
+                    }
                 }
             }
         }
         scope.launch {
-            for (entry in logChannel) {
-                try {
-                    // Rotate log file to .1 when reaching 5MB instead of deleting all history
-                    val maxLogFileSize = 5 * 1024 * 1024L
-                    if (logFile.length() > maxLogFileSize) {
-                        val backupFile = File(context.filesDir, "splate_debug.log.1")
-                        if (backupFile.exists()) backupFile.delete()
-                        logFile.renameTo(backupFile)
+            var diskClearPending = false
+            for (signal in writerWakeup) {
+                while (true) {
+                    val write = writes.poll() ?: break
+                    if (write == LogWrite.Clear) diskClearPending = true
+                    try {
+                        if (diskClearPending) {
+                            for (file in listOf(logFile, File(context.filesDir, "splate_debug.log.1"))) {
+                                check(!file.exists() || file.delete() || !file.exists()) { "Could not clear log file" }
+                            }
+                            diskClearPending = false
+                        }
+                        if (write is LogWrite.Append) {
+                            if (logFile.length() > 5 * 1024 * 1024L) {
+                                val backupFile = File(context.filesDir, "splate_debug.log.1")
+                                if (backupFile.exists()) backupFile.delete()
+                                logFile.renameTo(backupFile)
+                            }
+                            FileOutputStream(logFile, true).use { output ->
+                                output.write("${write.entry}\n".toByteArray(Charsets.UTF_8))
+                            }
+                        }
+                    } catch (_: Exception) {
+                        // Memory logging remains available if storage cannot be written.
                     }
-                    FileOutputStream(logFile, true).use { fos ->
-                        fos.write("${entry}\n".toByteArray(Charsets.UTF_8))
-                    }
-                } catch (e: Exception) {
-                    // ignore file write errors
                 }
-
             }
         }
         log("AppLogManager", "Диагностический логгер инициализирован")
@@ -102,19 +116,17 @@ class AppLogManager @Inject constructor(
             message = message
         )
 
-        logQueue.addLast(entry)
-        while (logQueue.size > maxBufferEntries) {
-            logQueue.pollFirst()
-        }
-
-        if (level == "ERROR" || level == "WARN") {
-            errorQueue.addLast(entry)
-            while (errorQueue.size > maxErrorEntries) {
-                errorQueue.pollFirst()
+        synchronized(bufferLock) {
+            logQueue.addLast(entry)
+            while (logQueue.size > maxBufferEntries) logQueue.removeFirst()
+            if (level == "ERROR" || level == "WARN") {
+                errorQueue.addLast(entry)
+                while (errorQueue.size > maxErrorEntries) errorQueue.removeFirst()
             }
+            hasPendingFlowUpdate = true
+            writes.append(entry)
         }
 
-        // Also write to logcat
         when (level) {
             "ERROR" -> Log.e(tag, message)
             "WARN" -> Log.w(tag, message)
@@ -122,14 +134,19 @@ class AppLogManager @Inject constructor(
             else -> Log.i(tag, message)
         }
 
-        hasPendingFlowUpdate.set(true)
-        logChannel.trySend(entry)
+        writerWakeup.trySend(Unit)
     }
 
     fun i(tag: String, message: String) = log(tag, message, "INFO")
     fun d(tag: String, message: String) = log(tag, message, "DEBUG")
     fun w(tag: String, message: String) = log(tag, message, "WARN")
     fun e(tag: String, message: String, throwable: Throwable? = null) {
+        if (throwable != null) anonymousReports?.recordError(throwable, when {
+            tag.contains("qr", true) -> "QR"
+            tag.contains("tor", true) -> "TOR"
+            tag.contains("transfer", true) -> "TRANSFER"
+            else -> "CONNECTION"
+        })
         val fullMsg = if (throwable != null) {
             "$message\n${throwable.stackTraceToString()}"
         } else {
@@ -139,19 +156,15 @@ class AppLogManager @Inject constructor(
     }
 
     fun clear() {
-        logQueue.clear()
-        errorQueue.clear()
-        _logsFlow.value = emptyList()
-        _errorsFlow.value = emptyList()
-        scope.launch {
-            try {
-                if (logFile.exists()) logFile.delete()
-                val backupFile = File(context.filesDir, "splate_debug.log.1")
-                if (backupFile.exists()) backupFile.delete()
-            } catch (e: Exception) {
-                // ignore
-            }
+        synchronized(bufferLock) {
+            logQueue.clear()
+            errorQueue.clear()
+            hasPendingFlowUpdate = false
+            _logsFlow.value = emptyList()
+            _errorsFlow.value = emptyList()
+            writes.clear()
         }
+        writerWakeup.trySend(Unit)
         log("AppLogManager", "Журнал логов очищен")
     }
 
@@ -161,7 +174,8 @@ class AppLogManager @Inject constructor(
         routingMode: String? = null,
         dnsProvider: String? = null,
         vpnConnected: Boolean = false,
-        ipDetails: String? = null
+        ipDetails: String? = null,
+        privateValues: Collection<String> = emptyList()
     ): String {
         val sb = StringBuilder()
         val now = synchronized(reportDateFormat) { reportDateFormat.format(Date()) }
@@ -170,6 +184,9 @@ class AppLogManager @Inject constructor(
         sb.appendLine("       SplateVPN - ДИАГНОСТИЧЕСКИЙ ОТЧЕТ       ")
         sb.appendLine("==========================================")
         sb.appendLine("Дата и время: $now")
+        val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull()
+        sb.appendLine("Версия SplateVPN: ${version ?: "unknown"}")
+        sb.appendLine("Ядро Xray: ${com.danieldk.splatevpn.SplateConstants.XRAY_VERSION}")
         sb.appendLine("Устройство: ${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})")
         sb.appendLine("Версия Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
         sb.appendLine("Архитектура: ${Build.SUPPORTED_ABIS.joinToString(", ")}")
@@ -181,7 +198,9 @@ class AppLogManager @Inject constructor(
             sb.appendLine("Геолокация выхода: $ipDetails")
         }
 
-        val recentErrors = errorQueue.toList()
+        val (recentErrors, recentLogs) = synchronized(bufferLock) {
+            errorQueue.toList().takeLast(100) to logQueue.toList().takeLast(200)
+        }
         if (recentErrors.isNotEmpty()) {
             sb.appendLine("------------------------------------------")
             sb.appendLine("СОХРАНЕННЫЕ ОШИБКИ И ПРЕДУПРЕЖДЕНИЯ (${recentErrors.size} записей):")
@@ -192,10 +211,10 @@ class AppLogManager @Inject constructor(
         }
 
         sb.appendLine("------------------------------------------")
-        sb.appendLine("ПОСЛЕДНИЕ СОБЫТИЯ И ЛОГИ СИСТЕМЫ (${logQueue.size} записей):")
+        sb.appendLine("ПОСЛЕДНИЕ СОБЫТИЯ И ЛОГИ СИСТЕМЫ (${recentLogs.size} записей):")
         sb.appendLine("------------------------------------------")
 
-        for (entry in logQueue) {
+        for (entry in recentLogs) {
             sb.appendLine(entry.toString())
         }
 
@@ -203,6 +222,6 @@ class AppLogManager @Inject constructor(
         sb.appendLine("           КОНЕЦ ОТЧЕТА                   ")
         sb.appendLine("==========================================")
 
-        return sb.toString()
+        return DiagnosticRedactor.redact(sb.toString(), privateValues + listOfNotNull(activeServerName))
     }
 }

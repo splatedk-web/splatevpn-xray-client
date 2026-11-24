@@ -19,4 +19,16 @@ class SubscriptionLabelsTest {
         assertEquals(SplateConstants.PRESET_SUB_CIDR_NAME,
             subscriptionDisplayName("custom-id", SplateConstants.PRESET_SUB_CIDR_NAME, EnglishAppStrings()))
     }
+
+    @Test fun additionalWhitelistPublishersKeepTheirBrandAndUserRenames() {
+        listOf(
+            Triple(SplateConstants.PRESET_SUB_LTE_ID, SplateConstants.PRESET_SUB_LTE_NAME, "LTE Checked"),
+            Triple(SplateConstants.PRESET_SUB_BLACK_ID, SplateConstants.PRESET_SUB_BLACK_NAME, "Black VLESS")
+        ).forEach { (id, name, publisher) ->
+            val expected = if (id == SplateConstants.PRESET_SUB_BLACK_ID) "Blacklist ($publisher)" else "Allowlist ($publisher)"
+            assertEquals(expected, subscriptionDisplayName(id, name, EnglishAppStrings()))
+            assertEquals(name, subscriptionDisplayName(id, name, RussianAppStrings()))
+            assertEquals("My source", subscriptionDisplayName(id, "My source", EnglishAppStrings()))
+        }
+    }
 }

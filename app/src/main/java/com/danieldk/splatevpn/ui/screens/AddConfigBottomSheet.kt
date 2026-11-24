@@ -1,8 +1,13 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+
 import android.widget.Toast
+import kotlinx.coroutines.launch
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,9 +31,8 @@ import com.danieldk.splatevpn.ui.components.liquidGlass
 import com.danieldk.splatevpn.ui.components.tactileClickable
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import com.danieldk.splatevpn.ui.theme.localized
+import com.danieldk.splatevpn.ui.components.SplateButton
 
 private enum class DetectedPayloadType {
     NONE,
@@ -51,22 +55,41 @@ fun AddConfigBottomSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var inputLink by remember { mutableStateOf(initialText) }
+    val scanQr = com.danieldk.splatevpn.ui.components.rememberQrImporter { inputLink = it.trim() }
+    val importScope = rememberCoroutineScope()
+    val pickAwg = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) importScope.launch {
+            runCatching { kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                context.contentResolver.openInputStream(uri)?.use { stream ->
+                    val bytes = ByteArray(65537); var count = 0
+                    while (count < bytes.size) { val n = stream.read(bytes, count, bytes.size - count); if (n < 0) break; count += n }
+                    require(count <= 65536) { "AWG profile exceeds 64 KiB" }
+                    bytes.copyOf(count).toString(Charsets.UTF_8).also { com.danieldk.splatevpn.data.AmneziaWg.parse(it) }
+                } ?: error("Cannot read AWG file")
+            } }.onSuccess { inputLink = it }.onFailure { Toast.makeText(context, it.message ?: strings.invalidLinkFormat, Toast.LENGTH_LONG).show() }
+        }
+    }
     var subscriptionName by remember { mutableStateOf("") }
     var isOperating by remember { mutableStateOf(false) }
+    var userAgent by remember(inputLink) { mutableStateOf(viewModel.getSubscriptionUserAgent(inputLink)) }
+    val hwidEligible = remember(inputLink) { viewModel.canSendSubscriptionHwid(inputLink) }
+    var hwidEnabled by remember(inputLink) { mutableStateOf(viewModel.isSubscriptionHwidEnabled(inputLink)) }
 
-    // Smart detector for entered or pasted payload
     val detectedType = remember(inputLink) {
         val trimmed = inputLink.trim()
         when {
             trimmed.isEmpty() -> DetectedPayloadType.NONE
+            com.danieldk.splatevpn.data.AmneziaWg.looksLike(trimmed) -> DetectedPayloadType.SINGLE_SERVER
             com.danieldk.splatevpn.data.LinkParser.normalizeSubscriptionUrl(trimmed) != null ||
                     com.danieldk.splatevpn.data.LinkParser.isEncryptedSubscriptionLink(trimmed) -> {
                 DetectedPayloadType.SUBSCRIPTION_URL
             }
-            trimmed.lines().count { it.isNotBlank() } > 1 -> {
+            com.danieldk.splatevpn.data.LinkParser.isBase64Content(trimmed) || trimmed.lines().count { it.isNotBlank() } > 1 -> {
                 DetectedPayloadType.MULTIPLE_SERVERS
             }
             trimmed.startsWith("vless://", ignoreCase = true) ||
+            trimmed.startsWith("hy2://", ignoreCase = true) ||
+            trimmed.startsWith("hysteria2://", ignoreCase = true) ||
             trimmed.startsWith("vmess://", ignoreCase = true) ||
             trimmed.startsWith("ss://", ignoreCase = true) ||
             trimmed.startsWith("trojan://", ignoreCase = true) ||
@@ -88,7 +111,9 @@ fun AddConfigBottomSheet(
         if (detectedType == DetectedPayloadType.SUBSCRIPTION_URL) {
             viewModel.importSubscription(
                 url = trimmed,
-                title = subscriptionName.takeIf { it.isNotBlank() }
+                title = subscriptionName.takeIf { it.isNotBlank() },
+                hwid = hwidEnabled.takeIf { hwidEligible },
+                userAgent = userAgent
             ) { result ->
                 isOperating = false
                 result.onSuccess { count ->
@@ -107,7 +132,10 @@ fun AddConfigBottomSheet(
                 }
             }
         } else {
-            viewModel.addServersFromLinks(trimmed) { count ->
+            viewModel.addServersFromLinks(trimmed, onImportError = { message ->
+                isOperating = false
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            }) { count ->
                 isOperating = false
                 if (count > 0) {
                     val msg = if (count == 1) {
@@ -130,9 +158,12 @@ fun AddConfigBottomSheet(
         containerColor = colors.background,
         dragHandle = null
     ) {
+        com.danieldk.splatevpn.ui.components.rememberAndApplyPopupWindowBlur(blurBehind = true, backgroundBlur = false)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp)
                 .padding(top = 16.dp, bottom = 36.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -183,6 +214,12 @@ fun AddConfigBottomSheet(
                         modifier = Modifier.size(20.dp)
                     )
                 }
+            }
+
+            com.danieldk.splatevpn.ui.components.SplateTextButton(onClick = { pickAwg.launch(arrayOf("*/*")) }, enabled = !isOperating) {
+                Icon(Icons.Default.FolderOpen, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text(com.danieldk.splatevpn.ui.theme.LocalAppResources.current.getString(com.danieldk.splatevpn.R.string.awg_import_file))
             }
 
             // Quick Actions: Large Tap Target Action Cards (48+ dp height)
@@ -255,24 +292,7 @@ fun AddConfigBottomSheet(
                             accentBorder = colors.accentAmber.copy(alpha = 0.45f)
                         )
                         .tactileClickable(targetScale = 0.95f, enabled = !isOperating) {
-                            val options = GmsBarcodeScannerOptions.Builder()
-                                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                                .build()
-                            val scanner = GmsBarcodeScanning.getClient(context, options)
-                            scanner.startScan()
-                                .addOnSuccessListener { barcode ->
-                                    val raw = barcode.rawValue
-                                    if (!raw.isNullOrBlank()) {
-                                        inputLink = raw.trim()
-                                    }
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(
-                                        context,
-                                        String.format(strings.qrScanError, e.message ?: ""),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                            scanQr()
                         }
                         .padding(horizontal = 12.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -428,6 +448,17 @@ fun AddConfigBottomSheet(
                 }
             }
 
+            if (detectedType == DetectedPayloadType.SUBSCRIPTION_URL && hwidEligible) {
+                com.danieldk.splatevpn.ui.components.SubscriptionHwidSetting(
+                    hwidEnabled, { hwidEnabled = it }, enabled = !isOperating)
+            }
+
+            if (detectedType == DetectedPayloadType.SUBSCRIPTION_URL) {
+                userAgent?.let {
+                    com.danieldk.splatevpn.ui.components.SubscriptionUserAgentSetting(it, { userAgent = it }, !isOperating)
+                }
+            }
+
             // Operation Progress Status
             AnimatedVisibility(visible = isOperating) {
                 Row(
@@ -442,7 +473,7 @@ fun AddConfigBottomSheet(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = if (detectedType == DetectedPayloadType.SUBSCRIPTION_URL) strings.subLoading else "Импорт узлов...",
+                        text = if (detectedType == DetectedPayloadType.SUBSCRIPTION_URL) strings.subLoading else strings.localized("Импорт узлов…", "Importing servers…"),
                         fontSize = 12.sp,
                         color = colors.textSecondary,
                         fontFamily = FontFamily.Monospace
@@ -450,7 +481,6 @@ fun AddConfigBottomSheet(
                 }
             }
 
-            // Primary Action Button (High Contrast & Clear Ergonomics, 52dp height)
             val isButtonEnabled = inputLink.isNotBlank() && !isOperating
             val buttonAccentColor = when (detectedType) {
                 DetectedPayloadType.SUBSCRIPTION_URL -> colors.accentAmber
@@ -458,32 +488,13 @@ fun AddConfigBottomSheet(
                 else -> colors.accentCyan
             }
 
-            Box(
+            SplateButton(
+                onClick = { executeImport() },
+                enabled = isButtonEnabled,
+                colors = ButtonDefaults.buttonColors(containerColor = buttonAccentColor),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(
-                        if (isButtonEnabled) {
-                            Brush.horizontalGradient(
-                                listOf(
-                                    buttonAccentColor,
-                                    buttonAccentColor.copy(alpha = 0.85f)
-                                )
-                            )
-                        } else {
-                            Brush.linearGradient(
-                                listOf(
-                                    colors.surface,
-                                    colors.surface
-                                )
-                            )
-                        }
-                    )
-                    .tactileClickable(enabled = isButtonEnabled) {
-                        executeImport()
-                    },
-                contentAlignment = Alignment.Center
+                    .heightIn(min = 52.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -493,18 +504,16 @@ fun AddConfigBottomSheet(
                             Icons.Default.Add
                         },
                         contentDescription = null,
-                        tint = if (isButtonEnabled) LocalAppThemeColors.current.onAccent else colors.textTertiary,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = when (detectedType) {
-                            DetectedPayloadType.SUBSCRIPTION_URL -> "Импортировать подписку"
-                            DetectedPayloadType.MULTIPLE_SERVERS -> "Импортировать все узлы"
-                            DetectedPayloadType.SINGLE_SERVER -> "Добавить узел"
+                            DetectedPayloadType.SUBSCRIPTION_URL -> strings.localized("Импортировать подписку", "Import subscription")
+                            DetectedPayloadType.MULTIPLE_SERVERS -> strings.localized("Импортировать все узлы", "Import all servers")
+                            DetectedPayloadType.SINGLE_SERVER -> strings.localized("Добавить узел", "Add server")
                             DetectedPayloadType.NONE -> strings.importAction
                         },
-                        color = if (isButtonEnabled) LocalAppThemeColors.current.onAccent else colors.textTertiary,
                         fontSize = 13.5.sp,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Black,

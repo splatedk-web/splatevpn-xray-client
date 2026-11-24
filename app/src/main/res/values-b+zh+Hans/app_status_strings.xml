@@ -1,0 +1,9 @@
+<resources>
+    <string name="about_app_version">应用版本</string>
+    <string name="about_transports">传输方式</string>
+    <string name="update_result_available">发现更新 %1$s</string>
+    <string name="update_result_current">你已使用最新版本</string>
+    <string name="update_result_wifi">请连接 Wi-Fi 以检查更新</string>
+    <string name="update_result_failed">无法检查更新，请重试。</string>
+    <string name="server_ping_result">%1$s · 已检测：%2$d · 可用：%3$d</string>
+</resources>

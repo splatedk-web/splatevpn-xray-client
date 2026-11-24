@@ -1,0 +1,5 @@
+<resources>
+    <string name="subscription_agent_title">Subscription client: %1$s</string>
+    <string name="subscription_agent_auto">Automatic</string>
+    <string name="subscription_agent_hint">Changes the User-Agent sent to this subscription provider. HWID is controlled separately.</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bqc_goal_title">Для чего</string>
+    <string name="bqc_metric_title">Подбор по</string>
+    <string name="bqc_goal_general">Обычный</string>
+    <string name="bqc_goal_youtube_ru">YouTube (RU)</string>
+    <string name="bqc_metric_latency">Задержка</string>
+    <string name="bqc_metric_download">Скорость</string>
+    <string name="bqc_metric_download_traffic">Скорость · расходует трафик</string>
+    <string name="bqc_hint_general">Без приоритета сервиса.</string>
+    <string name="bqc_hint_telegram">Проверяется реальное соединение MTProto с Telegram.</string>
+    <string name="bqc_hint_youtube">Проверяются метаданные YouTube и загрузка фрагмента видео.</string>
+    <string name="bqc_hint_tiktok">Проверяется сайт TikTok; работа аккаунта и приложения не гарантируется.</string>
+    <string name="bqc_hint_youtube_ru">Проверяются метаданные YouTube, фрагмент видео и российский IP выхода.</string>
+    <string name="bqc_hint_download">Реальная загрузка по 4 МиБ; до %1$d МиБ в час.</string>
+    <string name="bqc_expanded">Варианты открыты</string>
+    <string name="bqc_collapsed">Открыть варианты</string>
+    <string name="balancer_warm_standby">Резервные серверы</string>
+    <string name="balancer_warm_standby_hint">Проверять альтернативы в фоне, не меняя подключение. Работает и при ручном выборе.</string>
+    <string name="balancer_speed_budget">Лимит проверки скорости</string>
+    <string name="balancer_speed_budget_value">%1$d МиБ/час</string>
+    <string name="bqc_hint_https_service">Проверяется ответ %1$s по HTTPS. Вход, звонки и воспроизведение не проверяются.</string>
+</resources>

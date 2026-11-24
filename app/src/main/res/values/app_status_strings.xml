@@ -1,0 +1,9 @@
+<resources>
+    <string name="about_app_version">App version</string>
+    <string name="about_transports">Transports</string>
+    <string name="update_result_available">Update found: %1$s</string>
+    <string name="update_result_current">You’re on the latest version</string>
+    <string name="update_result_wifi">Connect to Wi-Fi to check for updates</string>
+    <string name="update_result_failed">Couldn’t check for updates. Try again.</string>
+    <string name="server_ping_result">%1$s · Checked: %2$d · Available: %3$d</string>
+</resources>

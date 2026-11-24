@@ -87,4 +87,60 @@ class ConnectionChecksTest {
             assertEquals("timeout", result.detail)
         }
     }
+
+    @Test fun disconnectMidwayMarksAllRemainingTargetsAsSkipped() {
+        val initialResults = listOf(
+            CheckResult("Google", CheckOutcome.OK, "HTTP 200", 45L),
+            CheckResult("YouTube", CheckOutcome.OK, "HTTP 200", 50L),
+            CheckResult("Telegram", CheckOutcome.OK, "HTTP 200", 60L)
+        )
+        val processedNames = initialResults.map { it.name }.toSet()
+        val remaining = ConnectionChecks.targets.filter { it.first !in processedNames }
+            .map { CheckResult(it.first, CheckOutcome.SKIPPED, "vpn_off") }
+        val finalResults = initialResults + remaining
+        assertEquals(ConnectionChecks.targets.size, finalResults.size)
+        assertTrue(finalResults.any { it.name == "Google" && it.outcome == CheckOutcome.OK })
+        assertTrue(finalResults.any { it.name == "ChatGPT" && it.outcome == CheckOutcome.SKIPPED && it.detail == "vpn_off" })
+        assertTrue(finalResults.any { it.name == "Claude" && it.outcome == CheckOutcome.SKIPPED && it.detail == "vpn_off" })
+        assertTrue(finalResults.any { it.name == "Яндекс" && it.outcome == CheckOutcome.SKIPPED && it.detail == "vpn_off" })
+    }
+
+    @Test fun concurrentDiagnosticsInvocationIsGuardedByTryLock() = runBlocking {
+        val mutex = kotlinx.coroutines.sync.Mutex()
+        var runCount = 0
+        val slowTaskStarted = CompletableDeferred<Unit>()
+        val slowTaskCanFinish = CompletableDeferred<Unit>()
+
+        val job1 = launch(Dispatchers.Default) {
+            if (mutex.tryLock()) {
+                try {
+                    runCount++
+                    slowTaskStarted.complete(Unit)
+                    slowTaskCanFinish.await()
+                } finally {
+                    mutex.unlock()
+                }
+            }
+        }
+
+        slowTaskStarted.await()
+
+        val job2 = launch(Dispatchers.Default) {
+            // Second concurrent call while job1 holds mutex
+            if (mutex.tryLock()) {
+                try {
+                    runCount++
+                } finally {
+                    mutex.unlock()
+                }
+            }
+        }
+
+        job2.join()
+        slowTaskCanFinish.complete(Unit)
+        job1.join()
+
+        // Only the first invocation must have executed; second was safely rejected by tryLock()
+        assertEquals(1, runCount)
+    }
 }

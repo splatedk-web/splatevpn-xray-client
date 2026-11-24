@@ -35,12 +35,18 @@ internal fun ThemeObjectBackdrop(c: AppThemeColors, modifier: Modifier, phase: (
     } }
     BoxWithConstraints(modifier.clipToBounds().background(Brush.verticalGradient(listOf(c.background, c.backgroundDeep)))) {
         val preview = maxHeight < maxWidth
-        ThemeAtmosphere(c, Modifier.fillMaxSize(), phase, preview)
+        if (c.backdrop == BackdropStyle.OCEAN) {
+            OceanWaterLight(c, Modifier.fillMaxSize(), phase)
+        } else {
+            ThemeAtmosphere(c, Modifier.fillMaxSize(), phase, preview)
+            ThemeSceneMotion(c, Modifier.fillMaxSize(), phase)
+        }
         Canvas(Modifier.fillMaxSize()) {
             val center = Offset(size.width * .93f, size.height * .68f)
             drawCircle(Brush.radialGradient(listOf(glow.copy(alpha = if(c.backdrop == BackdropStyle.RINGS) .035f else .09f), Color.Transparent), center, size.minDimension * .8f), size.minDimension * .8f, center)
         }
         ThemeLayeredObjects(c.backdrop, Modifier.fillMaxSize(), phase, preview)
+        if (c.backdrop == BackdropStyle.OCEAN) OceanCaustics(c, Modifier.fillMaxSize(), phase)
         Canvas(Modifier.fillMaxSize()) {
             val p = phase()
             val unit = size.minDimension

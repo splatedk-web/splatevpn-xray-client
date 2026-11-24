@@ -70,7 +70,7 @@ internal fun ThemeAtmosphere(c: AppThemeColors, modifier: Modifier, phase: () ->
             lineTo(w * (-.35f + i * .32f), h * .88f)
             lineTo(w * (-.65f + i * .32f), h * .88f); close()
         } }
-        val beamBrush = Brush.verticalGradient(listOf(cyan.copy(alpha = .11f), cyan.copy(alpha = .025f), Color.Transparent), 0f, h * .88f)
+        val beamBrush = Brush.verticalGradient(listOf(cyan.copy(alpha = .055f), cyan.copy(alpha = .012f), Color.Transparent), 0f, h * .88f)
         val stroke = Stroke(unit * .08f, cap = StrokeCap.Round)
         val fineStroke = Stroke(unit * .002f, cap = StrokeCap.Round)
         onDrawBehind {
@@ -89,7 +89,7 @@ internal fun ThemeAtmosphere(c: AppThemeColors, modifier: Modifier, phase: () ->
             if(style == BackdropStyle.OCEAN) beams.forEachIndexed { i, path ->
                 translate(sin(a + i) * unit * .08f) { drawPath(path, beamBrush) }
             }
-            if(style != BackdropStyle.GRID && style != BackdropStyle.RINGS) ribbons.forEachIndexed { i, path ->
+            if(style != BackdropStyle.GRID && style != BackdropStyle.RINGS && style != BackdropStyle.AURORA) ribbons.forEachIndexed { i, path ->
                 translate(sin(a + i) * unit * .07f, cos(a + i) * unit * .025f) {
                     drawPath(path, ribbonBrushes[i], style = stroke)
                     if(style == BackdropStyle.AURORA) drawPath(path, ribbonBrushes[i], style = fineStroke)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subscription_hwid_title">Привязка устройства (HWID)</string>
+    <string name="subscription_hwid_hint">Передавать ID этой установки только этой подписке. Без IMEI и MAC-адреса. После переустановки или очистки данных ID изменится: может понадобиться сбросить устройство у провайдера.</string>
+    <string name="subscription_hwid_required">Подписке нужен HWID. Включите привязку устройства в её настройках и повторите обновление.</string>
+    <string name="subscription_hwid_device_limit">Достигнут лимит устройств подписки. Попросите провайдера удалить неиспользуемое устройство. Сохранённые серверы оставлены.</string>
+</resources>

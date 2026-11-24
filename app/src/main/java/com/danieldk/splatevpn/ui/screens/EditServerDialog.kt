@@ -1,8 +1,14 @@
 package com.danieldk.splatevpn.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+
+import com.danieldk.splatevpn.ui.components.SplateButton as Button
+
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,29 +17,34 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.danieldk.splatevpn.data.ServerNode
 import com.danieldk.splatevpn.ui.components.liquidGlass
+import com.danieldk.splatevpn.ui.components.ToolDialog
+import com.danieldk.splatevpn.ui.theme.localized
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun EditServerDialog(
     server: ServerNode,
     onDismiss: () -> Unit,
-    onSave: (ServerNode) -> Unit
+    onSave: (ServerNode, (Result<Unit>) -> Unit) -> Unit
 ) {
+    if (server.protocol.equals("amneziawg", true)) { AmneziaWgEditor(server, onDismiss, onSave); return }
     val strings = LocalAppStrings.current
     val colors = LocalAppThemeColors.current
+    val connectionEditable = com.danieldk.splatevpn.data.ServerEditPolicy.supportsConnectionEditing(server)
+    var saving by remember { mutableStateOf(false) }
+    var saveError by remember { mutableStateOf<String?>(null) }
 
     var name by remember { mutableStateOf(server.name) }
     var protocol by remember { mutableStateOf(server.protocol.lowercase()) }
@@ -56,133 +67,118 @@ fun EditServerDialog(
     }
     val scrollState = rememberScrollState()
 
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ToolDialog(
+        onDismissRequest = { if (!saving) onDismiss() },
+        maxWidth = 540.dp,
+        contentPadding = PaddingValues(16.dp)
     ) {
-        Box(
+        Text(
+            text = strings.editServerTitle,
+            color = colors.textPrimary,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "${server.address}:${server.port}",
+            color = colors.accentCyan,
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        HorizontalDivider(color = colors.borderSubtle)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(colors.background.copy(alpha = 0.65f))
-                .systemBarsPadding()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
+                .weight(1f, fill = false)
+                .verticalScroll(scrollState)
+                .padding(bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(0.96f)
-                    .fillMaxHeight(0.90f)
-                    .liquidGlass(
-                        cornerRadius = 24.dp,
-                        backgroundColor = colors.glassSurfaceElevated,
-                        borderBrush = Brush.linearGradient(
-                            listOf(
-                                colors.glassBorderLight.copy(alpha = 0.6f),
-                                colors.glassBorderDark.copy(alpha = 0.2f)
-                            )
-                        ),
-                        specularSheen = true
-                    )
-                    .padding(20.dp)
-            ) {
-                // Header
-                Text(
-                    text = strings.editServerTitle,
-                    color = colors.textPrimary,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${server.address}:${server.port}",
-                    color = colors.accentCyan,
-                    fontSize = 12.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-                HorizontalDivider(color = colors.borderSubtle)
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // Scrollable Form
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(scrollState),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
-                ) {
-                    // Node Name
-                    EditTextField(
-                        label = strings.fieldName,
-                        value = name,
-                        onValueChange = { name = it }
-                    )
-
-                    // Protocol Selector
+            EditTextField(
+                label = strings.fieldName,
+                value = name,
+                onValueChange = { if (!saving) name = it }
+            )
+            if (!connectionEditable) Text(strings.localized(
+                "Для JSON-профиля здесь можно изменить название. Остальные параметры измените в исходном JSON и импортируйте его снова.",
+                "You can rename a JSON profile here. To change connection settings, edit the original JSON and import it again."),
+                color = colors.textSecondary, fontSize = 12.sp)
+            if (connectionEditable) {
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = strings.fieldProtocol,
                         color = colors.textSecondary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth().selectableGroup(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        val protocols = listOf("vless", "vmess", "trojan", "shadowsocks")
+                        val protocols = listOf("vless", "vmess", "trojan", "shadowsocks", "hysteria2")
                         protocols.forEach { p ->
                             val selected = protocol == p
                             SelectChip(
-                                label = if (p == "shadowsocks") "SS" else p.uppercase(),
+                                label = when (p) { "shadowsocks" -> "SS"; "hysteria2" -> "HY2"; else -> p.uppercase() },
                                 isSelected = selected,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.defaultMinSize(minWidth = 52.dp)
                             ) {
                                 protocol = p
                             }
                         }
                     }
+                }
 
-                    // Host & Port
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Box(modifier = Modifier.weight(2.5f)) {
-                            EditTextField(
-                                label = strings.fieldAddress,
-                                value = address,
-                                onValueChange = { address = it },
-                                error = if (!validation.isAddressValid) strings.fieldAddressError else null,
-                                showErrorText = false
-                            )
-                        }
-                        Box(modifier = Modifier.weight(1f)) {
-                            EditTextField(
-                                label = strings.fieldPort,
-                                value = portText,
-                                onValueChange = { portText = it },
-                                error = if (validation.port == null) strings.fieldPortError else null,
-                                showErrorText = false
-                            )
-                        }
+                // Host & Port
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(modifier = Modifier.weight(2.5f)) {
+                        EditTextField(
+                            label = strings.fieldAddress,
+                            value = address,
+                            onValueChange = { address = it },
+                            error = if (!validation.isAddressValid) strings.fieldAddressError else null,
+                            showErrorText = false
+                        )
                     }
-
-                    if (!validation.isValid) {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            if (!validation.isAddressValid) Text(strings.fieldAddressError, color = colors.accentCrimson, fontSize = 12.sp)
-                            if (validation.port == null) Text(strings.fieldPortError, color = colors.accentCrimson, fontSize = 12.sp)
-                        }
+                    Box(modifier = Modifier.weight(1f)) {
+                        EditTextField(
+                            label = strings.fieldPort,
+                            value = portText,
+                            onValueChange = { portText = it },
+                            keyboardType = KeyboardType.Number,
+                            error = if (validation.port == null) strings.fieldPortError else null,
+                            showErrorText = false
+                        )
                     }
+                }
 
-                    // Network Transport (type)
+                if (!validation.isValid) {
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        if (!validation.isAddressValid) Text(strings.fieldAddressError, color = colors.accentCrimson, fontSize = 12.sp)
+                        if (validation.port == null) Text(strings.fieldPortError, color = colors.accentCrimson, fontSize = 12.sp)
+                    }
+                }
+
+                // Network Transport (type)
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = strings.fieldNetwork,
                         color = colors.textSecondary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth().selectableGroup(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         val networks = listOf("ws", "tcp", "xhttp", "grpc")
                         networks.forEach { net ->
@@ -190,23 +186,26 @@ fun EditServerDialog(
                             SelectChip(
                                 label = net.uppercase(),
                                 isSelected = selected,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.defaultMinSize(minWidth = 52.dp)
                             ) {
                                 network = net
                             }
                         }
                     }
+                }
 
-                    // Security Mode
+                // Security Mode
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
                         text = strings.fieldSecurity,
                         color = colors.textSecondary,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth().selectableGroup(),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         val securities = listOf("none", "tls", "reality")
                         securities.forEach { sec ->
@@ -214,146 +213,158 @@ fun EditServerDialog(
                             SelectChip(
                                 label = sec.uppercase(),
                                 isSelected = selected,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.defaultMinSize(minWidth = 52.dp)
                             ) {
                                 security = sec
                             }
                         }
                     }
+                }
 
-                    // SNI Domain
+                HorizontalDivider(color = colors.borderSubtle)
+                Text(
+                    strings.localized("Дополнительные параметры", "Advanced options"),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = colors.textPrimary
+                )
+
+                // SNI Domain
+                EditTextField(
+                    label = strings.fieldSni,
+                    value = sni,
+                    onValueChange = { sni = it },
+                    placeholder = strings.fieldSniHint
+                )
+
+                // Path & Host Header (for WS, XHTTP, gRPC)
+                if (network in listOf("ws", "xhttp", "grpc", "h2")) {
                     EditTextField(
-                        label = strings.fieldSni,
-                        value = sni,
-                        onValueChange = { sni = it },
-                        placeholder = strings.fieldSniHint
+                        label = strings.fieldPath,
+                        value = path,
+                        onValueChange = { path = it },
+                        placeholder = if (network == "grpc") "gun (serviceName)" else "/ws"
                     )
-
-                    // Path & Host Header (for WS, XHTTP, gRPC)
-                    if (network in listOf("ws", "xhttp", "grpc", "h2")) {
-                        EditTextField(
-                            label = strings.fieldPath,
-                            value = path,
-                            onValueChange = { path = it },
-                            placeholder = if (network == "grpc") "gun (serviceName)" else "/ws"
-                        )
-                        EditTextField(
-                            label = strings.fieldHost,
-                            value = host,
-                            onValueChange = { host = it },
-                            placeholder = strings.fieldHostHint
-                        )
-                    }
-
-                    // UUID / Password
                     EditTextField(
-                        label = if (protocol == "trojan" || protocol == "shadowsocks") strings.fieldPassword else strings.fieldUuid,
-                        value = uuid,
-                        onValueChange = { uuid = it }
+                        label = strings.fieldHost,
+                        value = host,
+                        onValueChange = { host = it },
+                        placeholder = strings.fieldHostHint
                     )
+                }
 
-                    // Reality specific fields
-                    if (security == "reality") {
-                        EditTextField(
-                            label = strings.fieldPublicKey,
-                            value = publicKey,
-                            onValueChange = { publicKey = it }
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            Box(modifier = Modifier.weight(1f)) {
-                                EditTextField(
-                                    label = strings.fieldShortId,
-                                    value = shortId,
-                                    onValueChange = { shortId = it }
-                                )
-                            }
-                            Box(modifier = Modifier.weight(1f)) {
-                                EditTextField(
-                                    label = strings.fieldSpiderX,
-                                    value = spiderX,
-                                    onValueChange = { spiderX = it }
-                                )
-                            }
+                // UUID / Password
+                EditTextField(
+                    label = if (protocol in listOf("trojan", "shadowsocks", "hysteria2")) strings.fieldPassword else strings.fieldUuid,
+                    value = uuid,
+                    onValueChange = { uuid = it }
+                )
+
+                // Reality specific fields
+                if (security == "reality") {
+                    EditTextField(
+                        label = strings.fieldPublicKey,
+                        value = publicKey,
+                        onValueChange = { publicKey = it }
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(modifier = Modifier.weight(1f)) {
+                            EditTextField(
+                                label = strings.fieldShortId,
+                                value = shortId,
+                                onValueChange = { shortId = it }
+                            )
+                        }
+                        Box(modifier = Modifier.weight(1f)) {
+                            EditTextField(
+                                label = strings.fieldSpiderX,
+                                value = spiderX,
+                                onValueChange = { spiderX = it }
+                            )
                         }
                     }
+                }
 
-                    // Flow (xtls-rprx-vision for TCP)
-                    if (network == "tcp" && security in listOf("reality", "tls")) {
-                        EditTextField(
-                            label = "Flow (Vision)",
-                            value = flow,
-                            onValueChange = { flow = it },
-                            placeholder = "xtls-rprx-vision"
-                        )
-                    }
-
-                    // Fingerprint
+                // Flow (xtls-rprx-vision for TCP)
+                if (network == "tcp" && security in listOf("reality", "tls")) {
                     EditTextField(
-                        label = strings.fieldFingerprint,
-                        value = fingerprint,
-                        onValueChange = { fingerprint = it },
-                        placeholder = "chrome"
+                        label = "Flow (Vision)",
+                        value = flow,
+                        onValueChange = { flow = it },
+                        placeholder = "xtls-rprx-vision"
                     )
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
-                HorizontalDivider(color = colors.borderSubtle)
-                Spacer(modifier = Modifier.height(14.dp))
+                // Fingerprint
+                EditTextField(
+                    label = strings.fieldFingerprint,
+                    value = fingerprint,
+                    onValueChange = { fingerprint = it },
+                    placeholder = "chrome"
+                )
+            }
+        }
 
-                // Action Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(
-                        onClick = onDismiss,
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(strings.cancel, color = colors.textSecondary)
+        Spacer(modifier = Modifier.height(10.dp))
+        HorizontalDivider(color = colors.borderSubtle)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        saveError?.let { Text(it, color = colors.accentCrimson, fontSize = 12.sp) }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !saving,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(strings.cancel, color = colors.textSecondary)
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Button(
+                enabled = !saving && (validation.isValid || !connectionEditable),
+                onClick = {
+                    if (connectionEditable && !validation.isValid) return@Button
+                    val parsedPort = validation.port ?: server.port
+                    val updated = if (!connectionEditable) server.copy(name = name.trim().ifEmpty { server.name }) else server.copy(
+                        name = name.trim().ifEmpty { server.name },
+                        protocol = protocol.trim(),
+                        address = address.trim(),
+                        port = parsedPort,
+                        network = network.trim(),
+                        security = security.trim(),
+                        sni = sni.trim(),
+                        path = path.trim(),
+                        host = host.trim(),
+                        uuid = uuid.trim(),
+                        flow = flow.trim(),
+                        publicKey = publicKey.trim(),
+                        shortId = shortId.trim(),
+                        spiderX = spiderX.trim(),
+                        fingerprint = fingerprint.trim().ifEmpty { "chrome" }
+                    )
+                    saving = true
+                    saveError = null
+                    onSave(updated) { result ->
+                        saving = false
+                        result.onSuccess { onDismiss() }.onFailure { saveError = it.message ?: strings.invalidLinkFormat }
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Button(
-                        enabled = validation.isValid,
-                        onClick = {
-                            val parsedPort = validation.port ?: return@Button
-                            if (!validation.isAddressValid) return@Button
-                            val updated = server.copy(
-                                name = name.trim().ifEmpty { server.name },
-                                protocol = protocol.trim(),
-                                address = address.trim(),
-                                port = parsedPort,
-                                network = network.trim(),
-                                security = security.trim(),
-                                sni = sni.trim(),
-                                path = path.trim(),
-                                host = host.trim(),
-                                uuid = uuid.trim(),
-                                flow = flow.trim(),
-                                publicKey = publicKey.trim(),
-                                shortId = shortId.trim(),
-                                spiderX = spiderX.trim(),
-                                fingerprint = fingerprint.trim().ifEmpty { "chrome" }
-                            )
-                            onSave(updated)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colors.accentCyan,
-                            disabledContainerColor = colors.surfaceElevated,
-                            disabledContentColor = colors.textSecondary
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = strings.save,
-                            color = if (validation.isValid) colors.onAccent else colors.textSecondary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colors.accentCyan,
+                    disabledContainerColor = colors.surfaceElevated,
+                    disabledContentColor = colors.textSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = strings.save,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -378,14 +389,15 @@ private fun SelectChip(
                 ),
                 specularSheen = isSelected
             )
-            .clickable { onClick() }
-            .padding(vertical = 8.dp),
+            .tvFocusOutline().selectable(selected = isSelected, role = Role.RadioButton, onClick = onClick)
+            .heightIn(min = 48.dp)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
             color = if (isSelected) colors.accentCyan else colors.textSecondary,
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )
     }
@@ -398,19 +410,21 @@ private fun EditTextField(
     onValueChange: (String) -> Unit,
     placeholder: String = "",
     error: String? = null,
-    showErrorText: Boolean = true
+    showErrorText: Boolean = true,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     val colors = LocalAppThemeColors.current
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
             color = colors.textSecondary,
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.height(4.dp))
         OutlinedTextField(
             value = value,
+            textStyle = androidx.compose.material3.LocalTextStyle.current.copy(textDirection = androidx.compose.ui.text.style.TextDirection.ContentOrLtr),
             onValueChange = onValueChange,
             isError = error != null,
             supportingText = if (error != null && showErrorText) { { Text(error, color = colors.accentCrimson) } } else null,
@@ -418,6 +432,7 @@ private fun EditTextField(
                 { Text(placeholder, fontSize = 12.sp, color = colors.textSecondary) }
             } else null,
             singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colors.accentCyan,

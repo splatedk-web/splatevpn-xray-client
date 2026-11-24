@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="extra_000" formatted="false">Share your VPN</string>
+    <string name="extra_001" formatted="false">Connect another device through your phone</string>
+    <string name="extra_002" formatted="false">Which device are you connecting?</string>
+    <string name="extra_003" formatted="false">In an app</string>
+    <string name="extra_004" formatted="false">Phone</string>
+    <string name="extra_005" formatted="false">Device</string>
+    <string name="extra_006" formatted="false">Check</string>
+    <string name="extra_007" formatted="false">Back</string>
+    <string name="extra_008" formatted="false">Next</string>
+    <string name="extra_009" formatted="false">Done</string>
+    <string name="extra_010" formatted="false">Wi-Fi / USB / LAN</string>
+    <string name="extra_011" formatted="false">Your device</string>
+    <string name="extra_012" formatted="false">First, on the phone running SplateVPN</string>
+    <string name="extra_013" formatted="false">Connect the VPN</string>
+    <string name="extra_014" formatted="false">Choose a working server in SplateVPN and connect. For testing, the All traffic route is convenient.</string>
+    <string name="extra_015" formatted="false">Enable sharing in SplateVPN</string>
+    <string name="extra_016" formatted="false">Settings → Share VPN over LAN. Choose an interface and wait for the VPN to reconnect. On the other device, enable proxy authentication: username splate and the password shown in sharing settings.</string>
+    <string name="extra_017" formatted="false">Connect the devices</string>
+    <string name="extra_018" formatted="false">Enable the phone\'s hotspot and connect the other device over Wi-Fi. A computer supporting Android USB tethering can use USB instead. A shared LAN also works if client isolation is disabled.</string>
+    <string name="extra_019" formatted="false">For Android and iPhone/iPad, connect to the phone\'s hotspot over Wi-Fi. Configure the proxy for that network.</string>
+    <string name="extra_020" formatted="false">For a Mac, use Wi-Fi or a shared LAN. Android USB tethering support depends on the phone and driver; Wi-Fi is the main option.</string>
+    <string name="extra_021" formatted="false">This shares a proxy connection. It works in browsers and apps that honor the system proxy or provide their own proxy settings. Games, calls and other apps may bypass it; the device\'s entire traffic does not automatically enter the VPN.</string>
+    <string name="extra_022" formatted="false">VPN is disconnected. Connect it on the home screen.</string>
+    <string name="extra_023" formatted="false">Sharing is not running yet. Enable it and wait for the VPN to reconnect.</string>
+    <string name="extra_024" formatted="false">No address detected yet</string>
+    <string name="extra_025" formatted="false">Enable the hotspot or USB tethering. You can read the guide now; connection parameters become copyable after an address is detected. The address may change next time.</string>
+    <string name="extra_026" formatted="false">Connection parameters</string>
+    <string name="extra_027" formatted="false">Phone address on your network</string>
+    <string name="extra_028" formatted="false">Choose the network used by the other device. Wi-Fi and USB addresses can differ.</string>
+    <string name="extra_029" formatted="false">Phone IP address</string>
+    <string name="extra_030" formatted="false">Phone IP</string>
+    <string name="extra_031" formatted="false">Port</string>
+    <string name="extra_032" formatted="false">Authentication</string>
+    <string name="extra_033" formatted="false">Off</string>
+    <string name="extra_034" formatted="false">Manual</string>
+    <string name="extra_035" formatted="false">Server</string>
+    <string name="extra_036" formatted="false">Proxy hostname</string>
+    <string name="extra_037" formatted="false">Proxy port</string>
+    <string name="extra_038" formatted="false">Save</string>
+    <string name="extra_039" formatted="false">Apply</string>
+    <string name="extra_040" formatted="false">Proxy</string>
+    <string name="extra_041" formatted="false">Web proxy (HTTP)</string>
+    <string name="extra_042" formatted="false">Secure web proxy (HTTPS)</string>
+    <string name="extra_043" formatted="false">Settings illustration</string>
+    <string name="extra_044" formatted="false">This is an illustration; labels and appearance vary by OS version.</string>
+    <string name="extra_045" formatted="false">Enter only the IP, without http:// or a port. Authenticate with splate and the password from sharing settings. HTTP and HTTPS use the HTTP port; SOCKS5 has its own port.</string>
+    <string name="extra_046" formatted="false">Commands and other methods</string>
+    <string name="extra_047" formatted="false">Enable in PowerShell</string>
+    <string name="extra_048" formatted="false">Disable in PowerShell</string>
+    <string name="extra_049" formatted="false">Enable in this terminal</string>
+    <string name="extra_050" formatted="false">Disable in this terminal</string>
+    <string name="extra_051" formatted="false">For bash / zsh and programs honoring these variables. Applies only to this terminal and programs launched from it; GUI apps and sudo may not use them.</string>
+    <string name="extra_052" formatted="false">Use PowerShell, not CMD. Changes the current user\'s proxy for apps honoring Windows settings. Replaces the previously configured proxy address.</string>
+    <string name="extra_053" formatted="false">Test the HTTP proxy with curl</string>
+    <string name="extra_054" formatted="false">The response should contain example.com HTML. This tests a proxy connection, not the route of the entire device.</string>
+    <string name="extra_055" formatted="false">Check the connection</string>
+    <string name="extra_056" formatted="false">Open a website on the other device</string>
+    <string name="extra_057" formatted="false">Use a browser honoring the system proxy. Try a site that should open through the VPN. Traffic follows the route selected in SplateVPN.</string>
+    <string name="extra_058" formatted="false">If an app does not work</string>
+    <string name="extra_059" formatted="false">It may ignore the system proxy. If the app has proxy settings, choose SOCKS5 and enter the phone address and SOCKS5 port. Without such settings, this method may not work for that app.</string>
+    <string name="extra_060" formatted="false">Cannot connect?</string>
+    <string name="extra_061" formatted="false">Check the address and port</string>
+    <string name="extra_062" formatted="false">The IP may change after restarting the hotspot. Use the current address from the Device step. HTTP and HTTPS use the HTTP port, not the SOCKS5 port.</string>
+    <string name="extra_063" formatted="false">Check the network</string>
+    <string name="extra_064" formatted="false">Both devices must be able to reach each other on the same network. Guest Wi-Fi, client isolation, phone sleep or another VPN on the receiving device can interfere.</string>
+    <string name="extra_065" formatted="false">Check the phone</string>
+    <string name="extra_066" formatted="false">VPN and sharing must be enabled. If the site fails on the phone, fix VPN first. Use the proxy password and share with trusted devices.</string>
+    <string name="extra_067" formatted="false">If you imported a full JSON profile</string>
+    <string name="extra_068" formatted="false">Local proxy ports are managed by the app. Use the HTTP/SOCKS5 addresses from this guide.</string>
+    <string name="extra_069" formatted="false">Turn the proxy off when finished</string>
+    <string name="extra_070" formatted="false">Official documentation</string>
+    <string name="extra_071" formatted="false">Open the connected Wi-Fi network</string>
+    <string name="extra_072" formatted="false">Settings → Wi-Fi / Internet → the hotspot network → its settings or edit icon.</string>
+    <string name="extra_073" formatted="false">Choose a manual proxy</string>
+    <string name="extra_074" formatted="false">Open Modify network or Advanced options → Proxy → Manual. Labels vary on Samsung, Xiaomi and other devices.</string>
+    <string name="extra_075" formatted="false">Fill in the fields and save</string>
+    <string name="extra_076" formatted="false">Proxy hostname is the SplateVPN phone\'s IP; port is the HTTP port below. Leave the network\'s IP settings on DHCP / automatic.</string>
+    <string name="extra_077" formatted="false">Open network details</string>
+    <string name="extra_078" formatted="false">Settings → Wi-Fi → ⓘ next to the phone\'s hotspot network.</string>
+    <string name="extra_079" formatted="false">Configure the HTTP proxy</string>
+    <string name="extra_080" formatted="false">Scroll down → Configure Proxy → Manual.</string>
+    <string name="extra_081" formatted="false">Enter the server and port</string>
+    <string name="extra_082" formatted="false">Server is the phone IP; port is the HTTP port below. Enable authentication with splate and the sharing password, then save.</string>
+    <string name="extra_083" formatted="false">Open proxy settings</string>
+    <string name="extra_084" formatted="false">Windows 10/11: Settings → Network &amp; internet → Proxy.</string>
+    <string name="extra_085" formatted="false">Enable manual setup</string>
+    <string name="extra_086" formatted="false">Manual proxy setup → Set up / Use a proxy server → On.</string>
+    <string name="extra_087" formatted="false">Enter the IP and HTTP port</string>
+    <string name="extra_088" formatted="false">Fill in the illustrated fields below and save. These are the current user\'s proxy settings, not a Windows VPN connection.</string>
+    <string name="extra_089" formatted="false">Choose the active connection</string>
+    <string name="extra_090" formatted="false">System Settings → Network → Wi-Fi or Ethernet → Details → Proxies.</string>
+    <string name="extra_091" formatted="false">Enable HTTP and HTTPS</string>
+    <string name="extra_092" formatted="false">Enable Web proxy (HTTP) and Secure web proxy (HTTPS). Enter the same IP and HTTP port for both.</string>
+    <string name="extra_093" formatted="false">Save the settings</string>
+    <string name="extra_094" formatted="false">Enable proxy authentication with splate and the sharing password. Click OK / Done, then Apply. SOCKS need not be enabled at the same time.</string>
+    <string name="extra_095" formatted="false">Open Network Proxy</string>
+    <string name="extra_096" formatted="false">Ubuntu / GNOME: Settings → Network → Network Proxy. Choose Manual.</string>
+    <string name="extra_097" formatted="false">Fill in HTTP and HTTPS</string>
+    <string name="extra_098" formatted="false">Enter the same phone IP and HTTP port in both rows. Save; some apps need to be restarted.</string>
+    <string name="extra_099" formatted="false">Open the Proxy module</string>
+    <string name="extra_100" formatted="false">KDE Plasma: search for Proxy in System Settings → choose manual configuration.</string>
+    <string name="extra_101" formatted="false">Configure HTTP and HTTPS</string>
+    <string name="extra_102" formatted="false">Enter the phone IP and HTTP port for HTTP and HTTPS, then Apply. Apps may have their own proxy settings.</string>
+    <string name="extra_103" formatted="false">Open bash or zsh</string>
+    <string name="extra_104" formatted="false">Copy and run the commands below in your terminal. Then launch the commands you need from that same terminal.</string>
+    <string name="extra_105" formatted="false">Find the proxy settings</string>
+    <string name="extra_106" formatted="false">Open the app\'s Proxy section, often found under network or data settings.</string>
+    <string name="extra_107" formatted="false">Choose SOCKS5</string>
+    <string name="extra_108" formatted="false">Enter the phone IP and SOCKS5 port below. Username is splate; use the sharing password. For HTTP-only apps, use the HTTP port.</string>
+    <string name="extra_109" formatted="false">In this Wi-Fi network\'s settings, set Proxy → None and save.</string>
+    <string name="extra_110" formatted="false">Settings → Wi-Fi → ⓘ → Configure Proxy → Off → Save.</string>
+    <string name="extra_111" formatted="false">Settings → Network &amp; internet → Proxy → Use a proxy server → Off.</string>
+    <string name="extra_112" formatted="false">Network → your connection → Details → Proxies: turn HTTP and HTTPS off and save.</string>
+    <string name="extra_113" formatted="false">Run the unset command below or close this terminal.</string>
+    <string name="extra_114" formatted="false">Set Network Proxy back to None / Disabled.</string>
+    <string name="extra_115" formatted="false">Turn the proxy off in the app\'s own settings.</string>
+    <string name="extra_116" formatted="false">Otherwise those apps may lose internet access after the phone disconnects.</string>
+    <string name="extra_117" formatted="false">SmartDNS failover</string>
+    <string name="extra_118" formatted="false">While connected, checks public pages every 5 minutes using the selected SmartDNS mode. Repeated failures trigger a verified replacement and a brief VPN reconnect. CAPTCHA and sign-in are not failures.</string>
+    <string name="extra_119" formatted="false">SmartDNS via VPN</string>
+    <string name="extra_120" formatted="false">DNS queries and the SmartDNS proxy connection use the selected VPN server. Auto-selection tests this same route. Service access also depends on the SmartDNS exit region and account settings.</string>
+    <string name="extra_121" formatted="false">SmartDNS auto-selection</string>
+    <string name="extra_122" formatted="false">Tests providers in the selected mode and applies a confirmed option. Direct mode also tests TLS fragmentation. May take a few minutes.</string>
+    <string name="extra_123" formatted="false">Checks DNS, HTTPS and public Gemini, ChatGPT and Claude pages. Finalists also load Gemini with JavaScript. Account sign-in and functionality are not checked.</string>
+    <string name="extra_124" formatted="false">Find and apply</string>
+    <string name="extra_125" formatted="false">Stop selection</string>
+    <string name="extra_126" formatted="false">Confirming result</string>
+    <string name="extra_127" formatted="false">The automatic check could not confirm Gemini. It may still work in your browser: sign-in and WebView restrictions can prevent verification. Settings unchanged. Details below.</string>
+    <string name="extra_128" formatted="false">Selection stopped. Settings unchanged.</string>
+    <string name="extra_129" formatted="false">Network changed. Start selection again.</string>
+    <string name="extra_130" formatted="false">No network connection.</string>
+    <string name="extra_131" formatted="false">Could not complete the check. Settings unchanged.</string>
+    <string name="extra_132" formatted="false">DoH rejected</string>
+    <string name="extra_133" formatted="false">DNS connection failed</string>
+    <string name="extra_134" formatted="false">DNS timed out</string>
+    <string name="extra_135" formatted="false">DNS returned no valid public IPv4</string>
+    <string name="extra_136" formatted="false">not a DNS response</string>
+    <string name="extra_137" formatted="false">connection / TLS failure</string>
+    <string name="extra_138" formatted="false">site timed out</string>
+    <string name="extra_139" formatted="false">site TLS handshake failed</string>
+    <string name="extra_140" formatted="false">DNS checked · site response</string>
+    <string name="extra_141" formatted="false">JavaScript page loaded; account not checked</string>
+    <string name="extra_142" formatted="false">JavaScript: sign-in, CAPTCHA or page error</string>
+    <string name="extra_143" formatted="false">JavaScript: region blocked</string>
+    <string name="extra_144" formatted="false">JavaScript: check timed out</string>
+    <string name="extra_145" formatted="false">browser check requires Android 9+ and an up-to-date Android System WebView</string>
+    <string name="extra_146" formatted="false">browser check did not complete</string>
+    <string name="extra_147" formatted="false">accessible</string>
+    <string name="extra_148" formatted="false">limited</string>
+    <string name="extra_149" formatted="false">region blocked</string>
+    <string name="extra_150" formatted="false">failed</string>
+    <string name="extra_151" formatted="false">Statistics and tools</string>
+    <string name="extra_152" formatted="false">Traffic statistics</string>
+    <string name="extra_153" formatted="false">Today</string>
+    <string name="extra_154" formatted="false">Service availability</string>
+    <string name="extra_155" formatted="false">8 services · check through VPN</string>
+    <string name="extra_156" formatted="false">One-tap diagnostics</string>
+    <string name="extra_157" formatted="false">Network, DNS, server and tunnel</string>
+    <string name="extra_158" formatted="false">Close</string>
+    <string name="extra_159" formatted="false">Connection diagnostics</string>
+    <string name="extra_160" formatted="false">Checking connection…</string>
+    <string name="extra_161" formatted="false">Check stopped</string>
+    <string name="extra_162" formatted="false">Check complete</string>
+    <string name="extra_163" formatted="false">Results are incomplete.</string>
+    <string name="extra_164" formatted="false">Stop check</string>
+    <string name="extra_165" formatted="false">Check again</string>
+    <string name="extra_166" formatted="false">Checks use the current connection and routing rules. Website availability does not guarantee login, streaming or calls.</string>
+    <string name="extra_167" formatted="false">DNS and server port use the physical network; HTTPS uses VPN. An open port does not confirm valid credentials.</string>
+    <string name="extra_168" formatted="false">Network</string>
+    <string name="extra_169" formatted="false">System DNS</string>
+    <string name="extra_170" formatted="false">Server port</string>
+    <string name="extra_171" formatted="false">Available</string>
+    <string name="extra_172" formatted="false">Failed</string>
+    <string name="extra_173" formatted="false">Access restricted</string>
+    <string name="extra_174" formatted="false">Skipped</string>
+    <string name="extra_175" formatted="false">Connect VPN and retry</string>
+    <string name="extra_176" formatted="false">VPN connected</string>
+    <string name="extra_177" formatted="false">Internet-capable network found</string>
+    <string name="extra_178" formatted="false">No network: check Wi-Fi or mobile data</string>
+    <string name="extra_179" formatted="false">Hostname resolves to an IP</string>
+    <string name="extra_180" formatted="false">Name resolution failed: check DNS</string>
+    <string name="extra_181" formatted="false">TCP connection established</string>
+    <string name="extra_182" formatted="false">Port unavailable: check address/port or switch server</string>
+    <string name="extra_183" formatted="false">Select a server</string>
+    <string name="extra_184" formatted="false">TLS failed: check device date and TLS settings</string>
+    <string name="extra_185" formatted="false">Timeout: retry or switch server</string>
+    <string name="extra_186" formatted="false">Connection failed: check network and server</string>
+    <string name="extra_187" formatted="false">Details</string>
+    <string name="extra_188" formatted="false">Connection mode</string>
+    <string name="extra_189" formatted="false">Save current settings</string>
+    <string name="extra_190" formatted="false">Undo last profile</string>
+    <string name="extra_191" formatted="false">VPN will reconnect after applying.</string>
+    <string name="extra_192" formatted="false">Applying…</string>
+    <string name="extra_193" formatted="false">New profile</string>
+    <string name="extra_194" formatted="false">Name</string>
+    <string name="extra_195" formatted="false">Could not save profile.</string>
+    <string name="extra_196" formatted="false">Cancel</string>
+    <string name="extra_197" formatted="false">Smart routing</string>
+    <string name="extra_198" formatted="false">All traffic</string>
+    <string name="extra_199" formatted="false">Current mode</string>
+    <string name="extra_200" formatted="false">Updating…</string>
+    <string name="extra_201" formatted="false">Change</string>
+    <string name="extra_202" formatted="false">Search settings…</string>
+    <string name="extra_203" formatted="false">Clear search</string>
+    <string name="extra_204" formatted="false">No matches. Try DNS, theme or backup.</string>
+    <string name="extra_205" formatted="false">All settings</string>
+    <string name="extra_206" formatted="false">Sharing interface</string>
+    <string name="extra_207" formatted="false">Automatic</string>
+    <string name="extra_208" formatted="false">Proxy authentication is required. Username: splate</string>
+    <string name="extra_209" formatted="false">Password</string>
+    <string name="extra_210" formatted="false">Show password</string>
+    <string name="extra_211" formatted="false">Rotate password</string>
+    <string name="extra_212" formatted="false">How should the backup be restored?</string>
+    <string name="extra_213" formatted="false">Merge</string>
+    <string name="extra_214" formatted="false">Replace data</string>
+    <string name="extra_215" formatted="false">Add servers and rules. Settings from the file will apply.</string>
+    <string name="extra_216" formatted="false">Replace servers, subscriptions, app lists and routes, including empty lists.</string>
+    <string name="extra_217" formatted="false">Choose file</string>
+    <string name="extra_218" formatted="false">Connection</string>
+    <string name="extra_219" formatted="false">Auto-select, balancer, startup and subscriptions</string>
+    <string name="extra_220" formatted="false">Network and DNS</string>
+    <string name="extra_221" formatted="false">Routing, general DNS and server checks</string>
+    <string name="extra_222" formatted="false">AI services</string>
+    <string name="extra_223" formatted="false">SmartDNS, Gemini, ChatGPT and auto-selection</string>
+    <string name="extra_224" formatted="false">Protection and ads</string>
+    <string name="extra_225" formatted="false">Kill Switch, IPv6 and ad blocker</string>
+    <string name="extra_226" formatted="false">Appearance and language</string>
+    <string name="extra_227" formatted="false">Themes, transparency and blur</string>
+    <string name="extra_228" formatted="false">Backup and restore</string>
+    <string name="extra_229" formatted="false">Export, restore and automatic snapshot</string>
+    <string name="extra_230" formatted="false">Diagnostics</string>
+    <string name="extra_231" formatted="false">Connection checks, statistics and logs</string>
+    <string name="extra_232" formatted="false">Advanced</string>
+    <string name="extra_233" formatted="false">XHTTP, FakeDNS, QUIC, sniffing and custom routes</string>
+    <string name="extra_234" formatted="false">VPN sharing</string>
+    <string name="extra_235" formatted="false">LAN proxy and tethering</string>
+    <string name="extra_236" formatted="false">About</string>
+    <string name="extra_237" formatted="false">Core version and app updates</string>
+    <string name="extra_238" formatted="false">Applications</string>
+    <string name="extra_239" formatted="false">Choose which applications use VPN</string>
+    <string name="extra_240" formatted="false">1. Choose a mode</string>
+    <string name="extra_241" formatted="false">Change mode</string>
+    <string name="extra_242" formatted="false">All applications</string>
+    <string name="extra_243" formatted="false">Only selected applications</string>
+    <string name="extra_244" formatted="false">All except selected applications</string>
+    <string name="extra_245" formatted="false">VPN routing rules apply to every application.</string>
+    <string name="extra_246" formatted="false">Selected apps use VPN. All others connect directly.</string>
+    <string name="extra_247" formatted="false">Selected apps connect directly. All others use VPN.</string>
+    <string name="extra_248" formatted="false">2. Select applications for VPN</string>
+    <string name="extra_249" formatted="false">2. Select applications to bypass VPN</string>
+    <string name="extra_250" formatted="false">VPN routing rules</string>
+    <string name="extra_251" formatted="false">Without VPN · direct</string>
+    <string name="extra_252" formatted="false">VPN apps follow the mode on Home. Smart routing can send some sites directly.</string>
+    <string name="extra_253" formatted="false">No need to select apps individually. To add exceptions, choose “All except selected applications”.</string>
+    <string name="extra_254" formatted="false">Select at least one application or choose “All applications”.</string>
+    <string name="extra_255" formatted="false">No exceptions: VPN will be available to every application.</string>
+    <string name="extra_256" formatted="false">Changes not applied yet</string>
+    <string name="extra_257" formatted="false">Settings saved</string>
+    <string name="extra_258" formatted="false">Applying changes reconnects VPN once.</string>
+    <string name="extra_259" formatted="false">Rules take effect when you connect VPN.</string>
+    <string name="extra_260" formatted="false">Apply changes</string>
+    <string name="extra_261" formatted="false">Discard changes</string>
+    <string name="extra_262" formatted="false">Selected only</string>
+    <string name="extra_263" formatted="false">Select search results</string>
+    <string name="extra_264" formatted="false">Select all</string>
+    <string name="extra_265" formatted="false">Clear selection</string>
+    <string name="extra_266" formatted="false">No applications found. Change your search.</string>
+    <string name="extra_267" formatted="false">Nothing selected yet. Show all applications to choose some.</string>
+    <string name="extra_268" formatted="false">Show all applications</string>
+    <string name="extra_269" formatted="false">Application list is empty. Try refreshing it.</string>
+    <string name="extra_270" formatted="false">Balancer settings</string>
+    <string name="extra_271" formatted="false">Automatic · default</string>
+    <string name="extra_272" formatted="false">Selects a server on connect, replaces failed nodes and looks for a faster one when quality drops.</string>
+    <string name="extra_273" formatted="false">On failure only</string>
+    <string name="extra_274" formatted="false">Keeps a working server. Switches only after consecutive checks confirm a failure.</string>
+    <string name="extra_275" formatted="false">On connect only</string>
+    <string name="extra_276" formatted="false">Selects a server once on connect. Never switches during the session, even if that server stops responding.</string>
+    <string name="extra_277" formatted="false">Connection check interval</string>
+    <string name="extra_278" formatted="false">Failed checks before switching</string>
+    <string name="extra_279" formatted="false">Scheduled search for a better server</string>
+    <string name="extra_280" formatted="false">Pause between improvements</string>
+    <string name="extra_281" formatted="false">Minimum latency improvement</string>
+    <string name="extra_282" formatted="false">Restore default settings</string>
+    <string name="extra_283" formatted="false">These options apply while auto-select is enabled.</string>
+    <string name="extra_284" formatted="false">VPN download · 2 streams · 10 s · up to 128 MB</string>
+    <string name="extra_285" formatted="false">Start speed test</string>
+    <string name="extra_286" formatted="false">Stop speed test</string>
+    <string name="extra_287" formatted="false">Connect the VPN first</string>
+    <string name="extra_288" formatted="false">The connection changed. Run the test again.</string>
+    <string name="extra_289" formatted="false">The test server timed out</string>
+    <string name="extra_290" formatted="false">Could not resolve the test server</string>
+    <string name="extra_291" formatted="false">Test server unavailable. Try another VPN node.</string>
+    <string name="extra_292" formatted="false">Not enough data for a reliable measurement</string>
+    <string name="extra_293" formatted="false">%.1f MB · %.1f s measured</string>
+    <string name="extra_294" formatted="false">MB/s</string>
+    <string name="extra_295" formatted="false">MB</string>
+    <string name="extra_296" formatted="false">Selected: %d</string>
+    <string name="extra_297" formatted="false">Checked %d of %d</string>
+    <string name="extra_298" formatted="false">Applied %s · accessible pages: %d/3</string>
+    <string name="extra_299" formatted="false">Results (%d)</string>
+    <string name="extra_300" formatted="false">%d s</string>
+    <string name="extra_301" formatted="false">%d min</string>
+    <string name="extra_302" formatted="false">Source code on GitHub</string>
+    <string name="extra_303" formatted="false">Recent updates</string>
+    <string name="extra_304" formatted="false">Combined rules · AND / OR</string>
+    <string name="extra_305" formatted="false">AND requires all filled fields to match; OR requires any one. Lines within a field are alternatives. The first matching rule applies.</string>
+    <string name="extra_306" formatted="false">Match apps, domains, IPs, ports and protocols. App conditions need Android 10+ and inclusion in VPN on the Apps screen.</string>
+    <string name="extra_307" formatted="false">Rules are saved but do not apply in Tor mode.</string>
+    <string name="extra_308" formatted="false">"Apps: "</string>
+    <string name="extra_309" formatted="false">"Suffixes: "</string>
+    <string name="extra_310" formatted="false">"Domains: "</string>
+    <string name="extra_311" formatted="false">"Keywords: "</string>
+    <string name="extra_312" formatted="false">"Ports: "</string>
+    <string name="extra_313" formatted="false">Edit</string>
+    <string name="extra_314" formatted="false">Move up</string>
+    <string name="extra_315" formatted="false">Move down</string>
+    <string name="extra_316" formatted="false">Add advanced rule</string>
+    <string name="extra_317" formatted="false">Custom exceptions and essential DNS rules run first. Combined rules run before subscription and region rules.</string>
+    <string name="extra_318" formatted="false">Saved rules are invalid. The VPN will not use an unvalidated set.</string>
+    <string name="extra_319" formatted="false">Clear invalid rules</string>
+    <string name="extra_320" formatted="false">Combined rule</string>
+    <string name="extra_321" formatted="false">All filled sections must match.</string>
+    <string name="extra_322" formatted="false">Any filled section can match.</string>
+    <string name="extra_323" formatted="false">Direct</string>
+    <string name="extra_324" formatted="false">Block</string>
+    <string name="extra_325" formatted="false">Matching traffic goes directly, outside the VPN server.</string>
+    <string name="extra_326" formatted="false">App package IDs</string>
+    <string name="extra_327" formatted="false">Choose installed apps</string>
+    <string name="extra_328" formatted="false">One package ID per line, case-sensitive. Uninstalled apps stay in the rule. Shared-UID apps are unsupported.</string>
+    <string name="extra_329" formatted="false">App conditions require Android 10 or later.</string>
+    <string name="extra_330" formatted="false">Domain suffixes</string>
+    <string name="extra_331" formatted="false">One domain per line. Matches the domain and its subdomains. A leading dot is optional.</string>
+    <string name="extra_332" formatted="false">Exact domains</string>
+    <string name="extra_333" formatted="false">Domain keywords</string>
+    <string name="extra_334" formatted="false">Multiple lines within a field mean OR. Empty fields are ignored.</string>
+    <string name="extra_335" formatted="false">IP, ports and protocols</string>
+    <string name="extra_336" formatted="false">Ports: 443,8000-8100</string>
+    <string name="extra_337" formatted="false">Protocols: http, tls, quic</string>
+    <string name="extra_338" formatted="false">Enable domain detection for these rules</string>
+    <string name="extra_339" formatted="false">Apps for this rule</string>
+    <string name="extra_340" formatted="false">Name or package ID</string>
+    <string name="extra_341" formatted="false">Selected: %d / %d</string>
+    <string name="extra_342" formatted="false">No matching apps</string>
+    <string name="extra_343" formatted="false">Manually entered packages stay selected even when absent from this list.</string>
+    <string name="extra_344" formatted="false">Error reports</string>
+    <string name="extra_345" formatted="false">With your consent, reports contain only the error type, code locations and app version. IP addresses, device data, exception messages, logs, subscriptions and settings are excluded.</string>
+    <string name="extra_346" formatted="false">Save locally</string>
+    <string name="extra_347" formatted="false">No automatic sending: there is no report receiver. Up to five reports stay on this device. Disabling collection deletes them.</string>
+    <string name="extra_348" formatted="false">"Feature: "</string>
+    <string name="extra_349" formatted="false">Record a problem</string>
+    <string name="extra_350" formatted="false">"Review report "</string>
+    <string name="extra_351" formatted="false">No saved reports</string>
+    <string name="extra_352" formatted="false">Delete all</string>
+    <string name="extra_353" formatted="false">Review before export</string>
+    <string name="extra_354" formatted="false">Export opens the system menu. You choose the recipient.</string>
+    <string name="extra_355" formatted="false">Export</string>
+    <string name="extra_356" formatted="false">Copy</string>
+    <string name="extra_357" formatted="false">Delete</string>
+    <string name="extra_358" formatted="false">Restore from a cloud link</string>
+    <string name="extra_359" formatted="false">Paste a link to a JSON backup file. The client downloads it and shows its contents before restoring. No folder selection is needed.</string>
+    <string name="extra_360" formatted="false">Backup file link</string>
+    <string name="extra_361" formatted="false">Paste link</string>
+    <string name="extra_362" formatted="false">Password, if the backup is encrypted</string>
+    <string name="extra_363" formatted="false">Google Drive, Yandex Disk, Dropbox and direct HTTPS links. The file must be accessible without signing into a cloud account. Plain backups need no password.</string>
+    <string name="extra_364" formatted="false">Open downloaded backup</string>
+    <string name="extra_365" formatted="false">Download and review</string>
+    <string name="extra_366" formatted="false">Folder auto-backup disabled</string>
+    <string name="extra_367" formatted="false">Folder selection was removed from cloud backup. Existing files and the encryption password were kept. Restore using a backup link, or configure WebDAV for background backups.</string>
+    <string name="extra_368" formatted="false">Got it</string>
+    <string name="extra_369" formatted="false">WebDAV automatic backups</string>
+    <string name="extra_370" formatted="false">Encrypted backups every 6 or 24 hours. Restore after review and confirmation. The last 10 snapshots from this device are kept separately.</string>
+    <string name="extra_371" formatted="false">Uses WebDAV saved under transfer settings. A conflicting shared copy is kept: download and review it before syncing again.</string>
+    <string name="extra_372" formatted="false">New password (blank to keep)</string>
+    <string name="extra_373" formatted="false">Encryption password, 8+ characters</string>
+    <string name="extra_374" formatted="false">Confirm password</string>
+    <string name="extra_375" formatted="false">Background backup stores the password encrypted with Android Keystore on this device only. Keep it separately: another device needs it to restore.</string>
+    <string name="extra_376" formatted="false">Automatic backup enabled</string>
+    <string name="extra_377" formatted="false">Unmetered network only</string>
+    <string name="extra_378" formatted="false">Every %d h</string>
+    <string name="extra_379" formatted="false">Passwords must match and contain at least 8 characters</string>
+    <string name="extra_380" formatted="false">Save settings</string>
+    <string name="extra_381" formatted="false">Back up now</string>
+    <string name="extra_382" formatted="false">Disable and forget password</string>
+    <string name="extra_383" formatted="false">"Last backup: "</string>
+    <string name="extra_384" formatted="false">Delete %s</string>
+    <string name="extra_385" formatted="false">Settings received. Review before importing.</string>
+    <string name="extra_386" formatted="false">Review the receiving device and confirm sending.</string>
+    <string name="extra_387" formatted="false">Between devices</string>
+    <string name="extra_388" formatted="false">Connect your phone and TV to the same Wi-Fi or Ethernet network. Servers, subscriptions, Tor and proxy settings travel encrypted.</string>
+    <string name="extra_389" formatted="false">Disconnect VPN before applying received settings.</string>
+    <string name="extra_390" formatted="false">Send settings</string>
+    <string name="extra_391" formatted="false">Receive on this device / TV</string>
+    <string name="extra_392" formatted="false">Device pairing QR</string>
+    <string name="extra_393" formatted="false">Scan this QR with the phone containing your settings, then confirm the import here.</string>
+    <string name="extra_394" formatted="false">Scan on the receiving device. For a TV without a camera, choose Receive on the TV and scan its QR with your phone.</string>
+    <string name="extra_395" formatted="false">"Code expires in "</string>
+    <string name="extra_396" formatted="false">" s · one use"</string>
+    <string name="extra_397" formatted="false">Copy code</string>
+    <string name="extra_398" formatted="false">Close transfer</string>
+    <string name="extra_399" formatted="false">Pairing code or link</string>
+    <string name="extra_400" formatted="false">Use code</string>
+    <string name="extra_401" formatted="false">The QR contains a pairing secret. Show it only to your own device. Received settings require confirmation before applying.</string>
+    <string name="extra_402" formatted="false">Hide WebDAV</string>
+    <string name="extra_403" formatted="false">WebDAV sync</string>
+    <string name="extra_404" formatted="false">An encrypted splate-settings.v1.json file is stored in an existing WebDAV folder. Upload and download run when you choose.</string>
+    <string name="extra_405" formatted="false">WebDAV folder HTTPS URL</string>
+    <string name="extra_406" formatted="false">WebDAV username</string>
+    <string name="extra_407" formatted="false">WebDAV password</string>
+    <string name="extra_408" formatted="false">WebDAV saved</string>
+    <string name="extra_409" formatted="false">Save WebDAV</string>
+    <string name="extra_410" formatted="false">Backup encryption password (8+ characters)</string>
+    <string name="extra_411" formatted="false">The encryption password is not saved. Enter the same password on the other device. WebDAV credentials stay on this device and are excluded from the backup.</string>
+    <string name="extra_412" formatted="false">Encrypted backup uploaded</string>
+    <string name="extra_413" formatted="false">Replace copy</string>
+    <string name="extra_414" formatted="false">Backup downloaded. Confirm the import.</string>
+    <string name="extra_415" formatted="false">Download</string>
+    <string name="extra_416" formatted="false">Send settings to this device?</string>
+    <string name="extra_417" formatted="false">Import settings</string>
+    <string name="extra_418" formatted="false">"Received from "</string>
+    <string name="extra_419" formatted="false">"Device on your local network: "</string>
+    <string name="extra_420" formatted="false">"Servers: "</string>
+    <string name="extra_421" formatted="false">" · subscriptions: "</string>
+    <string name="extra_422" formatted="false">Plain JSON backup without encryption</string>
+    <string name="extra_423" formatted="false">"Advanced rules: "</string>
+    <string name="extra_424" formatted="false">Includes Tor and bridges</string>
+    <string name="extra_425" formatted="false">Includes proxy settings and sharing password</string>
+    <string name="extra_426" formatted="false">General settings will be applied to this device. Servers are added to existing entries by default.</string>
+    <string name="extra_427" formatted="false">This sends servers, subscriptions, Tor settings and the proxy password. Continue only for your own device that displayed this QR.</string>
+    <string name="extra_428" formatted="false">Replace existing servers and subscriptions</string>
+    <string name="extra_429" formatted="false">Disconnect VPN first</string>
+    <string name="extra_430" formatted="false">Apply settings</string>
+    <string name="extra_431" formatted="false">Local proxy · Mixed</string>
+    <string name="extra_432" formatted="false">HTTP and SOCKS on one local port. Authentication is on by default; the client generates credentials and passes them to the VPN automatically. LAN sharing is independent.</string>
+    <string name="extra_433" formatted="false">Hide settings</string>
+    <string name="extra_434" formatted="false">Configure credentials</string>
+    <string name="extra_435" formatted="false">Without authentication, other apps on this phone can access the local proxy.</string>
+    <string name="extra_436" formatted="false">Username</string>
+    <string name="extra_437" formatted="false">Hide password</string>
+    <string name="extra_438" formatted="false">Saved. An active VPN will reconnect.</string>
+    <string name="extra_439" formatted="false">New credentials saved. An active VPN will reconnect.</string>
+    <string name="extra_440" formatted="false">Generate new credentials</string>
+    <string name="extra_441" formatted="false">These credentials stay on this device and are excluded from cloud backups. Proxy authentication does not hide the VPN connection from your ISP.</string>
+    <string name="extra_442" formatted="false">Downloads through VPN only</string>
+    <string name="extra_443" formatted="false">Subscriptions, bridges, geodata, filters, cloud links and WebDAV. If the VPN is unavailable, downloads fail without switching to a direct connection.</string>
+    <string name="extra_444" formatted="false">Updates over Wi-Fi only</string>
+    <string name="extra_445" formatted="false">Pings and checks over Wi-Fi only</string>
+    <string name="extra_446" formatted="false">These operations wait on mobile data. You can still use the current VPN; a skipped check does not mark a server as dead.</string>
+    <string name="extra_447" formatted="false">Direct checks of other servers are visible to your ISP. Failover mode stops regular searches for faster servers; startup and failure checks remain.</string>
+    <string name="extra_448" formatted="false">Reduce background checks</string>
+    <string name="extra_449" formatted="false">"Current mode: "</string>
+    <string name="extra_450" formatted="false">periodic optimization</string>
+    <string name="extra_451" formatted="false">failover</string>
+    <string name="extra_452" formatted="false">initial selection only</string>
+    <string name="extra_453" formatted="false">Could not switch mode. Try again.</string>
+    <string name="extra_454" formatted="false">Action failed</string>
+    <string name="extra_455" formatted="false">URL added. Tap Download subscription.</string>
+    <string name="extra_456" formatted="false">Bridges added</string>
+    <string name="extra_457" formatted="false">Ready to connect</string>
+    <string name="extra_458" formatted="false">Connecting</string>
+    <string name="extra_459" formatted="false">Connected</string>
+    <string name="extra_460" formatted="false">The saved bridges could not connect. Refresh the list or choose a bridge manually.</string>
+    <string name="extra_461" formatted="false">Could not connect. Try another bridge.</string>
+    <string name="extra_462" formatted="false">Automatic bridge: %d/%d</string>
+    <string name="extra_463" formatted="false">Elapsed: %d s · no progress: %d s</string>
+    <string name="extra_464" formatted="false">Tor reports a problem at this connection stage.</string>
+    <string name="extra_465" formatted="false">This bridge is not responding yet. The app will try the next one if progress does not resume.</string>
+    <string name="extra_466" formatted="false">The TLS handshake has not completed. This bridge may be unavailable on your network. Wait, or try another bridge or WebTunnel.</string>
+    <string name="extra_467" formatted="false">This stage has not advanced for a while. Wait or try another bridge.</string>
+    <string name="extra_468" formatted="false">Another bridge</string>
+    <string name="extra_469" formatted="false">WebTunnel selected</string>
+    <string name="extra_470" formatted="false">Tap Connect Tor and the app will select a bridge from the list. The first connection may take a few minutes.</string>
+    <string name="extra_471" formatted="false">Connect here. The first connection may take more than a minute.</string>
+    <string name="extra_472" formatted="false">Tor selected</string>
+    <string name="extra_473" formatted="false">Connect Tor</string>
+    <string name="extra_474" formatted="false">Cancel connection</string>
+    <string name="extra_475" formatted="false">Disconnect</string>
+    <string name="extra_476" formatted="false">Saved Tor settings could not be read. Import bridges or save the settings again.</string>
+    <string name="extra_477" formatted="false">Connection bridge</string>
+    <string name="extra_478" formatted="false">Automatic selection</string>
+    <string name="extra_479" formatted="false">No bridges of this type. Choose another type.</string>
+    <string name="extra_480" formatted="false">No bridge · direct Tor connection</string>
+    <string name="extra_481" formatted="false">Saved bridges are tried automatically, one at a time. Auto alternates Vanilla, WebTunnel and obfs4.</string>
+    <string name="extra_482" formatted="false">This bridge is pinned manually. Select Auto to try other saved bridges automatically.</string>
+    <string name="extra_483" formatted="false">Auto</string>
+    <string name="extra_484" formatted="false">Bridge selected</string>
+    <string name="extra_485" formatted="false">Choose bridge</string>
+    <string name="extra_486" formatted="false">Bridges disabled</string>
+    <string name="extra_487" formatted="false">No bridges</string>
+    <string name="extra_488" formatted="false">Quick import</string>
+    <string name="extra_489" formatted="false">TOP-100 bridge list from GitHub. Download on request; bridge availability depends on your network.</string>
+    <string name="extra_490" formatted="false">Bridge list downloaded</string>
+    <string name="extra_491" formatted="false">Disconnect before refreshing the bridge list.</string>
+    <string name="extra_492" formatted="false">Paste</string>
+    <string name="extra_493" formatted="false">"Downloaded: "</string>
+    <string name="extra_494" formatted="false">"Malformed bridges skipped: "</string>
+    <string name="extra_495" formatted="false">Custom subscription and relays</string>
+    <string name="extra_496" formatted="false">Disconnect to edit advanced settings.</string>
+    <string name="extra_497" formatted="false">GitHub / HTTPS subscription</string>
+    <string name="extra_498" formatted="false">Update every 12 hours</string>
+    <string name="extra_499" formatted="false">Subscription downloaded</string>
+    <string name="extra_500" formatted="false">Download subscription</string>
+    <string name="extra_501" formatted="false">Bridges: one per line</string>
+    <string name="extra_502" formatted="false">Leave the fields below blank for automatic selection. For manual selection, enter comma-separated 40-character relay fingerprints.</string>
+    <string name="extra_503" formatted="false">Strict relay exclusions</string>
+    <string name="extra_504" formatted="false">Tor carries TCP and DNS for selected apps. UDP, direct routes and SmartDNS are unavailable in this mode.</string>
+    <string name="extra_505" formatted="false">Tor settings saved</string>
+    <string name="extra_506" formatted="false">Choose one bridge</string>
+    <string name="extra_507" formatted="false">Performance</string>
+    <string name="extra_508" formatted="false">Reduce visual effects to lower device load. Changes apply immediately.</string>
+    <string name="extra_509" formatted="false">Interface animations</string>
+    <string name="extra_510" formatted="false">Transitions, movement and animated feedback</string>
+    <string name="extra_511" formatted="false">Decorative background</string>
+    <string name="extra_512" formatted="false">Theme grids, particles, illustrations and decorations</string>
+    <string name="extra_513" formatted="false">Glass highlights</string>
+    <string name="extra_514" formatted="false">Decorative highlights and panel gradients</string>
+    <string name="extra_515" formatted="false">Lightweight mode</string>
+    <string name="extra_516" formatted="false">Enable all effects</string>
+    <string name="extra_517" formatted="false">Lightweight mode also disables glass blur. You can adjust blur separately below.</string>
+    <string name="extra_518" formatted="false">Successful: %d of %d</string>
+    <string name="extra_519" formatted="false">Check paused until Wi-Fi is connected</string>
+    <string name="extra_520" formatted="false">"Connecting Tor: "</string>
+    <string name="extra_521" formatted="false">"Bridges: "</string>
+    <string name="extra_522" formatted="false">Tor network · open settings</string>
+    <string name="extra_523" formatted="false">After setup, you can receive your phone\'s settings using a QR code. Connect after the transfer is complete.</string>
+    <string name="extra_524" formatted="false">Servers: +%d</string>
+    <string name="extra_525" formatted="false">Servers: %d</string>
+    <string name="extra_526" formatted="false">No changes</string>
+    <string name="extra_527" formatted="false">Reserved · missing from current subscription</string>
+    <string name="extra_528" formatted="false">1 h</string>
+    <string name="extra_529" formatted="false">3 h</string>
+    <string name="extra_530" formatted="false">To restore from the cloud, paste the file link in the card above. The buttons below save or open a file through the system picker.</string>
+    <string name="extra_531" formatted="false">"Successfully downloaded: "</string>
+    <string name="extra_532" formatted="false">Not downloaded from the network yet</string>
+    <string name="extra_533" formatted="false">"Last attempt: "</string>
+    <string name="extra_534" formatted="false">" • Successful"</string>
+    <string name="extra_535" formatted="false">The download date changes after the subscription is retrieved successfully. Saved servers remain available if an update fails.</string>
+    <string name="extra_536" formatted="false">Working server reserve</string>
+    <string name="extra_537" formatted="false">Keep working nodes missing from updates</string>
+    <string name="extra_538" formatted="false">Up to 100 nodes for up to 30 days after a successful tunnel check. TCP ping alone is insufficient. Reserved: %d.</string>
+    <string name="extra_539" formatted="false">Clear this subscription\'s reserve</string>
+    <string name="extra_540" formatted="false">Subscription rules</string>
+    <string name="extra_541" formatted="false">Use subscription rules</string>
+    <string name="extra_542" formatted="false">Unsupported conditions: %d. This set cannot be enabled safely. Supported rules: %d.</string>
+    <string name="extra_543" formatted="false">No rules found. Refresh an older subscription first. A plain list of server links contains no routing rules.</string>
+    <string name="extra_544" formatted="false">Rules: %d. Applied only when using a server from this subscription. Changed rules require approval again.</string>
+    <string name="extra_545" formatted="false">Review rules</string>
+    <string name="extra_546" formatted="false">Options apply immediately. Changing the URL clears the old source\'s rules and reserve.</string>
+    <string name="extra_547" formatted="false">Rules: %s</string>
+    <string name="extra_548" formatted="false">DIRECT sends matching traffic directly. PROXY uses the selected server. DNS, per-app settings and server choices within groups are not imported. Your own rules take priority.</string>
+    <string name="extra_549" formatted="false">Unsupported rules are present. Activation is blocked.</string>
+    <string name="extra_550" formatted="false">The subscription changed. Close this dialog and review the new rules.</string>
+    <string name="extra_551" formatted="false">Approve and enable</string>
+    <string name="extra_552" formatted="false">Delete reserved nodes?</string>
+    <string name="extra_553" formatted="false">Deletes %d nodes missing from the current subscription. Current nodes remain.</string>
+    <string name="extra_554" formatted="false">%d h %d min</string>
+    <string name="extra_555" formatted="false">Day</string>
+    <string name="extra_556" formatted="false">Month</string>
+    <string name="extra_557" formatted="false">Previous period</string>
+    <string name="extra_558" formatted="false">Monthly totals</string>
+    <string name="extra_559" formatted="false">Daily totals</string>
+    <string name="extra_560" formatted="false">Next period</string>
+    <string name="extra_561" formatted="false">Choose date</string>
+    <string name="extra_562" formatted="false">Total traffic</string>
+    <string name="extra_563" formatted="false">"Connected: "</string>
+    <string name="extra_564" formatted="false">Downloaded</string>
+    <string name="extra_565" formatted="false">Uploaded</string>
+    <string name="extra_566" formatted="false">By day</string>
+    <string name="extra_567" formatted="false">7 days</string>
+    <string name="extra_568" formatted="false">All</string>
+    <string name="extra_569" formatted="false">Down</string>
+    <string name="extra_570" formatted="false">Up</string>
+    <string name="extra_571" formatted="false">Tap a bar or drag across the chart</string>
+    <string name="extra_572" formatted="false">No data for this period yet. Statistics appear after connecting VPN.</string>
+    <string name="extra_573" formatted="false">Current period</string>
+    <string name="extra_574" formatted="false">Clear history</string>
+    <string name="extra_575" formatted="false">VPN interface traffic, including its direct routes. History is retained for 400 days and starts with this version. A crash may lose the last 15 seconds.</string>
+    <string name="extra_576" formatted="false">Clear statistics?</string>
+    <string name="extra_577" formatted="false">All traffic and connection-time history will be deleted.</string>
+    <string name="extra_578" formatted="false">Select</string>
+    <string name="extra_579" formatted="false">Daily traffic. Select a day on the chart</string>
+    <string name="extra_580" formatted="false">Could not prepare the QR code. Connect the TV to Wi-Fi or Ethernet and retry in Transfer settings.</string>
+    <string name="extra_581" formatted="false">Could not save your choice. Try again.</string>
+    <string name="extra_582" formatted="false">Servers</string>
+    <string name="extra_583" formatted="false">Transfer settings</string>
+    <string name="extra_584" formatted="false">Settings</string>
+    <string name="extra_585" formatted="false">Use the arrow keys and OK on your remote.</string>
+    <string name="extra_586" formatted="false">Choose a server</string>
+    <string name="extra_587" formatted="false">Receive settings from phone</string>
+    <string name="extra_588" formatted="false">Choose connection</string>
+    <string name="extra_589" formatted="false">Receive servers and settings from your phone using Transfer settings.</string>
+    <string name="extra_590" formatted="false">Connect your phone and TV to the same Wi-Fi network. No TV camera is needed.</string>
+    <string name="extra_591" formatted="false">Connecting Tor</string>
+    <string name="extra_592" formatted="false">The first Tor connection can take more than a minute. Wait for it to complete.</string>
+    <string name="extra_593" formatted="false">Transfer settings from your phone?</string>
+    <string name="extra_594" formatted="false">Connect your phone and TV to the same Wi-Fi or Ethernet network. The TV will show a QR code to scan in SplateVPN on your phone. You can review the settings before applying them.</string>
+    <string name="extra_595" formatted="false">Receive using QR code</string>
+    <string name="extra_596" formatted="false">Set up later</string>
+    <string name="extra_597" formatted="false">Importing servers…</string>
+    <string name="extra_598" formatted="false">Import subscription</string>
+    <string name="extra_599" formatted="false">Import all servers</string>
+    <string name="extra_600" formatted="false">Add server</string>
+    <string name="extra_601" formatted="false">You can rename a JSON profile here. To change connection settings, edit the original JSON and import it again.</string>
+    <string name="extra_602" formatted="false">Bundled base · works offline</string>
+    <string name="extra_603" formatted="false">Updated: %s</string>
+    <string name="extra_604" formatted="false">Updates daily. Background updates apply on next connection. Manual updates reload the active VPN.</string>
+    <string name="extra_605" formatted="false">Could not update or load the extended list. Available local protection is retained.</string>
+    <string name="extra_606" formatted="false">Update filters</string>
+    <string name="extra_607" formatted="false">Exceptions (%d)</string>
+    <string name="extra_608" formatted="false">Source and license: AdGuard · GPL-3.0</string>
+    <string name="extra_609" formatted="false">Ad blocker exceptions</string>
+    <string name="extra_610" formatted="false">One domain per line, without https:// or paths. Allows the domain and subdomains only in the ad blocker. Up to 100 domains.</string>
+    <string name="extra_611" formatted="false">Check domain names and count</string>
+    <string name="extra_612" formatted="false">Network settings from profile “%s” will be applied.</string>
+    <string name="extra_613" formatted="false">Application selection and AI settings stay as configured.</string>
+    <string name="extra_614" formatted="false">My profiles</string>
+    <string name="extra_615" formatted="false">A profile saves all network settings, including applications and DNS.</string>
+    <string name="extra_616" formatted="false">Could not save changes. Check settings and available storage.</string>
+    <string name="extra_617" formatted="false">VPN for routed applications, with your exceptions.</string>
+    <string name="extra_618" formatted="false">Review diagnostic report</string>
+    <string name="extra_619" formatted="false">Links, keys, IP addresses and server names are hidden automatically. Review the remaining text before sharing.</string>
+    <string name="extra_620" formatted="false">Share</string>
+    <string name="extra_621" formatted="false">Available DNS: %s</string>
+    <string name="extra_622" formatted="false">DNS checks failed</string>
+    <string name="extra_623" formatted="false">Checking DNS servers…</string>
+    <string name="extra_624" formatted="false">%s is not responding through the VPN. Checking other DoH servers…</string>
+    <string name="extra_625" formatted="false">" (%d ms)"</string>
+    <string name="extra_626" formatted="false">%s did not respond through the VPN. %s responds%s.</string>
+    <string name="extra_627" formatted="false">The tested DoH servers did not respond through the VPN. Try another server or DNS provider.</string>
+    <string name="extra_628" formatted="false">Switch to %s</string>
+    <string name="extra_629" formatted="false">Enable FakeDNS</string>
+    <string name="extra_630" formatted="false">Settings recovery</string>
+    <string name="extra_631" formatted="false">Settings are damaged and no working snapshot is available. Original files were preserved. Create new settings? Servers and subscriptions will remain. VPN cannot connect until you decide.</string>
+    <string name="extra_632" formatted="false">Settings were restored from the last working snapshot. The damaged original was preserved separately.</string>
+    <string name="extra_633" formatted="false">Could not save settings. Check available storage.</string>
+    <string name="extra_634" formatted="false">Create new</string>
+    <string name="extra_635" formatted="false">Exit</string>
+    <string name="extra_636" formatted="false">Dismiss</string>
+    <string name="extra_637" formatted="false">Current fragmentation prevents connectivity</string>
+    <string name="extra_638" formatted="false">Two checks of the same server failed with current parameters and passed with standard fragmentation. Try the standard preset.</string>
+    <string name="extra_639" formatted="false">Use standard fragmentation</string>
+    <string name="extra_640" formatted="false">Tunnel Alerts &amp; Diagnostics</string>
+    <string name="extra_641" formatted="false">Tunnel health notifications with suggested fixes</string>
+    <string name="extra_642" formatted="false">VPN connectivity checks failed</string>
+    <string name="extra_643" formatted="false">Two tunnel checks failed while the network was available. The cause is unknown; try another server.</string>
+    <string name="extra_644" formatted="false">Switch Server</string>
+    <string name="extra_645" formatted="false">Packet size error</string>
+    <string name="extra_646" formatted="false">A packet size error was reported. Try MTU 1280; the source of the limit is unknown.</string>
+    <string name="extra_647" formatted="false">Set MTU 1280</string>
+    <string name="extra_648" formatted="false">Possible routing loop</string>
+    <string name="extra_649" formatted="false">Logs suggest a routing problem. Automatic recovery has not been confirmed.</string>
+    <string name="extra_650" formatted="false">Internet access could not be verified</string>
+    <string name="extra_651" formatted="false">VPN is running, but external network checks failed and no incoming traffic was detected. Check Wi-Fi or mobile data. No website route changes are needed.</string>
+    <string name="extra_652" formatted="false">Wi-Fi sign-in required</string>
+    <string name="extra_653" formatted="false">Network requires browser sign-in. You can temporarily pause VPN to sign in.</string>
+    <string name="extra_654" formatted="false">Pause 2 min</string>
+    <string name="extra_655" formatted="false">Open Login</string>
+    <string name="extra_656" formatted="false">Clock differs by %d s</string>
+    <string name="extra_657" formatted="false">Device time differs from the check server. Check automatic clock synchronization.</string>
+    <string name="extra_658" formatted="false">Date Settings</string>
+    <string name="extra_659" formatted="false">%s failed repeated checks; %s responded. The cause is unknown.</string>
+    <string name="extra_660" formatted="false">The tested DNS resolvers did not respond. The cause is unknown. You can try FakeDNS.</string>
+    <string name="extra_661" formatted="false">The tested DNS resolvers did not respond. FakeDNS is already enabled. Check the selected server connection.</string>
+    <string name="extra_662" formatted="false">Quick selection</string>
+    <string name="extra_663" formatted="false">Up to 10 nodes with a successful Real ping in the last 10 minutes on this network and in this app session.</string>
+    <string name="extra_664" formatted="false">No freshly verified nodes. Open all servers and run Real ping.</string>
+    <string name="extra_665" formatted="false">The result expired. Refresh the list.</string>
+    <string name="extra_666" formatted="false">Could not switch the connection.</string>
+    <string name="extra_667" formatted="false">All nodes</string>
+    <string name="extra_668" formatted="false">Subscriptions</string>
+    <string name="extra_669" formatted="false">Personal</string>
+    <string name="extra_670" formatted="false">Refresh list</string>
+    <string name="extra_671" formatted="false">All servers</string>
+    <string name="extra_672" formatted="false">Up to 10 nodes · Real ping from the last 10 minutes</string>
+    <string name="extra_673" formatted="false">%d ms</string>
+    <string name="extra_674" formatted="false">Server update interval: %d h</string>
+    <string name="extra_675" formatted="false">Website</string>
+    <string name="extra_676" formatted="false">Support</string>
+    <string name="extra_677" formatted="false">Could not open the link</string>
+    <string name="extra_678" formatted="false">Needs verification</string>
+    <string name="extra_679" formatted="false">Connection mode: %s</string>
+    <string name="extra_680" formatted="false">Auto-generated if empty</string>
+    <string name="extra_681" formatted="false">Server for this rule</string>
+    <string name="extra_682" formatted="false">Default VPN (current active)</string>
+    <string name="extra_683" formatted="false">Fill at least one rule condition (domains, apps, IPs, or ports)</string>
+    <string name="extra_684" formatted="false">Rule: %s</string>
+    <string name="extra_685" formatted="false">Rule validation error</string>
+    <string name="extra_686" formatted="false">Select server for rule</string>
+    <string name="extra_687" formatted="false">Search server</string>
+    <string name="extra_688" formatted="false">Default VPN (auto-selected)</string>
+    <string name="extra_689" formatted="false">Use current connected server</string>
+    <string name="extra_690" formatted="false">Network and checks</string>
+    <string name="extra_691" formatted="false">Subscriptions, bridges, geodata, filters and WebDAV. No fallback to a direct connection.</string>
+    <string name="extra_692" formatted="false">Server address hidden. Reveal for 15 seconds</string>
+    <string name="extra_693" formatted="false">Bridge list is empty. Download TOP-100 below or disable bridges to connect.</string>
+    <string name="extra_694" formatted="false">Probe delay</string>
+    <string name="extra_695" formatted="false">Probing bridge reachability and latency…</string>
+    <string name="extra_696" formatted="false">New Tor circuit (New Identity)</string>
+    <string name="extra_697" formatted="false">TOP-100 bridges from GitHub. Automatic updates are available after the first download.</string>
+    <string name="extra_698" formatted="false">Update TOP-100 every 12 hours</string>
+    <string name="extra_699" formatted="false">Update schedule saved</string>
+    <string name="extra_700" formatted="false">Vanilla</string>
+    <string name="extra_701" formatted="false">Optimistic data transmission (OptimisticData)</string>
+    <string name="extra_702" formatted="false">Auto-select fastest bridge by latency</string>
+    <string name="extra_703" formatted="false">Custom SNI / Fronting (optional)</string>
+    <string name="extra_704" formatted="false">Test</string>
+    <string name="extra_705" formatted="false">unreachable</string>
+    <string name="extra_706" formatted="false">Advanced options</string>
+    <string name="extra_707" formatted="false">Pro</string>
+    <string name="extra_708" formatted="false">Hide tools</string>
+    <string name="extra_709" formatted="false">Connection tools</string>
+    <string name="extra_710" formatted="false">Waiting for network requests...</string>
+    <string name="extra_711" formatted="false">All (%d)</string>
+    <string name="extra_712" formatted="false">Active (%d)</string>
+    <string name="extra_713" formatted="false">History (%d)</string>
+    <string name="extra_714" formatted="false">State</string>
+    <string name="extra_715" formatted="false">Active</string>
+    <string name="extra_716" formatted="false">Closed</string>
+    <string name="extra_717" formatted="false">Transport</string>
+    <string name="extra_718" formatted="false">Source</string>
+    <string name="extra_719" formatted="false">Route</string>
+    <string name="extra_720" formatted="false">Requests</string>
+    <string name="extra_721" formatted="false">Time</string>
+    <string name="extra_722" formatted="false">Copied: %s</string>
+    <string name="extra_723" formatted="false">Copy address</string>
+    <string name="extra_724" formatted="false">Added to Direct: %s</string>
+    <string name="extra_725" formatted="false">Added to Proxy: %s</string>
+    <string name="extra_726" formatted="false">Blocked: %s</string>
+    <string name="extra_727" formatted="false">Loaded %d Tor bridges (WebTunnel · obfs4 · Vanilla)!</string>
+    <string name="extra_728" formatted="false">Failed to fetch Tor bridges</string>
+    <string name="extra_729" formatted="false">Would you like a tour?</string>
+    <string name="extra_730" formatted="false">Learn about connecting, fast automatic selection and app routing. Auto-selection checks HTTPS through a server and, in a monitoring mode, finds a replacement after failure. You can turn it off on Home.</string>
+    <string name="extra_731" formatted="false">Show me</string>
+    <string name="extra_732" formatted="false">Continue without the tour</string>
+    <string name="extra_733" formatted="false">Quick setup</string>
+    <string name="extra_734" formatted="false">Confirm your region and routing. The detailed tour will be skipped.</string>
+    <string name="extra_735" formatted="false">Smart mode accelerates speed by routing domestic traffic directly. Full traffic encrypts 100% of data.</string>
+    <string name="extra_736" formatted="false">Servers &amp; Connection</string>
+    <string name="extra_737" formatted="false">Tor TOP-100 Bridges by igareck</string>
+    <string name="extra_738" formatted="false">Ready bypass without a private VPS</string>
+    <string name="extra_739" formatted="false">Tor guards are blocked in censored zones. This pool includes verified WebTunnel (HTTPS disguise) and obfs4 bridges bypassing deep packet inspection.</string>
+    <string name="extra_740" formatted="false">Refresh TOP-100 bridges</string>
+    <string name="extra_741" formatted="false">Download Tor TOP-100 bridges</string>
+    <string name="extra_742" formatted="false">Fetching and validating bridges from GitHub…</string>
+    <string name="extra_743" formatted="false">Default mode: Tor</string>
+    <string name="extra_744" formatted="false">Connect via Tor directly after setup</string>
+    <string name="extra_745" formatted="false">apps</string>
+    <string name="extra_746" formatted="false">Language</string>
+    <string name="extra_747" formatted="false">Region</string>
+    <string name="extra_748" formatted="false">Routing</string>
+    <string name="extra_749" formatted="false">VPN link</string>
+    <string name="extra_750" formatted="false">Ready to import</string>
+    <string name="extra_751" formatted="false">Backup</string>
+    <string name="extra_752" formatted="false">Backup file selected</string>
+    <string name="extra_753" formatted="false">Tor bridges</string>
+    <string name="extra_754" formatted="false">%d TOP-100 bridges</string>
+    <string name="extra_755" formatted="false">Startup mode</string>
+    <string name="extra_756" formatted="false">Apps</string>
+    <string name="extra_757" formatted="false">After setup, you can transfer configs from your phone via QR code.</string>
+    <string name="extra_758" formatted="false">Finish and Connect</string>
+    <string name="extra_759" formatted="false">Skip</string>
+    <string name="extra_760" formatted="false">Interactive Training</string>
+    <string name="extra_761" formatted="false">Safe replica · settings unchanged</string>
+    <string name="extra_762" formatted="false">Task</string>
+    <string name="extra_763" formatted="false">DEMO MODE</string>
+    <string name="extra_764" formatted="false">Connect VPN</string>
+    <string name="extra_765" formatted="false">Germany</string>
+    <string name="extra_766" formatted="false">Netherlands</string>
+    <string name="extra_767" formatted="false">Latency</string>
+    <string name="extra_768" formatted="false">Speed</string>
+    <string name="extra_769" formatted="false">Add server (+)</string>
+    <string name="extra_770" formatted="false">From link (Clipboard)</string>
+    <string name="extra_771" formatted="false">Scan QR code</string>
+    <string name="extra_772" formatted="false">Germany (VLESS)</string>
+    <string name="extra_773" formatted="false">Example server added ✓</string>
+    <string name="extra_774" formatted="false">100 verified bridges ready</string>
+    <string name="extra_775" formatted="false">Bypass strict DPI blocking in Russia</string>
+    <string name="extra_776" formatted="false">Quick import TOP-100 (igareck bridges)</string>
+    <string name="extra_777" formatted="false">Fresh bridges for Russia (WebTunnel, obfs4) from igareck\'s repository.</string>
+    <string name="extra_778" formatted="false">Downloading 100 igareck bridges from GitHub…</string>
+    <string name="extra_779" formatted="false">Bridge transports:</string>
+    <string name="extra_780" formatted="false">Auto · 100</string>
+    <string name="extra_781" formatted="false">Censorship bypass secret</string>
+    <string name="extra_782" formatted="false">WebTunnel disguises traffic as normal HTTPS web traffic, and obfs4 obfuscates it. DPI lets the connection through!</string>
+    <string name="extra_783" formatted="false">Use VPN for selected apps only</string>
+    <string name="extra_784" formatted="false">Web browser (Chrome / Firefox)</string>
+    <string name="extra_785" formatted="false">Appearance &amp; Themes</string>
+    <string name="extra_786" formatted="false">Great job! Lesson completed.</string>
+    <string name="extra_787" formatted="false">Tap \'Continue\' to proceed to the next step.</string>
+    <string name="extra_788" formatted="false">Tap the highlighted control on the demo screen</string>
+    <string name="extra_789" formatted="false">Point your camera at a provider QR code. The real client parses the configuration instantly on-device.</string>
+    <string name="extra_790" formatted="false">Example config</string>
+    <string name="extra_791" formatted="false">Copy a VLESS/Shadowsocks server or subscription link, paste it into the field, and tap Add.</string>
+    <string name="extra_792" formatted="false">Add example</string>
+    <string name="extra_793" formatted="false">Quick server selection</string>
+    <string name="extra_794" formatted="false">Germany (Frankfurt)</string>
+    <string name="extra_795" formatted="false">Netherlands (Amsterdam)</string>
+    <string name="extra_796" formatted="false">Tap</string>
+    <string name="extra_797" formatted="false">Speed-test traffic budget exhausted. New samples after %s. You can raise the budget in balancer settings.</string>
+    <string name="extra_798" formatted="false">Up to 10 nodes · up to 6 Mbps samples per refresh within the traffic budget</string>
+    <string name="extra_799" formatted="false">Mbps not measured</string>
+    <string name="extra_800" formatted="false">\"%s\": Error (%s unavailable)</string>
+    <string name="extra_801" formatted="false">Restored %d servers</string>
+    <string name="extra_802" formatted="false">Restored %d preset nodes</string>
+    <string name="extra_803" formatted="false">Cyberpunk</string>
+    <string name="extra_804" formatted="false">Interactive Tour</string>
+    <string name="extra_805" formatted="false">Connect when opening the app</string>
+    <string name="extra_806" formatted="false">Start the selected VPN or Tor mode when entering the app</string>
+    <string name="extra_807" formatted="false">Support the project</string>
+    <string name="extra_808" formatted="false">A voluntary donation helps develop SplateVPN. Thank you for your support!</string>
+    <string name="extra_809" formatted="false">Donate via DonationAlerts</string>
+    <string name="extra_810" formatted="false">Personal servers</string>
+    <string name="extra_811" formatted="false">Subscription</string>
+    <string name="extra_812" formatted="false">SERVERS (%d)</string>
+    <string name="extra_813" formatted="false">Add</string>
+    <string name="extra_814" formatted="false">Stop</string>
+    <string name="extra_815" formatted="false">Ping</string>
+    <string name="extra_816" formatted="false">Search server…</string>
+    <string name="extra_817" formatted="false">No matching servers found</string>
+    <string name="extra_818" formatted="false">No servers available yet</string>
+    <string name="extra_819" formatted="false">Add server or subscription</string>
+    <string name="extra_820" formatted="false">Nodes (%d)</string>
+    <string name="extra_821" formatted="false">Ping subscription</string>
+    <string name="extra_822" formatted="false">Show more (%d)</string>
+    <string name="extra_823" formatted="false">Interface mode</string>
+    <string name="extra_824" formatted="false">Simple</string>
+    <string name="extra_825" formatted="false">Minimal interface: connect button, server picker, and basic protection.</string>
+    <string name="extra_826" formatted="false">Full access: servers, routing rules, Tor, balancer, DNS, and diagnostics.</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subscription_hwid_title">设备绑定（HWID）</string>
+    <string name="subscription_hwid_hint">仅向此订阅发送本次安装的标识，不发送 IMEI 或 MAC 地址。重新安装或清除应用数据后标识会改变，可能需要服务商重置设备名额。</string>
+    <string name="subscription_hwid_required">此订阅需要 HWID。请在订阅设置中启用设备绑定，然后重新更新。</string>
+    <string name="subscription_hwid_device_limit">已达到订阅的设备数量上限。请联系服务商移除不再使用的设备。已保存的服务器会保留。</string>
+</resources>

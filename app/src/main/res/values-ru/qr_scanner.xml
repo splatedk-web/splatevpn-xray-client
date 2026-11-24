@@ -1,0 +1,15 @@
+<resources>
+    <string name="qr_close">Закрыть</string>
+    <string name="qr_torch_on">Включить фонарь</string>
+    <string name="qr_torch_off">Выключить фонарь</string>
+    <string name="qr_zoom">Масштаб %1$d×</string>
+    <string name="qr_zoom_value">Масштаб %1$.1f×</string>
+    <string name="qr_scanner_help">Держите QR-код целиком в кадре. Для мелкого кода подойдите ближе или увеличьте масштаб.</string>
+    <string name="qr_camera_permission">Разрешите доступ к камере для сканирования QR-кода или выберите изображение.</string>
+    <string name="qr_camera_unavailable">Камера недоступна. Можно импортировать QR-код из изображения.</string>
+    <string name="qr_image_open_error">Не удалось открыть изображение. Выберите PNG, JPEG или снимок экрана.</string>
+    <string name="qr_payload_error">QR-код пустой или слишком большой для импорта.</string>
+    <string name="qr_choose_payload">Найдено несколько QR-кодов. Выберите один для импорта.</string>
+    <string name="qr_payload_number">QR-код %1$d</string>
+</resources>
+

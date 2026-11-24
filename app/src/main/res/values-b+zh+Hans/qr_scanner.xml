@@ -1,0 +1,15 @@
+<resources>
+    <string name="qr_close">关闭</string>
+    <string name="qr_torch_on">开启手电筒</string>
+    <string name="qr_torch_off">关闭手电筒</string>
+    <string name="qr_zoom">缩放 %1$d×</string>
+    <string name="qr_zoom_value">缩放 %1$.1f×</string>
+    <string name="qr_scanner_help">请将完整二维码保持在画面中。二维码较小时，请靠近或放大。</string>
+    <string name="qr_camera_permission">请允许相机访问以扫描二维码，或选择图片。</string>
+    <string name="qr_camera_unavailable">相机不可用。您可以从图片导入二维码。</string>
+    <string name="qr_image_open_error">无法打开图片。请选择 PNG、JPEG 或屏幕截图。</string>
+    <string name="qr_payload_error">二维码为空或过大，无法导入。</string>
+    <string name="qr_choose_payload">发现多个二维码。请选择一个导入。</string>
+    <string name="qr_payload_number">二维码 %1$d</string>
+</resources>
+

@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Mirror the main declaration for tools that inspect this overlay before merging. -->
+        <service android:name="com.danieldk.splatevpn.vpn.SplateVpnService"
+            android:foregroundServiceType="specialUse" />
+        <!-- Instrumentation fixture. Not included in release builds. -->
+        <service android:name="com.danieldk.splatevpn.vpn.AppIdentityTestVpnService"
+            android:exported="false" android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter><action android:name="android.net.VpnService" /></intent-filter>
+        </service>
+    </application>
+</manifest>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="qr_close">Close</string>
+    <string name="qr_torch_on">Flashlight on</string>
+    <string name="qr_torch_off">Flashlight off</string>
+    <string name="qr_zoom">Zoom %1$d×</string>
+    <string name="qr_zoom_value">Zoom %1$.1f×</string>
+    <string name="qr_scanner_help">Keep the whole QR code in view. Move closer or use zoom for a small code.</string>
+    <string name="qr_camera_permission">Allow camera access to scan a QR code, or choose an image instead.</string>
+    <string name="qr_camera_unavailable">Camera unavailable. You can import a QR code from an image.</string>
+    <string name="qr_image_open_error">Could not open this image. Choose a PNG, JPEG or a screenshot.</string>
+    <string name="qr_payload_error">This QR code is empty or too large to import.</string>
+    <string name="qr_choose_payload">Several QR codes found. Choose one to import.</string>
+    <string name="qr_payload_number">QR code %1$d</string>
+</resources>
+

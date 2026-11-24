@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_searching">未找到服务器，正在搜索…</string>
+    <string name="connection_waiting_network">正在等待网络并搜索服务器…</string>
+    <string name="connection_core_failed">Xray 核心启动失败</string>
+    <string name="connection_tun_failed">无法创建 VPN 接口</string>
+    <string name="connection_timeout">连接超时</string>
+    <string name="connection_tor_limit">已达到 Tor 重连次数上限</string>
+    <string name="connection_tor_changed">Tor 配置已更改</string>
+    <string name="connection_tor_failed">Tor 重新连接失败</string>
+    <string name="folder_update">更新订阅</string>
+    <string name="folder_ping">测试延迟</string>
+    <string name="preset_lte_name">白名单（LTE 已检测）</string>
+    <string name="preset_black_name">黑名单（Black VLESS）</string>
+    <string name="release_translating">正在翻译更新说明… 可能需要下载语言模型。</string>
+    <string name="release_translation_failed">翻译暂不可用，正在显示原文。</string>
+    <string name="release_original">显示原文</string>
+    <string name="release_translated">显示译文</string>
+    <string name="release_machine_translation">自动翻译</string>
+</resources>

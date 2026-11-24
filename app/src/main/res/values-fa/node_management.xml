@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="node_limits_unknown">محدودیت و تاریخ انقضا ارائه نشده است</string>
+    <string name="node_enable_all">فعال کردن همه گره‌ها</string>
+    <string name="node_disable_all">غیرفعال کردن همه گره‌ها</string>
+    <string name="folder_enable">فعال کردن پوشه</string>
+    <string name="folder_disable">غیرفعال کردن پوشه</string>
+</resources>

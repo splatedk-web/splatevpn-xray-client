@@ -15,9 +15,13 @@ class XrayConfigGenerator @Inject constructor() {
 
     private val gson = Gson()
 
-    /** Isolated SmartDNS probe: no VPN, selected server, LAN listener or main-core port. */
-    fun generateAiDnsProbeConfig(providerKey: String, fragment: Boolean, socksPort: Int): String {
+    /** Isolated SmartDNS probe; VPN mode requires a complete immutable transport snapshot. */
+    fun generateAiDnsProbeConfig(providerKey: String, fragment: Boolean, socksPort: Int,
+        localProxyAccess: LocalProxyCredentials? = null, viaVpn: Boolean = false,
+        vpnRoute: com.danieldk.splatevpn.data.AiDnsVpnRoute? = null): String {
         require(socksPort in 1..65535)
+        if (viaVpn) return generateAiDnsVpnProbeConfig(providerKey, socksPort, localProxyAccess,
+            requireNotNull(vpnRoute) { "A connected VPN profile is required for SmartDNS via VPN" })
         val provider = SmartDnsProviders.forAi(providerKey)
         val targetDomains = aiSmartDnsDomains
         return gson.toJson(JsonObject().apply {
@@ -44,7 +48,8 @@ class XrayConfigGenerator @Inject constructor() {
                     addProperty("listen", "127.0.0.1")
                     addProperty("port", socksPort)
                     addProperty("protocol", "socks")
-                    add("settings", JsonObject().apply { addProperty("auth", "noauth"); addProperty("udp", false) })
+                    add("settings", localProxyAccess?.socksSettings(false)
+                        ?: JsonObject().apply { addProperty("auth", "noauth"); addProperty("udp", false) })
                 })
             })
             add("outbounds", JsonArray().apply {
@@ -60,6 +65,13 @@ class XrayConfigGenerator @Inject constructor() {
                         add("sockopt", JsonObject().apply { addProperty("domainStrategy", "ForceIPv4") })
                     })
                 })
+                if (fragment) add(JsonObject().apply {
+                    addProperty("tag", "provider-probe"); addProperty("protocol", "freedom")
+                    add("settings", JsonObject().apply { add("fragment", JsonObject().apply {
+                        addProperty("packets", "tlshello"); addProperty("length", "10-20"); addProperty("interval", "1-2")
+                    }) })
+                    add("streamSettings", JsonObject().apply { add("sockopt", JsonObject().apply { addProperty("domainStrategy", "ForceIPv4") }) })
+                })
                 add(JsonObject().apply {
                     addProperty("tag", "dns-probe")
                     addProperty("protocol", "freedom")
@@ -71,7 +83,7 @@ class XrayConfigGenerator @Inject constructor() {
             add("routing", JsonObject().apply {
                 add("rules", JsonArray().apply {
                     add(JsonObject().apply {
-                        addProperty("type", "field"); addProperty("port", "443"); addProperty("outboundTag", "dns-probe")
+                        addProperty("type", "field"); addProperty("port", "443"); addProperty("outboundTag", if (fragment) "provider-probe" else "dns-probe")
                         add("domain", JsonArray().apply { add("full:${provider.host}") })
                     })
                     add(JsonObject().apply {
@@ -86,47 +98,38 @@ class XrayConfigGenerator @Inject constructor() {
         })
     }
 
-    private fun buildImportedFullConfig(
-        rawConfig: String,
-        inboundPort: Int,
-        listenAddress: String,
-        udp: Boolean,
-        silent: Boolean = false,
-        adBlocker: Boolean = false,
-        adBlockMatcher: String? = null,
-        adBlockAllowlist: List<String> = emptyList()
-    ): String? = try {
-        val config = com.google.gson.JsonParser.parseString(rawConfig).asJsonObject
-        val inbounds = config.get("inbounds")
-            ?.takeIf { it.isJsonArray }
-            ?.asJsonArray
-            ?: JsonArray()
-        val socksInbound = inbounds.firstOrNull { inbound ->
-            inbound.isJsonObject && inbound.asJsonObject.get("protocol")?.asString.equals("socks", ignoreCase = true)
-        }?.asJsonObject
+    private fun generateAiDnsVpnProbeConfig(providerKey: String, socksPort: Int,
+        localProxyAccess: LocalProxyCredentials?, route: com.danieldk.splatevpn.data.AiDnsVpnRoute): String {
+        val config = com.google.gson.JsonParser.parseString(generateAiDnsProbeConfig(providerKey,
+            fragment = false, socksPort = socksPort, localProxyAccess = localProxyAccess)).asJsonObject
+        val transport = com.google.gson.JsonParser.parseString(generateTestConfig(route.node, socksPort,
+            xhttpModeOverride = route.xhttpMode, enableTlsFragment = route.tlsFragment,
+            tlsFragmentLength = route.tlsFragmentLength, tlsFragmentInterval = route.tlsFragmentInterval,
+            tlsFragmentPackets = route.tlsFragmentPackets, tlsMixedSni = route.tlsMixedSni, enableMux = route.mux,
+            muxConcurrency = route.muxConcurrency, localProxyAccess = localProxyAccess)).asJsonObject
+        val aiOutbound = config.getAsJsonArray("outbounds")[0].asJsonObject.deepCopy()
+        aiOutbound.getAsJsonObject("streamSettings").getAsJsonObject("sockopt").addProperty("dialerProxy", "proxy")
+        val outbounds = transport.getAsJsonArray("outbounds").deepCopy()
+        outbounds.add(aiOutbound)
+        config.add("outbounds", outbounds)
 
-        val managedInbound = socksInbound ?: JsonObject().apply {
-            addProperty("tag", "socks-in")
-            addProperty("protocol", "socks")
-        }.also { inbounds.add(it) }
-        managedInbound.addProperty("port", inboundPort)
-        managedInbound.addProperty("listen", listenAddress)
-        val settings = managedInbound.get("settings")
-            ?.takeIf { it.isJsonObject }
-            ?.asJsonObject
-            ?: JsonObject().also { managedInbound.add("settings", it) }
-        settings.addProperty("auth", "noauth")
-        settings.addProperty("udp", udp)
-
-        config.add("inbounds", inbounds)
-        if (adBlocker) AdBlockingPolicy.applyToImported(config, managedInbound, adBlockMatcher, adBlockAllowlist)
-        if (silent) {
-            val log = JsonObject().apply { addProperty("loglevel", "none") }
-            config.add("log", log)
+        val dns = config.getAsJsonObject("dns")
+        val hosts = dns.getAsJsonObject("hosts")
+        transport.getAsJsonObject("dns").getAsJsonObject("hosts")?.entrySet()?.forEach { (name, value) ->
+            if (!hosts.has(name)) hosts.add(name, value.deepCopy())
         }
-        gson.toJson(config)
-    } catch (_: Exception) {
-        null
+        val servers = JsonArray()
+        // Only VPN transport endpoints can use the pre-tunnel resolver. AI names cannot fall back to it.
+        transport.getAsJsonObject("dns").getAsJsonArray("servers").filter {
+            it.isJsonObject && it.asJsonObject["address"]?.asString == "localhost"
+        }.forEach { servers.add(it.deepCopy()) }
+        dns.getAsJsonArray("servers").forEach { servers.add(it.deepCopy()) }
+        dns.add("servers", servers)
+        config.getAsJsonObject("routing").getAsJsonArray("rules").forEach { element ->
+            val rule = element.asJsonObject
+            if (rule["outboundTag"]?.asString == "dns-probe") rule.addProperty("outboundTag", "proxy")
+        }
+        return gson.toJson(config)
     }
 
     fun generateConfig(
@@ -155,25 +158,48 @@ class XrayConfigGenerator @Inject constructor() {
         aiDnsProvider: String = "dns_ai",
         aiTlsFragment: Boolean = false,
         adBlockMatcher: String? = null,
-        adBlockAllowlist: List<String> = emptyList()
+        adBlockAllowlist: List<String> = emptyList(),
+        lanAccess: LanAccess? = null,
+        routingRegion: String = "ru",
+        diagnosticLogging: Boolean = node?.security.equals("reality", ignoreCase = true) || !node?.publicKey.isNullOrBlank(),
+        dnsProbePort: Int? = null,
+        localProxyAccess: LocalProxyCredentials? = null,
+        subscriptionRules: List<JsonObject> = emptyList(),
+        advancedRules: List<com.danieldk.splatevpn.data.AdvancedRouteRule> = emptyList(),
+        appIdentityAccess: AppIdentityAccess? = null,
+        allAvailableServers: List<ServerNode> = emptyList(),
+        tlsMixedSni: Boolean = false,
+        socksPort: Int = SplateConstants.XRAY_SOCKS_PORT
     ): String {
-        node?.fullConfigJson?.takeIf { it.isNotBlank() }?.let { rawConfig ->
-            buildImportedFullConfig(
-                rawConfig = rawConfig,
-                inboundPort = SplateConstants.XRAY_SOCKS_PORT,
-                listenAddress = if (shareLan) "0.0.0.0" else SplateConstants.XRAY_SOCKS_ADDRESS,
-                udp = true,
-                adBlocker = adBlocker,
-                adBlockMatcher = adBlockMatcher,
-                adBlockAllowlist = adBlockAllowlist
-            )?.let { return it }
-        }
-
+        require(socksPort in 1..65535) { "Invalid local SOCKS port" }
+        val region = com.danieldk.splatevpn.data.RoutingRegion.fromId(if (mode == "smart_ru") "ru" else routingRegion)
+        val localRouting = mode in setOf("smart_ru", "smart")
         val config = JsonObject()
 
-        // 1. Log: stream access logs to stdout for live connection tracking in app
+        val appPackages = com.danieldk.splatevpn.data.AdvancedRoutingRules.packageNames(advancedRules).toSet()
+        require(appPackages.isEmpty() || appIdentityAccess != null && appIdentityAccess.packages == appPackages) {
+            "Для правил приложений требуется отдельный внутренний TUN-вход с определением Android UID"
+        }
+        require(appIdentityAccess == null || appIdentityAccess.port != socksPort &&
+            appIdentityAccess.port != dnsProbePort && (!shareLan || appIdentityAccess.port !in setOf(lanHttpPort, SplateConstants.XRAY_LAN_SOCKS_PORT))) {
+            "Private app identity port conflicts with another listener"
+        }
+        val compiledAdvancedRules = com.danieldk.splatevpn.data.AdvancedRoutingRules.compile(advancedRules).map { rule ->
+            if (rule.has("user")) rule.apply {
+                // Even a manually chosen Mixed/LAN username must not impersonate a TUN app.
+                add("inboundTag", JsonArray().apply { add(AppIdentityAccess.INBOUND_TAG) })
+            } else rule
+        }
+        require(enableSniffing || !com.danieldk.splatevpn.data.AdvancedRoutingRules.requiresDomainSniffing(advancedRules)) {
+            "Для составных доменных правил включите определение доменов (sniffing)"
+        }
+        val targetServerIds = advancedRules.filter { it.enabled && it.outbound == "proxy" && !it.targetServerId.isNullOrBlank() }
+            .mapNotNull { it.targetServerId }
+            .distinct()
+
+        // Transport failures are info-level in Xray; retain them when diagnosing a profile.
         val log = JsonObject().apply {
-            addProperty("loglevel", "warning")
+            addProperty("loglevel", if (diagnosticLogging) "info" else "warning")
             addProperty("access", "")
         }
         config.add("log", log)
@@ -183,15 +209,20 @@ class XrayConfigGenerator @Inject constructor() {
         val selectedSmartDns = SmartDnsProviders.forAi(aiDnsProvider)
         val generalSmartDns = SmartDnsProviders.find(dnsProvider)
         val remoteDnsUrl = generalSmartDns?.dohUrl ?: when (dnsProvider.lowercase()) {
-            "google"  -> "8.8.8.8"
-            "quad9"   -> "9.9.9.9"
-            "adguard" -> "94.140.14.14"
+            "google"  -> "https://8.8.8.8/dns-query"
+            "quad9"   -> "https://9.9.9.9/dns-query"
+            "adguard" -> "https://94.140.14.14/dns-query"
             "yandex"  -> "tcp://77.88.8.8:53"
-            "custom"  -> if (customDohUrl.isNotBlank()) customDohUrl.trim() else "1.1.1.1"
-            else      -> "1.1.1.1" // Cloudflare default
+            "custom"  -> if (customDohUrl.isNotBlank()) customDohUrl.trim() else "https://1.1.1.1/dns-query"
+            else      -> "https://1.1.1.1/dns-query" // Cloudflare default
         }
+        val customDnsBootstrapHost = if (dnsProvider.equals("custom", ignoreCase = true)) {
+            runCatching { java.net.URI(customDohUrl.trim()).host }.getOrNull()
+                ?.takeIf { it.isNotBlank() && !isIpAddress(it) }
+        } else null
 
         val useSmartDns = bypassAi && aiRoutingMode != "vpn"
+        val smartDnsViaVpn = useSmartDns && aiRoutingMode == "dns_vpn"
         val smartDnsInUse = (listOfNotNull(generalSmartDns) + if (useSmartDns) listOf(selectedSmartDns) else emptyList()).distinctBy { it.key }
         // Keep the direct exception limited to AI hosts, not entire vendor domains.
         val aiDirectDomainList = aiSmartDnsDomains
@@ -212,6 +243,22 @@ class XrayConfigGenerator @Inject constructor() {
             "domain:perplexity.ai",
             "domain:x.ai",
             "domain:grok.com",
+            "domain:poe.com",
+            "domain:cursor.sh",
+            "domain:cursor.com",
+            "domain:midjourney.com",
+            "domain:suno.com",
+            "domain:suno.ai",
+            "domain:elevenlabs.io",
+            "domain:character.ai",
+            "domain:duck.ai",
+            "domain:githubcopilot.com",
+            "full:copilot-proxy.githubusercontent.com",
+            "full:search.brave.com",
+            "full:leo.brave.com",
+            "full:ai-chat.bsg.brave.com",
+            "domain:lumo.proton.me",
+            "full:lumo-api.proton.me",
             "geosite:openai"
         )
 
@@ -224,44 +271,21 @@ class XrayConfigGenerator @Inject constructor() {
                     add("fakedns")
                 }
 
-                // Direct DNS for RU domains — Yandex DNS bypasses Xray tunnel
-                // Using tcp://77.88.8.8:53 prevents UDP transaction ID loss/duplication ("cannot find the pending request")
-                val ruDns = JsonObject().apply {
-                    addProperty("address", "tcp://77.88.8.8:53")
-                    addProperty("port", 53)
-                    val domains = JsonArray().apply {
-                        add("geosite:category-ru")
-                        add("geosite:tld-ru")
-                        add("geosite:yandex")
-                        add("geosite:vk")
-                        add("geosite:mailru")
-                        add("domain:gosuslugi.ru")
-                        add("domain:sberbank.ru")
-                        add("domain:tinkoff.ru")
-                        add("domain:vtb.ru")
-                        add("domain:alfabank.ru")
-                        add("domain:raiffeisen.ru")
-                        add("domain:gazprombank.ru")
-                        add("domain:mos.ru")
-                        add("domain:nalog.ru")
-                        add("domain:ru")
-                        add("domain:su")
-                        add("domain:xn--p1ai")
-                        // Resolve server address directly to avoid proxy loop
-                        if (!node?.address.isNullOrBlank() && !isIpAddress(node!!.address)) {
-                            add("domain:${node.address}")
-                        }
-                    }
-                    add("domains", domains)
+                // Regional DNS is scoped to local exceptions. Other regions keep DNS in the tunnel.
+                if (localRouting && region == com.danieldk.splatevpn.data.RoutingRegion.RUSSIA) {
+                    add(JsonObject().apply {
+                        addProperty("address", "tcp://77.88.8.8:53")
+                        addProperty("skipFallback", true)
+                        add("domains", JsonArray().apply { region.domains.forEach { add(it) } })
+                    })
                 }
-                add(ruDns)
 
                 // A user proxy override must not inherit a Smart DNS relay address.
                 val proxyDnsDomains = customRoutes.filter { it.second == "proxy" }.map { it.first } +
                     if (bypassAi && !useSmartDns) aiProxyDomainList + aiDirectDomainList else emptyList()
                 if (proxyDnsDomains.isNotEmpty()) {
                     add(JsonObject().apply {
-                        addProperty("address", if (generalSmartDns != null) "1.1.1.1" else remoteDnsUrl)
+                        addProperty("address", if (generalSmartDns != null) "https://1.1.1.1/dns-query" else remoteDnsUrl)
                         addProperty("skipFallback", true)
                         add("domains", JsonArray().apply { proxyDnsDomains.forEach { add(it) } })
                     })
@@ -283,33 +307,14 @@ class XrayConfigGenerator @Inject constructor() {
 
                 // Remote DNS for all other domains — routed through proxy tunnel.
                 add(remoteDnsUrl)
-                // Reliable TCP fallbacks
-                add("tcp://8.8.8.8:53")
-                add("tcp://1.1.1.1:53")
+                // Retain TCP support for VPN servers without UDP, without silently
+                // switching to a different provider (including for custom/SmartDNS).
+                if (!remoteDnsUrl.contains("://") && isIpAddress(remoteDnsUrl)) {
+                    val host = if (remoteDnsUrl.contains(':')) "[${remoteDnsUrl.removeSurrounding("[", "]")}]" else remoteDnsUrl
+                    add("tcp://$host:53")
+                }
             }
             add("servers", servers)
-
-            val protocol = node?.protocol?.lowercase() ?: "vless"
-            val rawSec = node?.security?.lowercase()?.trim() ?: "none"
-            val security: String = when {
-                rawSec == "reality"              -> "reality"
-                rawSec == "tls"                  -> "tls"
-                rawSec == "none"                 -> "none"
-                !node?.publicKey.isNullOrEmpty() -> "reality"
-                node?.port == 443                -> "tls"
-                else                             -> "none"
-            }
-
-            // Xray 26+ strictly prohibits VLESS with security="none" if address is a public IP or public domain.
-            // Xray requires the address to be a private IP or private domain (.local, .internal, localhost).
-            // We provide "server.local" mapped to the real server IP/address in dns.hosts so Xray validation passes.
-            val vlessProxyDomain: String? = if (protocol == "vless" && security == "none" && !node?.address.isNullOrBlank()) {
-                "server.local"
-            } else null
-
-
-            val hasTls = security == "tls" || security == "reality"
-            val effectiveTlsFragment = enableTlsFragment && hasTls
 
             val hosts = JsonObject().apply {
                 if (adBlocker) AdBlockingPolicy.addDnsHosts(this, adBlockMatcher, adBlockAllowlist)
@@ -321,15 +326,12 @@ class XrayConfigGenerator @Inject constructor() {
                 smartDnsInUse.forEach { provider ->
                     add(provider.host, JsonArray().apply { provider.bootstrapIpv4.forEach { add(it) } })
                 }
-
-                if (vlessProxyDomain != null && !node?.address.isNullOrBlank()) {
-                    addProperty(vlessProxyDomain, node.address.trim())
-                }
             }
             add("hosts", hosts)
             addProperty("queryStrategy", "UseIPv4")
-            // Never replace a matched Smart DNS answer with a regular public IP.
-            if (useSmartDns) addProperty("disableFallbackIfMatch", true)
+            // Keep scoped RU/bootstrap, explicit routes and AI DNS isolated even
+            // when their resolver fails. Unmatched names use the selected provider.
+            addProperty("disableFallbackIfMatch", true)
         }
         config.add("dns", dns)
 
@@ -348,10 +350,10 @@ class XrayConfigGenerator @Inject constructor() {
         val inbounds = JsonArray()
         val socksInbound = JsonObject().apply {
             addProperty("tag", "socks-in")
-            addProperty("port", SplateConstants.XRAY_SOCKS_PORT)
-            addProperty("listen", if (shareLan) "0.0.0.0" else SplateConstants.XRAY_SOCKS_ADDRESS)
+            addProperty("port", socksPort)
+            addProperty("listen", SplateConstants.XRAY_SOCKS_ADDRESS)
             addProperty("protocol", "socks")
-            val settings = JsonObject().apply {
+            val settings = localProxyAccess?.socksSettings(true) ?: JsonObject().apply {
                 addProperty("auth", "noauth")
                 addProperty("udp", true)
             }
@@ -375,17 +377,44 @@ class XrayConfigGenerator @Inject constructor() {
         }
         inbounds.add(socksInbound)
 
-        // When LAN/Hotspot sharing is enabled, provide an HTTP proxy on 0.0.0.0
-        // for seamless configuration on Windows, macOS, Linux, Android and iOS
+        if (dnsProbePort != null) {
+            require(dnsProbePort in 1..65535 && dnsProbePort != socksPort &&
+                (!shareLan || dnsProbePort != lanHttpPort))
+            inbounds.add(JsonObject().apply {
+                addProperty("tag", "dns-check-in")
+                addProperty("listen", SplateConstants.XRAY_SOCKS_ADDRESS)
+                addProperty("port", dnsProbePort)
+                addProperty("protocol", "socks")
+                add("settings", localProxyAccess?.socksSettings(false)
+                    ?: JsonObject().apply { addProperty("auth", "noauth"); addProperty("udp", false) })
+            })
+        }
+
+        // The tunnel keeps its private listener; shared listeners bind only the selected address.
         if (shareLan) {
+            val access = requireNotNull(lanAccess) { "LAN interface and credentials are required" }
+            val accounts = JsonArray().apply { add(JsonObject().apply {
+                addProperty("user", access.username); addProperty("pass", access.password)
+            }) }
+            inbounds.add(socksInbound.deepCopy().apply {
+                addProperty("tag", "socks-lan")
+                addProperty("listen", access.bindAddress)
+                addProperty("port", SplateConstants.XRAY_LAN_SOCKS_PORT)
+                getAsJsonObject("settings").apply {
+                    addProperty("auth", if (access.authentication) "password" else "noauth")
+                    if (access.authentication) add("accounts", accounts.deepCopy()) else remove("accounts")
+                    addProperty("ip", access.bindAddress)
+                }
+            })
             val httpLanInbound = JsonObject().apply {
                 addProperty("tag", "http-in")
                 addProperty("port", lanHttpPort)
-                addProperty("listen", "0.0.0.0")
+                addProperty("listen", access.bindAddress)
                 addProperty("protocol", "http")
                 val settings = JsonObject().apply {
                     addProperty("timeout", 300)
                     addProperty("allowTransparent", false)
+                    if (access.authentication) add("accounts", accounts.deepCopy())
                 }
                 add("settings", settings)
 
@@ -407,11 +436,16 @@ class XrayConfigGenerator @Inject constructor() {
             }
             inbounds.add(httpLanInbound)
         }
+        if (appIdentityAccess != null) inbounds.add(socksInbound.deepCopy().apply {
+            addProperty("tag", AppIdentityAccess.INBOUND_TAG)
+            addProperty("port", appIdentityAccess.port)
+            addProperty("listen", "127.0.0.1")
+            add("settings", appIdentityAccess.settings())
+        })
         config.add("inbounds", inbounds)
 
         // 4. Outbounds
         val outbounds = JsonArray()
-        val protocol = node?.protocol?.lowercase() ?: "vless"
         val rawSec = node?.security?.lowercase()?.trim() ?: "none"
         val security: String = when {
             rawSec == "reality"              -> "reality"
@@ -421,9 +455,6 @@ class XrayConfigGenerator @Inject constructor() {
             node?.port == 443                -> "tls"
             else                             -> "none"
         }
-        val vlessProxyDomain: String? = if (protocol == "vless" && security == "none" && !node?.address.isNullOrBlank()) {
-            "server.local"
-        } else null
         val hasTls = security == "tls" || security == "reality"
         val effectiveTlsFragment = enableTlsFragment && hasTls
 
@@ -431,9 +462,9 @@ class XrayConfigGenerator @Inject constructor() {
             node = node,
             xhttpModeOverride = xhttpModeOverride,
             enableTlsFragment = effectiveTlsFragment,
-            vlessProxyDomain = vlessProxyDomain,
             enableMux = enableMux,
-            muxConcurrency = muxConcurrency
+            muxConcurrency = muxConcurrency,
+            resolveTargets = dnsProvider == "custom" || generalSmartDns != null
         )
         outbounds.add(proxyOutbound)
 
@@ -444,7 +475,9 @@ class XrayConfigGenerator @Inject constructor() {
                 val fragmentSettings = JsonObject().apply {
                     addProperty("domainStrategy", "AsIs")
                     val fragmentObj = JsonObject().apply {
-                        addProperty("packets", tlsFragmentPackets.ifBlank { "tlshello" })
+                        val twoParts = tlsFragmentPackets == com.danieldk.splatevpn.data.TLS_HELLO_TWO_PARTS
+                        addProperty("packets", if (twoParts) "tlshello" else tlsFragmentPackets.ifBlank { "tlshello" })
+                        if (twoParts) addProperty("maxSplit", "2")
                         addProperty("length", tlsFragmentLength.ifBlank { "100-200" })
                         addProperty("interval", tlsFragmentInterval.ifBlank { "10-20" })
                     }
@@ -473,7 +506,7 @@ class XrayConfigGenerator @Inject constructor() {
                 addProperty("tag", "ai-direct")
                 addProperty("protocol", "freedom")
                 add("settings", JsonObject().apply {
-                    if (aiTlsFragment) add("fragment", JsonObject().apply {
+                    if (aiTlsFragment && !smartDnsViaVpn) add("fragment", JsonObject().apply {
                         addProperty("packets", "tlshello")
                         addProperty("length", "10-20")
                         addProperty("interval", "1-2")
@@ -481,7 +514,12 @@ class XrayConfigGenerator @Inject constructor() {
                 })
                 add("streamSettings", JsonObject().apply {
                     // Preserve the relay selection: never fall back to OS DNS after a SmartDNS failure.
-                    add("sockopt", JsonObject().apply { addProperty("domainStrategy", "ForceIPv4") })
+                    add("sockopt", JsonObject().apply {
+                        addProperty("domainStrategy", "ForceIPv4")
+                        // Resolve the SmartDNS relay here, before the VPN outbound can
+                        // resolve the original AI hostname using ordinary remote DNS.
+                        if (smartDnsViaVpn) addProperty("dialerProxy", "proxy")
+                    })
                 })
             })
         }
@@ -501,8 +539,15 @@ class XrayConfigGenerator @Inject constructor() {
 
         // 5. Routing
         val routing = JsonObject().apply {
-            addProperty("domainStrategy", "IPIfNonMatch")
+            addProperty("domainStrategy", if (com.danieldk.splatevpn.data.AdvancedRoutingRules.requiresIpResolution(advancedRules)) "IPOnDemand" else "IPIfNonMatch")
             val rules = JsonArray()
+
+            // Resolver comparisons must use the VPN even when user routes send DNS directly.
+            if (dnsProbePort != null) rules.add(JsonObject().apply {
+                addProperty("type", "field")
+                add("inboundTag", JsonArray().apply { add("dns-check-in") })
+                addProperty("outboundTag", "dns-check-proxy")
+            })
 
             // 5.1 Prevent proxy loop: server address must go direct
             if (!node?.address.isNullOrBlank()) {
@@ -516,12 +561,53 @@ class XrayConfigGenerator @Inject constructor() {
                         val domainArr = JsonArray().apply { add("domain:${node.address}") }
                         add("domain", domainArr)
                     }
-                    if (vlessProxyDomain != null) {
-                        val domainArr = (get("domain") as? JsonArray) ?: JsonArray().also { add("domain", it) }
-                        domainArr.add("domain:$vlessProxyDomain")
-                    }
                 }
                 rules.add(nodeAddrRule)
+            }
+
+            targetServerIds.forEach { targetId ->
+                if (node?.id != targetId) {
+                    val targetNode = allAvailableServers.firstOrNull { it.id == targetId }
+                    if (targetNode != null && !targetNode.address.isNullOrBlank()) {
+                        val targetAddrRule = JsonObject().apply {
+                            addProperty("type", "field")
+                            addProperty("outboundTag", "direct")
+                            if (isIpAddress(targetNode.address)) {
+                                val ipArr = JsonArray().apply { add(targetNode.address) }
+                                add("ip", ipArr)
+                            } else {
+                                val domainArr = JsonArray().apply { add("domain:${targetNode.address}") }
+                                add("domain", domainArr)
+                            }
+                        }
+                        rules.add(targetAddrRule)
+                    }
+                }
+            }
+
+            // 5.1b XDrive cloud-storage API endpoints must bypass the VPN (they form the tunnel itself).
+            if (node?.network?.lowercase() == "xdrive") {
+                val xdriveApiRule = com.google.gson.JsonParser.parseString(
+                    node.fullConfigJson.orEmpty()
+                ).takeIf { it.isJsonObject }
+                    ?.asJsonObject?.getAsJsonArray("outbounds")
+                    ?.firstOrNull { it.asJsonObject["tag"]?.asString == "proxy" }
+                    ?.asJsonObject?.getAsJsonObject("streamSettings")
+                    ?.getAsJsonObject("xdriveSettings")
+                    ?.getAsJsonObject("template")
+                    ?.entrySet()
+                    ?.flatMap { (_, v) -> if (!v.isJsonObject) emptyList() else listOfNotNull(v.asJsonObject["url"]?.asString) }
+                    ?.mapNotNull { url -> runCatching { java.net.URI(url.substringBefore("{")).host?.takeIf { it.isNotBlank() && !isIpAddress(it) } }.getOrNull() }
+                    ?.distinct()
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.let { hosts ->
+                        JsonObject().apply {
+                            addProperty("type", "field")
+                            addProperty("outboundTag", "direct")
+                            add("domain", JsonArray().apply { hosts.forEach { add("domain:$it") } })
+                        }
+                    }
+                if (xdriveApiRule != null) rules.add(xdriveApiRule)
             }
 
             // Filter before DNS/IP/direct exceptions; never allow ads through a RU bypass.
@@ -531,7 +617,10 @@ class XrayConfigGenerator @Inject constructor() {
             // 5.2 Intercept DNS queries from TUN → internal Xray DNS resolver
             val dnsInterceptionRule = JsonObject().apply {
                 addProperty("type", "field")
-                val inboundArr = JsonArray().apply { add("socks-in") }
+                val inboundArr = JsonArray().apply {
+                    add("socks-in")
+                    if (appIdentityAccess != null) add(AppIdentityAccess.INBOUND_TAG)
+                }
                 add("inboundTag", inboundArr)
                 addProperty("port", "53")
                 addProperty("outboundTag", "dns-out")
@@ -547,33 +636,45 @@ class XrayConfigGenerator @Inject constructor() {
                 addProperty("outboundTag", "block")
             })
 
-            // 5.3 Yandex DNS & Xbox DNS (RU direct) → direct
-            val directYandexDnsRule = JsonObject().apply {
+            // 5.3 Bootstrap DNS servers (Yandex, Google, Cloudflare port 53) → direct (for server resolving before tunnel)
+            val directBootstrapDnsRule = JsonObject().apply {
                 addProperty("type", "field")
                 addProperty("outboundTag", "direct")
                 val ipArr = JsonArray().apply {
-                    add("77.88.8.8")
-                    add("77.88.8.1")
+                    if (routingRegion == "ru") {
+                        add("77.88.8.8")
+                        add("77.88.8.1")
+                    }
                     add("172.65.9.208")
+                    add("8.8.8.8")
+                    add("1.1.1.1")
                 }
                 add("ip", ipArr)
                 addProperty("port", "53")
             }
-            rules.add(directYandexDnsRule)
+            rules.add(directBootstrapDnsRule)
 
             // Route DoH by hostname alone: Xray combines domain and IP fields with AND.
             if (smartDnsInUse.isNotEmpty()) {
-                val aiDnsRule = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "direct")
-                    addProperty("port", "443")
-                    addProperty("network", "tcp")
-                    val domainArr = JsonArray().apply {
-                        smartDnsInUse.forEach { add("full:${it.host}") }
+                smartDnsInUse.groupBy { provider ->
+                    when {
+                        smartDnsViaVpn && provider.key == selectedSmartDns.key -> "proxy"
+                        useSmartDns && aiTlsFragment && provider.key == selectedSmartDns.key -> "ai-direct"
+                        else -> "direct"
                     }
-                    add("domain", domainArr)
+                }.forEach { (outbound, providers) ->
+                    val aiDnsRule = JsonObject().apply {
+                        addProperty("type", "field")
+                        addProperty("outboundTag", outbound)
+                        addProperty("port", "443")
+                        addProperty("network", "tcp")
+                        val domainArr = JsonArray().apply {
+                            providers.forEach { add("full:${it.host}") }
+                        }
+                        add("domain", domainArr)
+                    }
+                    rules.add(aiDnsRule)
                 }
-                rules.add(aiDnsRule)
             }
 
             // 5.5 Remote DoH DNS servers → proxy (encrypted DNS via VPN tunnel)
@@ -601,8 +702,8 @@ class XrayConfigGenerator @Inject constructor() {
                     if (!customDnsHost.isNullOrBlank() && !isIpAddress(customDnsHost)) {
                         val customDnsHostRule = JsonObject().apply {
                             addProperty("type", "field")
-                            addProperty("outboundTag", "proxy")
-                            val domainArr = JsonArray().apply { add("domain:$customDnsHost") }
+                            addProperty("outboundTag", "dns-bootstrap")
+                            val domainArr = JsonArray().apply { add("full:$customDnsHost") }
                             add("domain", domainArr)
                         }
                         rules.add(customDnsHostRule)
@@ -659,40 +760,21 @@ class XrayConfigGenerator @Inject constructor() {
                 addProperty("port", "123")
                 addProperty("outboundTag", "direct")
             }
-            rules.add(ntpRule)
+            if (localRouting) rules.add(ntpRule)
 
             // 5.11 User custom domain routes (highest priority after DNS rules)
-            val customDirect = customRoutes.filter { it.second == "direct" }.map { it.first }
-            val customProxy = customRoutes.filter { it.second == "proxy" }.map { it.first }
-            val customBlock = customRoutes.filter { it.second == "block" }.map { it.first }
+            // Preserve rule order, including expiring overrides placed before permanent rules.
+            customRoutes.forEach { (domain, outbound) ->
+                if (outbound in setOf("direct", "proxy", "block")) rules.add(JsonObject().apply {
+                    addProperty("type", "field")
+                    addProperty("outboundTag", outbound)
+                    add("domain", JsonArray().apply { add(domain) })
+                })
+            }
 
-            if (customDirect.isNotEmpty()) {
-                val rule = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "direct")
-                    val arr = JsonArray().apply { customDirect.forEach { add(it) } }
-                    add("domain", arr)
-                }
-                rules.add(rule)
-            }
-            if (customBlock.isNotEmpty()) {
-                val rule = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "block")
-                    val arr = JsonArray().apply { customBlock.forEach { add(it) } }
-                    add("domain", arr)
-                }
-                rules.add(rule)
-            }
-            if (customProxy.isNotEmpty()) {
-                val rule = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "proxy")
-                    val arr = JsonArray().apply { customProxy.forEach { add(it) } }
-                    add("domain", arr)
-                }
-                rules.add(rule)
-            }
+            // Validated subscription rules follow explicit user overrides, before broad presets.
+            compiledAdvancedRules.forEach { rules.add(it.deepCopy()) }
+            subscriptionRules.forEach { rules.add(it.deepCopy()) }
 
             // 5.12 AI services bypass:
             // Smart DNS uses a separate direct outbound, independent of server TLS.
@@ -729,68 +811,25 @@ class XrayConfigGenerator @Inject constructor() {
                 rules.add(proxyAiRule)
             }
 
-            val isLegacyStreamingTransport = node?.network?.lowercase() in listOf("ws", "grpc", "h2", "http")
 
-            if (mode == "smart_ru") {
-                // IP checkers & leak test services → proxy for accurate external IP display
-                val proxyCheckerDomains = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "proxy")
-                    val domainArr = JsonArray().apply {
-                        add("domain:2ip.io")
-                        add("domain:2ip.ru")
-                        add("domain:whoer.net")
-                        add("domain:ipinfo.io")
-                        add("domain:ipwho.is")
-                        add("domain:api.ip.sb")
-                        add("domain:ifconfig.me")
-                        add("domain:checkip.amazonaws.com")
-                        add("domain:browserleaks.com")
-                        add("domain:dnsleaktest.com")
-                        add("domain:ipleak.net")
-                    }
-                    add("domain", domainArr)
-                }
-                rules.add(proxyCheckerDomains)
-
+            if (localRouting) {
                 // RU domains → direct (no VPN overhead for local services)
                 val directRuDomains = JsonObject().apply {
                     addProperty("type", "field")
                     addProperty("outboundTag", "direct")
                     val domainArr = JsonArray().apply {
-                        add("geosite:category-ru")
-                        add("geosite:tld-ru")
-                        add("geosite:yandex")
-                        add("geosite:vk")
-                        add("geosite:mailru")
-                        add("domain:heytapmobile.com")
-                        add("domain:heytapdl.com")
-                        add("domain:coloros.com")
-                        add("domain:oppo.com")
-                        add("domain:oneplus.com")
-                        add("domain:gosuslugi.ru")
-                        add("domain:sberbank.ru")
-                        add("domain:tinkoff.ru")
-                        add("domain:vtb.ru")
-                        add("domain:alfabank.ru")
-                        add("domain:raiffeisen.ru")
-                        add("domain:gazprombank.ru")
-                        add("domain:mos.ru")
-                        add("domain:nalog.ru")
-                        add("domain:ru")
-                        add("domain:su")
-                        add("domain:xn--p1ai")
+                        region.domains.forEach { add(it) }
                     }
                     add("domain", domainArr)
                 }
-                rules.add(directRuDomains)
+                if (region.domains.isNotEmpty()) rules.add(directRuDomains)
 
                 // RU IPs & private LAN → direct
                 val directRuIps = JsonObject().apply {
                     addProperty("type", "field")
                     addProperty("outboundTag", "direct")
                     val ipArr = JsonArray().apply {
-                        add("geoip:ru")
+                        region.geoIp?.let { add(it) }
                         add("geoip:private")
                     }
                     add("ip", ipArr)
@@ -848,21 +887,10 @@ class XrayConfigGenerator @Inject constructor() {
                 rules.add(privateRule)
             }
 
-            // For legacy streaming transports (WS, gRPC, H2) that don't support UDP:
-            // route remaining UDP directly to prevent UDP black hole
-            if (isLegacyStreamingTransport) {
-                val directRemainingUdp = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("network", "udp")
-                    addProperty("outboundTag", "direct")
-                }
-                rules.add(directRemainingUdp)
-            }
-
             // Default fallback → proxy
             val defaultProxyRule = JsonObject().apply {
                 addProperty("type", "field")
-                addProperty("network", if (isLegacyStreamingTransport) "tcp" else "tcp,udp")
+                addProperty("network", "tcp,udp")
                 addProperty("outboundTag", "proxy")
             }
             rules.add(defaultProxyRule)
@@ -892,6 +920,57 @@ class XrayConfigGenerator @Inject constructor() {
         }
         config.add("policy", policy)
 
+        ImportedOutboundPolicy.apply(config, node?.fullConfigJson, enableMux, enableTlsFragment, xhttpModeOverride)
+        // Copy the effective imported transport/chain as well. Resolver probes and the
+        // custom resolver's own hostname must not depend on that resolver to connect.
+        val effectiveOutbounds = config.getAsJsonArray("outbounds")
+        val effectiveProxy = effectiveOutbounds.first { it.asJsonObject["tag"].asString == "proxy" }.asJsonObject
+        fun addDnsProxy(tag: String) = effectiveOutbounds.add(effectiveProxy.deepCopy().apply {
+            addProperty("tag", tag)
+            addProperty("targetStrategy", "AsIs")
+        })
+        if (dnsProbePort != null) addDnsProxy("dns-check-proxy")
+        if (customDnsBootstrapHost != null) addDnsProxy("dns-bootstrap")
+
+        targetServerIds.forEach { targetId ->
+            val targetTag = "proxy-server-$targetId"
+            if (node != null && node.id == targetId) {
+                effectiveOutbounds.add(effectiveProxy.deepCopy().apply {
+                    addProperty("tag", targetTag)
+                })
+            } else {
+                val targetNode = allAvailableServers.firstOrNull { it.id == targetId }
+                if (targetNode != null) {
+                    val importedTarget = if (!targetNode.fullConfigJson.isNullOrBlank()) {
+                        runCatching {
+                            val parsed = com.google.gson.JsonParser.parseString(targetNode.fullConfigJson).asJsonObject.getAsJsonArray("outbounds")
+                            parsed?.firstOrNull {
+                                it.isJsonObject && it.asJsonObject["protocol"]?.asString in setOf("vless", "vmess", "trojan", "shadowsocks", "socks", "http", "hysteria")
+                            }?.asJsonObject?.deepCopy()?.apply {
+                                addProperty("tag", targetTag)
+                            }
+                        }.getOrNull()
+                    } else null
+
+                    if (importedTarget != null) {
+                        effectiveOutbounds.add(importedTarget)
+                    } else {
+                        effectiveOutbounds.add(buildProxyOutbound(
+                            node = targetNode,
+                            xhttpModeOverride = "auto",
+                            enableTlsFragment = false,
+                            tag = targetTag
+                        ))
+                    }
+                } else {
+                    effectiveOutbounds.add(effectiveProxy.deepCopy().apply {
+                        addProperty("tag", targetTag)
+                    })
+                }
+            }
+        }
+        if (tlsMixedSni) applyMixedSni(config)
+        addProxyBootstrapDns(config)
         return gson.toJson(config)
     }
 
@@ -900,27 +979,70 @@ class XrayConfigGenerator @Inject constructor() {
         return trimmed.matches(Regex("""^(\d{1,3}\.){3}\d{1,3}$""")) || trimmed.contains(':')
     }
 
+    private fun applyMixedSni(config: JsonObject) {
+        val dnsLabel = Regex("[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?")
+        config.getAsJsonArray("outbounds").forEach { outbound ->
+            val stream = outbound.asJsonObject.getAsJsonObject("streamSettings") ?: return@forEach
+            if (stream["security"]?.asString != "tls" || stream["network"]?.asString == "xdrive") return@forEach
+            val tls = stream.getAsJsonObject("tlsSettings") ?: return@forEach
+            val host = tls["serverName"]?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }?.asString
+                ?: return@forEach
+            val name = host.removeSuffix(".")
+            if (name.length !in 1..253 || isIpAddress(name) || !name.split('.').all(dnsLabel::matches)) return@forEach
+            var upper = true
+            val mixed = buildString(host.length) {
+                host.forEach { char ->
+                    if (char in 'a'..'z' || char in 'A'..'Z') {
+                        append(if (upper) char.uppercaseChar() else char.lowercaseChar())
+                        upper = !upper
+                    } else append(char)
+                }
+            }
+            tls.addProperty("serverName", mixed)
+        }
+    }
+
     private fun buildProxyOutbound(
         node: ServerNode?,
         xhttpModeOverride: String,
         enableTlsFragment: Boolean = false,
-        vlessProxyDomain: String? = null,
         enableMux: Boolean = false,
-        muxConcurrency: Int = 8
+        muxConcurrency: Int = 8,
+        resolveTargets: Boolean = false,
+        tag: String = "proxy"
     ): JsonObject {
+        if (node?.protocol.equals("amneziawg", true)) {
+            return JsonObject().apply {
+                addProperty("tag", tag); addProperty("protocol", "splate-amneziawg")
+                add("awg", gson.toJsonTree(requireNotNull(node?.amneziaWg) { "AWG profile is missing" }.validated()))
+            }
+        }
+        if (node?.protocol?.lowercase() in setOf("hysteria2", "hy2")) {
+            return com.danieldk.splatevpn.data.Hysteria2Profile.outbound(requireNotNull(node)).apply {
+                addProperty("tag", tag)
+            }
+        }
         val proxy = JsonObject()
-        proxy.addProperty("tag", "proxy")
+        proxy.addProperty("tag", tag)
+        // Ordinary tunnels must work without a reachable DNS resolver on the
+        // physical network. Only explicit custom/Smart DNS needs local answers.
+        proxy.addProperty("targetStrategy", if (resolveTargets) "ForceIP" else "AsIs")
 
         val protocol = node?.protocol?.lowercase() ?: "vless"
         proxy.addProperty("protocol", protocol)
 
         val rawNet = node?.network?.lowercase()?.trim() ?: "tcp"
+        val migratedFromH2 = rawNet == "h2" || rawNet == "http"
         val network: String = when (rawNet) {
-            "splithttp", "xhttp" -> "xhttp"
-            "websocket", "ws"    -> "ws"
-            "h2", "http"         -> "h2"
-            "grpc"               -> "grpc"
-            else                 -> "tcp"
+            "splithttp", "xhttp", "h2", "http" -> "xhttp"
+            "websocket", "ws"                  -> "ws"
+            "httpupgrade"                      -> "httpupgrade"
+            "grpc", "gun"                      -> "grpc"
+            "kcp", "mkcp"                      -> "kcp"
+            // XDrive is a cloud-storage transport; the managed outbound is a placeholder
+            // replaced wholesale by ImportedOutboundPolicy from fullConfigJson.
+            "xdrive"                           -> "xdrive"
+            else                               -> "tcp"
         }
 
         val rawSec = node?.security?.lowercase()?.trim() ?: "none"
@@ -938,20 +1060,18 @@ class XrayConfigGenerator @Inject constructor() {
             "vless" -> {
                 val vnext = JsonArray()
                 val serverItem = JsonObject().apply {
-                    val targetAddress = vlessProxyDomain ?: (node?.address ?: "127.0.0.1")
-                    addProperty("address", targetAddress)
+                    // Keep the actual peer so Xray can reject unsafe public VLESS transports.
+                    addProperty("address", node?.address ?: "127.0.0.1")
                     addProperty("port", node?.port ?: 443)
                     val users = JsonArray()
                     val user = JsonObject().apply {
                         addProperty("id", node?.uuid ?: "00000000-0000-0000-0000-000000000000")
                         addProperty("encryption", if (node?.encryption.isNullOrEmpty()) "none" else node?.encryption)
-                        // XTLS Vision flow only valid for TCP+Reality/TLS
+                        // XTLS Vision flow only valid for TCP+Reality/TLS when explicitly configured on the node
                         if (!node?.flow.isNullOrEmpty()) {
                             if (network == "tcp" && (security == "reality" || security == "tls")) {
                                 addProperty("flow", node?.flow)
                             }
-                        } else if (security == "reality" && network == "tcp") {
-                            addProperty("flow", "xtls-rprx-vision")
                         }
                     }
                     users.add(user)
@@ -1050,6 +1170,9 @@ class XrayConfigGenerator @Inject constructor() {
                 val sniVal = if (!node?.sni.isNullOrEmpty()) node?.sni else (node?.address ?: "")
                 addProperty("serverName", sniVal)
                 addProperty("publicKey", node?.publicKey ?: "")
+                node?.rawLink?.let(com.danieldk.splatevpn.data.LinkParser::extractRealityVerificationKey)?.let {
+                    addProperty("mldsa65Verify", com.danieldk.splatevpn.data.RealityVerificationKey.normalize(it))
+                }
                 addProperty("shortId", node?.shortId ?: "")
                 addProperty("spiderX", node?.spiderX ?: "")
                 if (network == "xhttp" || network == "h2") {
@@ -1070,7 +1193,10 @@ class XrayConfigGenerator @Inject constructor() {
                 }
                 addProperty("serverName", serverName)
                 addProperty("fingerprint", if (node?.fingerprint.isNullOrEmpty()) "chrome" else node?.fingerprint)
-                if (network == "xhttp" || network == "h2") {
+                val explicitAlpn = com.danieldk.splatevpn.data.LinkParser.extractAlpn(node?.rawLink.orEmpty())
+                if (explicitAlpn.isNotEmpty()) {
+                    add("alpn", JsonArray().apply { explicitAlpn.forEach { add(it) } })
+                } else if (network == "xhttp") {
                     val alpnArr = JsonArray().apply {
                         add("h2")
                         add("http/1.1")
@@ -1080,7 +1206,7 @@ class XrayConfigGenerator @Inject constructor() {
                 // verifyPeerCertByName: when using camouflage SNI (e.g. dl.google.com),
                 // verify TLS certificate against the real server host, not SNI.
                 val realHost = if (!node?.host.isNullOrEmpty()) node.host else (node?.address ?: "")
-                if (!node?.sni.isNullOrEmpty() && realHost.isNotBlank() && node?.sni != realHost) {
+                if (!node?.sni.isNullOrEmpty() && realHost.isNotBlank() && node?.sni != realHost && !isIpAddress(realHost)) {
                     addProperty("verifyPeerCertByName", realHost)
                 }
             }
@@ -1088,17 +1214,19 @@ class XrayConfigGenerator @Inject constructor() {
         }
 
         // Socket-level optimizations for Xray 26.x
+        val canFragmentTransport = enableTlsFragment && (security == "tls" || security == "reality") && network != "kcp"
         val sockopt = JsonObject().apply {
             addProperty("domainStrategy", "AsIs")
             addProperty("tcpNoDelay", true)
             addProperty("tcpKeepAliveInterval", 15)
-            if (enableTlsFragment) {
+            if (canFragmentTransport) {
                 addProperty("dialerProxy", "fragment")
             }
         }
         streamSettings.add("sockopt", sockopt)
 
-        when (network) {
+        // XDrive outbound is fully replaced by ImportedOutboundPolicy; skip transport block.
+        if (network != "xdrive") when (network) {
             "xhttp" -> {
                 val xhttp = JsonObject().apply {
                     val rawPath = if (node?.path.isNullOrEmpty()) "/" else node?.path!!
@@ -1109,6 +1237,7 @@ class XrayConfigGenerator @Inject constructor() {
                     }
                     val effectiveMode = when {
                         xhttpModeOverride.isNotBlank() && xhttpModeOverride != "auto" -> xhttpModeOverride
+                        migratedFromH2 -> "stream-one"
                         !node?.mode.isNullOrEmpty() -> node.mode!!
                         else -> "auto"
                     }
@@ -1168,44 +1297,65 @@ class XrayConfigGenerator @Inject constructor() {
                     }
                     if (!hostVal.isNullOrEmpty()) {
                         addProperty("host", hostVal)
-                        val headers = JsonObject().apply {
-                            addProperty("Host", hostVal)
-                        }
-                        add("headers", headers)
                     }
                 }
                 streamSettings.add("wsSettings", ws)
             }
-            "grpc" -> {
-                val grpc = JsonObject().apply {
-                    addProperty("serviceName", if (node?.path.isNullOrEmpty()) "gun" else node?.path)
-                    addProperty("multiMode", false)
-                    addProperty("idle_timeout", 60)
-                    addProperty("health_check_timeout", 20)
-                }
-                streamSettings.add("grpcSettings", grpc)
-            }
-            "h2" -> {
-                val http = JsonObject().apply {
+            "httpupgrade" -> {
+                val httpUpgrade = JsonObject().apply {
                     val rawPath = if (node?.path.isNullOrEmpty()) "/" else node?.path!!
                     val normalizedPath = if (rawPath.startsWith("/")) rawPath else "/$rawPath"
-                    val pathArr = JsonArray().apply { add(normalizedPath) }
-                    add("path", pathArr)
+                    addProperty("path", normalizedPath)
                     val hostVal = when {
                         !node?.host.isNullOrEmpty() -> node?.host
                         !node?.sni.isNullOrEmpty()  -> node?.sni
                         else                         -> node?.address
                     }
                     if (!hostVal.isNullOrEmpty()) {
-                        val hostArr = JsonArray().apply { add(hostVal) }
-                        add("host", hostArr)
+                        addProperty("host", hostVal)
                     }
                 }
-                streamSettings.add("httpSettings", http)
+                streamSettings.add("httpupgradeSettings", httpUpgrade)
+            }
+            "grpc" -> {
+                val grpc = JsonObject().apply {
+                    val serviceName = when {
+                        node?.path.isNullOrBlank() -> "gun"
+                        node?.path == "/" -> ""
+                        else -> node.path
+                    }
+                    addProperty("serviceName", serviceName)
+                    addProperty("multiMode", node?.mode.equals("multi", ignoreCase = true))
+                    if (!node?.host.isNullOrBlank()) {
+                        addProperty("authority", node.host)
+                    }
+                    addProperty("idle_timeout", 60)
+                    addProperty("health_check_timeout", 20)
+                }
+                streamSettings.add("grpcSettings", grpc)
+            }
+            "kcp" -> {
+                val (headerType, seed) = com.danieldk.splatevpn.data.LinkParser.extractKcpParams(node?.rawLink.orEmpty())
+                val kcp = JsonObject().apply {
+                    addProperty("mtu", 1350)
+                    addProperty("tti", 20)
+                    addProperty("uplinkCapacity", 5)
+                    addProperty("downlinkCapacity", 20)
+                    addProperty("congestion", false)
+                    addProperty("readBufferSize", 2)
+                    addProperty("writeBufferSize", 2)
+                    add("header", JsonObject().apply {
+                        addProperty("type", headerType.ifBlank { "none" })
+                    })
+                    if (seed.isNotEmpty()) {
+                        addProperty("seed", seed)
+                    }
+                }
+                streamSettings.add("kcpSettings", kcp)
             }
             "tcp" -> {
-                // TCP with HTTP header camouflage (used in some VMess configs)
-                if (!node?.path.isNullOrEmpty() || !node?.host.isNullOrEmpty()) {
+                // HTTP camouflage must agree with the peer's configured TCP header type.
+                if (node != null && com.danieldk.splatevpn.data.LinkParser.usesTcpHttpHeader(node)) {
                     val tcpSettings = JsonObject().apply {
                         val header = JsonObject().apply {
                             addProperty("type", "http")
@@ -1238,11 +1388,11 @@ class XrayConfigGenerator @Inject constructor() {
             }
         }
 
-        if (enableTlsFragment && (security == "tls" || security == "reality")) {
-            val sockopt = streamSettings.getAsJsonObject("sockopt") ?: JsonObject().also {
+        if (canFragmentTransport) {
+            val sockoptObj = streamSettings.getAsJsonObject("sockopt") ?: JsonObject().also {
                 streamSettings.add("sockopt", it)
             }
-            sockopt.addProperty("dialerProxy", "fragment")
+            sockoptObj.addProperty("dialerProxy", "fragment")
         }
 
         // Mux settings (incompatible with xtls-rprx-vision flow)
@@ -1272,6 +1422,58 @@ class XrayConfigGenerator @Inject constructor() {
      * Transport parameters ([xhttpModeOverride], TLS fragment, Mux) must mirror the production config
      * produced by [generateConfig], otherwise the probe may pass while the real tunnel fails (or vice versa).
      */
+    private fun addProxyBootstrapDns(config: JsonObject) {
+        val initial = config.getAsJsonArray("outbounds").flatMap { raw ->
+            val ob = raw.asJsonObject
+            val settings = ob.getAsJsonObject("settings") ?: return@flatMap emptyList<String>()
+            val directAddresses = listOfNotNull(settings["address"]?.asString) +
+                listOf("vnext", "servers").flatMap { key ->
+                    settings.getAsJsonArray(key)?.mapNotNull { it.asJsonObject["address"]?.asString }.orEmpty()
+                }
+            // XDrive transport connects to cloud-storage API endpoints defined in the template.
+            // Extract hostnames from template URL fields so they can be resolved before the
+            // first dial without depending on the VPN tunnel that is not yet established.
+            val xdriveHosts = ob.getAsJsonObject("streamSettings")
+                ?.takeIf { it["network"]?.asString.equals("xdrive", ignoreCase = true) }
+                ?.getAsJsonObject("xdriveSettings")
+                ?.getAsJsonObject("template")
+                ?.entrySet()
+                ?.flatMap { (_, v) ->
+                    if (!v.isJsonObject) return@flatMap emptyList()
+                    listOfNotNull(v.asJsonObject["url"]?.asString)
+                }
+                ?.mapNotNull { url ->
+                    runCatching { java.net.URI(url.substringBefore("{")).host?.takeIf { it.isNotBlank() && !isIpAddress(it) } }.getOrNull()
+                }
+                .orEmpty()
+            directAddresses + xdriveHosts
+        }
+        val endpoints = linkedSetOf<String>()
+        val hosts = config.getAsJsonObject("dns").getAsJsonObject("hosts")
+        fun follow(address: String) {
+            if (address.isBlank() || isIpAddress(address) || !endpoints.add(address)) return
+            hosts?.get(address)?.let { mapped ->
+                if (mapped.isJsonArray) mapped.asJsonArray.forEach { follow(it.asString) }
+                else if (mapped.isJsonPrimitive) follow(mapped.asString)
+            }
+        }
+        initial.forEach(::follow)
+        if (endpoints.isEmpty()) return
+        val servers = config.getAsJsonObject("dns").getAsJsonArray("servers")
+        val domainArray = JsonArray().apply { endpoints.forEach { add("full:$it") } }
+        val bootstrapServer = JsonObject().apply {
+            addProperty("address", "localhost")
+            addProperty("skipFallback", true)
+            add("domains", domainArray)
+        }
+        // Bootstrap must work before the VPN server can be contacted. It cannot resolve other domains.
+        val ordered = JsonArray().apply {
+            add(bootstrapServer)
+            servers.forEach { add(it) }
+        }
+        config.getAsJsonObject("dns").add("servers", ordered)
+    }
+
     fun generateTestConfig(
         node: ServerNode,
         socksPort: Int,
@@ -1281,18 +1483,11 @@ class XrayConfigGenerator @Inject constructor() {
         tlsFragmentInterval: String = "10-20",
         tlsFragmentPackets: String = "tlshello",
         enableMux: Boolean = false,
-        muxConcurrency: Int = 8
+        muxConcurrency: Int = 8,
+        routingRegion: String = "ru",
+        localProxyAccess: LocalProxyCredentials? = null,
+        tlsMixedSni: Boolean = false
     ): String {
-        node.fullConfigJson?.takeIf { it.isNotBlank() }?.let { rawConfig ->
-            buildImportedFullConfig(
-                rawConfig = rawConfig,
-                inboundPort = socksPort,
-                listenAddress = "127.0.0.1",
-                udp = false,
-                silent = true
-            )?.let { return it }
-        }
-
         val config = JsonObject()
 
         // 1. Silent logging
@@ -1308,7 +1503,7 @@ class XrayConfigGenerator @Inject constructor() {
             addProperty("port", socksPort)
             addProperty("listen", "127.0.0.1")
             addProperty("protocol", "socks")
-            val inSettings = JsonObject().apply {
+            val inSettings = localProxyAccess?.socksSettings(false) ?: JsonObject().apply {
                 addProperty("auth", "noauth")
                 addProperty("udp", false)
             }
@@ -1319,7 +1514,6 @@ class XrayConfigGenerator @Inject constructor() {
 
         // 3. Outbounds: Target node proxy outbound + fragment + direct + dns-out
         val outbounds = JsonArray()
-        val protocol = node.protocol.lowercase().trim().ifBlank { "vless" }
         val rawSec = node.security.lowercase().trim()
         val security: String = when {
             rawSec == "reality"           -> "reality"
@@ -1330,17 +1524,11 @@ class XrayConfigGenerator @Inject constructor() {
             else                          -> "none"
         }
 
-        // Xray 26+ compatibility: map unencrypted VLESS to private virtual domain
-        val vlessProxyDomain: String? = if (protocol == "vless" && security == "none" && node.address.isNotBlank()) {
-            "server.local"
-        } else null
-
         val effectiveTlsFragment = enableTlsFragment && (security == "tls" || security == "reality")
         val proxyOutbound = buildProxyOutbound(
             node = node,
             xhttpModeOverride = xhttpModeOverride,
             enableTlsFragment = effectiveTlsFragment,
-            vlessProxyDomain = vlessProxyDomain,
             enableMux = enableMux,
             muxConcurrency = muxConcurrency
         )
@@ -1353,7 +1541,9 @@ class XrayConfigGenerator @Inject constructor() {
                 val fragmentSettings = JsonObject().apply {
                     addProperty("domainStrategy", "AsIs")
                     val fragmentObj = JsonObject().apply {
-                        addProperty("packets", tlsFragmentPackets.ifBlank { "tlshello" })
+                        val twoParts = tlsFragmentPackets == com.danieldk.splatevpn.data.TLS_HELLO_TWO_PARTS
+                        addProperty("packets", if (twoParts) "tlshello" else tlsFragmentPackets.ifBlank { "tlshello" })
+                        if (twoParts) addProperty("maxSplit", "2")
                         addProperty("length", tlsFragmentLength.ifBlank { "100-200" })
                         addProperty("interval", tlsFragmentInterval.ifBlank { "10-20" })
                     }
@@ -1388,30 +1578,32 @@ class XrayConfigGenerator @Inject constructor() {
         // 4. Robust DNS configuration matching production
         val dns = JsonObject().apply {
             val servers = JsonArray().apply {
+                add("localhost")
+                if (routingRegion == "ru") {
+                    add("tcp://77.88.8.8:53")
+                    add("77.88.8.8")
+                }
+                add("tcp://1.1.1.1:53")
+                add("1.1.1.1")
+                add("tcp://8.8.8.8:53")
+                add("8.8.8.8")
                 add("https://1.1.1.1/dns-query")
                 add("https://8.8.8.8/dns-query")
-                add("tcp://77.88.8.8:53")
-                add("77.88.8.8")
-                add("1.1.1.1")
-                add("8.8.8.8")
             }
             add("servers", servers)
 
             val hosts = JsonObject().apply {
                 addProperty("cloudflare-dns.com", "1.1.1.1")
                 addProperty("dns.google", "8.8.8.8")
-                if (vlessProxyDomain != null && node.address.isNotBlank()) {
-                    addProperty(vlessProxyDomain, node.address.trim())
-                }
             }
             add("hosts", hosts)
             addProperty("queryStrategy", "UseIPv4")
         }
         config.add("dns", dns)
 
-        // 5. Routing rules with valid Xray string types
+        // 5. Routing rules with valid Xray string types (AsIs routes test domain directly to proxy without blocking on local DNS)
         val routing = JsonObject().apply {
-            addProperty("domainStrategy", "IPIfNonMatch")
+            addProperty("domainStrategy", "AsIs")
             val rules = JsonArray()
 
             // 5.1 Intercept DNS queries → internal Xray DNS resolver
@@ -1429,8 +1621,10 @@ class XrayConfigGenerator @Inject constructor() {
                 addProperty("type", "field")
                 addProperty("outboundTag", "direct")
                 val ipArr = JsonArray().apply {
-                    add("77.88.8.8")
-                    add("77.88.8.1")
+                    if (routingRegion == "ru") {
+                        add("77.88.8.8")
+                        add("77.88.8.1")
+                    }
                     add("1.1.1.1")
                     add("8.8.8.8")
                 }
@@ -1439,27 +1633,10 @@ class XrayConfigGenerator @Inject constructor() {
             }
             rules.add(directDnsRule)
 
-            // 5.3 Target node address → direct to prevent routing loops
-            if (node.address.isNotBlank()) {
-                val directNodeRule = JsonObject().apply {
-                    addProperty("type", "field")
-                    addProperty("outboundTag", "direct")
-                    if (isIpAddress(node.address)) {
-                        val ipArr = JsonArray().apply { add(node.address) }
-                        add("ip", ipArr)
-                    } else {
-                        val domainArr = JsonArray().apply { add("domain:${node.address}") }
-                        add("domain", domainArr)
-                    }
-                    if (vlessProxyDomain != null) {
-                        val domainArr = (get("domain") as? JsonArray) ?: JsonArray().also { add("domain", it) }
-                        domainArr.add("domain:$vlessProxyDomain")
-                    }
-                }
-                rules.add(directNodeRule)
-            }
-
-            // 5.4 Default rule: route incoming probe traffic to the proxy outbound
+            // The isolated core dials its transport directly, without routing it through
+            // this inbound. A server-address bypass could falsely verify a dead candidate
+            // when the HTTP test target shares that address.
+            // 5.3 Default rule: route incoming probe traffic to the proxy outbound
             val defaultProxyRule = JsonObject().apply {
                 addProperty("type", "field")
                 addProperty("outboundTag", "proxy")
@@ -1471,6 +1648,10 @@ class XrayConfigGenerator @Inject constructor() {
         }
         config.add("routing", routing)
 
+        ImportedOutboundPolicy.apply(config, node?.fullConfigJson, enableMux, enableTlsFragment, xhttpModeOverride)
+        if (tlsMixedSni) applyMixedSni(config)
+        addProxyBootstrapDns(config)
         return gson.toJson(config)
     }
+
 }

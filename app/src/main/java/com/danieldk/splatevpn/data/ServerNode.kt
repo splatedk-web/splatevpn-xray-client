@@ -31,5 +31,12 @@ data class ServerNode(
     val subId: String = "",
     val subName: String = "",
     /** Original Xray JSON profile for subscription entries that provide a full config. */
-    val fullConfigJson: String? = ""
+    val fullConfigJson: String? = "",
+    /** Only a successful HTTP request through this node establishes working tunnel evidence. */
+    @androidx.room.ColumnInfo(defaultValue = "0") val lastVerifiedAt: Long = 0L,
+    @androidx.room.ColumnInfo(defaultValue = "0") val lastVerificationFailedAt: Long = 0L,
+    /** This node is absent from its provider's latest response and kept in the bounded reserve. */
+    @androidx.room.ColumnInfo(defaultValue = "0") val isRetained: Boolean = false,
+    @androidx.room.ColumnInfo(defaultValue = "0") val retainedAt: Long = 0L,
+    val amneziaWg: AmneziaWgProfile? = null
 )

@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_ping">تاخیر: %1$d میلی‌ثانیه</string>
+    <string name="notification_ping_unknown">تاخیر: —</string>
+</resources>

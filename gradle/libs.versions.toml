@@ -16,7 +16,6 @@ hiltNavigationCompose = "1.2.0"
 room = "2.7.0"
 gson = "2.14.0"
 workManager = "2.10.0"
-playServicesCodeScanner = "16.1.0"
 zxingCore = "3.5.3"
 okhttp = "4.12.0"
 
@@ -46,10 +45,10 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
-play-services-code-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version.ref = "playServicesCodeScanner" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 

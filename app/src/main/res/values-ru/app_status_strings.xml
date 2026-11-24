@@ -1,0 +1,9 @@
+<resources>
+    <string name="about_app_version">Версия приложения</string>
+    <string name="about_transports">Транспорты</string>
+    <string name="update_result_available">Найдено обновление %1$s</string>
+    <string name="update_result_current">У вас самая актуальная версия</string>
+    <string name="update_result_wifi">Для проверки обновлений подключитесь к Wi-Fi</string>
+    <string name="update_result_failed">Не удалось проверить обновления. Попробуйте ещё раз.</string>
+    <string name="server_ping_result">%1$s · Проверено: %2$d · Доступно: %3$d</string>
+</resources>

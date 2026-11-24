@@ -1,6 +1,27 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.data.isProtectedWtpn
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+import com.danieldk.splatevpn.ui.components.SplateSwitch as Switch
+import com.danieldk.splatevpn.ui.components.SplateDropdownMenuItem as DropdownMenuItem
+
+import com.danieldk.splatevpn.ui.components.SplateDropdownMenu as DropdownMenu
+
+import com.danieldk.splatevpn.ui.components.SplateAlertDialog as AlertDialog
+
+import com.danieldk.splatevpn.ui.components.SplateButton as Button
+
+import androidx.compose.ui.draw.alpha
+
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,15 +55,21 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.selected as semanticsSelected
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.sp
 import com.danieldk.splatevpn.data.ServerNode
 import com.danieldk.splatevpn.data.SubscriptionEntity
@@ -117,6 +144,28 @@ private fun formatSubNodesCount(count: Int): String {
 fun ServersScreen(
     viewModel: MainViewModel
 ) {
+    val browsingTor by viewModel.serverBrowserTor.collectAsState()
+    BackHandler(enabled = !com.danieldk.splatevpn.ui.components.LocalTvControls.current) {
+        if (browsingTor) viewModel.browseServerMode(false) else viewModel.selectTab(AppTab.HOME)
+    }
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        com.danieldk.splatevpn.ui.components.ServerConnectionModeSelector(viewModel,
+            Modifier.widthIn(max = 720.dp).fillMaxWidth().padding(top = 16.dp, start = 16.dp, end = 16.dp))
+        if (browsingTor) {
+            Column(Modifier.weight(1f).widthIn(max = 720.dp).fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 20.dp, start = 16.dp, end = 16.dp, bottom = 20.dp + LocalBottomDockInset.current)) {
+                com.danieldk.splatevpn.ui.components.TorSettingsCard(viewModel)
+            }
+        } else Box(Modifier.weight(1f)) { VpnServersScreen(viewModel) }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun VpnServersScreen(
+    viewModel: MainViewModel
+) {
     val servers by viewModel.allServers.collectAsState()
     val subscriptions by viewModel.allSubscriptions.collectAsState()
     val selectedServer by viewModel.selectedServer.collectAsState()
@@ -127,6 +176,7 @@ fun ServersScreen(
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val strings = LocalAppStrings.current
+    val pingResources = com.danieldk.splatevpn.ui.theme.LocalAppResources.current
     val colors = LocalAppThemeColors.current
 
     val savedListPreferences = remember { viewModel.getServersListPreferences() }
@@ -136,6 +186,7 @@ fun ServersScreen(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     // null = show all; "custom" = only personal; or subId = specific subscription
     var selectedFilterSubId by rememberSaveable { mutableStateOf(savedListPreferences.filterSubId) }
+    var folderOrigin by rememberSaveable { mutableStateOf<NodeViewMode?>(null) }
 
     var showAddDialog by remember { mutableStateOf(false) }
     var showAddSubDialog by remember { mutableStateOf(false) }
@@ -146,13 +197,53 @@ fun ServersScreen(
     var subscriptionUpdateReport by remember { mutableStateOf<com.danieldk.splatevpn.data.SubscriptionUpdateReport?>(null) }
     val autoUpdateInterval by viewModel.autoUpdateInterval.collectAsState()
     var deletingSub by remember { mutableStateOf<SubscriptionEntity?>(null) }
-    var updatingSubIds by remember { mutableStateOf<Set<String>>(emptySet()) }
-    var pingingSubIds by remember { mutableStateOf<Set<String>>(emptySet()) }
+    val updatingSubIds by viewModel.updatingSubscriptionIds.collectAsState()
     var isUpdatingAllSubs by remember { mutableStateOf(false) }
     var sharingServer by remember { mutableStateOf<ServerNode?>(null) }
     var sharingSub by remember { mutableStateOf<SubscriptionEntity?>(null) }
     var isGroupedBySub by rememberSaveable { mutableStateOf(savedListPreferences.grouped) }
     var expandedSubIds by rememberSaveable { mutableStateOf(savedListPreferences.expandedGroupIds) }
+    var isPersonalSelectionMode by rememberSaveable { mutableStateOf(false) }
+    var selectedPersonalIdsForDeletion by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var showBatchDeleteConfirm by remember { mutableStateOf(false) }
+    fun exitPersonalSelectionMode() {
+        isPersonalSelectionMode = false
+        selectedPersonalIdsForDeletion = emptySet()
+        showBatchDeleteConfirm = false
+    }
+    fun enterPersonalSelectionMode(initialId: String? = null) {
+        if (activeViewMode != NodeViewMode.PERSONAL) {
+            activeViewMode = NodeViewMode.PERSONAL
+            selectedFilterSubId = null
+            folderOrigin = null
+        }
+        expandedSubIds = expandedSubIds + "personal"
+        isPersonalSelectionMode = true
+        selectedPersonalIdsForDeletion = if (initialId != null) setOf(initialId) else emptySet()
+    }
+    val hasExpandedGroups = isGroupedBySub && activeViewMode == NodeViewMode.ALL && selectedFilterSubId == null && expandedSubIds.isNotEmpty()
+    val hasLocalBack = isPersonalSelectionMode || searchQuery.isNotEmpty() || selectedFilterSubId != null || hasExpandedGroups || activeViewMode != NodeViewMode.ALL
+    fun closeFolder() {
+        selectedFilterSubId = null
+        folderOrigin?.let { activeViewMode = it }
+        folderOrigin = null
+    }
+    fun navigateBack() {
+        when {
+            isPersonalSelectionMode -> exitPersonalSelectionMode()
+            searchQuery.isNotEmpty() -> searchQuery = ""
+            selectedFilterSubId != null -> closeFolder()
+            hasExpandedGroups -> expandedSubIds = emptySet()
+            activeViewMode != NodeViewMode.ALL -> activeViewMode = NodeViewMode.ALL
+            else -> viewModel.selectTab(AppTab.HOME)
+        }
+    }
+    BackHandler(enabled = hasLocalBack) { navigateBack() }
+    LaunchedEffect(activeViewMode) {
+        if (activeViewMode != NodeViewMode.PERSONAL && isPersonalSelectionMode) {
+            exitPersonalSelectionMode()
+        }
+    }
 
     LaunchedEffect(activeViewMode, selectedFilterSubId, isGroupedBySub, expandedSubIds) {
         viewModel.saveServersListPreferences(
@@ -166,6 +257,7 @@ fun ServersScreen(
     // Distinct lists
     val realSubscriptions = remember(subscriptions) {
         subscriptions.filter { it.id != "builtin" }
+            .sortedBy { it.id != com.danieldk.splatevpn.SplateConstants.PRESET_SUB_SPONSOR_ID }
     }
     val filteredSubscriptions = remember(realSubscriptions, searchQuery, strings) {
         realSubscriptions.filter { sub ->
@@ -173,14 +265,22 @@ fun ServersScreen(
                 subscriptionDisplayName(sub.id, sub.name, strings).contains(searchQuery.trim(), ignoreCase = true)
         }
     }
+    val disabledNodeIds by viewModel.disabledServerIds.collectAsState()
     val disabledSubIds = remember(subscriptions) {
         subscriptions.filter { !it.enabled }.map { it.id }.toSet()
     }
-    val activeServersCount = remember(servers, disabledSubIds) {
-        servers.count { it.subId !in disabledSubIds }
+    val enabledSubscriptions = remember(realSubscriptions) { realSubscriptions.filter { it.enabled } }
+    LaunchedEffect(activeViewMode, selectedFilterSubId, disabledSubIds) {
+        if (activeViewMode in setOf(NodeViewMode.ALL, NodeViewMode.PRESET) && selectedFilterSubId in disabledSubIds) {
+            selectedFilterSubId = null
+        }
     }
-    // High-performance single-pass partitioning of server nodes (O(N) instead of 3x full list traversals)
-    val (presetServers, personalServers, subscriptionServers) = remember(servers) {
+    val browserSnapshot by produceState(
+        ServerBrowserSnapshot(), servers, activeViewMode, selectedFilterSubId, isSortByPing, searchQuery, disabledSubIds, disabledNodeIds
+    ) {
+        value = withContext(Dispatchers.Default) {
+            val now = System.currentTimeMillis()
+            val activeCount = servers.count { it.subId !in disabledSubIds && viewModel.isNodeEnabled(it, disabledNodeIds, now) }
         val preset = ArrayList<ServerNode>()
         val personal = ArrayList<ServerNode>()
         val subs = ArrayList<ServerNode>()
@@ -192,8 +292,72 @@ fun ServersScreen(
                 else -> subs.add(s)
             }
         }
-        Triple(preset, personal, subs)
+            val presetServers = preset
+            val personalServers = personal
+            val subscriptionServers = subs
+            val baseList = when (activeViewMode) {
+                NodeViewMode.ALL -> {
+                    when (selectedFilterSubId) {
+                        null -> servers
+                        "custom" -> personalServers
+                        "preset" -> presetServers
+                        else -> servers.filter { it.subId == selectedFilterSubId }
+                    }
+                }
+                NodeViewMode.PRESET -> {
+                    if (selectedFilterSubId != null && selectedFilterSubId in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS) {
+                        servers.filter { it.subId == selectedFilterSubId }
+                    } else {
+                        presetServers
+                    }
+                }
+                NodeViewMode.SUBSCRIPTIONS -> {
+                    if (selectedFilterSubId != null && selectedFilterSubId != "custom") {
+                        servers.filter { it.subId == selectedFilterSubId }
+                    } else {
+                        subscriptionServers
+                    }
+                }
+                NodeViewMode.PERSONAL -> {
+                    personalServers
+                }
+            }
+
+            val visibleNodes = if (activeViewMode == NodeViewMode.ALL || activeViewMode == NodeViewMode.PRESET) {
+                baseList.filter { it.subId !in disabledSubIds }
+            } else baseList
+
+            val searched = if (searchQuery.isBlank()) {
+                visibleNodes
+            } else {
+                val q = searchQuery.trim()
+                visibleNodes.filter {
+                    it.name.contains(q, ignoreCase = true) ||
+                            it.address.contains(q, ignoreCase = true) ||
+                            it.protocol.contains(q, ignoreCase = true) ||
+                            it.subName.contains(q, ignoreCase = true)
+                }
+            }
+
+            val sorted = if (isSortByPing) {
+                searched.sortedWith(
+                    compareBy<ServerNode> { if (it.ping > 0) 0 else 1 }
+                        .thenBy { if (it.ping > 0) it.ping else Long.MAX_VALUE }
+                        .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+                )
+            } else if (searchQuery.isNotBlank()) {
+                searched.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+            } else {
+                searched
+            }
+            ServerBrowserSnapshot(preset, personal, subs, activeCount,
+                sorted.sortedBy { it.subId != com.danieldk.splatevpn.SplateConstants.PRESET_SUB_SPONSOR_ID })
+        }
     }
+    val presetServers = browserSnapshot.presets
+    val personalServers = browserSnapshot.personal
+    val activeServersCount = browserSnapshot.activeCount
+    val filteredServers = browserSnapshot.visible
 
     // Active sub entity for the banner
     val activeSubEntity = remember(realSubscriptions, selectedFilterSubId) {
@@ -202,59 +366,6 @@ fun ServersScreen(
         } else null
     }
 
-    val filteredServers = remember(servers, activeViewMode, selectedFilterSubId, isSortByPing, searchQuery, disabledSubIds, isGroupedBySub) {
-        val baseList = when (activeViewMode) {
-            NodeViewMode.ALL -> {
-                when (selectedFilterSubId) {
-                    null -> if (isGroupedBySub) servers else servers.filter { it.subId !in disabledSubIds }
-                    "custom" -> personalServers
-                    "preset" -> presetServers
-                    else -> servers.filter { it.subId == selectedFilterSubId }
-                }
-            }
-            NodeViewMode.PRESET -> {
-                if (selectedFilterSubId != null && selectedFilterSubId in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS) {
-                    servers.filter { it.subId == selectedFilterSubId }
-                } else {
-                    presetServers
-                }
-            }
-            NodeViewMode.SUBSCRIPTIONS -> {
-                if (selectedFilterSubId != null && selectedFilterSubId != "custom") {
-                    servers.filter { it.subId == selectedFilterSubId }
-                } else {
-                    subscriptionServers
-                }
-            }
-            NodeViewMode.PERSONAL -> {
-                personalServers
-            }
-        }
-
-        val searched = if (searchQuery.isBlank()) {
-            baseList
-        } else {
-            val q = searchQuery.trim()
-            baseList.filter {
-                it.name.contains(q, ignoreCase = true) ||
-                        it.address.contains(q, ignoreCase = true) ||
-                        it.protocol.contains(q, ignoreCase = true) ||
-                        it.subName.contains(q, ignoreCase = true)
-            }
-        }
-
-        if (isSortByPing) {
-            searched.sortedWith(
-                compareBy<ServerNode> { if (it.ping > 0) 0 else 1 }
-                    .thenBy { if (it.ping > 0) it.ping else Long.MAX_VALUE }
-                    .thenBy(String.CASE_INSENSITIVE_ORDER) { it.name }
-            )
-        } else if (searchQuery.isNotBlank()) {
-            searched.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-        } else {
-            searched
-        }
-    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -262,11 +373,19 @@ fun ServersScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .widthIn(max = 720.dp)
+                .fillMaxSize()
                 .padding(top = 20.dp, start = 16.dp, end = 16.dp)
         ) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            if (searchQuery.isNotEmpty() || selectedFilterSubId != null) {
+                IconButton(onClick = ::navigateBack, modifier = Modifier.size(44.dp).testTag("serversNavigateBack")) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, LocalAppResources.current.getString(com.danieldk.splatevpn.R.string.server_back), tint = colors.textPrimary)
+                }
+                Spacer(Modifier.width(4.dp))
+            }
             PageHeader(
+                modifier = Modifier.weight(1f),
                 title = when (activeViewMode) {
                     NodeViewMode.ALL -> strings.serversPageTitle
                     NodeViewMode.PRESET -> strings.presetsPageTitle
@@ -295,6 +414,7 @@ fun ServersScreen(
                     }
                 }
             )
+            }
             Spacer(Modifier.height(10.dp))
             Row(Modifier.fillMaxWidth().height(56.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
                 // Right: Action buttons
@@ -305,7 +425,7 @@ fun ServersScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         // Refresh all subscriptions button
-                        val refreshSubRotation = if (isUpdatingAllSubs) {
+                        val refreshSubRotation = if (isUpdatingAllSubs && LocalUiPerformanceSettings.current.animationsEnabled) {
                             val infiniteTransition = rememberInfiniteTransition(label = "update_all_subs_spin")
                             val spin by infiniteTransition.animateFloat(
                                 initialValue = 0f,
@@ -361,12 +481,6 @@ fun ServersScreen(
                     }
                 } else {
                     val isAutoSelect by viewModel.isAutoSelect.collectAsState()
-                    val refreshRotation = if (isPinging) {
-                        val transition = rememberInfiniteTransition(label = "toolbarPing")
-                        val rotation by transition.animateFloat(0f, 360f,
-                            infiniteRepeatable(tween(1000, easing = LinearEasing)), label = "toolbarPingRotation")
-                        rotation
-                    } else 0f
                     Row(
                         Modifier.fillMaxWidth().liquidGlass(cornerRadius = 16, innerSheen = true).padding(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -404,13 +518,25 @@ fun ServersScreen(
                             Toast.makeText(context, if (isRealDelay) strings.pingModeTcp else strings.pingModeRealDelay, Toast.LENGTH_SHORT).show()
                         }
                         ServerToolAction(
-                            label = strings.serverToolsTest, description = strings.pingAll,
-                            icon = Icons.Default.Refresh, accent = colors.accentCyan,
-                            action = true, enabled = !isPinging, rotation = refreshRotation, modifier = Modifier.weight(1f)
+                            label = if (isPinging) LocalAppResources.current.getString(com.danieldk.splatevpn.R.string.server_stop_checks_short) else strings.serverToolsTest,
+                            description = LocalAppResources.current.getString(if (isPinging) com.danieldk.splatevpn.R.string.server_stop_checks else com.danieldk.splatevpn.R.string.server_check_servers),
+                            icon = if (isPinging) Icons.Default.Stop else Icons.Default.NetworkCheck, accent = colors.accentCyan,
+                            action = true, enabled = true, modifier = Modifier.weight(1f).testTag("serversPingToggle")
                         ) {
-                            if (activeViewMode == NodeViewMode.ALL && selectedFilterSubId == null) viewModel.testAllPings()
-                            else viewModel.testServersPing(filteredServers) { count ->
-                                Toast.makeText(context, strings.uiPingSummary.format(if (isRealDelay) "Real Delay" else "TCP Ping", count), Toast.LENGTH_SHORT).show()
+                            if (isPinging) {
+                                viewModel.cancelPingChecks()
+                            } else {
+                                val showResult: (com.danieldk.splatevpn.data.ServerPingSummary) -> Unit = { summary ->
+                                    val mode = when (pingMode.lowercase()) {
+                                        "real_delay", "http", "real" -> "Real Delay"
+                                        "icmp" -> "ICMP"
+                                        else -> "TCP Ping"
+                                    }
+                                    Toast.makeText(context, pingResources.getString(com.danieldk.splatevpn.R.string.server_ping_result,
+                                        mode, summary.checked, summary.available), Toast.LENGTH_SHORT).show()
+                                }
+                                if (activeViewMode == NodeViewMode.ALL && selectedFilterSubId == null) viewModel.testAllPings(showResult)
+                                else viewModel.testServersPing(filteredServers, showResult)
                             }
                         }
                     }
@@ -443,60 +569,19 @@ fun ServersScreen(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // The capsule follows a horizontal drag just like the bottom dock.
-            SlidingTabStrip(
-                selectedIndex = when (activeViewMode) {
-                    NodeViewMode.SUBSCRIPTIONS -> 1
-                    NodeViewMode.PERSONAL -> 2
-                    else -> 0
-                },
-                accents = listOf(colors.accentCyan, colors.accentAmber, colors.accentEmerald),
-                onSelect = { index ->
-                    activeViewMode = when (index) {
-                        1 -> NodeViewMode.SUBSCRIPTIONS
-                        2 -> NodeViewMode.PERSONAL
-                        else -> NodeViewMode.ALL
-                    }
-                    selectedFilterSubId = null
+            FloatingServerListPanel(
+                modifier = Modifier.weight(1f),
+                header = {
+                    ServerCategoryTabs(
+                        activeViewMode, activeServersCount,
+                        realSubscriptions.count { it.enabled }, realSubscriptions.size, personalServers.size
+                    ) { mode -> activeViewMode = mode; selectedFilterSubId = null; folderOrigin = null }
                 }
-            ) { highlighted ->
-                ServerCategorySegment(
-                    label = strings.subscriptionNodesLabel,
-                    count = activeServersCount.toString(),
-                    icon = Icons.Default.Dns,
-                    selected = highlighted == 0,
-                    accent = colors.accentCyan,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    activeViewMode = NodeViewMode.ALL
-                    selectedFilterSubId = null
-                }
-                ServerCategorySegment(
-                    label = strings.subscriptionsLabel,
-                    count = "${realSubscriptions.count { it.enabled }}/${realSubscriptions.size}",
-                    icon = Icons.Default.CloudDownload,
-                    selected = highlighted == 1,
-                    accent = colors.accentAmber,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    activeViewMode = NodeViewMode.SUBSCRIPTIONS
-                    selectedFilterSubId = null
-                }
-                ServerCategorySegment(
-                    label = strings.personalNodesLabel,
-                    count = personalServers.size.toString(),
-                    icon = Icons.Default.Lock,
-                    selected = highlighted == 2,
-                    accent = colors.accentEmerald,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    activeViewMode = NodeViewMode.PERSONAL
-                    selectedFilterSubId = null
-                }
-            }
-
+            ) { listTopInset ->
+            Column(Modifier.fillMaxSize()) {
+            val commonListPreamble: @Composable () -> Unit = {
             // Secondary Subscription Isolation Strip in ALL Mode (when not grouped)
-            if (activeViewMode == NodeViewMode.ALL && realSubscriptions.isNotEmpty() && !isGroupedBySub) {
+            if (activeViewMode == NodeViewMode.ALL && enabledSubscriptions.isNotEmpty() && !isGroupedBySub) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     modifier = Modifier
@@ -515,7 +600,7 @@ fun ServersScreen(
                                 color = if (isAllActiveSelected) colors.accentCyan else colors.borderSubtle.copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .clickable { selectedFilterSubId = null }
+                            .tvFocusOutline().clickable { selectedFilterSubId = null }
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
@@ -527,9 +612,8 @@ fun ServersScreen(
                         )
                     }
 
-                    realSubscriptions.forEach { sub ->
+                    enabledSubscriptions.forEach { sub ->
                         val isSubSelected = selectedFilterSubId == sub.id
-                        val isSubDisabled = !sub.enabled
                         val chipColor = if (sub.id in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS) colors.accentCyan else colors.accentAmber
                         Box(
                             modifier = Modifier
@@ -537,7 +621,6 @@ fun ServersScreen(
                                 .background(
                                     when {
                                         isSubSelected -> chipColor.copy(alpha = 0.2f)
-                                        isSubDisabled -> colors.surface.copy(alpha = 0.25f)
                                         else -> colors.surface.copy(alpha = 0.4f)
                                     }
                                 )
@@ -545,12 +628,11 @@ fun ServersScreen(
                                     width = 1.dp,
                                     color = when {
                                         isSubSelected -> chipColor
-                                        isSubDisabled -> colors.textTertiary.copy(alpha = 0.2f)
                                         else -> colors.borderSubtle.copy(alpha = 0.5f)
                                     },
                                     shape = RoundedCornerShape(8.dp)
                                 )
-                                .clickable {
+                                .tvFocusOutline().clickable {
                                     selectedFilterSubId = if (selectedFilterSubId == sub.id) null else sub.id
                                 }
                                 .padding(horizontal = 7.dp, vertical = 4.dp)
@@ -559,7 +641,6 @@ fun ServersScreen(
                                 text = "${subscriptionDisplayName(sub.id, sub.name, strings)} (${sub.nodeCount})",
                                 color = when {
                                     isSubSelected -> chipColor
-                                    isSubDisabled -> colors.textSecondary
                                     else -> colors.textSecondary
                                 },
                                 fontSize = 10.sp,
@@ -571,31 +652,31 @@ fun ServersScreen(
                 }
             }
 
+            }
+
             // Content Area depending on Active View Mode
             when (activeViewMode) {
                 NodeViewMode.ALL -> {
+                    val listPreamble: @Composable () -> Unit = {
+                        commonListPreamble()
                     // Active Subscription Banner (when filtered to a specific subscription)
                     if (activeSubEntity != null) {
                         Spacer(modifier = Modifier.height(5.dp))
                         ActiveSubscriptionBanner(
                             sub = activeSubEntity,
-                            isUpdating = isUpdatingAllSubs || activeSubEntity.id in updatingSubIds,
-                            isPinging = activeSubEntity.id in pingingSubIds,
+                            isUpdating = activeSubEntity.id in updatingSubIds,
+                            isPinging = isPinging,
+                            onStopPing = viewModel::cancelPingChecks,
                             onToggleEnabled = { enabled ->
                                 viewModel.toggleSubscriptionEnabled(activeSubEntity.id, enabled)
                             },
                             onPing = {
-                                pingingSubIds = pingingSubIds + activeSubEntity.id
-                                viewModel.testSubscriptionPings(activeSubEntity.id) { count ->
-                                    pingingSubIds = pingingSubIds - activeSubEntity.id
-                                    val modeDesc = if (isRealDelay) "Real Delay" else "TCP Ping"
-                                    Toast.makeText(context, String.format(strings.uiPingSummary, subscriptionDisplayName(activeSubEntity.id, activeSubEntity.name, strings), count), Toast.LENGTH_SHORT).show()
+                                viewModel.testSubscriptionPings(activeSubEntity.id) { summary ->
+                                    Toast.makeText(context, pingResources.getString(com.danieldk.splatevpn.R.string.server_ping_result, subscriptionDisplayName(activeSubEntity.id, activeSubEntity.name, strings), summary.checked, summary.available), Toast.LENGTH_SHORT).show()
                                 }
                             },
                             onUpdate = {
-                                updatingSubIds = updatingSubIds + activeSubEntity.id
                                 viewModel.updateSubscription(activeSubEntity.id) { res ->
-                                    updatingSubIds = updatingSubIds - activeSubEntity.id
                                     res.onSuccess { count ->
                                         Toast.makeText(context, String.format(strings.subUpdatedSuccess, count), Toast.LENGTH_SHORT).show()
                                     }.onFailure { err ->
@@ -603,15 +684,18 @@ fun ServersScreen(
                                     }
                                 }
                             },
-                            onShare = { sharingSub = activeSubEntity },
-                            onDismiss = { selectedFilterSubId = null }
+                            onShare = { if (!isProtectedWtpn(activeSubEntity.id, activeSubEntity.url)) sharingSub = activeSubEntity },
+                            onDismiss = ::closeFolder
                         )
                     }
 
                     Spacer(modifier = Modifier.height(6.dp))
 
+                    }
+
                     // Servers List
                     ServerListSection(
+                        contentTopInset = listTopInset, topContent = listPreamble,
                         servers = filteredServers,
                         selectedServer = selectedServer,
                         isAutoBalancerVisible = searchQuery.isBlank() && selectedFilterSubId == null,
@@ -622,6 +706,7 @@ fun ServersScreen(
                             expandedSubIds = if (groupId in expandedSubIds) expandedSubIds - groupId else expandedSubIds + groupId
                         },
                         subscriptionsMap = subscriptionsMap,
+                        onSubscriptionDetails = { editingSubscription = it },
                         onToggleSubEnabled = { subId, enabled ->
                             viewModel.toggleSubscriptionEnabled(subId, enabled)
                             val subName = subscriptions.firstOrNull { it.id == subId }?.name ?: ""
@@ -629,10 +714,11 @@ fun ServersScreen(
                             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                         },
                         onSelectServer = { viewModel.selectServer(it) },
-                        onEditServer = { editingServer = it },
+                        onEditServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) editingServer = it },
                         onDeleteServer = { viewModel.deleteServer(it) },
-                        onShareServer = { sharingServer = it },
+                        onShareServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) sharingServer = it },
                         viewModel = viewModel,
+                        onEnterSelectionMode = ::enterPersonalSelectionMode,
                         onAddClick = {
                             initialImportPayload = ""
                             showAddUnifiedSheet = true
@@ -645,7 +731,7 @@ fun ServersScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(top = 32.dp, bottom = 90.dp),
+                                .padding(top = 32.dp + listTopInset, bottom = 90.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Column(
@@ -667,7 +753,7 @@ fun ServersScreen(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Bolt,
+                                        imageVector = Icons.Default.CloudDownload,
                                         contentDescription = null,
                                         tint = colors.accentCyan,
                                         modifier = Modifier.size(30.dp)
@@ -703,7 +789,11 @@ fun ServersScreen(
                                         )
                                         .tactileClickable(targetScale = 0.95f) {
                                             viewModel.restorePresetSubscriptions { count ->
-                                                Toast.makeText(context, "Восстановлено $count серверов", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(
+                                                    context,
+                                                    String.format(strings.localized("Восстановлено %d серверов", "Restored %d servers"), count),
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         },
                                     contentAlignment = Alignment.Center
@@ -728,27 +818,25 @@ fun ServersScreen(
                             }
                         }
                     } else {
+                        val listPreamble: @Composable () -> Unit = {
+                            commonListPreamble()
                         if (activeSubEntity != null) {
                             Spacer(modifier = Modifier.height(5.dp))
                             ActiveSubscriptionBanner(
                                 sub = activeSubEntity,
-                                isUpdating = isUpdatingAllSubs || activeSubEntity.id in updatingSubIds,
-                                isPinging = activeSubEntity.id in pingingSubIds,
+                                isUpdating = activeSubEntity.id in updatingSubIds,
+                                isPinging = isPinging,
+                                onStopPing = viewModel::cancelPingChecks,
                                 onToggleEnabled = { enabled ->
                                     viewModel.toggleSubscriptionEnabled(activeSubEntity.id, enabled)
                                 },
                                 onPing = {
-                                    pingingSubIds = pingingSubIds + activeSubEntity.id
-                                    viewModel.testSubscriptionPings(activeSubEntity.id) { count ->
-                                        pingingSubIds = pingingSubIds - activeSubEntity.id
-                                        val modeDesc = if (isRealDelay) "Real Delay" else "TCP Ping"
-                                        Toast.makeText(context, String.format(strings.uiPingSummary, subscriptionDisplayName(activeSubEntity.id, activeSubEntity.name, strings), count), Toast.LENGTH_SHORT).show()
+                                    viewModel.testSubscriptionPings(activeSubEntity.id) { summary ->
+                                        Toast.makeText(context, pingResources.getString(com.danieldk.splatevpn.R.string.server_ping_result, subscriptionDisplayName(activeSubEntity.id, activeSubEntity.name, strings), summary.checked, summary.available), Toast.LENGTH_SHORT).show()
                                     }
                                 },
                                 onUpdate = {
-                                    updatingSubIds = updatingSubIds + activeSubEntity.id
                                     viewModel.updateSubscription(activeSubEntity.id) { res ->
-                                        updatingSubIds = updatingSubIds - activeSubEntity.id
                                         res.onSuccess { count ->
                                             Toast.makeText(context, String.format(strings.subUpdatedSuccess, count), Toast.LENGTH_SHORT).show()
                                         }.onFailure { err ->
@@ -756,21 +844,24 @@ fun ServersScreen(
                                         }
                                     }
                                 },
-                                onDismiss = { selectedFilterSubId = null }
+                                onShare = { if (!isProtectedWtpn(activeSubEntity.id, activeSubEntity.url)) sharingSub = activeSubEntity },
+                                onDismiss = ::closeFolder
                             )
                         }
 
                         Spacer(modifier = Modifier.height(6.dp))
 
+                        }
                         ServerListSection(
+                            contentTopInset = listTopInset, topContent = listPreamble,
                             servers = filteredServers,
                             selectedServer = selectedServer,
                             isAutoBalancerVisible = searchQuery.isBlank() && selectedFilterSubId == null,
                             isPinging = isPinging,
                             onSelectServer = { viewModel.selectServer(it) },
-                            onEditServer = { editingServer = it },
+                            onEditServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) editingServer = it },
                             onDeleteServer = { viewModel.deleteServer(it) },
-                            onShareServer = { sharingServer = it },
+                            onShareServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) sharingServer = it },
                             viewModel = viewModel,
                             onAddClick = null
                         )
@@ -778,109 +869,158 @@ fun ServersScreen(
                 }
 
                 NodeViewMode.SUBSCRIPTIONS -> {
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    // Subscriptions Mode Header Toolbar: Stats & Preset Restore
-                    val hasMissingPresets = remember(realSubscriptions) {
-                        com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS.any { presetId ->
-                            realSubscriptions.none { it.id == presetId }
-                        }
-                    }
-
-                    if (hasMissingPresets) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .liquidGlass(cornerRadius = 10, innerSheen = true, accentBorder = colors.accentCyan.copy(alpha = 0.45f))
-                                .tactileClickable(targetScale = 0.97f) {
-                                    viewModel.restorePresetSubscriptions { count ->
-                                        Toast.makeText(context, "Восстановлено $count предустановленных узлов", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.Bolt, contentDescription = null, tint = colors.accentCyan, modifier = Modifier.size(15.dp))
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = strings.uiRestorePresets,
-                                color = colors.accentCyan,
-                                fontSize = 11.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                    val subscriptionsPreamble: @Composable () -> Unit = {
+                        commonListPreamble()
                         Spacer(modifier = Modifier.height(4.dp))
-                    }
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                        // Subscriptions Mode Header Toolbar: Stats & Preset Restore
+                        val hasMissingPresets = remember(realSubscriptions) {
+                            com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS.any { presetId ->
+                                realSubscriptions.none { it.id == presetId }
+                            }
+                        }
 
-                    if (realSubscriptions.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 32.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                        if (hasMissingPresets) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .liquidGlass(cornerRadius = 10, innerSheen = true, accentBorder = colors.accentCyan.copy(alpha = 0.45f))
+                                    .tactileClickable(targetScale = 0.97f) {
+                                        viewModel.restorePresetSubscriptions { count ->
+                                            Toast.makeText(
+                                                context,
+                                                String.format(strings.localized("Восстановлено %d предустановленных узлов", "Restored %d preset nodes"), count),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(56.dp)
-                                        .liquidGlass(cornerRadius = 16, innerSheen = true, accentBorder = colors.accentAmber.copy(alpha = 0.4f)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(Icons.Default.CloudDownload, contentDescription = null, tint = colors.accentAmber, modifier = Modifier.size(28.dp))
-                                }
+                                Icon(Icons.Default.SettingsBackupRestore, contentDescription = null, tint = colors.accentCyan, modifier = Modifier.size(15.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = strings.uiNoSubscriptions,
-                                    color = colors.textPrimary,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = strings.uiSubscriptionHint,
-                                    color = colors.textSecondary,
+                                    text = strings.uiRestorePresets,
+                                    color = colors.accentCyan,
                                     fontSize = 11.sp,
                                     fontFamily = FontFamily.Monospace,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                    modifier = Modifier.padding(horizontal = 24.dp)
+                                    fontWeight = FontWeight.Bold
                                 )
-                                Button(
-                                    onClick = {
-                                        initialImportPayload = ""
-                                        showAddUnifiedSheet = true
-                                    },
-                                    colors = ButtonDefaults.buttonColors(containerColor = colors.accentAmber),
-                                    shape = RoundedCornerShape(12.dp),
-                                    modifier = Modifier.height(48.dp)
-                                ) {
-                                    Icon(Icons.Default.Add, contentDescription = null, tint = LocalAppThemeColors.current.onAccent, modifier = Modifier.size(18.dp))
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(strings.uiAddSubscription, color = LocalAppThemeColors.current.onAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                }
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
+
+                    val pullRefreshState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
+                    val onPullRefresh: () -> Unit = {
+                        if (!isUpdatingAllSubs && updatingSubIds.isEmpty() && realSubscriptions.any { it.enabled && it.url.isNotBlank() }) {
+                            isUpdatingAllSubs = true
+                            viewModel.updateAllSubscriptions { report ->
+                                isUpdatingAllSubs = false
+                                subscriptionUpdateReport = report
                             }
                         }
-                    } else {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(10.dp),
-                            contentPadding = PaddingValues(bottom = 16.dp + LocalBottomDockInset.current)
-                        ) {
-                            if (filteredSubscriptions.isEmpty()) {
-                                item { Text(strings.subscriptionsNoResults, color = colors.textSecondary, modifier = Modifier.padding(24.dp)) }
+                    }
+
+                    androidx.compose.material3.pulltorefresh.PullToRefreshBox(
+                        isRefreshing = isUpdatingAllSubs,
+                        onRefresh = onPullRefresh,
+                        state = pullRefreshState,
+                        modifier = Modifier.fillMaxSize(),
+                        indicator = {
+                            androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator(
+                                state = pullRefreshState,
+                                isRefreshing = isUpdatingAllSubs,
+                                modifier = Modifier
+                                    .align(Alignment.TopCenter)
+                                    .padding(top = listTopInset),
+                                color = colors.accentCyan,
+                                containerColor = colors.surface
+                            )
+                        }
+                    ) {
+                        if (realSubscriptions.isEmpty()) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(top = listTopInset, bottom = 16.dp + LocalBottomDockInset.current),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                subscriptionsPreamble()
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 32.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(56.dp)
+                                                .liquidGlass(cornerRadius = 16, innerSheen = true, accentBorder = colors.accentAmber.copy(alpha = 0.4f)),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Icon(Icons.Default.CloudDownload, contentDescription = null, tint = colors.accentAmber, modifier = Modifier.size(28.dp))
+                                        }
+                                        Text(
+                                            text = strings.uiNoSubscriptions,
+                                            color = colors.textPrimary,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = strings.uiSubscriptionHint,
+                                            color = colors.textSecondary,
+                                            fontSize = 11.sp,
+                                            fontFamily = FontFamily.Monospace,
+                                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                            modifier = Modifier.padding(horizontal = 24.dp)
+                                        )
+                                        Button(
+                                            onClick = {
+                                                initialImportPayload = ""
+                                                showAddUnifiedSheet = true
+                                            },
+                                            colors = ButtonDefaults.buttonColors(containerColor = colors.accentAmber),
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier.height(48.dp)
+                                        ) {
+                                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(strings.uiAddSubscription, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                        }
+                                        Spacer(modifier = Modifier.height(16.dp))
+                                        com.danieldk.splatevpn.ui.components.SourcePrivacyCard(viewModel, compact = true)
+                                    }
+                                }
                             }
-                            items(filteredSubscriptions, key = { it.id }) { sub ->
+                        } else {
+                            LazyColumn(
+                                verticalArrangement = Arrangement.spacedBy(10.dp),
+                                contentPadding = PaddingValues(top = listTopInset, bottom = 16.dp + LocalBottomDockInset.current)
+                            ) {
+                                item(key = "subscriptions_preamble", contentType = "preamble") { subscriptionsPreamble() }
+                                if (filteredSubscriptions.isEmpty()) {
+                                    item { Text(strings.subscriptionsNoResults, color = colors.textSecondary, modifier = Modifier.padding(24.dp)) }
+                                }
+                                items(filteredSubscriptions, key = { it.id }) { sub ->
                                 SubscriptionHubCard(
                                     sub = sub,
-                                    isUpdating = isUpdatingAllSubs || sub.id in updatingSubIds,
-                                    isPinging = sub.id in pingingSubIds,
-                                    onEdit = { editingSubscription = sub },
+                                    isUpdating = sub.id in updatingSubIds,
+                                    isPinging = isPinging,
+                                    onStopPing = viewModel::cancelPingChecks,
+                                    onEdit = { if (!isProtectedWtpn(sub.id, sub.url)) editingSubscription = sub },
                                     onToggleEnabled = { enabled ->
                                         viewModel.toggleSubscriptionEnabled(sub.id, enabled)
-                                        val msg = String.format(if (enabled) strings.subscriptionEnabledMessage else strings.subscriptionDisabledMessage, sub.name)
+                                        val msg = String.format(if (enabled) strings.subscriptionEnabledMessage else strings.subscriptionDisabledMessage,
+                                            subscriptionDisplayName(sub.id, sub.name, strings))
                                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                                     },
                                     onToggleAutoUpdate = { auto ->
@@ -889,6 +1029,7 @@ fun ServersScreen(
                                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                                     },
                                     onViewNodes = {
+                                        folderOrigin = NodeViewMode.SUBSCRIPTIONS
                                         selectedFilterSubId = sub.id
                                         activeViewMode = if (sub.id in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS) {
                                             NodeViewMode.PRESET
@@ -897,17 +1038,12 @@ fun ServersScreen(
                                         }
                                     },
                                     onPing = {
-                                        pingingSubIds = pingingSubIds + sub.id
-                                        viewModel.testSubscriptionPings(sub.id) { count ->
-                                            pingingSubIds = pingingSubIds - sub.id
-                                            val modeDesc = if (isRealDelay) "Real Delay" else "TCP Ping"
-                                            Toast.makeText(context, String.format(strings.uiPingSummary, subscriptionDisplayName(sub.id, sub.name, strings), count), Toast.LENGTH_SHORT).show()
+                                        viewModel.testSubscriptionPings(sub.id) { summary ->
+                                            Toast.makeText(context, pingResources.getString(com.danieldk.splatevpn.R.string.server_ping_result, subscriptionDisplayName(sub.id, sub.name, strings), summary.checked, summary.available), Toast.LENGTH_SHORT).show()
                                         }
                                     },
                                     onUpdate = {
-                                        updatingSubIds = updatingSubIds + sub.id
                                         viewModel.updateSubscription(sub.id) { res ->
-                                            updatingSubIds = updatingSubIds - sub.id
                                             res.onSuccess { count ->
                                                 Toast.makeText(context, String.format(strings.subUpdatedSuccess, count), Toast.LENGTH_SHORT).show()
                                             }.onFailure { err ->
@@ -915,18 +1051,23 @@ fun ServersScreen(
                                             }
                                         }
                                     },
-                                    onShare = { sharingSub = sub },
+                                    onShare = { if (!isProtectedWtpn(sub.id, sub.url)) sharingSub = sub },
                                     onDelete = { deletingSub = sub }
                                 )
+                            }
+                            item(key = "subscriptions_privacy_policy", contentType = "privacy") {
+                                Spacer(modifier = Modifier.height(6.dp))
+                                com.danieldk.splatevpn.ui.components.SourcePrivacyCard(viewModel, compact = true)
                             }
                         }
                     }
                 }
+            }
 
                 NodeViewMode.PERSONAL -> {
-                    Spacer(modifier = Modifier.height(6.dp))
 
                     if (personalServers.isEmpty()) {
+                        Spacer(Modifier.height(listTopInset))
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -968,23 +1109,81 @@ fun ServersScreen(
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.height(48.dp)
                                 ) {
-                                    Icon(Icons.Default.Add, contentDescription = null, tint = LocalAppThemeColors.current.onAccent, modifier = Modifier.size(18.dp))
+                                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(strings.uiAddConfig, color = LocalAppThemeColors.current.onAccent, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                    Text(strings.uiAddConfig, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                 }
                             }
                         }
                     } else {
+                        val validPersonalIds = remember(personalServers) { personalServers.mapTo(hashSetOf()) { it.id } }
+                        LaunchedEffect(validPersonalIds) {
+                            if (selectedPersonalIdsForDeletion.isNotEmpty()) {
+                                val pruned = selectedPersonalIdsForDeletion.intersect(validPersonalIds)
+                                if (pruned.size != selectedPersonalIdsForDeletion.size) {
+                                    selectedPersonalIdsForDeletion = pruned
+                                }
+                            }
+                            if (validPersonalIds.isEmpty() && isPersonalSelectionMode) {
+                                exitPersonalSelectionMode()
+                            }
+                        }
+                        val visiblePersonalIds = remember(filteredServers) { filteredServers.mapTo(linkedSetOf()) { it.id } }
+                        val allVisibleSelected = visiblePersonalIds.isNotEmpty() && visiblePersonalIds.all { it in selectedPersonalIdsForDeletion }
+                        val personalListPreamble: @Composable () -> Unit = {
+                            commonListPreamble()
+                            AnimatedVisibility(
+                                visible = isPersonalSelectionMode && filteredServers.isNotEmpty(),
+                                enter = expandVertically(tween(180)) + fadeIn(tween(150)),
+                                exit = shrinkVertically(tween(150)) + fadeOut(tween(120))
+                            ) {
+                                Column {
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    PersonalBatchDeleteBar(
+                                        selectedCount = selectedPersonalIdsForDeletion.size,
+                                        visibleCount = visiblePersonalIds.size,
+                                        allVisibleSelected = allVisibleSelected,
+                                        onToggleSelectAll = {
+                                            selectedPersonalIdsForDeletion = if (allVisibleSelected) {
+                                                selectedPersonalIdsForDeletion - visiblePersonalIds
+                                            } else {
+                                                selectedPersonalIdsForDeletion + visiblePersonalIds
+                                            }
+                                        },
+                                        onDeleteSelected = {
+                                            if (selectedPersonalIdsForDeletion.isNotEmpty()) {
+                                                showBatchDeleteConfirm = true
+                                            }
+                                        },
+                                        onCancel = ::exitPersonalSelectionMode
+                                    )
+                                }
+                            }
+                        }
                         ServerListSection(
+                            contentTopInset = listTopInset, topContent = personalListPreamble,
                             servers = filteredServers,
                             selectedServer = selectedServer,
                             isAutoBalancerVisible = false,
                             isPinging = isPinging,
+                            isGrouped = true,
+                            expandedGroups = if (isPersonalSelectionMode) expandedSubIds + "personal" else expandedSubIds,
+                            onToggleGroupCollapse = { id -> expandedSubIds = if (id in expandedSubIds) expandedSubIds - id else expandedSubIds + id },
                             onSelectServer = { viewModel.selectServer(it) },
-                            onEditServer = { editingServer = it },
+                            onEditServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) editingServer = it },
                             onDeleteServer = { viewModel.deleteServer(it) },
-                            onShareServer = { sharingServer = it },
+                            onShareServer = { if (!isProtectedWtpn(it.subId, subscriptionsMap[it.subId]?.url)) sharingServer = it },
                             viewModel = viewModel,
+                            selectionMode = isPersonalSelectionMode,
+                            selectedIdsForDeletion = selectedPersonalIdsForDeletion,
+                            onToggleSelection = { id ->
+                                selectedPersonalIdsForDeletion = if (id in selectedPersonalIdsForDeletion) {
+                                    selectedPersonalIdsForDeletion - id
+                                } else {
+                                    selectedPersonalIdsForDeletion + id
+                                }
+                            },
+                            onEnterSelectionMode = ::enterPersonalSelectionMode,
                             onAddClick = {
                                 initialImportPayload = ""
                                 showAddUnifiedSheet = true
@@ -993,11 +1192,68 @@ fun ServersScreen(
                     }
                 }
             }
+            }
+            }
+        }
+
+        if (showBatchDeleteConfirm && selectedPersonalIdsForDeletion.isNotEmpty()) {
+            val targets = selectedPersonalIdsForDeletion.toList()
+            val count = targets.size
+            AlertDialog(
+                onDismissRequest = { showBatchDeleteConfirm = false },
+                containerColor = colors.surfaceElevated,
+                title = {
+                    Text(
+                        text = strings.localized("Удалить выбранные серверы?", "Delete selected servers?"),
+                        color = colors.textPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Text(
+                        text = strings.localized(
+                            "Будет удалено личных серверов: $count. Это действие нельзя отменить.",
+                            "$count personal servers will be deleted. This action cannot be undone."
+                        ),
+                        color = colors.textSecondary,
+                        fontSize = 13.sp
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            showBatchDeleteConfirm = false
+                            viewModel.deleteServers(targets) { deleted ->
+                                if (deleted > 0) {
+                                    Toast.makeText(
+                                        context,
+                                        strings.localized("Удалено серверов: $deleted", "Deleted servers: $deleted"),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            exitPersonalSelectionMode()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = colors.accentCrimson)
+                    ) {
+                        Text(
+                            text = "${strings.delete} ($count)",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showBatchDeleteConfirm = false }) {
+                        Text(strings.cancel, color = colors.textSecondary)
+                    }
+                }
+            )
         }
 
         // Add Config Dialog (Manual / QR)
         if (showAddDialog) {
             var inputLink by remember { mutableStateOf("") }
+            val scaninputLink = com.danieldk.splatevpn.ui.components.rememberQrImporter { inputLink = it }
             AlertDialog(
                 onDismissRequest = { showAddDialog = false },
                 containerColor = colors.surface,
@@ -1022,18 +1278,7 @@ fun ServersScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             IconButton(
                                 onClick = {
-                                    val options = com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder()
-                                        .setBarcodeFormats(com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE)
-                                        .build()
-                                    val scanner = com.google.mlkit.vision.codescanner.GmsBarcodeScanning.getClient(context, options)
-                                    scanner.startScan()
-                                        .addOnSuccessListener { barcode ->
-                                            val rawValue = barcode.rawValue
-                                            if (rawValue != null) inputLink = rawValue
-                                        }
-                                        .addOnFailureListener { e ->
-                                            Toast.makeText(context, String.format(strings.qrScanError, e.message ?: ""), Toast.LENGTH_SHORT).show()
-                                        }
+                                    scaninputLink()
                                 },
                                 modifier = Modifier.size(48.dp)
                             ) {
@@ -1057,7 +1302,7 @@ fun ServersScreen(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = colors.accentCyan)
                     ) {
-                        Text(strings.add, color = LocalAppThemeColors.current.onAccent, fontWeight = FontWeight.Bold)
+                        Text(strings.add, fontWeight = FontWeight.Bold)
                     }
                 },
                 dismissButton = {
@@ -1071,6 +1316,10 @@ fun ServersScreen(
         // Add Subscription Dialog / Bottom Sheet
         if (showAddSubDialog) {
             var newSubUrl by remember { mutableStateOf("") }
+            var userAgent by remember(newSubUrl) { mutableStateOf(viewModel.getSubscriptionUserAgent(newSubUrl)) }
+            val hwidEligible = remember(newSubUrl) { viewModel.canSendSubscriptionHwid(newSubUrl) }
+            var sendHwid by remember(newSubUrl) { mutableStateOf(viewModel.isSubscriptionHwidEnabled(newSubUrl)) }
+            val scannewSubUrl = com.danieldk.splatevpn.ui.components.rememberQrImporter { newSubUrl = it }
             var newSubName by remember { mutableStateOf("") }
             var isOperating by remember { mutableStateOf(false) }
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -1081,9 +1330,12 @@ fun ServersScreen(
                 containerColor = colors.background,
                 dragHandle = null
             ) {
+                com.danieldk.splatevpn.ui.components.rememberAndApplyPopupWindowBlur(blurBehind = true, backgroundBlur = false)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .imePadding()
+                        .verticalScroll(rememberScrollState())
                         .padding(horizontal = 20.dp)
                         .padding(top = 20.dp, bottom = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -1169,23 +1421,18 @@ fun ServersScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             IconButton(
                                 onClick = {
-                                    val options = com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder()
-                                        .setBarcodeFormats(com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE)
-                                        .build()
-                                    val scanner = com.google.mlkit.vision.codescanner.GmsBarcodeScanning.getClient(context, options)
-                                    scanner.startScan()
-                                        .addOnSuccessListener { barcode ->
-                                            val rawValue = barcode.rawValue
-                                            if (rawValue != null) newSubUrl = rawValue
-                                        }
-                                        .addOnFailureListener { e ->
-                                            Toast.makeText(context, String.format(strings.qrScanError, e.message ?: ""), Toast.LENGTH_SHORT).show()
-                                        }
+                                    scannewSubUrl()
                                 },
                                 modifier = Modifier.size(48.dp)
                             ) {
                                 Icon(Icons.Default.QrCodeScanner, contentDescription = strings.scanQr, tint = colors.accentAmber)
                             }
+                        }
+
+                        if (hwidEligible) com.danieldk.splatevpn.ui.components.SubscriptionHwidSetting(
+                            sendHwid, { sendHwid = it }, enabled = !isOperating)
+                        userAgent?.let {
+                            com.danieldk.splatevpn.ui.components.SubscriptionUserAgentSetting(it, { userAgent = it }, !isOperating)
                         }
 
                         if (isOperating) {
@@ -1207,7 +1454,7 @@ fun ServersScreen(
                                 .tactileClickable(enabled = newSubUrl.isNotBlank() && !isOperating) {
                                     if (newSubUrl.isNotBlank()) {
                                         isOperating = true
-                                        viewModel.importSubscription(newSubUrl, newSubName.takeIf { it.isNotBlank() }) { result ->
+                                        viewModel.importSubscription(newSubUrl, newSubName.takeIf { it.isNotBlank() }, sendHwid.takeIf { hwidEligible }, userAgent) { result ->
                                             isOperating = false
                                             result.onSuccess { count ->
                                                 Toast.makeText(context, String.format(strings.subAddedSuccess, count), Toast.LENGTH_SHORT).show()
@@ -1244,12 +1491,22 @@ fun ServersScreen(
             }
         }
 
-        editingSubscription?.let { sub ->
+        editingSubscription?.let { editing ->
+            val sub = subscriptions.firstOrNull { it.id == editing.id } ?: editing
+            val history by remember(sub.id) { viewModel.subscriptionUpdateHistory(sub.id) }.collectAsState(initial = emptyList())
             SubscriptionDetailsDialog(
                 sub = sub,
                 autoUpdateInterval = autoUpdateInterval,
                 onDismiss = { editingSubscription = null },
-                onSave = { name, url, callback -> viewModel.editSubscription(sub.id, name, url, callback) }
+                onSave = { name, url, callback -> viewModel.editSubscription(sub.id, name, url, callback) },
+                history = history,
+                onRetention = { enabled, callback -> viewModel.setSubscriptionRetention(sub.id, enabled, callback) },
+                onRules = { enabled, expected, callback -> viewModel.setSubscriptionRulesEnabled(sub.id, enabled, expected, callback) },
+                onPurge = { callback -> viewModel.purgeRetainedNodes(sub.id, callback) },
+                hwidEnabled = { url -> viewModel.isSubscriptionHwidEnabled(url).takeIf { viewModel.canSendSubscriptionHwid(url) } },
+                onHwidChange = viewModel::setSubscriptionHwidEnabled,
+                getUserAgent = viewModel::getSubscriptionUserAgent,
+                onUserAgentChange = viewModel::setSubscriptionUserAgent
             )
         }
         subscriptionUpdateReport?.let { report ->
@@ -1262,7 +1519,7 @@ fun ServersScreen(
                         Text(if (report.updated == 0 && report.failures.isEmpty()) strings.subscriptionNoUpdates
                             else String.format(strings.subscriptionRefreshSummary, report.updated, report.failures.size))
                         report.failures.forEach { (name, error) ->
-                            Text("$name: $error", color = colors.accentCrimson, modifier = Modifier.padding(top = 8.dp))
+                            Text("$name: ${com.danieldk.splatevpn.ui.subscriptionErrorText(com.danieldk.splatevpn.ui.theme.LocalAppResources.current, error)}", color = colors.accentCrimson, modifier = Modifier.padding(top = 8.dp))
                         }
                     }
                 },
@@ -1288,7 +1545,7 @@ fun ServersScreen(
                     Button(
                         onClick = {
                             viewModel.deleteSubscription(targetSub.id)
-                            if (selectedFilterSubId == targetSub.id) selectedFilterSubId = null
+                            if (selectedFilterSubId == targetSub.id) closeFolder()
                             deletingSub = null
                             Toast.makeText(context, strings.subDeletedSuccess, Toast.LENGTH_SHORT).show()
                         },
@@ -1310,10 +1567,11 @@ fun ServersScreen(
             EditServerDialog(
                 server = editingServer!!,
                 onDismiss = { editingServer = null },
-                onSave = { updated ->
-                    viewModel.updateServer(updated)
-                    editingServer = null
-                    Toast.makeText(context, strings.serverUpdatedSuccess, Toast.LENGTH_SHORT).show()
+                onSave = { updated, onResult ->
+                    viewModel.updateServer(updated) { result ->
+                        result.onSuccess { Toast.makeText(context, strings.serverUpdatedSuccess, Toast.LENGTH_SHORT).show() }
+                        onResult(result)
+                    }
                 }
             )
         }
@@ -1388,10 +1646,61 @@ private fun ServerToolAction(
 }
 
 @Composable
+internal fun ServerCategoryTabs(
+    mode: NodeViewMode,
+    nodeCount: Int,
+    enabledSubscriptionCount: Int,
+    subscriptionCount: Int,
+    personalCount: Int,
+    onSelect: (NodeViewMode) -> Unit
+) {
+    val colors = LocalAppThemeColors.current
+    val strings = LocalAppStrings.current
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+    val labels = listOf(strings.subscriptionNodesLabel, strings.subscriptionsLabel, strings.personalNodesLabel)
+    val labelStyle = LocalTextStyle.current.copy(fontSize = 12.sp, lineHeight = 16.sp,
+        fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        // Account for the strip's outer padding and the two gaps between segments.
+        val slotWidth = ((maxWidth - 16.dp) / 3).coerceAtLeast(1.dp)
+        val widestLabel = labels.maxOf { textMeasurer.measure(it, style = labelStyle,
+            softWrap = false, maxLines = 1).size.width }
+        val showIcons = with(density) { widestLabel.toDp() + 36.dp <= slotWidth }
+        val textWidth = (slotWidth - 12.dp - if (showIcons) 24.dp else 0.dp).coerceAtLeast(1.dp)
+        // Leave a rounding guard for the Row's integer-pixel weight distribution.
+        val textWidthPx = with(density) { (textWidth.roundToPx() - 2).coerceAtLeast(1) }
+        val titleHeight = with(density) {
+            labels.maxOf { textMeasurer.measure(it, style = labelStyle, maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                constraints = Constraints(maxWidth = textWidthPx)).size.height }.toDp()
+        }
+        val requiredHeight = titleHeight + with(density) { 12.sp.toDp() } + 10.dp
+        SlidingTabStrip(
+            selectedIndex = when (mode) { NodeViewMode.SUBSCRIPTIONS -> 1; NodeViewMode.PERSONAL -> 2; else -> 0 },
+            accents = listOf(colors.accentCyan, colors.accentAmber, colors.accentEmerald),
+            onSelect = { onSelect(when (it) { 1 -> NodeViewMode.SUBSCRIPTIONS; 2 -> NodeViewMode.PERSONAL; else -> NodeViewMode.ALL }) },
+            modifier = Modifier.testTag("serverCategoryTabs"),
+            tabHeight = maxOf(48.dp * maxOf(1f, density.fontScale), requiredHeight)
+        ) { highlighted ->
+            ServerCategorySegment(labels[0], nodeCount.toString(), Icons.Default.Dns, showIcons, titleHeight, labelStyle,
+                highlighted == 0, colors.accentCyan, Modifier.weight(1f).testTag("serverCategory:ALL")) { onSelect(NodeViewMode.ALL) }
+            ServerCategorySegment(labels[1], "$enabledSubscriptionCount/$subscriptionCount", Icons.Default.CloudDownload, showIcons, titleHeight, labelStyle,
+                highlighted == 1, colors.accentAmber, Modifier.weight(1f).testTag("serverCategory:SUBSCRIPTIONS")) { onSelect(NodeViewMode.SUBSCRIPTIONS) }
+            ServerCategorySegment(labels[2], personalCount.toString(), Icons.Default.Lock, showIcons, titleHeight, labelStyle,
+                highlighted == 2, colors.accentEmerald, Modifier.weight(1f).testTag("serverCategory:PERSONAL")) { onSelect(NodeViewMode.PERSONAL) }
+        }
+    }
+}
+
+@Composable
 private fun ServerCategorySegment(
     label: String,
     count: String,
     icon: ImageVector,
+    showIcon: Boolean,
+    titleHeight: Dp,
+    labelStyle: TextStyle,
     selected: Boolean,
     accent: Color,
     modifier: Modifier = Modifier,
@@ -1399,26 +1708,30 @@ private fun ServerCategorySegment(
 ) {
     val colors = LocalAppThemeColors.current
     Column(
-        modifier = modifier.height(48.dp)
+        modifier = modifier.fillMaxHeight()
             .clip(RoundedCornerShape(10.dp))
-            .tactileClickable(onClick = onClick).padding(horizontal = 4.dp),
+            .semantics { semanticsSelected = selected; contentDescription = "$label, $count" }
+            .tactileClickable(onClick = onClick).padding(horizontal = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-            Box(Modifier.size(16.dp), contentAlignment = Alignment.Center) {
-                Icon(icon, contentDescription = null, tint = if (selected) accent else colors.textTertiary,
-                    modifier = Modifier.size(13.dp))
+        Row(Modifier.testTag("serverCategoryContent:$label"), verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (showIcon) {
+                Icon(icon, contentDescription = null, tint = if (selected) accent else colors.textSecondary,
+                    modifier = Modifier.size(18.dp).testTag("serverCategoryIcon:$label"))
             }
-            Spacer(Modifier.width(4.dp))
-            Text(label, color = if (selected) accent else colors.textSecondary,
-                fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.SemiBold,
-                maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center)
+            Column(Modifier.weight(1f, fill = false), horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(Modifier.height(titleHeight), contentAlignment = Alignment.Center) {
+                    Text(label, color = if (selected) accent else colors.textSecondary,
+                        style = labelStyle, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                }
+                Spacer(Modifier.height(2.dp))
+                Text(count, color = if (selected) accent else colors.textSecondary,
+                    fontSize = 10.sp, lineHeight = 12.sp, fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Medium, maxLines = 1)
+            }
         }
-        Spacer(Modifier.height(2.dp))
-        Text(count, color = if (selected) accent else colors.textSecondary,
-            fontSize = 10.sp, lineHeight = 12.sp, fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Medium, maxLines = 1)
     }
 }
 
@@ -1482,12 +1795,16 @@ private fun ActiveSubscriptionBanner(
     onPing: () -> Unit = {},
     onUpdate: () -> Unit,
     onShare: () -> Unit = {},
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onStopPing: () -> Unit = {}
 ) {
     val strings = LocalAppStrings.current
     val colors = LocalAppThemeColors.current
+    val resources = LocalAppResources.current
     val bannerAccent = if (sub.enabled) colors.accentAmber else colors.textTertiary
+    var menuOpen by remember { mutableStateOf(false) }
 
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -1514,11 +1831,11 @@ private fun ActiveSubscriptionBanner(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = String.format(strings.uiSubscriptionPrefix, subscriptionDisplayName(sub.id, sub.name, strings)),
+                text = subscriptionDisplayName(sub.id, sub.name, strings),
                 color = colors.textPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
@@ -1529,70 +1846,48 @@ private fun ActiveSubscriptionBanner(
             )
         }
 
-        if (onToggleEnabled != null) {
-            Switch(
-                checked = sub.enabled,
-                onCheckedChange = { onToggleEnabled(it) },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = colors.accentAmber,
-                    uncheckedThumbColor = colors.textTertiary,
-                    uncheckedTrackColor = colors.surface.copy(alpha = 0.5f),
-                    uncheckedBorderColor = colors.textTertiary.copy(alpha = 0.3f)
-                ),
-                modifier = Modifier.graphicsLayer { scaleX = 0.68f; scaleY = 0.68f }
-            )
-            Spacer(modifier = Modifier.width(2.dp))
-        }
-
-        // Quick Ping button for this subscription
         IconButton(
-            onClick = onPing,
-            enabled = !isPinging,
-            modifier = Modifier.size(26.dp)
+            onClick = if (isPinging) onStopPing else onPing,
+            enabled = isPinging || sub.enabled,
+            modifier = Modifier.size(44.dp)
         ) {
-            if (isPinging) {
-                CircularProgressIndicator(modifier = Modifier.size(12.dp), strokeWidth = 2.dp, color = colors.accentEmerald)
-            } else {
-                Icon(Icons.Default.Bolt, contentDescription = "Ping Subscription", tint = colors.accentEmerald, modifier = Modifier.size(15.dp))
-            }
+            Icon(if (isPinging) Icons.Default.Stop else Icons.Default.NetworkCheck,
+                contentDescription = resources.getString(if (isPinging) com.danieldk.splatevpn.R.string.server_stop_checks else com.danieldk.splatevpn.R.string.server_check_servers),
+                tint = if (isPinging || sub.enabled) colors.accentEmerald else colors.textTertiary, modifier = Modifier.size(20.dp))
         }
-
-        Spacer(modifier = Modifier.width(2.dp))
-
-        // Quick Update button
         IconButton(
             onClick = onUpdate,
             enabled = !isUpdating,
-            modifier = Modifier.size(26.dp)
+            modifier = Modifier.size(44.dp)
         ) {
             if (isUpdating) {
-                CircularProgressIndicator(modifier = Modifier.size(12.dp), strokeWidth = 2.dp, color = colors.accentAmber)
+                CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = colors.accentAmber)
             } else {
-                Icon(Icons.Default.Refresh, contentDescription = "Update", tint = colors.accentAmber, modifier = Modifier.size(15.dp))
+                Icon(Icons.Default.Refresh, contentDescription = strings.refresh, tint = colors.accentAmber, modifier = Modifier.size(20.dp))
             }
         }
-
-        Spacer(modifier = Modifier.width(2.dp))
-
-        // Quick Share / QR button for subscription
-        if (sub.url.isNotBlank()) {
-            IconButton(
-                onClick = onShare,
-                modifier = Modifier.size(26.dp)
-            ) {
-                Icon(Icons.Default.QrCode2, contentDescription = "Share Subscription", tint = bannerAccent, modifier = Modifier.size(15.dp))
+        Box {
+            IconButton(onClick = { menuOpen = true }, modifier = Modifier.size(44.dp)) {
+                Icon(Icons.Default.MoreVert, resources.getString(com.danieldk.splatevpn.R.string.server_folder_options),
+                    tint = colors.textSecondary, modifier = Modifier.size(20.dp))
             }
-            Spacer(modifier = Modifier.width(2.dp))
+            DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }, modifier = Modifier.background(colors.surfaceElevated)) {
+                if (onToggleEnabled != null) DropdownMenuItem(
+                    text = { Text(resources.getString(if (sub.enabled) com.danieldk.splatevpn.R.string.folder_disable else com.danieldk.splatevpn.R.string.folder_enable)) },
+                    onClick = { menuOpen = false; onToggleEnabled(!sub.enabled) })
+                if (sub.url.isNotBlank() && !isProtectedWtpn(sub.id, sub.url)) DropdownMenuItem(text = { Text(strings.shareSubscriptionTitle) },
+                    onClick = { menuOpen = false; onShare() })
+                DropdownMenuItem(text = { Text(resources.getString(com.danieldk.splatevpn.R.string.server_back)) },
+                    onClick = { menuOpen = false; onDismiss() })
+            }
         }
-
-        // Reset Filter button
-        IconButton(
-            onClick = onDismiss,
-            modifier = Modifier.size(26.dp)
-        ) {
-            Icon(Icons.Default.Close, contentDescription = "Dismiss", tint = colors.textTertiary, modifier = Modifier.size(15.dp))
-        }
+    }
+    Column(Modifier.fillMaxWidth().liquidGlass(cornerRadius = 12,
+        backgroundColor = colors.surface.copy(alpha = .97f), innerSheen = false).padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        SubscriptionUsageSummary(sub)
+        com.danieldk.splatevpn.ui.components.SubscriptionPublisherDetails(sub.publisherMetadataJson, compact = true, framed = false)
+    }
     }
 }
 
@@ -1612,7 +1907,8 @@ private fun SubscriptionHubCard(
     onUpdate: () -> Unit,
     onShare: () -> Unit = {},
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onStopPing: () -> Unit = {}
 ) {
     val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
@@ -1648,7 +1944,7 @@ private fun SubscriptionHubCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = if (isPreset) Icons.Default.Bolt else Icons.Default.CloudDownload,
+                    imageVector = Icons.Default.CloudDownload,
                     contentDescription = null,
                     tint = cardAccent,
                     modifier = Modifier.size(17.dp)
@@ -1657,7 +1953,7 @@ private fun SubscriptionHubCard(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Column(modifier = Modifier.weight(1f).clickable(enabled = !isUpdating, onClickLabel = strings.edit, onClick = onEdit)) {
+            Column(modifier = Modifier.weight(1f).tvFocusOutline().clickable(enabled = !isUpdating && !isProtectedWtpn(sub.id, sub.url), onClickLabel = strings.edit, onClick = onEdit)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = subscriptionDisplayName(sub.id, sub.name, strings),
@@ -1668,7 +1964,7 @@ private fun SubscriptionHubCard(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
                     )
-                    Icon(Icons.Default.Edit, contentDescription = strings.edit, tint = colors.textSecondary, modifier = Modifier.padding(start = 4.dp).size(16.dp))
+                    if (!isProtectedWtpn(sub.id, sub.url)) Icon(Icons.Default.Edit, contentDescription = strings.edit, tint = colors.textSecondary, modifier = Modifier.padding(start = 4.dp).size(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -1702,6 +1998,19 @@ private fun SubscriptionHubCard(
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace
                     )
+                    if (sub.lastAttemptAt > 0) {
+                        val ru = strings is com.danieldk.splatevpn.ui.theme.RussianAppStrings
+                        val delta = sub.nodeCount - sub.previousNodeCount
+                        Text(text = (if (ru) "Попытка: " else "Attempt: ") + formatSubUpdated(sub.lastAttemptAt, strings) +
+                            if (sub.lastError.isNotBlank()) " • ${com.danieldk.splatevpn.ui.subscriptionErrorText(com.danieldk.splatevpn.ui.theme.LocalAppResources.current, sub.lastError)}" else when {
+                                delta > 0 -> " • " + String.format(strings.localized("Серверов: +%d", "Servers: +%d"), delta)
+                                delta < 0 -> " • " + String.format(strings.localized("Серверов: %d", "Servers: %d"), delta)
+                                else -> " • " + strings.localized("Без изменений", "No changes")
+                            },
+                            color = if (sub.lastError.isNotBlank()) colors.accentAmber else colors.textSecondary,
+                            fontSize = 10.sp)
+                    }
+
                 }
             }
 
@@ -1722,6 +2031,8 @@ private fun SubscriptionHubCard(
 
 
         }
+
+        com.danieldk.splatevpn.ui.components.SubscriptionPublisherDetails(sub.publisherMetadataJson)
 
         // Quota & Expiration Section (Subscription-Userinfo)
         val usedBytes = sub.uploadBytes + sub.downloadBytes
@@ -1815,8 +2126,10 @@ private fun SubscriptionHubCard(
                 modifier = Modifier.weight(1f), onClick = onViewNodes
             )
             SubscriptionActionButton(
-                label = strings.ping, icon = Icons.Default.Bolt, accent = colors.accentEmerald,
-                modifier = Modifier.weight(1f), busy = isPinging, onClick = onPing
+                label = if (isPinging) LocalAppResources.current.getString(com.danieldk.splatevpn.R.string.server_stop_checks_short) else strings.ping,
+                icon = if (isPinging) Icons.Default.Stop else Icons.Default.NetworkCheck, accent = colors.accentEmerald,
+                modifier = Modifier.weight(1f), enabled = isPinging || isEnabled,
+                onClick = if (isPinging) onStopPing else onPing
             )
             SubscriptionActionButton(
                 label = strings.refresh, icon = Icons.Default.Refresh, accent = colors.accentAmber,
@@ -1834,7 +2147,7 @@ private fun SubscriptionHubCard(
                 accent = if (sub.autoUpdate) colors.accentCyan else colors.textSecondary,
                 modifier = Modifier.weight(1f), onClick = { onToggleAutoUpdate(!sub.autoUpdate) }
             )
-            if (sub.url.isNotBlank()) {
+            if (sub.url.isNotBlank() && !isProtectedWtpn(sub.id, sub.url)) {
                 SubscriptionIconAction(Icons.Default.QrCode2, "QR", colors.accentAmber, onClick = onShare)
             }
             SubscriptionIconAction(Icons.Default.DeleteOutline, strings.delete, colors.accentCrimson,
@@ -1850,24 +2163,26 @@ private fun SubscriptionActionButton(
     accent: Color,
     modifier: Modifier = Modifier,
     busy: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
+    val foreground = if (enabled) accent else LocalAppThemeColors.current.textTertiary
     Box(
-        modifier = modifier.heightIn(min = 48.dp).tactileClickable(enabled = !busy, onClick = onClick),
+        modifier = modifier.heightIn(min = 48.dp).tactileClickable(enabled = enabled && !busy, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Row(
             Modifier.fillMaxWidth()
-                .liquidGlass(cornerRadius = 8, innerSheen = true, accentBorder = accent.copy(alpha = 0.35f))
+                .liquidGlass(cornerRadius = 12, innerSheen = true, accentBorder = accent.copy(alpha = 0.35f))
                 .heightIn(min = 36.dp).padding(horizontal = 6.dp, vertical = 6.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (busy) CircularProgressIndicator(Modifier.size(13.dp), color = accent, strokeWidth = 1.5.dp)
-            else Icon(icon, contentDescription = null, tint = accent, modifier = Modifier.size(14.dp))
+            else Icon(icon, contentDescription = null, tint = foreground, modifier = Modifier.size(14.dp))
             Spacer(Modifier.width(4.dp))
-            Text(label, color = accent, fontSize = 10.5.sp, fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(label, color = foreground, fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
@@ -1987,7 +2302,7 @@ private fun SearchBarField(
     }
 }
 
-private data class ServerGroup(
+internal data class ServerGroup(
     val id: String,
     val title: String,
     val isPreset: Boolean,
@@ -1997,1203 +2312,282 @@ private data class ServerGroup(
 )
 
 @Composable
-private fun SubscriptionGroupHeader(
-    group: ServerGroup,
-    isCollapsed: Boolean,
-    isEnabled: Boolean,
-    isPinging: Boolean,
-    pingEnabled: Boolean,
-    onPing: () -> Unit,
-    onToggleCollapse: () -> Unit,
-    onToggleEnabled: ((Boolean) -> Unit)? = null
-) {
+private fun SubscriptionUsageSummary(sub: SubscriptionEntity) {
     val strings = LocalAppStrings.current
     val colors = LocalAppThemeColors.current
-    val accent = when {
-        !isEnabled -> colors.textSecondary
-        group.isPersonal -> colors.accentEmerald
-        group.isPreset -> colors.accentCyan
-        else -> colors.accentAmber
+    val used = sub.uploadBytes.coerceAtLeast(0).let { upload ->
+        val download = sub.downloadBytes.coerceAtLeast(0)
+        if (Long.MAX_VALUE - upload < download) Long.MAX_VALUE else upload + download
     }
-    Row(
-        Modifier.fillMaxWidth().liquidGlass(cornerRadius = 14, innerSheen = true,
-            accentBorder = accent.copy(alpha = if (isEnabled) 0.35f else 0.15f))
-            .tactileClickable(targetScale = 0.98f, onClick = onToggleCollapse)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(Modifier.size(32.dp).liquidGlass(cornerRadius = 9,
-            accentBorder = accent.copy(alpha = 0.4f), innerSheen = true),
-            contentAlignment = Alignment.Center) {
-            Icon(when {
-                group.isPersonal -> Icons.Default.Lock
-                group.isPreset -> Icons.Default.Bolt
-                else -> Icons.Default.CloudDownload
-            }, contentDescription = null, tint = accent, modifier = Modifier.size(16.dp))
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (sub.totalBytes > 0) {
+            val fraction = (used.toDouble() / sub.totalBytes).coerceIn(0.0, 1.0).toFloat()
+            Text(String.format(strings.subQuotaRemaining, formatBytes((sub.totalBytes - used).coerceAtLeast(0)), formatBytes(sub.totalBytes)),
+                color = colors.textSecondary, fontSize = 12.sp)
+            LinearProgressIndicator(progress = { fraction }, modifier = Modifier.fillMaxWidth().height(4.dp),
+                color = if (fraction >= .9f) colors.accentCrimson else colors.accentAmber)
         }
-        Spacer(Modifier.width(10.dp))
-        Column(Modifier.weight(1f)) {
-            Text(group.title, color = if (isEnabled) colors.textPrimary else colors.textSecondary,
-                fontSize = 13.sp, lineHeight = 17.sp, fontWeight = FontWeight.Bold,
-                maxLines = 2, overflow = TextOverflow.Ellipsis)
-            Spacer(Modifier.height(2.dp))
-            Text(if (isEnabled) String.format(strings.subscriptionNodes, group.servers.size)
-                else strings.subscriptionDisabled,
-                color = colors.textSecondary, fontSize = 10.sp, lineHeight = 13.sp)
+        if (sub.expireTimestamp > 0) {
+            val expired = System.currentTimeMillis() / 1000 >= sub.expireTimestamp
+            val date = remember(sub.expireTimestamp) { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(sub.expireTimestamp * 1000)) }
+            Text(if (expired) strings.subExpired else String.format(strings.subExpireDate, date),
+                color = if (expired) colors.accentCrimson else colors.textSecondary, fontSize = 12.sp)
         }
-        Spacer(Modifier.width(4.dp))
-        IconButton(enabled = pingEnabled, onClick = onPing, modifier = Modifier.size(36.dp)) {
-            if (isPinging) CircularProgressIndicator(Modifier.size(16.dp), color = colors.accentEmerald, strokeWidth = 2.dp)
-            else Icon(Icons.Default.Bolt, contentDescription = strings.ping,
-                tint = if (pingEnabled) colors.accentEmerald else colors.textSecondary,
-                modifier = Modifier.size(18.dp))
-        }
-        if (onToggleEnabled != null && group.subId != null) {
-            Switch(checked = isEnabled, onCheckedChange = onToggleEnabled,
-                colors = SwitchDefaults.colors(checkedThumbColor = colors.accentCyan,
-                    checkedTrackColor = colors.accentCyan.copy(alpha = 0.35f)),
-                modifier = Modifier.scale(0.75f))
-        }
-        IconButton(onClick = onToggleCollapse, modifier = Modifier.size(28.dp)) {
-            Icon(if (isCollapsed) Icons.Default.ExpandMore else Icons.Default.ExpandLess,
-                contentDescription = if (isCollapsed) strings.uiExpand else strings.uiCollapse,
-                tint = colors.textSecondary, modifier = Modifier.size(20.dp))
+        if (sub.totalBytes <= 0 && sub.expireTimestamp <= 0) {
+            Text(LocalAppResources.current.getString(com.danieldk.splatevpn.R.string.node_limits_unknown), color = colors.textSecondary, fontSize = 12.sp)
         }
     }
 }
 
-/**
- * Server list section rendering cards with animated placement and optional subscription grouping
- */
 @Composable
-private fun ServerListSection(
-    servers: List<ServerNode>,
-    selectedServer: ServerNode?,
-    isAutoBalancerVisible: Boolean,
-    isPinging: Boolean,
-    isGrouped: Boolean = false,
-    expandedGroups: Set<String> = emptySet(),
-    onToggleGroupCollapse: (String) -> Unit = {},
-    subscriptionsMap: Map<String, SubscriptionEntity> = emptyMap(),
-    onToggleSubEnabled: ((String, Boolean) -> Unit)? = null,
-    onSelectServer: (String) -> Unit,
-    onEditServer: (ServerNode) -> Unit,
-    onDeleteServer: (String) -> Unit,
-    onShareServer: (ServerNode) -> Unit = {},
-    viewModel: MainViewModel,
-    onAddClick: (() -> Unit)? = null
+private fun PersonalBatchDeleteBar(
+    selectedCount: Int,
+    visibleCount: Int,
+    allVisibleSelected: Boolean,
+    onToggleSelectAll: () -> Unit,
+    onDeleteSelected: () -> Unit,
+    onCancel: () -> Unit
 ) {
     val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
-    val context = LocalContext.current
-    val clipboardManager = LocalClipboardManager.current
-    val pingMode by viewModel.pingMode.collectAsState()
-    val isRealDelay = pingMode.lowercase() in listOf("real_delay", "http", "real")
-
-    if (servers.isEmpty()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 32.dp, bottom = 90.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .liquidGlass(cornerRadius = 20, innerSheen = true, elevated = true)
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(58.dp)
-                        .liquidGlass(
-                            cornerRadius = 18,
-                            innerSheen = true,
-                            accentBorder = colors.accentCyan.copy(alpha = 0.5f)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CloudQueue,
-                        contentDescription = null,
-                        tint = colors.accentCyan,
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-
-                Text(
-                    text = strings.noServersFound,
-                    color = colors.textPrimary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-
-                Text(
-                    text = strings.emptyServersHint,
-                    color = colors.textSecondary,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-
-                if (onAddClick != null) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(colors.accentCyan, colors.accentCyan.copy(alpha = 0.85f))
-                                )
-                            )
-                            .tactileClickable(targetScale = 0.95f) {
-                                onAddClick()
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = LocalAppThemeColors.current.onAccent,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = strings.emptyServersCta,
-                                color = LocalAppThemeColors.current.onAccent,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.5.sp,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        val listState = androidx.compose.foundation.lazy.rememberLazyListState()
-        val activePingIds by viewModel.activePingIds.collectAsState()
-
-        val groupedServers = remember(servers, subscriptionsMap, isGrouped, strings) {
-            if (!isGrouped) emptyList()
-            else {
-                servers.groupBy { server ->
-                    when {
-                        server.subId.isBlank() || server.subId == "custom" || server.subId == "builtin" -> "personal"
-                        else -> server.subId
-                    }
-                }.map { (groupId, groupNodes) ->
-                    val isPersonal = groupId == "personal"
-                    val isPreset = groupId in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS
-                    val title = when {
-                        isPersonal -> strings.uiPersonalServers
-                        else -> subscriptionsMap[groupId]?.let { subscriptionDisplayName(it.id, it.name, strings) } ?: if (isPreset) strings.subscriptionBuiltIn else strings.subscriptionsLabel
-                    }
-                    ServerGroup(
-                        id = groupId,
-                        title = title,
-                        isPreset = isPreset,
-                        isPersonal = isPersonal,
-                        subId = if (isPersonal) null else groupId,
-                        servers = groupNodes
-                    )
-                }.sortedWith(
-                    compareBy(
-                        { if (it.isPersonal) 0 else if (!it.isPreset) 1 else 2 },
-                        { it.title }
-                    )
-                )
-            }
-        }
-
-        var menuServer by remember { mutableStateOf<ServerNode?>(null) }
-
-        LazyColumn(
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(bottom = 16.dp + LocalBottomDockInset.current)
-        ) {
-            if (isAutoBalancerVisible) {
-                item(key = "auto_balancer_item", contentType = "balancer") {
-                    val isAutoSelect by viewModel.isAutoSelect.collectAsState()
-                    AutoBalancerCard(
-                        isAutoSelect = isAutoSelect,
-                        isPinging = isPinging,
-                        activeServerName = selectedServer?.name,
-                        activeServerPing = selectedServer?.ping ?: 0L,
-                        onToggle = {
-                            viewModel.toggleAutoSelectServer { best ->
-                                if (best != null) {
-                                    Toast.makeText(context, String.format(strings.autoSelectSelected, best.name), Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        }
-                    )
-                }
-            }
-
-            if (isGrouped) {
-                groupedServers.forEach { group ->
-                    val isCollapsed = group.id !in expandedGroups
-                    val subEntity = group.subId?.let { subscriptionsMap[it] }
-                    val isSubEnabled = subEntity?.enabled ?: true
-
-                    item(key = "group_header_${group.id}", contentType = "header") {
-                        SubscriptionGroupHeader(
-                            group = group,
-                            isCollapsed = isCollapsed,
-                            isEnabled = isSubEnabled,
-                            isPinging = group.servers.any { it.id in activePingIds },
-                            pingEnabled = !isPinging,
-                            onPing = {
-                                viewModel.testServersPing(group.servers) { count ->
-                                    Toast.makeText(context, String.format(strings.uiPingSummary, group.title, count), Toast.LENGTH_SHORT).show()
-                                }
-                            },
-                            onToggleCollapse = { onToggleGroupCollapse(group.id) },
-                            onToggleEnabled = if (group.subId != null && onToggleSubEnabled != null) {
-                                { enabled -> onToggleSubEnabled(group.subId, enabled) }
-                            } else null
-                        )
-                    }
-
-                    if (!isCollapsed && isSubEnabled) {
-                        items(
-                            items = group.servers,
-                            key = { it.id },
-                            contentType = { "server_node" }
-                        ) { server ->
-                            ServerCard(
-                                server = server,
-                                isSelected = selectedServer?.id == server.id,
-                                isTestingPing = server.id in activePingIds,
-                                onTestPing = {
-
-                                    viewModel.testServerPing(server) { delay ->
-
-                                        val modeDesc = if (isRealDelay) "Real Delay (HTTP 204)" else "TCP Ping"
-                                        if (delay > 0) {
-                                            Toast.makeText(context, "«${server.name}»: $modeDesc $delay ms", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(context, "«${server.name}»: Ошибка ($modeDesc недоступен)", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                },
-                                onSelect = { onSelectServer(server.id) },
-                                onEdit = { onEditServer(server) },
-                                onMoreMenu = { menuServer = server }
-                            )
-                        }
-                    }
-                }
-            } else {
-                items(
-                    items = servers,
-                    key = { it.id },
-                    contentType = { "server_node" }
-                ) { server ->
-                    ServerCard(
-                        server = server,
-                        isSelected = selectedServer?.id == server.id,
-                        isTestingPing = server.id in activePingIds,
-                        onTestPing = {
-
-                            viewModel.testServerPing(server) { delay ->
-
-                                val modeDesc = if (isRealDelay) "Real Delay (HTTP 204)" else "TCP Ping"
-                                if (delay > 0) {
-                                    Toast.makeText(context, "«${server.name}»: $modeDesc $delay ms", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(context, "«${server.name}»: Ошибка ($modeDesc недоступен)", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        },
-                        onSelect = { onSelectServer(server.id) },
-                        onEdit = { onEditServer(server) },
-                        onMoreMenu = { menuServer = server }
-                    )
-                }
-            }
-        }
-
-        // Hoisted Single Action Dialog for selected server (eliminates 200 embedded DropdownMenus)
-        if (menuServer != null) {
-            val currentServer = menuServer!!
-            AlertDialog(
-                onDismissRequest = { menuServer = null },
-                title = {
-                    Text(
-                        text = currentServer.name,
-                        color = colors.textPrimary,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable {
-                                    val link = currentServer.rawLink.ifBlank { LinkParser.toShareLink(currentServer) }
-                                    clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(link))
-                                    Toast.makeText(context, strings.linkCopied, Toast.LENGTH_SHORT).show()
-                                    menuServer = null
-                                }
-                                .padding(vertical = 11.dp, horizontal = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.ContentCopy, contentDescription = null, tint = colors.accentCyan, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(strings.copyLink, color = colors.textPrimary, fontSize = 13.sp)
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable {
-                                    val s = currentServer
-                                    menuServer = null
-                                    onShareServer(s)
-                                }
-                                .padding(vertical = 11.dp, horizontal = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.QrCode2, contentDescription = null, tint = colors.accentAmber, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(strings.shareAction, color = colors.textPrimary, fontSize = 13.sp)
-                        }
-
-                        HorizontalDivider(color = colors.borderSubtle.copy(alpha = 0.5f), modifier = Modifier.padding(vertical = 4.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable {
-                                    val id = currentServer.id
-                                    menuServer = null
-                                    onDeleteServer(id)
-                                }
-                                .padding(vertical = 11.dp, horizontal = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(Icons.Default.DeleteOutline, contentDescription = null, tint = colors.accentCrimson, modifier = Modifier.size(18.dp))
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(strings.delete, color = colors.accentCrimson, fontSize = 13.sp)
-                        }
-                    }
-                },
-                confirmButton = {},
-                dismissButton = {
-                    TextButton(onClick = { menuServer = null }) {
-                        Text(strings.cancel, color = colors.textSecondary)
-                    }
-                },
-                containerColor = colors.surfaceElevated,
-                shape = RoundedCornerShape(16.dp)
-            )
-        }
-    }
-}
-
-/**
- * Server Card with optimized lightweight drawing for high-performance 200+ list scrolling
- */
-@Composable
-fun ServerCard(
-    modifier: Modifier = Modifier,
-    server: ServerNode,
-    isSelected: Boolean,
-    isTestingPing: Boolean = false,
-    onTestPing: () -> Unit = {},
-    onSelect: () -> Unit,
-    onEdit: () -> Unit,
-    onMoreMenu: () -> Unit
-) {
-    val colors = LocalAppThemeColors.current
-    val strings = LocalAppStrings.current
-    val protoColor = remember(server.protocol, colors) { getProtocolColor(server.protocol, colors) }
-
-    // True classification: is it from a subscription or a standalone manual config?
-    val isPreset = server.subId in com.danieldk.splatevpn.SplateConstants.PRESET_SUB_IDS
-    val isFromSubscription = server.subId.isNotBlank() &&
-            server.subId != "custom" &&
-            server.subId != "builtin"
-
-    val cardAccentBorder = remember(isSelected, isPreset, isFromSubscription, isTestingPing, colors) {
-        if (isTestingPing) colors.accentAmber
-        else if (isSelected) colors.accentCyan
-        else if (isPreset) colors.accentCyan.copy(alpha = 0.25f)
-        else if (isFromSubscription) colors.accentAmber.copy(alpha = 0.25f)
-        else colors.accentEmerald.copy(alpha = 0.20f)
-    }
-
-    val ping = server.ping
-    val (pingText, pingColor) = when {
-        ping in 1..120 -> "$ping ms" to colors.accentEmerald
-        ping in 121..250 -> "$ping ms" to colors.accentAmber
-        ping > 250 -> "$ping ms" to colors.accentCrimson
-        ping < 0 -> "" to colors.accentCrimson
-        else -> "—" to colors.textTertiary
-    }
-
-    Row(
-        modifier = modifier
+    Column(
+        modifier = Modifier
             .fillMaxWidth()
             .liquidGlass(
                 cornerRadius = 14,
-                accentBorder = cardAccentBorder,
+                accentBorder = colors.accentCrimson.copy(alpha = 0.5f),
                 innerSheen = true
             )
-            .clickable(onClick = onSelect)
-            .padding(horizontal = 12.dp, vertical = 9.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .testTag("personalSelectionActionBar"),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Selection Checkmark Dot
-        Box(
-            modifier = Modifier
-                .size(18.dp)
-                .clip(CircleShape)
-                .border(1.5.dp, if (isSelected) colors.accentCyan else colors.borderMedium, CircleShape),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (isSelected) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(colors.accentCyan)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Checklist,
+                    contentDescription = null,
+                    tint = colors.accentCrimson,
+                    modifier = Modifier.size(16.dp)
                 )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        // Main Content Column
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(3.dp)
-        ) {
-            // Row 1: Badges (Origin) + Ping Indicator + Edit + More Menu
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Origin badge
-                if (isPreset) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(colors.accentCyan.copy(alpha = 0.15f))
-                            .border(0.5.dp, colors.accentCyan.copy(alpha = 0.40f), RoundedCornerShape(5.dp))
-                            .padding(horizontal = 5.dp, vertical = 1.5.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Bolt,
-                                contentDescription = null,
-                                tint = colors.accentCyan,
-                                modifier = Modifier.size(9.dp)
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(
-                                text = String.format(strings.uiPresetTag, subscriptionDisplayName(server.subId, server.subName, strings).ifBlank { "VPN" }),
-                                color = colors.accentCyan,
-                                fontSize = 8.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                } else if (isFromSubscription) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(colors.accentAmber.copy(alpha = 0.15f))
-                            .border(0.5.dp, colors.accentAmber.copy(alpha = 0.40f), RoundedCornerShape(5.dp))
-                            .padding(horizontal = 5.dp, vertical = 1.5.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.CloudDownload,
-                                contentDescription = null,
-                                tint = colors.accentAmber,
-                                modifier = Modifier.size(9.dp)
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(
-                                text = String.format(strings.uiSubscriptionTag, subscriptionDisplayName(server.subId, server.subName, strings).ifBlank { "PRO" }),
-                                color = colors.accentAmber,
-                                fontSize = 8.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                    }
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(colors.accentEmerald.copy(alpha = 0.12f))
-                            .border(0.5.dp, colors.accentEmerald.copy(alpha = 0.35f), RoundedCornerShape(5.dp))
-                            .padding(horizontal = 5.dp, vertical = 1.5.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = null,
-                                tint = colors.accentEmerald,
-                                modifier = Modifier.size(9.dp)
-                            )
-                            Spacer(modifier = Modifier.width(3.dp))
-                            Text(
-                                text = strings.uiPersonalTag,
-                                color = colors.accentEmerald,
-                                fontSize = 8.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(6.dp))
-
-                // Ping Indicator (clickable to test latency)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(if (ping != 0L) pingColor.copy(alpha = 0.12f) else Color.Transparent)
-                        .border(
-                            0.5.dp,
-                            if (ping != 0L) pingColor.copy(alpha = 0.35f) else colors.borderMedium.copy(alpha = 0.3f),
-                            RoundedCornerShape(6.dp)
-                        )
-                        .clickable(enabled = !isTestingPing) { onTestPing() }
-                        .padding(horizontal = 6.dp, vertical = 2.5.dp)
-                ) {
-                    if (isTestingPing) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(9.dp),
-                            strokeWidth = 1.5.dp,
-                            color = colors.accentCyan
-                        )
-                        Spacer(modifier = Modifier.width(3.dp))
-                        Text(
-                            text = strings.pinging,
-                            color = colors.accentCyan,
-                            fontSize = 9.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
-                        )
-                    } else if (ping < 0) {
-                        Icon(
-                            imageVector = Icons.Default.ErrorOutline,
-                            contentDescription = strings.pingNoResponse,
-                            tint = colors.accentCrimson,
-                            modifier = Modifier.size(14.dp)
-                        )
-                    } else {
-                        if (ping > 0) {
-                            ServerSignalBars(pingMs = ping)
-                            Spacer(modifier = Modifier.width(3.dp))
-                        }
-                        Text(
-                            text = pingText,
-                            color = pingColor,
-                            fontSize = 10.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                // Edit Icon Button
-                IconButton(
-                    onClick = onEdit,
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = strings.edit,
-                        tint = colors.textSecondary,
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
-
-                // More Menu Button (3-dots)
-                IconButton(
-                    onClick = onMoreMenu,
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = strings.uiActions,
-                        tint = colors.textSecondary,
-                        modifier = Modifier.size(15.dp)
-                    )
-                }
-            }
-
-            // Row 2: Server Name (takes full width)
-            Text(
-                text = server.name,
-                color = colors.textPrimary,
-                fontSize = 13.5.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            // Row 3: Protocol Tags (VLESS, REALITY, etc.) + Address
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(3.dp)
-                ) {
-                    TagPill(text = server.protocol.uppercase(), color = protoColor)
-                    if (server.security.isNotBlank() && server.security != "none") {
-                        TagPill(text = server.security.uppercase(), color = colors.accentEmerald)
-                    }
-                    if (server.network.isNotBlank()) {
-                        TagPill(text = server.network.uppercase(), color = colors.accentViolet)
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(6.dp))
-
                 Text(
-                    text = "${server.address}:${server.port}",
-                    color = colors.textSecondary,
-                    fontSize = 10.5.sp,
-                    fontFamily = FontFamily.Monospace,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
+                    text = strings.localized(
+                        "Выбрано: $selectedCount из $visibleCount",
+                        "Selected: $selectedCount of $visibleCount"
+                    ),
+                    color = colors.textPrimary,
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            IconButton(
+                onClick = onCancel,
+                modifier = Modifier.size(32.dp).testTag("personalSelectionCancel")
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = strings.cancel,
+                    tint = colors.textSecondary,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun ServerSignalBars(pingMs: Long) {
-    val colors = LocalAppThemeColors.current
-    val activeBars = when {
-        pingMs <= 0 -> 0
-        pingMs <= 120 -> 3
-        pingMs <= 250 -> 2
-        else -> 1
-    }
-    val barColor = when (activeBars) {
-        3 -> colors.accentEmerald
-        2 -> colors.accentAmber
-        1 -> colors.accentCrimson
-        else -> colors.textTertiary
-    }
-    Row(
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier.height(10.dp)
-    ) {
-        val heights = listOf(3.5.dp, 6.5.dp, 9.5.dp)
-        heights.forEachIndexed { index, h ->
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
                 modifier = Modifier
-                    .width(2.dp)
-                    .height(h)
-                    .clip(RoundedCornerShape(1.dp))
-                    .background(if (index < activeBars) barColor else colors.borderMedium.copy(alpha = 0.35f))
-            )
+                    .weight(1f)
+                    .heightIn(min = 38.dp)
+                    .liquidGlass(cornerRadius = 10, innerSheen = true)
+                    .tvFocusOutline()
+                    .clickable(onClick = onToggleSelectAll)
+                    .padding(horizontal = 10.dp, vertical = 7.dp)
+                    .testTag("personalSelectionToggleAll"),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (allVisibleSelected) {
+                        strings.localized("Снять все", "Clear all")
+                    } else {
+                        strings.localized("Выбрать все", "Select all")
+                    },
+                    color = colors.textPrimary,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Button(
+                onClick = onDeleteSelected,
+                enabled = selectedCount > 0,
+                colors = ButtonDefaults.buttonColors(containerColor = colors.accentCrimson),
+                shape = RoundedCornerShape(10.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 7.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 38.dp)
+                    .testTag("personalSelectionDelete")
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DeleteOutline,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = if (selectedCount > 0) "${strings.delete} ($selectedCount)" else strings.delete,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
 
 @Composable
-fun TagPill(text: String, color: Color) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(color.copy(alpha = 0.14f))
-            .border(0.5.dp, color.copy(alpha = 0.45f), RoundedCornerShape(6.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    ) {
-        Text(
-            text = text,
-            color = color,
-            fontSize = 8.5.sp,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.5.sp,
-            maxLines = 1,
-            softWrap = false
-        )
-    }
-}
-
-@Composable
-fun AutoBalancerCard(
-    isAutoSelect: Boolean,
-    isPinging: Boolean,
-    activeServerName: String?,
-    activeServerPing: Long,
-    onToggle: () -> Unit
+internal fun SubscriptionGroupHeader(
+    group: ServerGroup, isCollapsed: Boolean, isEnabled: Boolean,
+    isPinging: Boolean, pingEnabled: Boolean, onPing: () -> Unit,
+    onToggleCollapse: () -> Unit, onToggleEnabled: ((Boolean) -> Unit)? = null,
+    subscription: SubscriptionEntity? = null, onDetails: () -> Unit = {},
+    onRefresh: () -> Unit = {}, isUpdating: Boolean = false,
+    onStopPing: () -> Unit = {},
+    onStartBatchDelete: (() -> Unit)? = null,
+    inGroupFrame: Boolean = false
 ) {
-    val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
-    val boltRotation = if (isPinging) {
-        val infiniteTransition = rememberInfiniteTransition(label = "balancer_anim")
-        val spin by infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 360f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1200, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            ),
-            label = "bolt_spin"
-        )
-        spin
+    val colors = LocalAppThemeColors.current
+    val resources = LocalAppResources.current
+    val animationsEnabled = LocalUiPerformanceSettings.current.animationsEnabled
+    val haptic = LocalHapticFeedback.current
+    var menu by remember { mutableStateOf(false) }
+    val accent = if (!isEnabled) colors.textTertiary else if (group.isPersonal) colors.accentEmerald else if (group.isPreset) colors.accentCyan else colors.accentAmber
+    val containerModifier = if (inGroupFrame) {
+        Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp)
     } else {
-        0f
+        Modifier.fillMaxWidth().liquidGlass(cornerRadius = 14, innerSheen = true).padding(horizontal = 12.dp, vertical = 6.dp)
     }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .liquidGlass(
-                cornerRadius = 12,
-                accentBorder = if (isAutoSelect) colors.accentCyan.copy(alpha = 0.55f) else null,
-                innerSheen = true
+    Column(containerModifier) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(if (group.isPersonal) Icons.Default.Lock else Icons.Default.CloudDownload, null,
+                tint = accent, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(10.dp))
+            val chevronRotation by animateFloatAsState(
+                targetValue = if (isCollapsed) 0f else 180f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessMediumLow
+                ),
+                label = "folderChevron_${group.id}"
             )
-            .tactileClickable(targetScale = 0.98f) { onToggle() }
-            .padding(horizontal = 12.dp, vertical = 7.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Default.Bolt,
-            contentDescription = null,
-            tint = if (isAutoSelect) colors.accentCyan else colors.textTertiary,
-            modifier = Modifier
-                .size(16.dp)
-                .graphicsLayer {
-                    if (isPinging) rotationZ = boltRotation
+            Row(Modifier.weight(1f).heightIn(min = 48.dp).tvFocusOutline()
+                .clickable(
+                    onClickLabel = if (isCollapsed) strings.uiExpand else strings.uiCollapse,
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onToggleCollapse()
+                    }
+                )
+                .padding(vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(group.title, color = if (isEnabled) colors.textPrimary else colors.textSecondary,
+                        fontWeight = FontWeight.SemiBold, fontSize = 13.sp, maxLines = 1,
+                        overflow = TextOverflow.Ellipsis)
+                    Text(if (isEnabled) String.format(strings.subscriptionNodes, group.servers.size) else strings.subscriptionDisabled,
+                        color = colors.textTertiary, fontSize = 11.sp)
                 }
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = strings.uiAutoSelect,
-                color = colors.textPrimary,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = if (isAutoSelect && !activeServerName.isNullOrBlank()) {
-                    "• $activeServerName" + if (activeServerPing > 0) " (${activeServerPing}ms)" else ""
-                } else {
-                    "• ${if (isAutoSelect) strings.uiFastest else strings.uiOff}"
-                },
-                color = if (isAutoSelect) colors.accentCyan else colors.textSecondary,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-        Spacer(modifier = Modifier.width(6.dp))
-
-        Box(
-            modifier = Modifier
-                .liquidGlass(
-                    cornerRadius = 6,
-                    accentBorder = if (isAutoSelect) colors.accentEmerald.copy(alpha = 0.5f) else null,
-                    innerSheen = true
-                )
-                .background(
-                    if (isAutoSelect) colors.accentEmerald.copy(alpha = 0.15f) else Color.Transparent,
-                    RoundedCornerShape(6.dp)
-                )
-                .padding(horizontal = 8.dp, vertical = 3.dp)
-        ) {
-            Text(
-                text = if (isAutoSelect) strings.onUpper else strings.offUpper,
-                color = if (isAutoSelect) colors.accentEmerald else colors.textTertiary,
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-/**
- * Dialog for sharing a server node via QR Code and System Share Sheet
- */
-@Composable
-private fun ServerShareDialog(
-    server: ServerNode,
-    onDismiss: () -> Unit
-) {
-    val colors = LocalAppThemeColors.current
-    val strings = LocalAppStrings.current
-    val context = LocalContext.current
-    val clipboardManager = LocalClipboardManager.current
-
-    val shareLink = remember(server) {
-        LinkParser.toShareLink(server)
-    }
-
-    val qrBitmap = remember(shareLink) {
-        QrCodeGenerator.generateQrBitmap(shareLink, sizePx = 640)
-    }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = colors.surface,
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = strings.shareServerTitle,
-                    color = colors.textPrimary,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                IconButton(onClick = onDismiss, modifier = Modifier.size(28.dp)) {
-                    Icon(Icons.Default.Close, contentDescription = null, tint = colors.textSecondary)
-                }
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = server.name,
-                    color = colors.accentCyan,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "${server.protocol.uppercase()} • ${server.address}:${server.port}",
-                    color = colors.textSecondary,
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // High contrast QR Container (white background guarantees instant camera readability)
-                Box(
+                Icon(
+                    imageVector = Icons.Default.ExpandMore,
+                    contentDescription = if (isCollapsed) strings.uiExpand else strings.uiCollapse,
+                    tint = colors.textSecondary,
                     modifier = Modifier
-                        .size(220.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
-                        .padding(10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (qrBitmap != null) {
-                        Image(
-                            bitmap = qrBitmap.asImageBitmap(),
-                            contentDescription = "Server QR Code",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Icon(Icons.Default.WarningAmber, contentDescription = null, tint = Color(0xFFD97706), modifier = Modifier.size(34.dp))
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = String.format(strings.sharePayloadTooLarge, shareLink.toByteArray(Charsets.UTF_8).size),
-                                color = Color(0xFF1E293B),
-                                fontSize = 10.sp,
-                                fontFamily = FontFamily.Monospace,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
+                        .size(20.dp)
+                        .graphicsLayer {
+                            rotationZ = if (animationsEnabled) chevronRotation else if (isCollapsed) 0f else 180f
                         }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = strings.shareQrPrompt,
-                    color = colors.textSecondary,
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        .testTag("folderExpand:${group.id}")
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Action buttons: Copy & System Share
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Copy Link Button
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .liquidGlass(cornerRadius = 12, innerSheen = true, accentBorder = colors.accentCyan.copy(alpha = 0.4f))
-                            .tactileClickable {
-                                clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(shareLink))
-                                Toast.makeText(context, strings.linkCopied, Toast.LENGTH_SHORT).show()
-                            }
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.ContentCopy, contentDescription = null, tint = colors.accentCyan, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = strings.shareCopyLink,
-                            color = colors.accentCyan,
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
+            }
+            IconButton(onClick = if (isPinging) onStopPing else onPing,
+                enabled = isPinging || (pingEnabled && isEnabled),
+                modifier = Modifier.size(48.dp).testTag("folderPing:${group.id}")) {
+                Icon(if (isPinging) Icons.Default.Stop else Icons.Default.NetworkCheck,
+                    resources.getString(if (isPinging) com.danieldk.splatevpn.R.string.server_stop_checks else com.danieldk.splatevpn.R.string.server_check_servers),
+                    tint = if (isPinging || (pingEnabled && isEnabled)) colors.accentEmerald else colors.textTertiary,
+                    modifier = Modifier.size(20.dp))
+            }
+            Box {
+                IconButton(onClick = { menu = true }, modifier = Modifier.size(48.dp).semantics {
+                    contentDescription = resources.getString(com.danieldk.splatevpn.R.string.server_folder_options)
+                }) {
+                    if (isUpdating) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp, color = accent)
+                    else Icon(Icons.Default.MoreVert, contentDescription = null,
+                        tint = colors.textSecondary, modifier = Modifier.size(20.dp))
+                }
+                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, modifier = Modifier.background(colors.surfaceElevated)) {
+                    if (subscription != null) {
+                        DropdownMenuItem(text = { Text(strings.refresh) }, enabled = !isUpdating,
+                            onClick = { menu = false; onRefresh() })
+                        DropdownMenuItem(text = { Text(strings.edit) }, onClick = { menu = false; onDetails() })
                     }
-
-                    // System Share Intent Button
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .liquidGlass(cornerRadius = 12, innerSheen = true, accentBorder = colors.accentEmerald.copy(alpha = 0.4f))
-                            .tactileClickable {
-                                val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_SUBJECT, server.name)
-                                    putExtra(Intent.EXTRA_TEXT, shareLink)
-                                }
-                                val shareIntent = Intent.createChooser(sendIntent, strings.shareServerTitle)
-                                context.startActivity(shareIntent)
-                            }
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.Share, contentDescription = null, tint = colors.accentEmerald, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = strings.shareSend,
-                            color = colors.accentEmerald,
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
+                    if (onStartBatchDelete != null) DropdownMenuItem(
+                        text = { Text(strings.localized("Выбрать для удаления", "Select to delete")) },
+                        onClick = { menu = false; onStartBatchDelete() })
+                    if (onToggleEnabled != null) DropdownMenuItem(
+                        text = { Text(resources.getString(if (isEnabled) com.danieldk.splatevpn.R.string.folder_disable else com.danieldk.splatevpn.R.string.folder_enable)) },
+                        onClick = { menu = false; onToggleEnabled(!isEnabled) })
                 }
             }
-        },
-        confirmButton = {}
-    )
-}
-
-/**
- * Dialog for sharing a subscription via QR Code and System Share Sheet
- */
-@Composable
-private fun SubscriptionShareDialog(
-    sub: SubscriptionEntity,
-    onDismiss: () -> Unit
-) {
-    val colors = LocalAppThemeColors.current
-    val strings = LocalAppStrings.current
-    val context = LocalContext.current
-    val clipboardManager = LocalClipboardManager.current
-
-    val shareLink = sub.url
-
-    val qrBitmap = remember(shareLink) {
-        QrCodeGenerator.generateQrBitmap(shareLink, sizePx = 640)
+        }
+        subscription?.let { sub ->
+            val parts = buildList {
+                if (sub.totalBytes > 0) {
+                    val remaining = (sub.totalBytes.toDouble() - sub.uploadBytes.coerceAtLeast(0) - sub.downloadBytes.coerceAtLeast(0)).coerceAtLeast(0.0).toLong()
+                    add(String.format(strings.subQuotaRemaining, formatBytes(remaining), formatBytes(sub.totalBytes)))
+                }
+                if (sub.expireTimestamp > 0) add(if (System.currentTimeMillis()/1000 >= sub.expireTimestamp) strings.subExpired else
+                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date(sub.expireTimestamp * 1000)))
+            }
+            if (parts.isNotEmpty()) Text(parts.joinToString(" · "), color = colors.textSecondary, fontSize = 11.sp,
+                modifier = Modifier.padding(bottom = 4.dp))
+            AnimatedVisibility(
+                visible = !isCollapsed,
+                enter = expandVertically(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeIn(tween(if (animationsEnabled) 200 else 0)),
+                exit = shrinkVertically(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeOut(tween(if (animationsEnabled) 140 else 0)),
+                label = "folderPublisher_${group.id}"
+            ) {
+                com.danieldk.splatevpn.ui.components.SubscriptionPublisherDetails(sub.publisherMetadataJson, compact = true)
+            }
+        }
     }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = colors.surface,
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = strings.shareSubscriptionTitle,
-                    color = colors.textPrimary,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                IconButton(onClick = onDismiss, modifier = Modifier.size(28.dp)) {
-                    Icon(Icons.Default.Close, contentDescription = null, tint = colors.textSecondary)
-                }
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = subscriptionDisplayName(sub.id, sub.name, strings),
-                    color = colors.accentAmber,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = String.format(strings.subscriptionNodes, sub.nodeCount),
-                    color = colors.textSecondary,
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                Box(
-                    modifier = Modifier
-                        .size(220.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
-                        .padding(10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (qrBitmap != null) {
-                        Image(
-                            bitmap = qrBitmap.asImageBitmap(),
-                            contentDescription = "Subscription QR Code",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Icon(Icons.Default.WarningAmber, contentDescription = null, tint = Color(0xFFD97706), modifier = Modifier.size(34.dp))
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = String.format(strings.sharePayloadTooLarge, shareLink.toByteArray(Charsets.UTF_8).size),
-                                color = Color(0xFF1E293B),
-                                fontSize = 10.sp,
-                                fontFamily = FontFamily.Monospace,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = strings.shareSubQrPrompt,
-                    color = colors.textSecondary,
-                    fontSize = 11.sp,
-                    fontFamily = FontFamily.Monospace,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    // Copy Link Button
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .liquidGlass(cornerRadius = 12, innerSheen = true, accentBorder = colors.accentAmber.copy(alpha = 0.4f))
-                            .tactileClickable {
-                                clipboardManager.setText(androidx.compose.ui.text.AnnotatedString(shareLink))
-                                Toast.makeText(context, strings.linkCopied, Toast.LENGTH_SHORT).show()
-                            }
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.ContentCopy, contentDescription = null, tint = colors.accentAmber, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = strings.shareCopyLink,
-                            color = colors.accentAmber,
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
-
-                    // System Share Intent Button
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .liquidGlass(cornerRadius = 12, innerSheen = true, accentBorder = colors.accentEmerald.copy(alpha = 0.4f))
-                            .tactileClickable {
-                                val sendIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_SUBJECT, sub.name)
-                                    putExtra(Intent.EXTRA_TEXT, shareLink)
-                                }
-                                val shareIntent = Intent.createChooser(sendIntent, strings.shareSubscriptionTitle)
-                                context.startActivity(shareIntent)
-                            }
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.Share, contentDescription = null, tint = colors.accentEmerald, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = strings.shareSend,
-                            color = colors.accentEmerald,
-                            fontSize = 11.5.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {}
-    )
 }
+
+/** One coherent result prevents filters from seeing partitions from an older server list. */
+private data class ServerBrowserSnapshot(
+    val presets: List<ServerNode> = emptyList(), val personal: List<ServerNode> = emptyList(),
+    val subscriptions: List<ServerNode> = emptyList(), val activeCount: Int = 0,
+    val visible: List<ServerNode> = emptyList()
+)

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_camera_private">Сканирование на устройстве · без отправки фото</string>
+    <string name="qr_camera_zoom_ratio">%1$.1f×</string>
+    <string name="qr_camera_light">Фонарик</string>
+    <string name="setup_country_suggested">Предлагаемая страна: %1$s</string>
+    <string name="setup_country_network">По стране мобильной сети, без отправки данных. Это регион правил маршрутизации, а не страна VPN-сервера. Его можно изменить ниже.</string>
+    <string name="setup_country_sim">По стране SIM-карты, без отправки данных. Это регион правил маршрутизации, а не страна VPN-сервера. Его можно изменить ниже.</string>
+    <string name="setup_country_device">По региону устройства. Это регион правил маршрутизации, а не страна VPN-сервера. Его можно изменить ниже.</string>
+    <string name="setup_tour_title">Попробуйте основные действия</string>
+    <string name="setup_tour_demo">Это демонстрация: нажатия здесь не подключают VPN и не меняют настройки.</string>
+    <string name="setup_tour_quick">Быстрый выбор</string>
+    <string name="setup_tour_import">Добавление</string>
+    <string name="setup_tour_settings">Настройки</string>
+    <string name="setup_tour_server_card">Нажмите карточку сервера на главной</string>
+    <string name="setup_tour_quick_help">Быстрый выбор показывает недавно проверенные альтернативы. Попробуйте выбрать другую строку ниже. Полный список — во вкладке «Серверы».</string>
+    <string name="setup_tour_germany">Германия</string>
+    <string name="setup_tour_netherlands">Нидерланды</string>
+    <string name="setup_tour_ping">%1$s мс</string>
+    <string name="setup_tour_ping_note">Значения для примера. Меньше задержка — быстрее отклик, но это не гарантия скорости загрузки или доступности всех сервисов.</string>
+    <string name="setup_tour_add_server">Достаточно QR-кода или ссылки</string>
+    <string name="setup_tour_link">Ссылка</string>
+    <string name="setup_tour_qr_help">Откройте импорт QR: наведите камеру на код или выберите сохранённое изображение. Код распознаётся на устройстве.</string>
+    <string name="setup_tour_link_help">Во вкладке «Серверы» нажмите добавление и вставьте ссылку сервера или подписки. Подписка хранит список узлов и позволяет обновлять его.</string>
+    <string name="setup_tour_protocols">Что такое VLESS, Hysteria 2 и Tor?</string>
+    <string name="setup_tour_protocol_help">VLESS и Hysteria 2 — протоколы подключения. Параметры уже есть в импортируемой ссылке. Tor использует отдельную сеть, иногда через мост; первое подключение может занять больше времени.</string>
+    <string name="setup_tour_routing">Маршрутизация</string>
+    <string name="setup_tour_dns">DNS</string>
+    <string name="setup_tour_appearance">Оформление</string>
+    <string name="setup_tour_routing_help">Полный туннель направляет трафик через VPN. Умный маршрут применяет исключения, в том числе для выбранного региона. Правила приложений определяют, какие приложения используют туннель.</string>
+    <string name="setup_tour_dns_help">DNS находит адрес сайта. Если туннель подключён, но сайты не открываются, начните с диагностики соединения, прежде чем менять расширенные параметры.</string>
+    <string name="setup_tour_appearance_help">Выберите тему и эффекты. На слабом устройстве можно отключить анимации, декоративный фон или блики стекла.</string>
+</resources>

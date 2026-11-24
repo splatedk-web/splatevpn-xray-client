@@ -90,21 +90,32 @@ class AdFilterRepository @Inject constructor(@ApplicationContext private val con
             null
         }
     }
+    internal fun copyCompiledTo(directory: File) = synchronized(lock) {
+        if (compiledFile.baseFile.exists()) {
+            val bytes = compiledFile.openRead().use { it.readBytes() }
+            writeAtomic(AtomicFile(File(directory, "splate-ads.dat")), bytes)
+        }
+    }
     suspend fun refresh(): Boolean = withContext(Dispatchers.IO) {
         synchronized(lock) {
             if (_state.value.updating) return@withContext false
             _state.value = _state.value.copy(updating = true, failed = false)
         }
         try {
-            val text = client.newCall(Request.Builder().url(SOURCE).build()).execute().use { response ->
+            NetworkAccessPolicy.requireUpdates(context)
+            val downloadClient = if (settings.isSourceDownloadsViaVpn()) com.danieldk.splatevpn.vpn.LocalProxyAccess.client(client) else client
+            val text = NetworkAccessPolicy.withUpdates(context) {
+              downloadClient.newCall(Request.Builder().url(SOURCE).build()).awaitConsumedResponse { response ->
                 check(response.isSuccessful)
                 val body = requireNotNull(response.body)
                 require(body.contentLength() <= 12 * 1024 * 1024)
                 val bytes = body.byteStream().use { it.readBytesLimited(12 * 1024 * 1024) }
                 bytes.toString(Charsets.UTF_8)
+              }
             }
             require(text.contains("Title: AdGuard DNS filter"))
             currentCoroutineContext().ensureActive()
+            NetworkAccessPolicy.requireUpdates(context)
             synchronized(lock) {
                 val allow = settings.getAdBlockAllowlist()
                 val domains = compile(text, allow)

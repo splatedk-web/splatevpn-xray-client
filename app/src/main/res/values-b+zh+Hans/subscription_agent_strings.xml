@@ -1,0 +1,5 @@
+<resources>
+    <string name="subscription_agent_title">订阅客户端：%1$s</string>
+    <string name="subscription_agent_auto">自动</string>
+    <string name="subscription_agent_hint">更改发送给此订阅提供方的 User-Agent。HWID 单独控制。</string>
+</resources>

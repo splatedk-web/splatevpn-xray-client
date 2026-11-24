@@ -43,15 +43,15 @@ class LiveConnectionTrackerTest {
 
     @Test
     fun capacityEvictsLeastRecentlyUsedEndpoint() {
-        repeat(150) { record("host$it.example") }
+        repeat(400) { record("host$it.example") }
         record("host0.example")
         record("new.example")
         publish()
-        assertEquals(150, tracker.totalCount.value)
+        assertEquals(400, tracker.totalCount.value)
         assertTrue(tracker.connections.value.any { it.destination == "host0.example" })
         assertFalse(tracker.connections.value.any { it.destination == "host1.example" })
         assertEquals("new.example", tracker.connections.value.first().destination)
-        assertEquals(152, tracker.totalHits.value)
+        assertEquals(402, tracker.totalHits.value)
     }
 
     @Test

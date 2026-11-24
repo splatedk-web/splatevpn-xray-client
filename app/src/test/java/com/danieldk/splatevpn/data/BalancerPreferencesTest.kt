@@ -4,12 +4,19 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class BalancerPreferencesTest {
+    @Test fun initialOnlyNeverMaintainsStandbyAndGeneralNeedsNoExtraQualification() {
+        assertFalse(BalancerPreferences(mode = BalancerMode.INITIAL_ONLY).maintainsStandby)
+        assertFalse(BalancerPreferences(warmStandby = false).maintainsStandby)
+        assertTrue(BalancerPreferences(mode = BalancerMode.FAILOVER).maintainsStandby)
+        assertFalse(BalancerPreferences(metric = BalancerMetric.DOWNLOAD).needsServiceQualification)
+        assertTrue(BalancerPreferences(goal = BalancerGoal.YOUTUBE).needsServiceQualification)
+    }
     @Test fun defaultsPreserveAutomaticPolicy() {
         val value = BalancerPreferences()
         assertTrue(value.monitorsConnection)
         assertTrue(value.optimizesConnection)
-        assertEquals(2, value.healthIntervalSeconds)
-        assertEquals(2, value.failureConfirmations)
+        assertEquals(10, value.healthIntervalSeconds)
+        assertEquals(3, value.failureConfirmations)
         assertEquals(5, value.optimizationMinutes)
         assertEquals(60, value.cooldownSeconds)
         assertEquals(30, value.improvementPercent)

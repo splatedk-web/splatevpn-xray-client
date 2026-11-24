@@ -95,7 +95,7 @@ class SplateTileService : TileService() {
             val vpnPrepareIntent = VpnService.prepare(this)
             if (vpnPrepareIntent != null) {
                 // Требуется подтверждение разрешения VPN диалогом системы
-                val appIntent = Intent(this, MainActivity::class.java).apply {
+                val appIntent = com.danieldk.splatevpn.InternalActivityEntry.intent(this).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                     putExtra("AUTO_CONNECT", true)
                 }
@@ -141,7 +141,7 @@ class SplateTileService : TileService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             tile.subtitle = when (state) {
                 VpnState.CONNECTED -> {
-                    val serverName = settingsManager.getSelectedServerName()
+                    val serverName = if (vpnStatusManager.connectedServerId == "splate-tor") "Tor" else settingsManager.getSelectedServerName()
                     if (serverName.isNotBlank()) serverName else "Подключено"
                 }
                 VpnState.SELECTING_SERVER, VpnState.STARTING_CORE, VpnState.CONNECTING, VpnState.HEALTH_CHECKING, VpnState.RECONNECTING -> "Подключение..."

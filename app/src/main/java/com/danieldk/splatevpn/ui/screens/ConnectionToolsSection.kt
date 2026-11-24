@@ -1,5 +1,7 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,18 +25,20 @@ import androidx.compose.ui.unit.sp
 import com.danieldk.splatevpn.data.*
 import com.danieldk.splatevpn.ui.MainViewModel
 import com.danieldk.splatevpn.ui.components.liquidGlass
+import com.danieldk.splatevpn.ui.components.popupSurface
+import androidx.compose.ui.platform.testTag
 import com.danieldk.splatevpn.ui.components.tactileClickable
 import com.danieldk.splatevpn.ui.theme.*
 import java.time.LocalDate
 import java.util.Locale
 
-internal class ToolsText(val russian: Boolean) {
-    operator fun invoke(ru: String, en: String): String = if (russian) ru else en
-    val locale: Locale get() = if (russian) Locale.forLanguageTag("ru") else Locale.ENGLISH
+internal class ToolsText(private val strings: AppStrings) {
+    operator fun invoke(ru: String, en: String): String = strings.localized(ru, en)
+    val locale: Locale get() = when (strings) { is RussianAppStrings -> Locale.forLanguageTag("ru"); is ResourceAppStrings -> strings.resources.configuration.locales[0]; else -> Locale.ENGLISH }
 }
 
 @Composable
-internal fun toolsText() = ToolsText(LocalAppStrings.current is RussianAppStrings)
+internal fun toolsText() = ToolsText(LocalAppStrings.current)
 
 internal fun trafficBytes(value: Long): String {
     val units = listOf("B", "KB", "MB", "GB", "TB")
@@ -107,7 +111,9 @@ internal fun ToolsSheet(title: String, onDismiss: () -> Unit, content: @Composab
     val text = toolsText()
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = Color.Transparent, dragHandle = null) {
+        com.danieldk.splatevpn.ui.components.rememberAndApplyPopupWindowBlur(blurBehind = true, backgroundBlur = false)
         Column(Modifier.fillMaxWidth().heightIn(max = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp * 0.9f)
+            .testTag("toolsSheet").popupSurface(28.dp)
             .liquidGlass(cornerRadius = 28, elevated = true)) {
             Box(Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp).size(36.dp, 4.dp)
                 .background(colors.textTertiary.copy(alpha = 0.5f), RoundedCornerShape(2.dp)))
@@ -135,7 +141,7 @@ private fun ChecksSheet(run: CheckRun, services: Boolean, onDismiss: () -> Unit,
                     run.cancelled -> text("Проверка остановлена", "Check stopped")
                     else -> text("Проверка завершена", "Check complete") }, color = colors.textPrimary, fontWeight = FontWeight.SemiBold)
             }
-            Text(text("Успешно: $success из ${run.results.size}", "Successful: $success of ${run.results.size}"), color = colors.textSecondary, fontFamily = FontFamily.Monospace, fontSize = 12.sp)
+            Text(String.format(text("Успешно: %d из %d", "Successful: %d of %d"), success, run.results.size), color = colors.textSecondary, fontFamily = FontFamily.Monospace, fontSize = 12.sp)
             if (run.running) LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = colors.accentCyan)
             else if (run.completedAt > 0) Text(java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT, text.locale).format(java.util.Date(run.completedAt)), color = colors.textSecondary, fontSize = 11.sp)
             if (run.cancelled) Text(text("Показаны неполные результаты.", "Results are incomplete."), color = colors.accentAmber, fontSize = 12.sp)
@@ -167,6 +173,7 @@ private fun CheckResultCard(result: CheckResult) {
     val status = when (result.outcome) { CheckOutcome.OK -> text("Доступно", "Available"); CheckOutcome.FAILED -> text("Ошибка", "Failed")
         CheckOutcome.LIMITED -> text("Ограничение доступа", "Access restricted"); CheckOutcome.SKIPPED -> text("Пропущено", "Skipped") }
     val detail = when (result.detail) {
+                                "wifi_required" -> text("Проверка отложена до подключения к Wi-Fi", "Check paused until Wi-Fi is connected")
                                 "vpn_off" -> text("Сначала подключите VPN и повторите проверку", "Connect VPN and retry")
                                 "vpn_ok" -> text("VPN подключён", "VPN connected")
                                 "network_ok" -> text("Есть сеть с доступом к интернету", "Internet-capable network found")

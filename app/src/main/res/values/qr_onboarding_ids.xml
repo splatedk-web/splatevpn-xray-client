@@ -1,0 +1,6 @@
+<resources>
+    <item name="qr_camera_close" type="id" />
+    <item name="qr_camera_torch" type="id" />
+    <item name="qr_camera_zoom" type="id" />
+    <item name="qr_camera_gallery" type="id" />
+</resources>

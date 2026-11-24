@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connection_searching">سروری پیدا نشد. در حال جستجو…</string>
+    <string name="connection_waiting_network">در انتظار شبکه. در حال جستجوی سرورها…</string>
+    <string name="connection_core_failed">راه‌اندازی هسته Xray ناموفق بود</string>
+    <string name="connection_tun_failed">ایجاد رابط VPN ناموفق بود</string>
+    <string name="connection_timeout">زمان اتصال به پایان رسید</string>
+    <string name="connection_tor_limit">تعداد تلاش‌های اتصال مجدد Tor به حد مجاز رسید</string>
+    <string name="connection_tor_changed">تنظیمات Tor تغییر کرد</string>
+    <string name="connection_tor_failed">اتصال مجدد Tor ناموفق بود</string>
+    <string name="folder_update">به‌روزرسانی اشتراک</string>
+    <string name="folder_ping">آزمایش پینگ</string>
+    <string name="preset_lte_name">فهرست مجاز (LTE بررسی‌شده)</string>
+    <string name="preset_black_name">فهرست مسدود (Black VLESS)</string>
+    <string name="release_translating">در حال ترجمه توضیحات به‌روزرسانی… ممکن است نیاز به دانلود مدل زبان باشد.</string>
+    <string name="release_translation_failed">ترجمه در دسترس نیست. متن اصلی نمایش داده می‌شود.</string>
+    <string name="release_original">نمایش متن اصلی</string>
+    <string name="release_translated">نمایش ترجمه</string>
+    <string name="release_machine_translation">ترجمه خودکار</string>
+</resources>

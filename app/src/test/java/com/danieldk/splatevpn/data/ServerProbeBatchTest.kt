@@ -6,6 +6,11 @@ import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
 
 class ServerProbeBatchTest {
+    @Test fun adaptiveProbeHasTimeForBothCoreStartupsAndBothHttpAttempts() {
+        assertEquals(8500L, realDelayOperationBudget(6000, false))
+        assertEquals(13000L, realDelayOperationBudget(6000, true))
+        assertEquals(15000L, realDelayOperationBudget(8000, true))
+    }
     @Test fun connectedBulkLeavesTwoSlotsForBalancer() = runBlocking {
         val batch = ServerProbeBatch { true }
         val gate = ServerProbeGate()

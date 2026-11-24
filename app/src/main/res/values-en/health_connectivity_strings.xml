@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_connectivity_unverified_title">VPN connectivity is unverified</string>
+    <string name="health_connectivity_unverified_description">The VPN interface was created, but connectivity checks failed. The cause is not yet known. Try another server or check your DNS settings.</string>
+</resources>

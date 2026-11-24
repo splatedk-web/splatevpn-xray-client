@@ -20,7 +20,6 @@ import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.ServerSocket
 import java.net.Socket
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,10 +36,7 @@ class AiDnsAutoSelector @Inject constructor(
     private val _state = MutableStateFlow(AiDnsSelectionState())
     val state = _state.asStateFlow()
     private val cm get() = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    private val dispatcher = Dispatcher(Executors.newFixedThreadPool(3) { runnable ->
-        Thread(runnable, "ai-dns-http").apply { isDaemon = true }
-    })
-    private val baseClient = OkHttpClient.Builder().dispatcher(dispatcher)
+    private val baseClient = OkHttpClient.Builder()
         .connectTimeout(4, TimeUnit.SECONDS).readTimeout(4, TimeUnit.SECONDS)
         .callTimeout(10, TimeUnit.SECONDS).followRedirects(false).followSslRedirects(false).build()
 
@@ -48,26 +44,31 @@ class AiDnsAutoSelector @Inject constructor(
         val targets = listOf("Gemini" to "https://gemini.google.com/", "ChatGPT" to "https://chatgpt.com/", "Claude" to "https://claude.ai/")
     }
 
-    suspend fun run(applyChoice: (AiDnsChoice) -> Boolean) = withContext(Dispatchers.IO) {
+    suspend fun run(viaVpn: Boolean = false, vpnRoute: AiDnsVpnRoute? = null,
+        applyChoice: (AiDnsChoice) -> Boolean) = withContext(Dispatchers.IO) {
         if (!gate.tryLock()) return@withContext
-        val candidates = SmartDnsProviders.all.flatMap { listOf(AiDnsChoice(it.key, false), AiDnsChoice(it.key, true)) }
+        val candidates = aiDnsCandidates(viaVpn)
         _state.value = AiDnsSelectionState(phase = AiDnsSelectionPhase.TESTING, total = candidates.size)
         try {
+            if (viaVpn && vpnRoute == null) throw IOException("vpn_route_missing")
             val network = cm.activeNetwork ?: throw IOException("network_missing")
             core.ensureAssetsExtracted()
             val binary = core.getXrayBinary()?.takeIf { it.exists() } ?: throw IOException("core_missing")
-            for (choice in candidates) {
+            // Three isolated workers speed up SmartDNS discovery without saturating mobile links.
+            for (batch in candidates.chunked(3)) {
                 currentCoroutineContext().ensureActive()
                 requireSameNetwork(network)
-                _state.value = _state.value.copy(current = choice)
-                val result = probeCandidate(binary, choice)
-                _state.value = _state.value.copy(completed = _state.value.completed + 1, results = _state.value.results + result)
+                _state.value = _state.value.copy(current = batch.first())
+                val results = coroutineScope { batch.map { choice -> async {
+                    probeCandidate(binary, choice, viaVpn = viaVpn, vpnRoute = vpnRoute)
+                } }.awaitAll() }
+                _state.value = _state.value.copy(completed = _state.value.completed + results.size, results = _state.value.results + results)
             }
             _state.value = _state.value.copy(phase = AiDnsSelectionPhase.VERIFYING)
             val winner = confirmBestAiDns(_state.value.results, requiredService = "Gemini") { choice ->
                 requireSameNetwork(network)
                 _state.value = _state.value.copy(current = choice)
-                probeCandidate(binary, choice, renderGemini = true).also { verified ->
+                probeCandidate(binary, choice, renderGemini = true, viaVpn = viaVpn, vpnRoute = vpnRoute).also { verified ->
                     _state.value = _state.value.copy(results = _state.value.results.map { if (it.choice == choice) verified else it })
                 }
             }
@@ -93,7 +94,6 @@ class AiDnsAutoSelector @Inject constructor(
             _state.value = _state.value.copy(phase = AiDnsSelectionPhase.ERROR, current = null,
                 error = if (e.message == "network_changed" || e.message == "network_missing") e.message else "probe_failed")
         } finally {
-            dispatcher.cancelAll()
             gate.unlock()
         }
     }
@@ -102,13 +102,39 @@ class AiDnsAutoSelector @Inject constructor(
         if (cm.activeNetwork != original) throw IOException("network_changed")
     }
 
-    internal suspend fun probeCandidate(binary: File, choice: AiDnsChoice, renderGemini: Boolean = false): AiDnsCandidateResult = coroutineScope {
+    internal suspend fun findFailover(choice: AiDnsChoice, viaVpn: Boolean = false,
+        vpnRoute: AiDnsVpnRoute? = null): AiDnsCandidateResult? = withContext(Dispatchers.IO) {
+        if (viaVpn && vpnRoute == null) return@withContext null
+        if (state.value.running) return@withContext null
+        val network = cm.activeNetwork ?: return@withContext null
+        core.ensureAssetsExtracted()
+        val binary = core.getXrayBinary()?.takeIf { it.exists() } ?: return@withContext null
+        findAiDnsReplacement(if (viaVpn) choice.copy(tlsFragment = false) else choice,
+            candidates = aiDnsCandidates(viaVpn)) { candidate ->
+            requireSameNetwork(network)
+            if (state.value.running) throw IOException("manual_selection")
+            probeCandidate(binary, candidate, viaVpn = viaVpn, vpnRoute = vpnRoute).also { requireSameNetwork(network) }
+        }
+    }
+
+    internal fun clearAutomaticSwitchResult() {
+        if (!state.value.running) _state.value = AiDnsSelectionState()
+    }
+
+    internal suspend fun probeCandidate(binary: File, choice: AiDnsChoice, renderGemini: Boolean = false,
+        viaVpn: Boolean = false, vpnRoute: AiDnsVpnRoute? = null): AiDnsCandidateResult = coroutineScope {
         val port = ServerSocket(0, 0, java.net.InetAddress.getByName("127.0.0.1")).use { it.localPort }
         val file = File.createTempFile("ai_dns_", ".json", context.cacheDir)
+        val localAccess = com.danieldk.splatevpn.vpn.LocalProxyCredentials.generate()
         var process: Process? = null
+        var prepared: com.danieldk.splatevpn.vpn.PreparedTransports? = null
         var client: OkHttpClient? = null
         try {
-            file.writeText(generator.generateAiDnsProbeConfig(choice.providerKey, choice.tlsFragment, port))
+            val generated = generator.generateAiDnsProbeConfig(choice.providerKey, choice.tlsFragment, port,
+                localAccess, viaVpn = viaVpn, vpnRoute = vpnRoute)
+            val transports = com.danieldk.splatevpn.vpn.PreparedTransports.prepare(context, generated)
+            prepared = transports
+            file.writeText(transports.json)
             val builder = ProcessBuilder(binary.absolutePath, "run", "-c", file.absolutePath)
                 .directory(context.filesDir).redirectErrorStream(true)
             builder.environment()["XRAY_LOCATION_ASSET"] = context.filesDir.absolutePath
@@ -124,8 +150,8 @@ class AiDnsAutoSelector @Inject constructor(
                         Socket().use { socket ->
                             socket.connect(InetSocketAddress("127.0.0.1", port), 150)
                             socket.soTimeout = 200
-                            socket.getOutputStream().write(byteArrayOf(5, 1, 0))
-                            socket.getInputStream().read() == 5 && socket.getInputStream().read() == 0
+                            socket.getOutputStream().write(byteArrayOf(5, 1, 2))
+                            socket.getInputStream().read() == 5 && socket.getInputStream().read() == 2
                         }
                     } catch (_: IOException) { false }
                     if (listening && child.isAlive) return@withTimeoutOrNull true
@@ -134,8 +160,9 @@ class AiDnsAutoSelector @Inject constructor(
                 false
             } == true
             if (!ready) throw IOException("probe_core_startup")
-            val probeClient = baseClient.newBuilder()
-                .proxy(Proxy(Proxy.Type.SOCKS, InetSocketAddress("127.0.0.1", port)))
+            val probeClient = com.danieldk.splatevpn.vpn.LocalProxyAccess.client(baseClient, port, localAccess).newBuilder()
+                // Manual selection and the service monitor must not cancel each other's calls.
+                .dispatcher(Dispatcher())
                 .connectionPool(ConnectionPool()).build()
             client = probeClient
             val results = targets.map { (name, url) -> async {
@@ -143,7 +170,7 @@ class AiDnsAutoSelector @Inject constructor(
                 if (first.isTransientFailure()) { delay(300); request(probeClient, choice, name, url) } else first
             } }.awaitAll().toMutableList()
             if (renderGemini && results[0].canVerifyInBrowser()) {
-                results[0] = verifyGeminiPage(context, port)
+                results[0] = verifyGeminiPage(context, port, localAccess)
             }
             AiDnsCandidateResult(choice, results)
         } catch (e: CancellationException) { throw e }
@@ -152,12 +179,14 @@ class AiDnsAutoSelector @Inject constructor(
         } finally {
             client?.dispatcher?.cancelAll()
             client?.connectionPool?.evictAll()
+            client?.dispatcher?.executorService?.shutdown()
             withContext(NonCancellable + Dispatchers.IO) {
                 process?.let { child ->
                     child.destroy()
                     if (!child.waitFor(500, TimeUnit.MILLISECONDS)) child.destroyForcibly()
                     runCatching { child.inputStream.close() }
                 }
+                prepared?.close()
                 file.delete()
             }
         }
@@ -188,7 +217,8 @@ class AiDnsAutoSelector @Inject constructor(
                 .header("Cache-Control", "no-cache").build()) { reply ->
                 detail = AiDnsDetail.HTTP_REPLY
                 val body = String(readLimited(reply, 512 * 1024), Charsets.UTF_8)
-                result(classifyAiDnsResponse(reply.code, body, reply.header("Location"), reply.header("cf-mitigated") == "challenge"), detail, reply.code)
+                result(classifyAiDnsServiceResponse(name, reply.code, body, reply.header("Location"),
+                    reply.header("cf-mitigated") == "challenge"), detail, reply.code)
             }
         } catch (e: CancellationException) { throw e }
         catch (e: IOException) {

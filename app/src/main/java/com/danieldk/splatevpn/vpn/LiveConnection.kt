@@ -25,6 +25,7 @@ enum class OutboundRuleType {
 
 data class LiveConnection(
     val id: String = UUID.randomUUID().toString(),
+    val sequenceNumber: Int = 0,
     val timestamp: Long = System.currentTimeMillis(),
     val lastSeen: Long = timestamp,
     val source: String,
@@ -36,8 +37,14 @@ data class LiveConnection(
     val outboundTag: String,
     val ruleType: OutboundRuleType,
     val isDomain: Boolean,
-    val hitCount: Int = 1
+    val hitCount: Int = 1,
+    val isActive: Boolean = true,
+    val protocolHint: String = "",
+    val serverName: String = ""
 ) {
     val endpointKey: String
         get() = "$network:$destination:$port"
+
+    val durationMs: Long
+        get() = (lastSeen - timestamp).coerceAtLeast(0L)
 }

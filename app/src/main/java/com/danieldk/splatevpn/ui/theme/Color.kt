@@ -4,24 +4,24 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 
-// Default / Dark Theme Color Tokens
+// Базовая тёмная палитра.
 val BackgroundDark = Color(0xFF070B14)
 val BackgroundDeep = Color(0xFF030509)
 val SurfaceDark = Color(0xFF0F1626)
 val SurfaceElevated = Color(0xFF151E33)
 
-// Precision Borders
+// Границы.
 val BorderSubtle = Color(0xFF1E2B42)
 val BorderMedium = Color(0xFF2A3B5A)
 val GlassWhite = Color(0x0FFFFFFF)
 val GlassBorder = Color(0x1FFFFFFF)
 
-// Tactical Typography
+// Текст.
 val TextPrimary = Color(0xFFF8FAFC)
 val TextSecondary = Color(0xFF94A3B8)
 val TextTertiary = Color(0xFF475569)
 
-// Cyber High-Tech Accents
+// Акценты.
 val PrimaryBlue = Color(0xFF3B82F6)
 val AccentCyan = Color(0xFF00F0FF)
 val AccentTeal = Color(0xFF00E5FF)
@@ -31,17 +31,18 @@ val AccentCrimson = Color(0xFFFF3366)
 val AccentViolet = Color(0xFFA78BFA)
 
 /**
- * Визуальный стиль анимированного фона. Каждая тема получает собственный «характер»,
- * а не просто смену цветов.
+ * Фоновые эффекты тем.
  */
 enum class BackdropStyle {
+    /** Лунный свет, заснеженные склоны и мягкий снегопад. */
+    WINTER,
     /** Мягкие светящиеся сферы (базовая тёмная). */
     SOFT,
 
     /** Чёрный фон с мерцающими звёздами (AMOLED). */
     STARS,
 
-    /** Перспективная неоновая сетка (Киберпанк). */
+    /** Фиолетовые стеклянные монолиты и мягкий контурный свет. */
     GRID,
 
     /** Плавные световые ленты (Северное сияние). */
@@ -67,10 +68,15 @@ enum class BackdropStyle {
 
 /** Ключи тем, сохраняемые в настройках. Порядок определяет порядок в сетке выбора. */
 val ThemeKeys: List<String> = listOf(
-    "dark", "amoled", "light", "system", "cyberpunk", "oneplus", "aurora", "sunset", "ocean", "sakura", "pony", "winx"
+    "dark", "amoled", "light", "system", "cyberpunk", "winter", "winter_light", "red", "aurora", "sunset", "ocean", "sakura", "pony", "winx"
 )
 
-// Comprehensive App Theme Palette Container
+/** Old backups and installations retain their selected replacement theme. */
+fun canonicalThemeKey(key: String): String = when (val normalized = key.lowercase()) {
+    "oneplus" -> "red"
+    else -> normalized
+}
+
 data class AppThemeColors(
     val background: Color,
     val backgroundDeep: Color,
@@ -109,8 +115,7 @@ data class AppThemeColors(
 )
 
 /**
- * Фабрика палитры: вычисляет стеклянные токены из базовых поверхностей,
- * чтобы все темы были внутренне согласованы.
+ * Вычисляет стеклянные поверхности из базовой палитры.
  */
 private fun buildPalette(
     isDark: Boolean,
@@ -242,7 +247,7 @@ val LightThemeColors = buildPalette(
     borderMedium = Color(0xFFA8B8CA),
     textPrimary = Color(0xFF0C1428),
     textSecondary = Color(0xFF43536B),
-    textTertiary = Color(0xFF5D6E88),
+    textTertiary = Color(0xFF43536B),
     accent = Color(0xFF245FBE),
     accentSecondary = Color(0xFF7052B8),
     accentEmerald = Color(0xFF007A55),
@@ -261,38 +266,82 @@ val LightThemeColors = buildPalette(
     glassSpecular = Color(0xBBFFFFFF)
 )
 
-/** Киберпанк: электрический жёлтый + горячий пурпурный неон + голубой, неоновая сетка. */
+/** Winter: ink-blue night, ice-blue glass and pearl snow. */
 val CyberpunkThemeColors = buildPalette(
     isDark = true,
-    background = Color(0xFF0A0318),
-    backgroundDeep = Color(0xFF03010A),
-    surface = Color(0xFF14082A),
-    surfaceElevated = Color(0xFF200D42),
-    borderSubtle = Color(0xFF381A6A),
-    borderMedium = Color(0xFF5428A0),
-    textPrimary = Color(0xFFFFF8E8),
-    textSecondary = Color(0xFFCEB6FF),
-    textTertiary = Color(0xFFAD96CE),
-    accent = Color(0xFFF5DB7A),
-    accentSecondary = Color(0xFFF184BE),
-    accentEmerald = Color(0xFF00FFA3),
-    accentAmber = Color(0xFFFF9F00),
-    accentCrimson = Color(0xFFFF668F),
-    accentViolet = Color(0xFFD482D7),
-    accentBlue = Color(0xFF78CED9),
-    onAccent = Color(0xFF141000),
-    ambientB = Color(0xFFD482D7),
-    ambientC = Color(0xFF78CED9),
-    ambientIntensity = 0.85f,
-    backdrop = BackdropStyle.GRID,
-    glassAlpha = 0.86f,
-    glassBorderLight = Color(0x68CA8BCF),
-    glassBorderDark = Color(0x4400E5F0),
-    glassSpecular = Color(0x44FFE0FF)
+    background = Color(0xFF120C22), backgroundDeep = Color(0xFF070510),
+    surface = Color(0xFF21172F), surfaceElevated = Color(0xFF30233F),
+    borderSubtle = Color(0xFF4D3B61), borderMedium = Color(0xFF80669B),
+    textPrimary = Color(0xFFF7F1FF), textSecondary = Color(0xFFD5C5E8), textTertiary = Color(0xFFC5B5D8),
+    accent = Color(0xFFD1ADFF), accentSecondary = Color(0xFF80E6DD),
+    accentEmerald = Color(0xFF91DBBB), accentAmber = Color(0xFFF4D59B),
+    accentCrimson = Color(0xFFFFA9CC), accentViolet = Color(0xFFCEB8FF), accentBlue = Color(0xFFACCEFF),
+    onAccent = Color(0xFF21112F), ambientB = Color(0xFF7954A9), ambientC = Color(0xFF528E98),
+    ambientIntensity = .42f, backdrop = BackdropStyle.GRID, glassAlpha = .88f,
+    glassBorderLight = Color(0x708E74AC), glassBorderDark = Color(0x382B1C41), glassSpecular = Color(0x70EEE0FF)
+)
+
+val WinterThemeColors = buildPalette(
+    isDark = true,
+    background = Color(0xFF0B1829),
+    backgroundDeep = Color(0xFF050E1B),
+    surface = Color(0xFF14263B),
+    surfaceElevated = Color(0xFF1C334B),
+    borderSubtle = Color(0xFF30475F),
+    borderMedium = Color(0xFF506B87),
+    textPrimary = Color(0xFFF2F7FF),
+    textSecondary = Color(0xFFBDD0E5),
+    textTertiary = Color(0xFFADC2DA),
+    accent = Color(0xFFADDFFF),
+    accentSecondary = Color(0xFFD9D7FF),
+    accentEmerald = Color(0xFF8DDCC5),
+    accentAmber = Color(0xFFF4D29A),
+    accentCrimson = Color(0xFFFFA6B4),
+    accentViolet = Color(0xFFC8BDF5),
+    accentBlue = Color(0xFFADDFFF),
+    onAccent = Color(0xFF10263C),
+    ambientB = Color(0xFF749CC8),
+    ambientC = Color(0xFFBCCBEC),
+    ambientIntensity = 0.55f,
+    backdrop = BackdropStyle.WINTER,
+    glassAlpha = 0.88f,
+    glassBorderLight = Color(0x709BC7E8),
+    glassBorderDark = Color(0x383D7195),
+    glassSpecular = Color(0x70E5F4FF)
+)
+
+/** A separate daylight material and object atlas, with readable blue ink over pearl snow. */
+val WinterLightThemeColors = buildPalette(
+    isDark = false,
+    background = Color(0xFFF0F6FC),
+    backgroundDeep = Color(0xFFE1EBF7),
+    surface = Color(0xFFFAFCFF),
+    surfaceElevated = Color(0xFFF3F7FC),
+    borderSubtle = Color(0xFFC1D1E2),
+    borderMedium = Color(0xFF8AA6C2),
+    textPrimary = Color(0xFF17324B),
+    textSecondary = Color(0xFF30485F),
+    textTertiary = Color(0xFF3C526B),
+    accent = Color(0xFF23629F),
+    accentSecondary = Color(0xFF5A58A6),
+    accentEmerald = Color(0xFF0B705D),
+    accentAmber = Color(0xFF8C570B),
+    accentCrimson = Color(0xFFAD3357),
+    accentViolet = Color(0xFF68519F),
+    accentBlue = Color(0xFF23629F),
+    onAccent = Color.White,
+    ambientB = Color(0xFF8BB7D9),
+    ambientC = Color(0xFFB8B1DC),
+    ambientIntensity = .48f,
+    backdrop = BackdropStyle.WINTER,
+    glassAlpha = .92f,
+    glassBorderLight = Color(0xEFFFFFFF),
+    glassBorderDark = Color(0x607B9BBA),
+    glassSpecular = Color(0xCFFFFFFF)
 )
 
 /** OnePlus: фирменный насыщенный красный на графитовом чёрном, расходящиеся кольца. */
-val OnePlusThemeColors = buildPalette(
+val RedThemeColors = buildPalette(
     isDark = true,
     background = Color(0xFF080A0C),
     backgroundDeep = Color(0xFF030304),
@@ -384,26 +433,26 @@ val SunsetThemeColors = buildPalette(
 
 val OceanThemeColors = buildPalette(
     isDark = true,
-    background = Color(0xFF03101E),
-    backgroundDeep = Color(0xFF010710),
-    surface = Color(0xFF0A1D31),
-    surfaceElevated = Color(0xFF122A42),
-    borderSubtle = Color(0xFF24445F),
-    borderMedium = Color(0xFF376787),
+    background = Color(0xFF041721),
+    backgroundDeep = Color(0xFF020C16),
+    surface = Color(0xFF0B2230),
+    surfaceElevated = Color(0xFF13303F),
+    borderSubtle = Color(0xFF2D5361),
+    borderMedium = Color(0xFF46717E),
     textPrimary = Color(0xFFEAF8FF),
-    textSecondary = Color(0xFFB2CDDF),
-    textTertiary = Color(0xFF96B8CF),
-    accent = Color(0xFF82DCEC),
-    accentSecondary = Color(0xFF9BBFF9),
+    textSecondary = Color(0xFFB7D2D7),
+    textTertiary = Color(0xFFA4C2CC),
+    accent = Color(0xFF88DDC7),
+    accentSecondary = Color(0xFF9ACCE8),
     accentEmerald = Color(0xFF62DEB4),
     accentAmber = Color(0xFFF4CB83),
     accentCrimson = Color(0xFFFF839C),
     accentViolet = Color(0xFFC1ABEE),
     accentBlue = Color(0xFF9BBFF9),
     onAccent = Color(0xFF031820),
-    ambientB = Color(0xFF467DD1),
-    ambientC = Color(0xFF46C6C4),
-    ambientIntensity = 1.0f,
+    ambientB = Color(0xFF4E8DA0),
+    ambientC = Color(0xFF64BBA7),
+    ambientIntensity = .65f,
     backdrop = BackdropStyle.OCEAN,
     glassAlpha = 0.84f,
     glassBorderLight = Color(0x6082DCEC),
@@ -471,11 +520,13 @@ val WinxThemeColors = LightThemeColors.copy(
 )
 
 fun resolveThemeColors(themeKey: String, isSystemDark: Boolean): AppThemeColors =
-    when (themeKey.lowercase()) {
+    when (canonicalThemeKey(themeKey)) {
         "amoled" -> AmoledThemeColors
         "light" -> LightThemeColors
         "cyberpunk" -> CyberpunkThemeColors
-        "oneplus" -> OnePlusThemeColors
+        "winter" -> WinterThemeColors
+        "winter_light" -> WinterLightThemeColors
+        "red" -> RedThemeColors
         "aurora" -> AuroraThemeColors
         "sunset" -> SunsetThemeColors
         "ocean" -> OceanThemeColors

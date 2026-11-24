@@ -17,7 +17,8 @@ internal class GeminiWebViewCheck(private val context: Context, private val prof
     companion object { private var profileReady = false }
 
     @SuppressLint("SetJavaScriptEnabled")
-    suspend fun check(port: Int, fixture: String? = null): AiDnsTargetResult = withContext(Dispatchers.Main.immediate) {
+    suspend fun check(port: Int, fixture: String? = null,
+        credentials: com.danieldk.splatevpn.vpn.LocalProxyCredentials? = null): AiDnsTargetResult = withContext(Dispatchers.Main.immediate) {
         val started = System.nanoTime()
         fun result(outcome: AiDnsOutcome, detail: AiDnsDetail) = AiDnsTargetResult("Gemini", outcome, (System.nanoTime() - started) / 1_000_000, detail)
         var browser: WebView? = null
@@ -32,7 +33,7 @@ internal class GeminiWebViewCheck(private val context: Context, private val prof
             if (!WebViewFeature.isFeatureSupported(WebViewFeature.PROXY_OVERRIDE)) return@withContext result(AiDnsOutcome.LIMITED, AiDnsDetail.JS_UNAVAILABLE)
             // No direct fallback. Set the route before creating/loading the browser.
             suspendCancellableCoroutine<Unit> { cont ->
-                ProxyController.getInstance().setProxyOverride(ProxyConfig.Builder().addProxyRule("socks://127.0.0.1:$port").removeImplicitRules().build(),
+                ProxyController.getInstance().setProxyOverride(ProxyConfig.Builder().addProxyRule("http://127.0.0.1:$port").removeImplicitRules().build(),
                     Executor { it.run() }) { if (cont.isActive) cont.resume(Unit) }
                 proxyInstalled = true
             }
@@ -61,6 +62,11 @@ internal class GeminiWebViewCheck(private val context: Context, private val prof
             }
             view.setDownloadListener { _, _, _, _, _ -> }
             view.webViewClient = object : WebViewClient() {
+                override fun onReceivedHttpAuthRequest(view: WebView?, handler: HttpAuthHandler, host: String?, realm: String?) {
+                    if (credentials != null && realm == "proxy" && host in setOf("127.0.0.1", "127.0.0.1:$port"))
+                        handler.proceed(credentials.username, credentials.password)
+                    else handler.cancel()
+                }
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                     val allowed = request.url.scheme == "https" && request.url.host in setOf("gemini.google.com", "accounts.google.com", "consent.google.com", "www.google.com")
                     if (request.isForMainFrame && !allowed) failed = true

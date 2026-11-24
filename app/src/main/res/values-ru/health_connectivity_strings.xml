@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_connectivity_unverified_title">Связь через VPN не подтверждена</string>
+    <string name="health_connectivity_unverified_description">VPN-интерфейс создан, но проверки связи не прошли. Причина пока не установлена. Проверьте другой сервер или настройки DNS.</string>
+</resources>

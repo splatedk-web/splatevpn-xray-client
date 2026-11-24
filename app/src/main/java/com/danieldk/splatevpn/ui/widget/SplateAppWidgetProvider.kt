@@ -73,7 +73,7 @@ class SplateAppWidgetProvider : AppWidgetProvider() {
                 VpnState.DISCONNECTED
             }
 
-            val serverName = settingsManager?.getSelectedServerName() ?: run {
+            val serverName = if (vpnStatusManager?.connectedServerId == "splate-tor") "Tor" else settingsManager?.getSelectedServerName() ?: run {
                 val prefs = context.getSharedPreferences("splate_prefs", Context.MODE_PRIVATE)
                 prefs.getString("selected_server_name", "") ?: ""
             }
@@ -137,7 +137,7 @@ class SplateAppWidgetProvider : AppWidgetProvider() {
             WidgetAppearance(context).applyFull(views, state, width, height)
 
             // Click on widget body -> Open MainActivity (Home)
-            val appIntent = Intent(context, MainActivity::class.java).apply {
+            val appIntent = com.danieldk.splatevpn.InternalActivityEntry.intent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             val appPendingIntent = PendingIntent.getActivity(
@@ -149,7 +149,7 @@ class SplateAppWidgetProvider : AppWidgetProvider() {
             views.setOnClickPendingIntent(R.id.widget_root, appPendingIntent)
 
             // Click on Servers shortcut -> Open MainActivity on Servers Tab
-            val serversIntent = Intent(context, MainActivity::class.java).apply {
+            val serversIntent = com.danieldk.splatevpn.InternalActivityEntry.intent(context).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(EXTRA_OPEN_TAB, "servers")
             }
@@ -224,7 +224,7 @@ class SplateAppWidgetProvider : AppWidgetProvider() {
             } else {
                 val prepareIntent = VpnService.prepare(context)
                 if (prepareIntent != null) {
-                    val appIntent = Intent(context, MainActivity::class.java).apply {
+                    val appIntent = com.danieldk.splatevpn.InternalActivityEntry.intent(context).apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                         putExtra("AUTO_CONNECT", true)
                     }

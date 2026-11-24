@@ -3,6 +3,10 @@ package com.danieldk.splatevpn.data
 import java.util.Locale
 
 data class AiDnsChoice(val providerKey: String, val tlsFragment: Boolean)
+
+internal fun aiDnsCandidates(viaVpn: Boolean): List<AiDnsChoice> = SmartDnsProviders.all.flatMap {
+    if (viaVpn) listOf(AiDnsChoice(it.key, false)) else listOf(AiDnsChoice(it.key, false), AiDnsChoice(it.key, true))
+}
 enum class AiDnsOutcome { ACCESSIBLE, LIMITED, GEO_BLOCKED, FAILED }
 enum class AiDnsDetail { DNS_HTTP, DNS_CONNECTION, DNS_TIMEOUT, DNS_INVALID, DNS_CONTENT, CONNECTION, CONNECTION_TIMEOUT, TLS_FAILURE, HTTP_REPLY, JS_LOADED, JS_LIMITED, JS_GEO, JS_TIMEOUT, JS_UNAVAILABLE, JS_FAILED }
 data class AiDnsTargetResult(val service: String, val outcome: AiDnsOutcome, val elapsedMs: Long = 0,
@@ -45,6 +49,22 @@ internal fun classifyAiDnsResponse(code: Int, body: String, location: String? = 
     return if (code in 200..299 && body.isNotBlank()) AiDnsOutcome.ACCESSIBLE else AiDnsOutcome.FAILED
 }
 
+/** A generic HTTP success or a proxy's placeholder page does not verify an AI service. */
+internal fun classifyAiDnsServiceResponse(service: String, code: Int, body: String,
+    location: String? = null, challenge: Boolean = false): AiDnsOutcome {
+    val base = classifyAiDnsResponse(code, body, location, challenge)
+    if (base != AiDnsOutcome.ACCESSIBLE) return base
+    val visible = normalizeAiPageText(body.replace(Regex("<script\\b[^>]*>.*?</script>|<style\\b[^>]*>.*?</style>",
+        setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)), " "))
+    val brands = when (service) {
+        "Gemini" -> listOf("gemini", "джемини")
+        "ChatGPT" -> listOf("chatgpt", "chat gpt")
+        "Claude" -> listOf("claude", "клод")
+        else -> emptyList()
+    }
+    return if (brands.any { it in visible }) AiDnsOutcome.ACCESSIBLE else AiDnsOutcome.LIMITED
+}
+
 internal fun normalizeAiPageText(value: String): String = value.replace(Regex("<[^>]+>"), " ")
     .replace(Regex("&#(x[0-9a-f]+|[0-9]+);?", RegexOption.IGNORE_CASE)) { match ->
         val token = match.groupValues[1]
@@ -64,7 +84,7 @@ internal fun classifyAiDnsRendered(text: String, location: String): AiDnsOutcome
             "что то пошло не так", "can't access this service", "cannot access this service", "не удалось получить доступ",
             "verify you are human", "подтвердите, что вы человек", "sign in to continue").any { it in content } ||
         Regex("\\bcaptcha\\b").containsMatchIn(content)) return AiDnsOutcome.LIMITED
-    return base
+    return if (host == "gemini.google.com" && ("gemini" in content || "джемини" in content)) base else AiDnsOutcome.LIMITED
 }
 
 internal val aiDnsRanking = compareByDescending<AiDnsCandidateResult> { it.accessible }

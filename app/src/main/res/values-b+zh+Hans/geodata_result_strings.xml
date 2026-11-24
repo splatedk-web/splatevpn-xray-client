@@ -1,0 +1,6 @@
+<resources>
+    <string name="geodata_result_updated">路由数据库已更新至 %1$s。将在下次连接时生效。</string>
+    <string name="geodata_result_current">路由数据库已是最新版本。</string>
+    <string name="geodata_result_rollback">已恢复先前的数据库：%1$s。将在下次连接时生效。</string>
+    <string name="geodata_result_no_previous">没有可恢复的先前数据库。</string>
+</resources>

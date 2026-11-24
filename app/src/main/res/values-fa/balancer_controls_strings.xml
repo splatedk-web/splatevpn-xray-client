@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bqc_goal_title">هدف</string>
+    <string name="bqc_metric_title">انتخاب بر اساس</string>
+    <string name="bqc_goal_general">عمومی</string>
+    <string name="bqc_goal_youtube_ru">YouTube (RU)</string>
+    <string name="bqc_metric_latency">تأخیر</string>
+    <string name="bqc_metric_download">سرعت</string>
+    <string name="bqc_metric_download_traffic">سرعت · مصرف ترافیک</string>
+    <string name="bqc_hint_general">بدون اولویت سرویس خاص.</string>
+    <string name="bqc_hint_telegram">اتصال واقعی MTProto به Telegram بررسی می‌شود.</string>
+    <string name="bqc_hint_youtube">فرادادهٔ YouTube و دانلود بخشی از ویدیو بررسی می‌شود.</string>
+    <string name="bqc_hint_tiktok">وب‌سایت TikTok بررسی می‌شود؛ دسترسی حساب و برنامه تضمین نمی‌شود.</string>
+    <string name="bqc_hint_youtube_ru">فرادادهٔ YouTube، بخشی از ویدیو و IP خروجیِ تأییدشده در روسیه بررسی می‌شود.</string>
+    <string name="bqc_hint_download">آزمایش دانلود واقعی با نمونه‌های ۴ MiB؛ حداکثر %1$d MiB در ساعت.</string>
+    <string name="bqc_expanded">گزینه‌ها باز است</string>
+    <string name="bqc_collapsed">بازکردن گزینه‌ها</string>
+    <string name="balancer_warm_standby">سرورهای آماده</string>
+    <string name="balancer_warm_standby_hint">سرورهای جایگزین در پس‌زمینه و بدون تغییر اتصال بررسی شوند. با انتخاب دستی هم کار می‌کند.</string>
+    <string name="balancer_speed_budget">سقف مصرف آزمایش سرعت</string>
+    <string name="balancer_speed_budget_value">%1$d MiB/ساعت</string>
+    <string name="bqc_hint_https_service">پاسخ %1$s از طریق HTTPS بررسی می‌شود. ورود، تماس و پخش بررسی نمی‌شوند.</string>
+</resources>

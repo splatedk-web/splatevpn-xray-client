@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_back">Назад</string>
+    <string name="server_stop_checks_short">Стоп</string>
+    <string name="server_stop_checks">Остановить проверку</string>
+    <string name="server_check_servers">Проверить узлы</string>
+    <string name="server_folder_options">Действия с папкой</string>
+</resources>

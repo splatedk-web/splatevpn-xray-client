@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notice_title">通知</string>
+    <string name="notice_health">诊断提醒</string>
+    <string name="notice_connection">连接故障</string>
+    <string name="notice_dns">DNS 问题</string>
+    <string name="notice_access">访问限制与 TLS</string>
+    <string name="notice_device">网络和设备建议</string>
+    <string name="notice_banner_hint">关闭提醒不会隐藏应用内建议。仍需 Android 通知权限。</string>
+    <string name="notice_status">VPN / Tor 状态通知</string>
+    <string name="notice_speed">速度和延迟</string>
+    <string name="notice_server">服务器名称</string>
+    <string name="notice_duration">连接时长</string>
+    <string name="notice_required">VPN 或 Tor 运行时，Android 要求服务通知。可在系统设置中管理显示和声音。</string>
+    <string name="notice_android">Android 通知设置</string>
+    <string name="recommended_title">建议设置</string>
+    <string name="recommended_optional">可选。无需授予这些权限即可继续，之后可随时返回。</string>
+    <string name="recommended_notifications">允许通知</string>
+    <string name="recommended_enabled">已启用</string>
+    <string name="recommended_notifications_hint">在应用后台运行时接收连接诊断。</string>
+    <string name="recommended_battery">关闭电池优化</string>
+    <string name="recommended_battery_hint">帮助 Android 在屏幕关闭时保持 VPN 和 Tor 运行。</string>
+    <string name="recommended_background">后台活动与自动启动</string>
+    <string name="recommended_background_restricted">Android 当前限制此应用的后台活动。</string>
+    <string name="recommended_background_hint">请在应用设置中手动检查厂商限制与自动启动。</string>
+    <string name="recommended_vpn">始终开启 VPN</string>
+    <string name="recommended_vpn_hint">可选。在 Android 中设置 VPN 自动恢复及无 VPN 时阻止连接。</string>
+    <string name="recommended_manage">管理</string>
+    <string name="recommended_open">打开设置</string>
+    <string name="recommended_open_failed">此设备不支持该设置页面。</string>
+    <string name="recommended_battery_enabled">电池优化已关闭</string>
+</resources>

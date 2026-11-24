@@ -1,5 +1,7 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import kotlinx.coroutines.launch
@@ -10,8 +12,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import com.danieldk.splatevpn.R
 import androidx.compose.ui.graphics.StrokeCap
@@ -28,6 +32,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +52,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.asImageBitmap
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -62,7 +71,7 @@ import com.danieldk.splatevpn.ui.theme.*
 
 /**
  * Высота нижней плавающей панели вместе с системным inset-ом навигации.
- * Контент рисуется под панелью (без тёмной полосы), а прокручиваемые списки
+ * Контент рисуется под панелью с мягким затемнением, а прокручиваемые списки
  * используют это значение как нижний отступ, чтобы последний элемент можно было поднять выше панели.
  */
 val LocalBottomDockInset = compositionLocalOf { 0.dp }
@@ -81,18 +90,36 @@ enum class AppTab(val icon: ImageVector) {
     }
 }
 
+internal fun visibleAppTabs(mode: com.danieldk.splatevpn.data.AppUiMode): List<AppTab> =
+    if (mode.isSimple) listOf(AppTab.HOME, AppTab.SETTINGS) else AppTab.entries
+
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
     onToggleConnect: () -> Unit
 ) {
     val currentTab by viewModel.selectedTab.collectAsState()
+    val uiMode by viewModel.uiMode.collectAsState()
+    val visibleTabs = remember(uiMode) { visibleAppTabs(uiMode) }
+    var settingsOpenRequest by remember { mutableIntStateOf(0) }
     val isStartupLoading by viewModel.isStartupLoading.collectAsState()
     val strings = LocalAppStrings.current
     val colors = LocalAppThemeColors.current
+    com.danieldk.splatevpn.ui.components.SettingsRecoveryDialog(viewModel)
     val glassTransparency by viewModel.glassTransparency.collectAsState()
     val glassBlurEnabled by viewModel.glassBlurEnabled.collectAsState()
     val vpnState by viewModel.vpnState.collectAsState()
+    com.danieldk.splatevpn.ui.components.DeviceTransferImportDialog(viewModel.deviceTransferManager,
+        vpnState !in setOf(com.danieldk.splatevpn.vpn.VpnState.DISCONNECTED, com.danieldk.splatevpn.vpn.VpnState.FAILED))
+    val uiConfiguration = androidx.compose.ui.platform.LocalConfiguration.current
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val hasLeanback = remember(context) { context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_LEANBACK) }
+    if (isTelevisionUi(uiConfiguration.uiMode, hasLeanback)) {
+        CompositionLocalProvider(com.danieldk.splatevpn.ui.components.LocalTvControls provides true) {
+            TvMainScreen(viewModel, onToggleConnect)
+        }
+        return
+    }
 
     val ambientGlowColor = when (vpnState) {
         com.danieldk.splatevpn.vpn.VpnState.CONNECTED -> colors.accentConnected
@@ -132,7 +159,11 @@ fun MainScreen(
                         CompositionLocalProvider(LocalGlassBackdrop provides dockBackdrop) {
                         FloatingLiquidDock(
                             currentTab = currentTab,
-                            onSelectTab = { viewModel.selectTab(it) },
+                            tabs = visibleTabs,
+                            onSelectTab = { tab ->
+                                if (tab == AppTab.SETTINGS) settingsOpenRequest++
+                                viewModel.selectTab(tab)
+                            },
                             colors = colors,
                             strings = strings
                         )
@@ -141,24 +172,22 @@ fun MainScreen(
                 },
                 containerColor = Color.Transparent
             ) { paddingValues ->
-                // Контент занимает весь экран и рисуется ПОД плавающей панелью: никакой тёмной полосы.
-                // Нижний отступ для списков передаётся через LocalBottomDockInset.
+                // Контент занимает весь экран и рисуется под плавающей панелью и её градиентом.
+                // Нижний отступ для списков передаётся через LocalBottomDockInset и масштабируется под крупный шрифт.
+                val fontScaleExtra = ((androidx.compose.ui.platform.LocalDensity.current.fontScale - 1f).coerceAtLeast(0f) * 20f).dp
+                val dockBottomInset = maxOf(paddingValues.calculateBottomPadding(), 84.dp) + 12.dp + fontScaleExtra
                 CompositionLocalProvider(
-                    LocalBottomDockInset provides paddingValues.calculateBottomPadding() + 8.dp
+                    LocalBottomDockInset provides dockBottomInset
                 ) {
-                    // Главный экран и серверы прогреваем вместе: список открывается сразу,
-                    // а остальные тяжёлые вкладки создаются только при первом переходе.
+                    // Save state without keeping hidden screens and their animations running.
                     val tabStateHolder = rememberSaveableStateHolder()
-                    val tabsToShow = when (currentTab) {
-                        AppTab.HOME, AppTab.SERVERS -> listOf(AppTab.HOME, AppTab.SERVERS)
-                        else -> listOf(currentTab)
-                    }
+                    val tabsToShow = listOf(currentTab)
 
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .then(captureDockContent)
-                            .statusBarsPadding()
+                            .windowInsetsPadding(WindowInsets.systemBars.union(WindowInsets.displayCutout).only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
                     ) {
                         tabsToShow.forEach { tab ->
                             key(tab) {
@@ -167,7 +196,8 @@ fun MainScreen(
                                         tab = tab,
                                         isSelected = tab == currentTab,
                                         viewModel = viewModel,
-                                        onToggleConnect = onToggleConnect
+                                        onToggleConnect = onToggleConnect,
+                                        settingsOpenRequest = settingsOpenRequest
                                     )
                                 }
                             }
@@ -206,16 +236,16 @@ private fun StartupLoadingOverlay(
     statusText: String,
     colors: AppThemeColors
 ) {
-    val transition = rememberInfiniteTransition(label = "startup_loading")
-    val orbitRotation by transition.animateFloat(
+    val transition = if (LocalUiPerformanceSettings.current.animationsEnabled) rememberInfiniteTransition(label = "startup_loading") else null
+    val orbitRotation by transition?.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1400, easing = LinearEasing)
         ),
         label = "startup_ring_rotation"
-    )
-    val glowPulse by transition.animateFloat(
+    ) ?: rememberUpdatedState(0f)
+    val glowPulse by transition?.animateFloat(
         initialValue = 0.90f,
         targetValue = 1.10f,
         animationSpec = infiniteRepeatable(
@@ -223,8 +253,8 @@ private fun StartupLoadingOverlay(
             repeatMode = RepeatMode.Reverse
         ),
         label = "startup_glow_pulse"
-    )
-    val shieldPulse by transition.animateFloat(
+    ) ?: rememberUpdatedState(1f)
+    val shieldPulse by transition?.animateFloat(
         initialValue = 0.96f,
         targetValue = 1.04f,
         animationSpec = infiniteRepeatable(
@@ -232,15 +262,15 @@ private fun StartupLoadingOverlay(
             repeatMode = RepeatMode.Reverse
         ),
         label = "startup_shield_pulse"
-    )
-    val shimmerProgress by transition.animateFloat(
+    ) ?: rememberUpdatedState(1f)
+    val shimmerProgress by transition?.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1400, easing = LinearEasing)
         ),
         label = "startup_shimmer"
-    )
+    ) ?: rememberUpdatedState(0f)
 
     Box(
         modifier = Modifier
@@ -255,7 +285,7 @@ private fun StartupLoadingOverlay(
                     radius = 1100f
                 )
             )
-            .clickable(
+            .tvFocusOutline().clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = {}
@@ -427,13 +457,16 @@ private fun TabHostScreen(
     tab: AppTab,
     isSelected: Boolean,
     viewModel: MainViewModel,
-    onToggleConnect: () -> Unit
+    onToggleConnect: () -> Unit,
+    settingsOpenRequest: Int
 ) {
-    val alphaAnim = remember { Animatable(if (isSelected) 1f else 0f) }
-    LaunchedEffect(isSelected) {
-        alphaAnim.animateTo(
+    val animationsEnabled = LocalUiPerformanceSettings.current.animationsEnabled
+    val transitionAnim = remember { Animatable(if (animationsEnabled) 0f else 1f) }
+    LaunchedEffect(isSelected, animationsEnabled) {
+        if (!animationsEnabled) transitionAnim.snapTo(if (isSelected) 1f else 0f)
+        else transitionAnim.animateTo(
             targetValue = if (isSelected) 1f else 0f,
-            animationSpec = tween(durationMillis = 100, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 115, easing = FastOutSlowInEasing)
         )
     }
 
@@ -442,8 +475,13 @@ private fun TabHostScreen(
             .fillMaxSize()
             .zIndex(if (isSelected) 2f else 1f)
             .graphicsLayer {
-                alpha = alphaAnim.value
-                translationX = if (!isSelected && alphaAnim.value == 0f) 100000f else 0f
+                val p = transitionAnim.value
+                alpha = p
+                val s = 0.99f + 0.01f * p
+                scaleX = s
+                scaleY = s
+                translationY = (1f - p) * 5.dp.toPx()
+                translationX = if (!isSelected && p == 0f) 100000f else 0f
             }
             .then(
                 if (!isSelected) {
@@ -462,11 +500,11 @@ private fun TabHostScreen(
             AppTab.HOME -> HomeScreen(
                 viewModel = viewModel,
                 onToggleConnect = onToggleConnect,
-                onNavigateToServers = { viewModel.selectTab(AppTab.SERVERS) }
+                onNavigateToServers = { viewModel.openAllServersInPro() }
             )
             AppTab.SERVERS -> ServersScreen(viewModel = viewModel)
             AppTab.APPS -> PerAppScreen(viewModel = viewModel)
-            AppTab.SETTINGS -> SettingsScreen(viewModel = viewModel)
+            AppTab.SETTINGS -> SettingsScreen(viewModel = viewModel, resetRequest = settingsOpenRequest)
         }
     }
 }
@@ -477,22 +515,38 @@ private fun TabHostScreen(
  * предотвращая ненужную рекомпозицию экранов и родительского Scaffold.
  */
 @Composable
-private fun FloatingLiquidDock(
+internal fun FloatingLiquidDock(
     currentTab: AppTab,
     onSelectTab: (AppTab) -> Unit,
     colors: AppThemeColors,
-    strings: AppStrings
+    strings: AppStrings,
+    tabs: List<AppTab> = AppTab.entries
 ) {
+    val activeTabs = if (tabs.isEmpty()) AppTab.entries else tabs
+    val currentIndex = activeTabs.indexOf(currentTab).coerceAtLeast(0)
+    val latestCurrentIndex by rememberUpdatedState(currentIndex)
+    val latestTabs by rememberUpdatedState(activeTabs)
+    val selectTab by rememberUpdatedState(onSelectTab)
     val haptic = LocalHapticFeedback.current
     val view = LocalView.current
     val density = LocalDensity.current
     val coroutineScope = rememberCoroutineScope()
     val transparency = LocalGlassTransparency.current
-    val scrimScale = 1f - transparency
+    val animationsEnabled = LocalUiPerformanceSettings.current.animationsEnabled
+    val animateDock by rememberUpdatedState(animationsEnabled)
+    // Keep the navigation area legible even when glass surfaces are fully transparent.
+    val glassEnabled = LocalUiPerformanceSettings.current.glassHighlightsEnabled
+    val scrimScale = (1f - transparency).coerceIn(0.85f, 1f)
+    val labelMeasurer = rememberTextMeasurer()
+    val labelStyle = TextStyle(
+        fontSize = 10.sp, lineHeight = 12.sp, fontFamily = OneSans,
+        fontWeight = FontWeight.SemiBold, letterSpacing = 0.sp,
+        textAlign = TextAlign.Center
+    )
 
     var isDragging by remember { mutableStateOf(false) }
-    var draggedTabIndex by remember { mutableIntStateOf(currentTab.ordinal) }
-    val tabCount = AppTab.entries.size
+    var draggedTabIndex by remember(activeTabs) { mutableIntStateOf(currentIndex) }
+    val tabCount = activeTabs.size
 
     var innerWidthPx by remember { mutableFloatStateOf(0f) }
     val pillAnimX = remember { Animatable(0f) }
@@ -501,16 +555,16 @@ private fun FloatingLiquidDock(
     val slotWidthDp = with(density) { slotWidthPx.toDp() }
 
     // Синхронизация позиции бегунка при программной смене таба или тапе
-    LaunchedEffect(currentTab, slotWidthPx) {
+    LaunchedEffect(currentIndex, slotWidthPx, animationsEnabled, tabCount) {
         if (slotWidthPx > 0f && !isDragging) {
-            val targetX = currentTab.ordinal * slotWidthPx
-            if (pillAnimX.value == 0f && currentTab.ordinal == 0) {
-                pillAnimX.snapTo(0f)
+            val targetX = currentIndex * slotWidthPx
+            if (!animationsEnabled || pillAnimX.value == 0f && currentIndex == 0) {
+                pillAnimX.snapTo(targetX)
             } else {
                 pillAnimX.animateTo(
                     targetValue = targetX,
                     animationSpec = spring(
-                        dampingRatio = 0.82f,
+                        dampingRatio = 0.80f,
                         stiffness = Spring.StiffnessMedium
                     )
                 )
@@ -518,48 +572,57 @@ private fun FloatingLiquidDock(
         }
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag("bottomDockArea")
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        // Main pass reaches children first, preserving tab taps and scrubbing.
+                        // Consume the surrounding padding too, so it cannot hit the list below.
+                        awaitPointerEvent().changes.forEach { it.consume() }
+                    }
+                }
+            }
             .background(
                 Brush.verticalGradient(
                     0.0f to Color.Transparent,
                     0.28f to colors.background.copy(alpha = (if (colors.isDark) 0.45f else 0.35f) * scrimScale),
-                    0.65f to colors.background.copy(alpha = (if (colors.isDark) 0.82f else 0.72f) * scrimScale),
-                    1.0f to colors.background.copy(alpha = (if (colors.isDark) 0.96f else 0.92f) * scrimScale)
+                    0.48f to colors.background.copy(alpha = if (glassEnabled) 0.88f * scrimScale else 1f),
+                    1.0f to colors.background
                 )
             )
-            .navigationBarsPadding()
+            .windowInsetsPadding(WindowInsets.systemBars.union(WindowInsets.displayCutout).only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
             .padding(horizontal = 20.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
+        // Measure with the same width and typography as the actual labels. All tabs
+        // reserve the tallest label so icons stay aligned when one title wraps.
+        val labelWidth = with(density) {
+            ((minOf(maxWidth, 600.dp) - 8.dp) / tabCount - 8.dp).roundToPx().coerceAtLeast(1)
+        }
+        val labelHeight = with(density) {
+            activeTabs.maxOf { tab ->
+                labelMeasurer.measure(
+                    text = tab.getTitle(strings), style = labelStyle, maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    constraints = Constraints(maxWidth = labelWidth)
+                ).size.height
+            }.toDp()
+        }
+        val dockHeight = maxOf(64.dp, 48.dp + labelHeight)
         Box(
             modifier = Modifier
-                .fillMaxWidth()
                 .widthIn(max = 600.dp)
-                .height(64.dp)
-                .frostedGlass(
-                    cornerRadius = 24.dp,
-                    elevation = 14.dp
-                )
+                .fillMaxWidth()
+                .height(dockHeight)
+                .then(if (glassEnabled) Modifier.frostedGlass(cornerRadius = 24.dp, elevation = 14.dp) else {
+                    val shape = RoundedCornerShape(24.dp)
+                    Modifier.shadow(12.dp, shape).background(colors.surface, shape).border(1.dp, colors.borderSubtle, shape)
+                })
                 .padding(horizontal = 4.dp, vertical = 4.dp)
         ) {
-            // Мягкое радиальное внутреннее свечение
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(
-                                colors.accentCyan.copy(alpha = if (colors.isDark) 0.05f else 0.04f),
-                                Color.Transparent
-                            ),
-                            center = Offset(innerWidthPx * 0.5f, 0f),
-                            radius = 450f
-                        )
-                    )
-            )
-
             // Внутренний контейнер: общее координатное пространство для бегунка и иконок
             Box(
                 modifier = Modifier
@@ -578,16 +641,17 @@ private fun FloatingLiquidDock(
                                 if (totalW <= 0f) continue
                                 val currentSlotW = totalW / tabCount
                                 var isScrubbing = false
-                                var lastHovered = currentTab.ordinal
+                                var lastHovered = latestCurrentIndex
 
                                 while (true) {
                                     val event = awaitPointerEvent()
                                     val change = event.changes.firstOrNull { it.id == down.id } ?: break
                                     if (!change.pressed) {
                                         if (isScrubbing) {
-                                            onSelectTab(AppTab.entries[lastHovered])
+                                            latestTabs.getOrNull(lastHovered)?.let(selectTab)
                                             coroutineScope.launch {
-                                                pillAnimX.animateTo(
+                                                if (!animateDock) pillAnimX.snapTo(lastHovered * currentSlotW)
+                                                else pillAnimX.animateTo(
                                                     targetValue = lastHovered * currentSlotW,
                                                     animationSpec = spring(
                                                         dampingRatio = 0.82f,
@@ -599,14 +663,6 @@ private fun FloatingLiquidDock(
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                             } catch (e: Exception) {
                                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                            }
-                                        } else {
-                                            val tappedIndex = ((downX / totalW) * tabCount).toInt().coerceIn(0, tabCount - 1)
-                                            onSelectTab(AppTab.entries[tappedIndex])
-                                            try {
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                            } catch (e: Exception) {
-                                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                                             }
                                         }
                                         isDragging = false
@@ -655,33 +711,10 @@ private fun FloatingLiquidDock(
                             .width(slotWidthDp)
                             .fillMaxHeight()
                             .padding(horizontal = 2.dp, vertical = 2.dp)
-                            .clip(RoundedCornerShape(18.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    listOf(
-                                        colors.accentCyan.copy(alpha = if (isDragging) 0.38f else 0.24f),
-                                        colors.accentSecondary.copy(alpha = if (isDragging) 0.26f else 0.15f)
-                                    )
-                                )
-                            )
-                            .border(
-                                width = if (isDragging) 1.5.dp else 1.dp,
-                                brush = Brush.linearGradient(
-                                    listOf(
-                                        colors.accentCyan.copy(alpha = if (isDragging) 1.0f else 0.85f),
-                                        colors.accentSecondary.copy(alpha = if (isDragging) 0.75f else 0.50f)
-                                    )
-                                ),
-                                shape = RoundedCornerShape(18.dp)
-                            )
-                    ) {
-                        Box(
-                            Modifier.align(Alignment.BottomCenter).padding(bottom = 3.dp)
-                                .size(width = 16.dp, height = 2.dp)
-                                .clip(RoundedCornerShape(1.dp))
-                                .background(Brush.horizontalGradient(listOf(Color.Transparent, colors.accentCyan, Color.Transparent)))
-                        )
-                    }
+                            .liquidGlass(cornerRadius = 18, accentBorder = colors.accentCyan,
+                                borderAlpha = if (isDragging) .72f else .56f,
+                                backgroundColor = colors.accentCyan.copy(alpha = if (isDragging) .22f else .14f))
+                    )
                 }
 
                 Row(
@@ -692,8 +725,8 @@ private fun FloatingLiquidDock(
                     val inactiveIconColor = lerp(colors.textSecondary, colors.textPrimary, if (colors.isDark) 0.25f else 0.15f)
                     val inactiveTextColor = lerp(colors.textSecondary, colors.textPrimary, if (colors.isDark) 0.20f else 0.10f)
 
-                    AppTab.entries.forEach { tab ->
-                        val isHighlighted = if (isDragging) draggedTabIndex == tab.ordinal else currentTab == tab
+                    activeTabs.forEachIndexed { index, tab ->
+                        val isHighlighted = if (isDragging) draggedTabIndex == index else currentTab == tab
                         val iconColor by animateColorAsState(
                             targetValue = if (isHighlighted) colors.accentCyan else inactiveIconColor,
                             animationSpec = tween(150),
@@ -708,14 +741,24 @@ private fun FloatingLiquidDock(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .fillMaxHeight(),
+                                .fillMaxHeight()
+                                .testTag("mainTab:${tab.name}")
+                                .tvFocusOutline().selectable(
+                                    selected = currentTab == tab,
+                                    role = Role.Tab,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
+                                    onSelectTab(tab)
+                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
                             Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = tab.icon,
-                                    contentDescription = tab.getTitle(strings),
+                                    contentDescription = null,
                                     tint = iconColor,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -724,13 +767,9 @@ private fun FloatingLiquidDock(
                             Text(
                                 text = tab.getTitle(strings),
                                 color = textColor,
-                                modifier = Modifier.fillMaxWidth(),
-                                fontSize = 9.5.sp,
-                                lineHeight = 12.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold,
-                                letterSpacing = 0.4.sp,
-                                maxLines = 1,
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp).height(labelHeight),
+                                style = labelStyle,
+                                maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 textAlign = TextAlign.Center
                             )

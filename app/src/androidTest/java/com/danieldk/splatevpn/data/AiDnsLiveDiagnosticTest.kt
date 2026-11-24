@@ -15,7 +15,7 @@ class AiDnsLiveDiagnosticTest {
         assumeTrue(InstrumentationRegistry.getArguments().getString("liveAiDns") == "true")
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val logs = AppLogManager(context)
-        val core = XrayCoreManager(context, logs, VpnStatusManager(context), LiveConnectionTracker())
+        val core = XrayCoreManager(context, logs, VpnStatusManager(context), LiveConnectionTracker(), testHealthAdvisor(context, VpnStatusManager(context)))
         core.ensureAssetsExtracted()
         val selector = AiDnsAutoSelector(context, core, XrayConfigGenerator(), logs)
         val keys = InstrumentationRegistry.getArguments().getString("providers")?.split(',') ?: listOf("geohide")

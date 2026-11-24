@@ -4,6 +4,44 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ServerQualityTrackerTest {
+    @Test fun exhaustedPoolCanRecheckWithoutWaitingForFiveMinuteQuarantine() {
+        var now = 1000L
+        val tracker = ServerQualityTracker { now }
+        repeat(5) { tracker.recordFailure("recovered") }
+        assertTrue(tracker.recoveryCandidates(setOf("recovered")).isEmpty())
+        now += 10_001
+        assertEquals(setOf("recovered"), tracker.recoveryCandidates(setOf("recovered")))
+        assertTrue(tracker.isQuarantined("recovered"))
+        assertTrue(tracker.canProbe("recovered"))
+        tracker.recordSuccess("recovered", 75)
+        assertFalse(tracker.isQuarantined("recovered"))
+    }
+
+    @Test fun recoverySlotsAreBoundedAndCannotIncludeExcludedProfiles() {
+        var now = 1000L
+        val tracker = ServerQualityTracker { now }
+        (1..10).forEach { tracker.recordFailure("$it") }
+        now += 10_001
+        val allowed = (2..10).mapTo(hashSetOf()) { "$it" }
+        val selected = tracker.recoveryCandidates(allowed)
+        assertEquals(2, selected.size)
+        assertFalse("1" in selected)
+        selected.forEach { tracker.recordFailure(it) }
+        assertTrue(tracker.recoveryCandidates(selected).isEmpty())
+    }
+    @Test fun changingNetworkClearsOldQuarantineAndLatencyHistory() {
+        val tracker = ServerQualityTracker { 1000L }
+        tracker.onNetworkChanged(1L)
+        tracker.recordSuccess("good", 45)
+        tracker.recordFailure("blockedOnWifi")
+        tracker.onNetworkChanged(1L)
+        assertTrue(tracker.isQuarantined("blockedOnWifi"))
+        tracker.onNetworkChanged(2L)
+        assertFalse(tracker.isQuarantined("blockedOnWifi"))
+        assertFalse(tracker.hasFreshSuccess("good"))
+        assertEquals(45L, tracker.score("blockedOnWifi", 45))
+    }
+
     @Test fun jitteryFastNodeLosesToStableNode() {
         val tracker = ServerQualityTracker { 1000L }
         listOf(20L, 450L, 30L, 300L, 25L).forEach { tracker.recordSuccess("flaky", it) }

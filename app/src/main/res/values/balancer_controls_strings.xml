@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bqc_goal_title">Purpose</string>
+    <string name="bqc_metric_title">Choose by</string>
+    <string name="bqc_goal_general">General</string>
+    <string name="bqc_goal_youtube_ru">YouTube (RU)</string>
+    <string name="bqc_metric_latency">Delay</string>
+    <string name="bqc_metric_download">Speed</string>
+    <string name="bqc_metric_download_traffic">Speed · uses data</string>
+    <string name="bqc_hint_general">No service priority.</string>
+    <string name="bqc_hint_telegram">Checks a real Telegram MTProto connection.</string>
+    <string name="bqc_hint_youtube">Checks YouTube metadata and downloads a video fragment.</string>
+    <string name="bqc_hint_tiktok">Checks the TikTok website; account and app access are not guaranteed.</string>
+    <string name="bqc_hint_youtube_ru">Checks YouTube metadata, a video fragment and a verified Russian exit IP.</string>
+    <string name="bqc_hint_download">Real 4 MiB download samples; up to %1$d MiB per hour.</string>
+    <string name="bqc_expanded">Options expanded</string>
+    <string name="bqc_collapsed">Open options</string>
+    <string name="balancer_warm_standby">Standby servers</string>
+    <string name="balancer_warm_standby_hint">Check alternatives in the background without changing the connection. Also works with manual selection.</string>
+    <string name="balancer_speed_budget">Speed-check data limit</string>
+    <string name="balancer_speed_budget_value">%1$d MiB/hour</string>
+    <string name="bqc_hint_https_service">Checks whether %1$s responds over HTTPS. Sign-in, calls and playback are not checked.</string>
+</resources>

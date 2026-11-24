@@ -36,49 +36,92 @@ class SpeedtestManager @Inject constructor(private val vpnStatusManager: VpnStat
     val testState = _testState.asStateFlow()
     val isRunning get() = _testState.value is SpeedtestState.Running
     private val gate = Mutex()
+    private val stateLock = Any()
+    private var generation = 0L
     @Volatile private var activeJob: Job? = null
-    private val connections = ConcurrentHashMap.newKeySet<HttpURLConnection>()
-
-    fun reset() {
-        activeJob?.cancel()
-        connections.forEach { it.disconnect() }
-        _testState.value = SpeedtestState.Idle
+    private val connections = ConcurrentHashMap.newKeySet<SampleConnection>()
+    private val activeCalls = ConcurrentHashMap.newKeySet<okhttp3.Call>()
+    // Kotlin Collection.toList() has a size == 1 shortcut that can race a concurrent removal.
+    private fun activeCallSnapshot(): List<okhttp3.Call> = buildList { for (call in activeCalls) add(call) }
+    private val client = okhttp3.OkHttpClient.Builder().connectTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
+        .readTimeout(2, java.util.concurrent.TimeUnit.SECONDS).followRedirects(false).followSslRedirects(false).build()
+    private class SampleConnection(val call: okhttp3.Call, val response: okhttp3.Response) {
+        private val closed = java.util.concurrent.atomic.AtomicBoolean()
+        val inputStream get() = requireNotNull(response.body).byteStream()
+        fun disconnect() {
+            if (!closed.compareAndSet(false, true)) return
+            call.cancel()
+            try { response.close() } catch (_: Exception) { /* Cancellation already closed the socket. */ }
+        }
     }
 
-    suspend fun startSpeedtest() = withContext(Dispatchers.IO) {
+    fun reset() {
+        val (job, calls) = synchronized(stateLock) {
+            generation++
+            _testState.value = SpeedtestState.Idle
+            activeJob to activeCallSnapshot()
+        }
+        job?.cancel()
+        // The owning IO coroutine closes response bodies after its readers stop.
+        calls.forEach { it.cancel() }
+    }
+
+    suspend fun startSpeedtest() = runSpeedtest(listOf(
+        SpeedtestEndpoint("https://speed.cloudflare.com/__down?bytes=100000000", 100_000_000L),
+        SpeedtestEndpoint("https://cachefly.cachefly.net/100mb.test", 104_857_600L)
+    ), ::measureHttpsResponse)
+
+    internal suspend fun runSpeedtest(endpoints: List<SpeedtestEndpoint>, latencyProbe: suspend (() -> Unit) -> Long) {
+        val ticket = synchronized(stateLock) { generation }
+        withContext(Dispatchers.IO) {
         if (!gate.tryLock()) return@withContext
-        activeJob = currentCoroutineContext()[Job]
+        fun publish(state: SpeedtestState) = synchronized(stateLock) {
+            if (generation == ticket) _testState.value = state
+        }
+        var cancellationWatcher: Job? = null
+        val serverId = vpnStatusManager.connectedServerId
         try {
+            val job = currentCoroutineContext()[Job]
+            synchronized(stateLock) {
+                if (generation != ticket) return@withContext
+                activeJob = job
+            }
+            cancellationWatcher = launch(start = CoroutineStart.UNDISPATCHED) {
+                try { awaitCancellation() }
+                finally {
+                    val calls = synchronized(stateLock) {
+                        if (activeJob === job) activeCallSnapshot() else emptyList()
+                    }
+                    calls.forEach { it.cancel() }
+                }
+            }
             if (vpnStatusManager.state.value != VpnState.CONNECTED) {
-                _testState.value = SpeedtestState.Error(SpeedtestError.VPN_REQUIRED)
+                publish(SpeedtestState.Error(SpeedtestError.VPN_REQUIRED))
                 return@withContext
             }
-            val serverId = vpnStatusManager.connectedServerId
             fun checkTunnel() {
                 if (vpnStatusManager.state.value != VpnState.CONNECTED || vpnStatusManager.connectedServerId != serverId)
                     throw IOException("vpn_changed")
             }
             // Provider UID bypasses TUN: never fall back to measuring a direct connection.
-            val proxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress(SplateConstants.XRAY_SOCKS_ADDRESS, SplateConstants.XRAY_SOCKS_PORT))
-            _testState.value = SpeedtestState.Running(0f, 0f, 0L)
-            val latency = measureHttpsResponse(proxy, ::checkTunnel)
-            val remainingBytes = AtomicLong(128_000_000L)
+            publish(SpeedtestState.Running(0f, 0f, 0L))
+            val latency = latencyProbe(::checkTunnel)
+            val remainingBytes = AtomicLong(300_000_000L)
             var lastError: Exception? = null
-            for (endpoint in listOf(
-                Endpoint("https://speed.cloudflare.com/__down?bytes=25000000", 25_000_000L),
-                Endpoint("https://cachefly.cachefly.net/10mb.test", 10_485_760L)
-            )) {
+            for (endpoint in endpoints) {
                 currentCoroutineContext().ensureActive()
                 checkTunnel()
                 try {
-                    val result = measureDownload(endpoint, proxy, remainingBytes, ::checkTunnel)
+                    val result = measureDownload(endpoint, remainingBytes, ::checkTunnel, ::publish)
                     currentCoroutineContext().ensureActive()
                     checkTunnel()
-                    _testState.value = SpeedtestState.Completed(result.first.mbps, latency,
-                        result.first.totalBytes, result.first.seconds, URL(endpoint.url).host, result.second)
+                    publish(SpeedtestState.Completed(result.first.mbps, latency,
+                        result.first.totalBytes, result.first.seconds, URL(endpoint.url).host, result.second))
                     return@withContext
                 } catch (e: CancellationException) { throw e }
                 catch (e: Exception) {
+                    activeCalls.forEach { it.cancel() }
+                    activeCalls.clear()
                     connections.forEach { it.disconnect() }
                     connections.clear()
                     lastError = e
@@ -87,65 +130,84 @@ class SpeedtestManager @Inject constructor(private val vpnStatusManager: VpnStat
                 }
             }
             throw lastError ?: IOException("invalid_sample")
-        } catch (e: CancellationException) { throw e }
+        } catch (e: CancellationException) { publish(SpeedtestState.Idle); throw e }
         catch (e: Exception) {
             currentCoroutineContext().ensureActive()
-            _testState.value = SpeedtestState.Error(when {
-                e.message == "vpn_changed" -> SpeedtestError.VPN_CHANGED
+            publish(SpeedtestState.Error(when {
+                e.message == "vpn_changed" || vpnStatusManager.state.value != VpnState.CONNECTED ||
+                    vpnStatusManager.connectedServerId != serverId -> SpeedtestError.VPN_CHANGED
                 e.message == "invalid_sample" -> SpeedtestError.INVALID_SAMPLE
                 e is java.net.SocketTimeoutException -> SpeedtestError.TIMEOUT
                 e is java.net.UnknownHostException -> SpeedtestError.DNS
                 else -> SpeedtestError.NETWORK
-            })
+            }))
         } finally {
+            cancellationWatcher?.cancel()
+            if (!currentCoroutineContext().isActive) publish(SpeedtestState.Idle)
+            activeCalls.forEach { it.cancel() }
+            activeCalls.clear()
             connections.forEach { it.disconnect() }
             connections.clear()
             activeJob = null
             gate.unlock()
         }
+        }
     }
 
-    private fun open(endpoint: Endpoint, proxy: Proxy): HttpURLConnection {
+    private suspend fun open(endpoint: SpeedtestEndpoint): SampleConnection {
+        currentCoroutineContext().ensureActive()
         val separator = if ('?' in endpoint.url) '&' else '?'
-        val conn = URL("${endpoint.url}${separator}sample=${SystemClock.elapsedRealtimeNanos()}")
-            .openConnection(proxy) as HttpURLConnection
+        val reqBuilder = okhttp3.Request.Builder()
+            .url("${endpoint.url}${separator}sample=${SystemClock.elapsedRealtimeNanos()}")
+            .header("Accept-Encoding", "identity")
+            .header("Cache-Control", "no-cache, no-store")
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 SplateVPN-Speedtest/1.0")
+        if (endpoint.url.contains("cloudflare.com")) {
+            reqBuilder.header("Referer", "https://speed.cloudflare.com/")
+            reqBuilder.header("Origin", "https://speed.cloudflare.com")
+        }
+        val call = com.danieldk.splatevpn.vpn.LocalProxyAccess.client(client).newCall(reqBuilder.build())
+        // The call is cancellable even while HTTP CONNECT/TLS is still opening.
+        activeCalls.add(call)
+        val response = try {
+            currentCoroutineContext().ensureActive()
+            call.execute()
+        } catch (error: Exception) { activeCalls.remove(call); call.cancel(); throw error }
+        val conn = SampleConnection(call, response)
         connections.add(conn)
         try {
-            conn.connectTimeout = 8_000
-            conn.readTimeout = 2_000
-            conn.useCaches = false
-            conn.setRequestProperty("Accept-Encoding", "identity")
-            conn.setRequestProperty("Cache-Control", "no-cache, no-store")
-            conn.setRequestProperty("User-Agent", "SplateVPN-Speedtest/1.0")
-            if (conn.responseCode != 200) throw IOException("HTTP ${conn.responseCode}")
-            if (conn.contentType.orEmpty().let { it.contains("text/", true) || it.contains("json", true) })
+            if (response.code != 200) throw IOException("HTTP ${response.code}")
+            if (response.header("Content-Type").orEmpty().let { it.contains("text/", true) || it.contains("json", true) })
                 throw IOException("invalid_sample")
-            if (conn.contentLengthLong > 0 && conn.contentLengthLong != endpoint.bytes) throw IOException("invalid_sample")
+            val length = response.body?.contentLength() ?: -1
+            if (length > 0 && length != endpoint.bytes) throw IOException("invalid_sample")
             return conn
         } catch (e: Exception) { close(conn); throw e }
     }
 
-    private fun close(conn: HttpURLConnection) {
+    private fun close(conn: SampleConnection) {
         connections.remove(conn)
+        activeCalls.remove(conn.call)
         conn.disconnect()
     }
 
-    private suspend fun measureDownload(endpoint: Endpoint, proxy: Proxy, remainingBytes: AtomicLong, checkTunnel: () -> Unit): Pair<DownloadMeasurement.Sample, List<Float>> = coroutineScope {
-        _testState.value = SpeedtestState.Running(0f, 0f, 0L)
+    private suspend fun measureDownload(endpoint: SpeedtestEndpoint, remainingBytes: AtomicLong, checkTunnel: () -> Unit,
+        publish: (SpeedtestState) -> Unit): Pair<DownloadMeasurement.Sample, List<Float>> = coroutineScope {
+        publish(SpeedtestState.Running(0f, 0f, 0L))
         // Start after both HTTPS connections are ready. Aggregate payload from two streams.
-        val prepared = (0..1).map { async(Dispatchers.IO) { open(endpoint, proxy) } }.awaitAll()
+        val prepared = (0..1).map { async(Dispatchers.IO) { open(endpoint) } }.awaitAll()
         val start = SystemClock.elapsedRealtimeNanos()
         val deadline = start + 10_000_000_000L
         val finishedNs = AtomicLong(start)
         val meter = DownloadMeasurement(start)
         val samples = mutableListOf<Float>()
         val workers = prepared.map { initial -> async(Dispatchers.IO) {
-            var conn: HttpURLConnection? = initial
+            var conn: SampleConnection? = initial
             try {
                 val buffer = ByteArray(64 * 1024)
                 while (isActive && SystemClock.elapsedRealtimeNanos() < deadline && remainingBytes.get() > 0) {
                     checkTunnel()
-                    val current = conn ?: open(endpoint, proxy).also { conn = it }
+                    val current = conn ?: open(endpoint).also { conn = it }
                     var payload = 0L
                     current.inputStream.use { input ->
                         while (isActive && SystemClock.elapsedRealtimeNanos() < deadline && remainingBytes.get() > 0) {
@@ -172,6 +234,7 @@ class SpeedtestManager @Inject constructor(private val vpnStatusManager: VpnStat
         } }
         var previousBytes = 0L
         var previousNs = start + 500_000_000L
+        var smoothedMbps = 0f
         try {
             while (workers.any { !it.isCompleted }) {
                 delay(300)
@@ -180,38 +243,60 @@ class SpeedtestManager @Inject constructor(private val vpnStatusManager: VpnStat
                 val sample = meter.snapshot(now)
                 val current = if (now > previousNs) ((sample.measuredBytes - previousBytes) * 8.0 * 1000 / (now - previousNs)).toFloat() else 0f
                 if (now > start + 500_000_000L) {
-                    samples.add(current)
+                    smoothedMbps = if (smoothedMbps <= 0f) current else (smoothedMbps * 0.65f + current * 0.35f)
+                    samples.add(smoothedMbps)
                     previousBytes = sample.measuredBytes
                     previousNs = now
                 }
-                _testState.value = SpeedtestState.Running(((now - start) / 10_000_000_000.0).toFloat().coerceIn(0f, .99f), current,
-                    sample.totalBytes, samples.toList())
+                val displaySpeed = if (smoothedMbps > 0f) smoothedMbps else current
+                publish(SpeedtestState.Running(((now - start) / 10_000_000_000.0).toFloat().coerceIn(0f, .99f), displaySpeed,
+                    sample.totalBytes, samples.toList()))
             }
             workers.awaitAll()
-            val result = meter.snapshot(finishedNs.get())
-            if (result.measuredBytes < 64_000 || result.seconds < .5) throw IOException("invalid_sample")
-            result to samples.toList()
+            val rawResult = meter.snapshot(finishedNs.get())
+            if (rawResult.measuredBytes < 64_000 || rawResult.seconds < .5) throw IOException("invalid_sample")
+
+            val stableSamples = samples.dropWhile { it < 1f }.filter { it > 0.5f }
+            val finalMbps = if (stableSamples.size >= 5) {
+                val sorted = stableSamples.sorted()
+                val dropLow = (sorted.size * 0.20).toInt()
+                val dropHigh = maxOf(1, (sorted.size * 0.10).toInt())
+                val core = sorted.subList(dropLow, (sorted.size - dropHigh).coerceAtLeast(dropLow + 1))
+                core.average().toFloat()
+            } else if (stableSamples.isNotEmpty()) {
+                stableSamples.average().toFloat()
+            } else {
+                rawResult.mbps
+            }
+            val finalSample = DownloadMeasurement.Sample(
+                totalBytes = rawResult.totalBytes,
+                measuredBytes = rawResult.measuredBytes,
+                seconds = rawResult.seconds,
+                mbps = finalMbps
+            )
+            finalSample to samples.toList()
         } finally { prepared.forEach(::close) }
     }
 
-    private suspend fun measureHttpsResponse(proxy: Proxy, checkTunnel: () -> Unit): Long {
+    private suspend fun measureHttpsResponse(checkTunnel: () -> Unit): Long {
         val samples = mutableListOf<Long>()
         repeat(3) {
             currentCoroutineContext().ensureActive()
             checkTunnel()
-            val conn = URL("https://cp.cloudflare.com/generate_204").openConnection(proxy) as HttpURLConnection
-            connections.add(conn)
+            val base = client.newBuilder().connectTimeout(3, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(3, java.util.concurrent.TimeUnit.SECONDS).callTimeout(4, java.util.concurrent.TimeUnit.SECONDS).build()
+            val call = com.danieldk.splatevpn.vpn.LocalProxyAccess.client(base).newCall(okhttp3.Request.Builder()
+                .url("https://cp.cloudflare.com/generate_204").header("Cache-Control", "no-cache").build())
+            activeCalls.add(call)
             try {
-                conn.connectTimeout = 3_000
-                conn.readTimeout = 3_000
-                conn.useCaches = false
                 val start = SystemClock.elapsedRealtimeNanos()
-                if (conn.responseCode in 200..299) samples.add((SystemClock.elapsedRealtimeNanos() - start) / 1_000_000)
+                call.execute().use { if (it.code in 200..299) samples.add((SystemClock.elapsedRealtimeNanos() - start) / 1_000_000) }
             } catch (_: IOException) { }
-            finally { close(conn) }
+            finally { activeCalls.remove(call); call.cancel() }
         }
         return samples.sorted().let { if (it.isEmpty()) -1 else it[it.size / 2] }
     }
 
-    private data class Endpoint(val url: String, val bytes: Long)
 }
+
+internal data class SpeedtestEndpoint(val url: String, val bytes: Long)

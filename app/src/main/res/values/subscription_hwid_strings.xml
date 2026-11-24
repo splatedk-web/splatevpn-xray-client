@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subscription_hwid_title">Device binding (HWID)</string>
+    <string name="subscription_hwid_hint">Send this installation’s ID to this subscription only. No IMEI or MAC address. Reinstalling or clearing app data creates a new ID and may require the provider to reset a device slot.</string>
+    <string name="subscription_hwid_required">This subscription requires HWID. Enable device binding in its settings and update again.</string>
+    <string name="subscription_hwid_device_limit">The subscription’s device limit has been reached. Ask the provider to remove an unused device. Your saved servers have been kept.</string>
+</resources>

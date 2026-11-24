@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="awg_import_file">Импорт AmneziaWG из файла (.conf)</string>
+    <string name="awg_config">Конфигурация AmneziaWG</string>
+    <string name="awg_show_keys">Показать ключи</string>
+    <string name="awg_profile_help">Профиль содержит приватные ключи. Маршрутизацией и Smart-режимом управляет приложение.</string>
+</resources>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="notification_ping">Latency: %1$d ms</string>
+    <string name="notification_ping_unknown">Latency: —</string>
+</resources>

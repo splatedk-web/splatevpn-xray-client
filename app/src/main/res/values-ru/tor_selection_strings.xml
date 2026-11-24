@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tor_metric_title">Подбор моста</string>
+    <string name="tor_metric_latency">По задержке</string>
+    <string name="tor_metric_speed">По скорости</string>
+    <string name="tor_metric_latency_hint">Быстрый отбор по времени TCP-подключения. Работоспособность подтверждает Tor.</string>
+    <string name="tor_metric_speed_hint">Сравнение загрузки через Tor на трёх кандидатах. Первый замер дольше; результат хранится 10 минут.</string>
+    <string name="tor_speed_progress">Проверено цепочек: %1$d/%2$d</string>
+    <string name="tor_metric_probe">Тест скорости</string>
+    <string name="tor_metric_speed_value">%1$.2f Мбит/с</string>
+    <string name="tor_metric_saved">Режим подбора сохранён</string>
+    <string name="tor_speed_unavailable">Скорость измерить не удалось. Подбор продолжится по доступности мостов.</string>
+</resources>

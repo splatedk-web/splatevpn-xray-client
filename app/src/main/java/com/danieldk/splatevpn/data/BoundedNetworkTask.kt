@@ -22,6 +22,9 @@ internal object BoundedNetworkTask {
                         }
                     } catch (e: Exception) {
                         if (continuation.isActive) continuation.resumeWithException(e)
+                    } catch (t: Throwable) {
+                        if (continuation.isActive) continuation.resumeWithException(t)
+                        throw t
                     }
                 }
                 continuation.invokeOnCancellation {

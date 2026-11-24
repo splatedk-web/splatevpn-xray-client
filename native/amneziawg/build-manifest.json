@@ -1,0 +1,14 @@
+{
+  "arm64-v8a": {
+    "sha256": "3cf001ff061ce0529ced199471cc70e2983c9eefa8480430196ffe14a89bba38",
+    "size": 7322296
+  },
+  "armeabi-v7a": {
+    "sha256": "c1381cc6d9f9c1a6f30360aeecdc4cce9895ec2da57e26b5bc29625f1010af66",
+    "size": 6908080
+  },
+  "x86_64": {
+    "sha256": "82f4a5bf4c1bf88d29cf57286c930a5d66267335da6463675c17435c1a15c04e",
+    "size": 7807032
+  }
+}

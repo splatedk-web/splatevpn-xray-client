@@ -265,8 +265,5 @@ internal fun widgetDimensions(context: Context, options: Bundle, fallbackWidth: 
 internal fun widgetResources(context: Context): Resources {
     val language = context.getSharedPreferences("splate_prefs", Context.MODE_PRIVATE)
         .getString("app_language", "system")
-    if (language != "ru" && language != "en") return context.resources
-    val configuration = Configuration(context.resources.configuration)
-    configuration.setLocale(Locale.forLanguageTag(language))
-    return context.createConfigurationContext(configuration).resources
+    return localizedResources(context, appLocale(language ?: "system", context.resources.configuration.locales[0]))
 }

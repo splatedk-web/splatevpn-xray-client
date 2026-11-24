@@ -5,6 +5,16 @@ import org.junit.Before
 import org.junit.Test
 
 class AutoBalancerTest {
+    private val originalDeadServerClock = SplateVpnService.deadServerClock
+
+    @org.junit.Before fun useJvmQuarantineClock() {
+        SplateVpnService.deadServerClock = { System.nanoTime() / 1_000_000 }
+    }
+
+    @org.junit.After fun restoreQuarantineClock() {
+        SplateVpnService.deadServerClock = originalDeadServerClock
+    }
+
 
     @Before
     fun setUp() {
@@ -47,8 +57,8 @@ class AutoBalancerTest {
 
     @Test
     fun testDeadServersTrackingAndClearing() {
-        SplateVpnService.deadServerIds.add("server-1")
-        SplateVpnService.deadServerIds.add("server-2")
+        SplateVpnService.markDeadServer("server-1")
+        SplateVpnService.markDeadServer("server-2")
 
         assertTrue(SplateVpnService.deadServerIds.contains("server-1"))
         assertTrue(SplateVpnService.deadServerIds.contains("server-2"))

@@ -1,64 +1,135 @@
 {
-  "checkedOn": "2026-10-12",
+  "checkedOn": "2026-11-13",
   "xray": {
-    "version": "26.9.30",
-    "prerelease": true,
-    "commit": "b26a91d",
-    "source": "https://github.com/XTLS/Xray-core/releases/tag/v26.9.30",
+    "version": "26.11.9",
+    "prerelease": false,
+    "commit": "676eaf66f8f05d4d558ee7a74b4736623d3feeb9",
+    "source": "https://github.com/XTLS/Xray-core/releases/tag/v26.11.9",
     "platforms": {
       "arm64-v8a": {
-        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-android-arm64-v8a.zip",
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.11.9/Xray-android-arm64-v8a.zip",
         "path": "app/src/main/jniLibs/arm64-v8a/libxray.so",
-        "sha256": "6de04c5f5492c0d050f520a1aad10b68ec6fd21907599b95572ad8807dd833cb"
+        "sha256": "dbfe83c136ebb58635f5ad4e21d1df077473aa6fc4bfa1b7ee193516d0af8255",
+        "archiveSha256": "edcefc25b9b3195b11e18624c8269a969d6aabc39c6298a9a5ab29de15d46f3b",
+        "releaseAssetDigest": "sha256:edcefc25b9b3195b11e18624c8269a969d6aabc39c6298a9a5ab29de15d46f3b",
+        "publishedDigestVerified": true,
+        "digestSource": "upstream .dgst"
       },
       "armeabi-v7a": {
-        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-linux-arm32-v7a.zip",
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.11.9/Xray-linux-arm32-v7a.zip",
         "path": "app/src/main/jniLibs/armeabi-v7a/libxray.so",
-        "sha256": "eee24a09ead49a326b953d3883cf2a7dfb3bd97462fea6399222dcbeef58f7b5"
+        "sha256": "71ee3e29e884f7ed4bce2c1b28851db2bcf38306addc72edfbb8ec02e203caea",
+        "archiveSha256": "19c51e08a6562705fb1cb032a84fd87df21d7e27b194f035be7e754dbe3a97b3",
+        "releaseAssetDigest": "sha256:19c51e08a6562705fb1cb032a84fd87df21d7e27b194f035be7e754dbe3a97b3",
+        "publishedDigestVerified": true,
+        "digestSource": "upstream .dgst"
       },
       "x86_64": {
-        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.9.30/Xray-android-amd64.zip",
+        "archive": "https://github.com/XTLS/Xray-core/releases/download/v26.11.9/Xray-android-amd64.zip",
         "path": "app/src/main/jniLibs/x86_64/libxray.so",
-        "sha256": "c599dd642cc6063f5d87aa66295fec075cf101b680973f9a743f30705f651965"
+        "sha256": "63ba44d391e1bfd4061fad9584ed171671b5928b91128001bf4921e8cb9b46aa",
+        "archiveSha256": "48c266cdb9660dade968814e2f91d84e6aff534b7c3762ca3e385fb8aa475bd8",
+        "releaseAssetDigest": "sha256:48c266cdb9660dade968814e2f91d84e6aff534b7c3762ca3e385fb8aa475bd8",
+        "publishedDigestVerified": true,
+        "digestSource": "upstream .dgst"
       }
-    }
+    },
+    "securityNote": "Upstream urgent security update: MPTCP disabled by default to reduce exposure of affected Linux/Android listeners.",
+    "refreshScript": "native/refresh-xray.py"
   },
   "geodata": {
-    "revision": "202610062207",
-    "source": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/tag/202610062207",
+    "revision": "202610222206",
+    "source": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/tag/202610222206",
     "files": [
       {
         "path": "app/src/main/assets/geoip.dat",
         "apkEntry": "assets/geoip.dat",
-        "sha256": "391b522361c52804e486a98b53d97f3d9c1d3e4e4217bb34954774a0b456b9fd"
+        "sha256": "a21bacd4e378bfec3bfb5426c08fd995d78ed31f6a44180c9449a61be185f85f"
       },
       {
         "path": "app/src/main/assets/geosite.dat",
         "apkEntry": "assets/geosite.dat",
-        "sha256": "282b6613f2a09e2c5b2ba357808abb7bb697f7f5c6cc957d8e5dc92bdc27fbbf"
+        "sha256": "cfb4e3be914b5c887b9f67807171ec2887d34690252e4f011266d60fc6849602"
       }
     ]
   },
+  "tor": {
+    "version": "0.4.9.14",
+    "source": "https://github.com/guardianproject/tor-android/tree/0.4.9.14",
+    "artifact": "info.guardianproject:tor-android:0.4.9.14",
+    "aarSha256": "28ff2bb6d4d42eabe57183dedd7a97fce77e8ce4b6f5af6fa03993b3ca054edd",
+    "refreshScript": "tor-android/refresh-upstream.ps1",
+    "platforms": {
+      "arm64-v8a": {
+        "path": "tor-android/src/main/jniLibs/arm64-v8a/libtor.so",
+        "sha256": "67ce86a6664c330f49037487f0931498e2a0f82099fbfaf3de7a62c32cf5e996"
+      },
+      "armeabi-v7a": {
+        "path": "tor-android/src/main/jniLibs/armeabi-v7a/libtor.so",
+        "sha256": "a27f80fc60f96d953c8251e9a3ba007a7da0ba941c51968962b525141d416f7c"
+      },
+      "x86_64": {
+        "path": "tor-android/src/main/jniLibs/x86_64/libtor.so",
+        "sha256": "dc7f0fecc47ed73397b2f7928ddf2b87d18fac7c6ba1d00d72e3d7772e5eb480"
+      }
+    },
+    "transports": {
+      "artifact": "com.netzarchitekten:IPtProxy:5.7.0",
+      "enabled": [
+        "obfs4",
+        "webtunnel"
+      ]
+    }
+  },
   "hev": {
     "source": "https://github.com/heiher/hev-socks5-tunnel/releases/tag/2.18.0",
+    "version": "2.18.0-splate-app-identity-v1",
+    "commit": "d9dca26c7ad0e494492244f0309e80ee583e739e",
+    "identityApi": 1,
+    "localBuild": "native/HEV_IDENTITY_BUILD.json",
+    "buildScript": "native/build-hev.ps1",
+    "sourceLock": "native/HEV_SOURCES.sha256",
+    "elfLoadAlignment": 16384,
     "platforms": {
       "arm64-v8a": {
         "jniPath": "app/src/main/jniLibs/arm64-v8a/libhev-socks5-tunnel.so",
-        "jniSha256": "b80d639ba57fb557e05e17a7ecde81eca791cd1af89679adeca705de920287a4",
+        "jniSha256": "9770933aae414bd7d5908be2a9cced73f8ed55baa5727524c99278f51d5760bc",
         "executablePath": "app/src/main/jniLibs/arm64-v8a/libhevsockstun.so",
-        "executableSha256": "479dfc43601aaa58fd781959c67491e9307cfa44b68fb3187cd9dc0d69a699c1"
+        "executableSha256": "47d4df1e79259b409bd0133bdd65c999189c8523c0ae4449a0fc8911369b45ba"
       },
       "armeabi-v7a": {
         "jniPath": "app/src/main/jniLibs/armeabi-v7a/libhev-socks5-tunnel.so",
-        "jniSha256": "b64e1be8085254e9925c02df64906df0248fd4e5e8d0c3458584c35afe11b6f1",
+        "jniSha256": "fc65f89c8aa45e02258210af52a03b3a6e6aa7f94da5673a3caa6d0c378bb7dd",
         "executablePath": "app/src/main/jniLibs/armeabi-v7a/libhevsockstun.so",
-        "executableSha256": "35d54cdca45fb7e830b8e1ce39158223b08c1dc7a6749d05abaaa9feb656b88f"
+        "executableSha256": "a20b35214c3093f402df43bfbf48c582008d2868e164b3694136ba6258043a60"
       },
       "x86_64": {
         "jniPath": "app/src/main/jniLibs/x86_64/libhev-socks5-tunnel.so",
-        "jniSha256": "04275fb02894fd05adf25b606981af00abb78ac78399f19a123658c84f3aaaea",
+        "jniSha256": "9345a6d686ddf756d3836d80ea8eff2c9bc24884874a2fcde4d28f5f0dc61f0a",
         "executablePath": "app/src/main/jniLibs/x86_64/libhevsockstun.so",
-        "executableSha256": "d6b61ae94dcfdf4df525507c4f4907941944cda242ce6225eea72adb446ebae0"
+        "executableSha256": "a6c19f220bc2b3454372b8c1938b2bafa0f49220959c6a6855ef7c5f01a772c1"
+      }
+    }
+  },
+  "amneziawg": {
+    "source": "https://github.com/amnezia-vpn/amneziawg-go",
+    "version": "v3.1.20260828",
+    "commit": "b5928efb6ca19f0153958460c3d141f04abc5c2e",
+    "license": "MIT",
+    "go": "1.27.4",
+    "refreshScript": "scripts/build_amneziawg.py",
+    "platforms": {
+      "arm64-v8a": {
+        "sha256": "3cf001ff061ce0529ced199471cc70e2983c9eefa8480430196ffe14a89bba38",
+        "size": 7322296
+      },
+      "armeabi-v7a": {
+        "sha256": "c1381cc6d9f9c1a6f30360aeecdc4cce9895ec2da57e26b5bc29625f1010af66",
+        "size": 6908080
+      },
+      "x86_64": {
+        "sha256": "82f4a5bf4c1bf88d29cf57286c930a5d66267335da6463675c17435c1a15c04e",
+        "size": 7807032
       }
     }
   }

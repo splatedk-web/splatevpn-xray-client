@@ -1,0 +1,2722 @@
+{
+  "extra_000": {
+    "en": "Share your VPN",
+    "ru": "Раздача VPN"
+  },
+  "extra_001": {
+    "en": "Connect another device through your phone",
+    "ru": "Подключите другое устройство через телефон"
+  },
+  "extra_002": {
+    "en": "Which device are you connecting?",
+    "ru": "Что подключаем?"
+  },
+  "extra_003": {
+    "en": "In an app",
+    "ru": "В приложении"
+  },
+  "extra_004": {
+    "en": "Phone",
+    "ru": "Телефон"
+  },
+  "extra_005": {
+    "en": "Device",
+    "ru": "Устройство"
+  },
+  "extra_006": {
+    "en": "Check",
+    "ru": "Проверка"
+  },
+  "extra_007": {
+    "en": "Back",
+    "ru": "Назад"
+  },
+  "extra_008": {
+    "en": "Next",
+    "ru": "Далее"
+  },
+  "extra_009": {
+    "en": "Done",
+    "ru": "Готово"
+  },
+  "extra_010": {
+    "en": "Wi-Fi / USB / LAN",
+    "ru": "Wi-Fi / USB / LAN"
+  },
+  "extra_011": {
+    "en": "Your device",
+    "ru": "Ваше устройство"
+  },
+  "extra_012": {
+    "en": "First, on the phone running SplateVPN",
+    "ru": "Сначала на телефоне с SplateVPN"
+  },
+  "extra_013": {
+    "en": "Connect the VPN",
+    "ru": "Подключите VPN"
+  },
+  "extra_014": {
+    "en": "Choose a working server in SplateVPN and connect. For testing, the All traffic route is convenient.",
+    "ru": "Выберите рабочий сервер в SplateVPN и подключитесь. Для проверки раздачи удобно выбрать маршрут «Весь трафик»."
+  },
+  "extra_015": {
+    "en": "Enable sharing in SplateVPN",
+    "ru": "Включите раздачу в SplateVPN"
+  },
+  "extra_016": {
+    "en": "Settings → Share VPN over LAN. Choose an interface and wait for the VPN to reconnect. On the other device, enable proxy authentication: username splate and the password shown in sharing settings.",
+    "ru": "Настройки → Раздача VPN в локальную сеть. Выберите интерфейс, затем дождитесь переподключения VPN. На втором устройстве включите авторизацию прокси: логин splate, пароль из настроек раздачи."
+  },
+  "extra_017": {
+    "en": "Connect the devices",
+    "ru": "Соедините устройства"
+  },
+  "extra_018": {
+    "en": "Enable the phone's hotspot and connect the other device over Wi-Fi. A computer supporting Android USB tethering can use USB instead. A shared LAN also works if client isolation is disabled.",
+    "ru": "Включите точку доступа телефона и подключите второе устройство по Wi-Fi. Для ПК с поддержкой USB-модема можно использовать USB. Также подойдёт общая локальная сеть без изоляции клиентов."
+  },
+  "extra_019": {
+    "en": "For Android and iPhone/iPad, connect to the phone's hotspot over Wi-Fi. Configure the proxy for that network.",
+    "ru": "Для Android и iPhone/iPad проще подключиться к точке доступа телефона по Wi-Fi. Прокси настраивается именно у этой сети."
+  },
+  "extra_020": {
+    "en": "For a Mac, use Wi-Fi or a shared LAN. Android USB tethering support depends on the phone and driver; Wi-Fi is the main option.",
+    "ru": "Для Mac используйте Wi-Fi или общую локальную сеть. Поддержка USB-модема Android зависит от телефона и драйвера; Wi-Fi — основной вариант."
+  },
+  "extra_021": {
+    "en": "This shares a proxy connection. It works in browsers and apps that honor the system proxy or provide their own proxy settings. Games, calls and other apps may bypass it; the device's entire traffic does not automatically enter the VPN.",
+    "ru": "Это раздача через прокси. Она работает в браузерах и приложениях, которые используют системный прокси или поддерживают собственную настройку. Игры, звонки и другие приложения могут обходить его; весь трафик устройства автоматически в VPN не попадает."
+  },
+  "extra_022": {
+    "en": "VPN is disconnected. Connect it on the home screen.",
+    "ru": "VPN отключён. Подключите его на главной странице."
+  },
+  "extra_023": {
+    "en": "Sharing is not running yet. Enable it and wait for the VPN to reconnect.",
+    "ru": "Раздача ещё не запущена. Включите её и дождитесь переподключения VPN."
+  },
+  "extra_024": {
+    "en": "No address detected yet",
+    "ru": "Адрес пока не обнаружен"
+  },
+  "extra_025": {
+    "en": "Enable the hotspot or USB tethering. You can read the guide now; connection parameters become copyable after an address is detected. The address may change next time.",
+    "ru": "Включите точку доступа или USB-модем. Инструкцию можно читать сейчас, но копирование параметров появится после обнаружения адреса. Адрес может измениться при следующем подключении."
+  },
+  "extra_026": {
+    "en": "Connection parameters",
+    "ru": "Параметры для подключения"
+  },
+  "extra_027": {
+    "en": "Phone address on your network",
+    "ru": "Адрес телефона в вашей сети"
+  },
+  "extra_028": {
+    "en": "Choose the network used by the other device. Wi-Fi and USB addresses can differ.",
+    "ru": "Выберите сеть, к которой подключено второе устройство. Адрес Wi-Fi и адрес USB могут отличаться."
+  },
+  "extra_029": {
+    "en": "Phone IP address",
+    "ru": "IP-адрес телефона"
+  },
+  "extra_030": {
+    "en": "Phone IP",
+    "ru": "IP телефона"
+  },
+  "extra_031": {
+    "en": "Port",
+    "ru": "Порт"
+  },
+  "extra_032": {
+    "en": "Authentication",
+    "ru": "Авторизация"
+  },
+  "extra_033": {
+    "en": "Off",
+    "ru": "Выключена"
+  },
+  "extra_034": {
+    "en": "Manual",
+    "ru": "Вручную"
+  },
+  "extra_035": {
+    "en": "Server",
+    "ru": "Сервер"
+  },
+  "extra_036": {
+    "en": "Proxy hostname",
+    "ru": "Имя хоста прокси"
+  },
+  "extra_037": {
+    "en": "Proxy port",
+    "ru": "Порт прокси"
+  },
+  "extra_038": {
+    "en": "Save",
+    "ru": "Сохранить"
+  },
+  "extra_039": {
+    "en": "Apply",
+    "ru": "Применить"
+  },
+  "extra_040": {
+    "en": "Proxy",
+    "ru": "Прокси"
+  },
+  "extra_041": {
+    "en": "Web proxy (HTTP)",
+    "ru": "Веб-прокси (HTTP)"
+  },
+  "extra_042": {
+    "en": "Secure web proxy (HTTPS)",
+    "ru": "Защищённый веб-прокси (HTTPS)"
+  },
+  "extra_043": {
+    "en": "Settings illustration",
+    "ru": "Наглядная схема настроек"
+  },
+  "extra_044": {
+    "en": "This is an illustration; labels and appearance vary by OS version.",
+    "ru": "Это схема: названия пунктов и внешний вид зависят от версии системы."
+  },
+  "extra_045": {
+    "ru": "В поле адреса укажите только IP, без http:// и порта. Для авторизации используйте splate и пароль из настроек раздачи. HTTP и HTTPS используют один HTTP-порт; SOCKS5 — отдельный.",
+    "en": "Enter only the IP, without http:// or a port. Authenticate with splate and the password from sharing settings. HTTP and HTTPS use the HTTP port; SOCKS5 has its own port."
+  },
+  "extra_046": {
+    "en": "Commands and other methods",
+    "ru": "Команды и дополнительные способы"
+  },
+  "extra_047": {
+    "en": "Enable in PowerShell",
+    "ru": "Включить в PowerShell"
+  },
+  "extra_048": {
+    "en": "Disable in PowerShell",
+    "ru": "Выключить в PowerShell"
+  },
+  "extra_049": {
+    "en": "Enable in this terminal",
+    "ru": "Включить в текущем терминале"
+  },
+  "extra_050": {
+    "en": "Disable in this terminal",
+    "ru": "Выключить в текущем терминале"
+  },
+  "extra_051": {
+    "en": "For bash / zsh and programs honoring these variables. Applies only to this terminal and programs launched from it; GUI apps and sudo may not use them.",
+    "ru": "Для bash / zsh и программ, которые читают эти переменные. Действует только в текущем терминале и запущенных из него программах; графические приложения и sudo могут их не использовать."
+  },
+  "extra_052": {
+    "en": "Use PowerShell, not CMD. Changes the current user's proxy for apps honoring Windows settings. Replaces the previously configured proxy address.",
+    "ru": "Только PowerShell, не CMD. Меняет прокси текущего пользователя для приложений, которые используют настройки Windows. Предыдущий адрес прокси будет заменён."
+  },
+  "extra_053": {
+    "en": "Test the HTTP proxy with curl",
+    "ru": "Проверить HTTP-прокси через curl"
+  },
+  "extra_054": {
+    "en": "The response should contain example.com HTML. This tests a proxy connection, not the route of the entire device.",
+    "ru": "В ответ должен прийти HTML example.com. Это проверяет соединение через прокси, но не подтверждает маршрут всего устройства."
+  },
+  "extra_055": {
+    "en": "Check the connection",
+    "ru": "Проверим соединение"
+  },
+  "extra_056": {
+    "en": "Open a website on the other device",
+    "ru": "Откройте сайт на втором устройстве"
+  },
+  "extra_057": {
+    "en": "Use a browser honoring the system proxy. Try a site that should open through the VPN. Traffic follows the route selected in SplateVPN.",
+    "ru": "Используйте браузер с системным прокси. Проверьте сайт, который должен открываться через VPN. Трафик следует выбранному маршруту SplateVPN."
+  },
+  "extra_058": {
+    "en": "If an app does not work",
+    "ru": "Если приложение не работает"
+  },
+  "extra_059": {
+    "en": "It may ignore the system proxy. If the app has proxy settings, choose SOCKS5 and enter the phone address and SOCKS5 port. Without such settings, this method may not work for that app.",
+    "ru": "Оно может игнорировать системный прокси. Если внутри приложения есть пункт «Прокси», выберите SOCKS5 и укажите адрес телефона и SOCKS5-порт. При отсутствии такой настройки этот способ может не подойти."
+  },
+  "extra_060": {
+    "en": "Cannot connect?",
+    "ru": "Не подключается?"
+  },
+  "extra_061": {
+    "en": "Check the address and port",
+    "ru": "Сверьте адрес и порт"
+  },
+  "extra_062": {
+    "en": "The IP may change after restarting the hotspot. Use the current address from the Device step. HTTP and HTTPS use the HTTP port, not the SOCKS5 port.",
+    "ru": "После перезапуска точки доступа IP мог измениться. Возьмите текущий адрес из шага «Устройство». HTTP и HTTPS используют HTTP-порт, а не SOCKS5-порт."
+  },
+  "extra_063": {
+    "en": "Check the network",
+    "ru": "Проверьте сеть"
+  },
+  "extra_064": {
+    "en": "Both devices must be able to reach each other on the same network. Guest Wi-Fi, client isolation, phone sleep or another VPN on the receiving device can interfere.",
+    "ru": "Оба устройства должны видеть друг друга в одной сети. Гостевой Wi-Fi, изоляция клиентов, сон телефона или другой VPN на получателе могут мешать подключению."
+  },
+  "extra_065": {
+    "en": "Check the phone",
+    "ru": "Проверьте телефон"
+  },
+  "extra_066": {
+    "ru": "VPN и раздача должны быть включены. Если сайт не работает на телефоне, сначала исправьте VPN. Используйте пароль прокси и подключайте доверенные устройства.",
+    "en": "VPN and sharing must be enabled. If the site fails on the phone, fix VPN first. Use the proxy password and share with trusted devices."
+  },
+  "extra_067": {
+    "en": "If you imported a full JSON profile",
+    "ru": "Если импортирован полный JSON-профиль"
+  },
+  "extra_068": {
+    "ru": "Локальные порты прокси задаются приложением. Используйте адреса HTTP/SOCKS5 из этой инструкции.",
+    "en": "Local proxy ports are managed by the app. Use the HTTP/SOCKS5 addresses from this guide."
+  },
+  "extra_069": {
+    "en": "Turn the proxy off when finished",
+    "ru": "После использования выключите прокси"
+  },
+  "extra_070": {
+    "en": "Official documentation",
+    "ru": "Официальная справка"
+  },
+  "extra_071": {
+    "en": "Open the connected Wi-Fi network",
+    "ru": "Откройте подключённую сеть Wi-Fi"
+  },
+  "extra_072": {
+    "en": "Settings → Wi-Fi / Internet → the hotspot network → its settings or edit icon.",
+    "ru": "Настройки → Wi-Fi / Интернет → сеть точки доступа → шестерёнка или значок редактирования."
+  },
+  "extra_073": {
+    "en": "Choose a manual proxy",
+    "ru": "Выберите прокси вручную"
+  },
+  "extra_074": {
+    "en": "Open Modify network or Advanced options → Proxy → Manual. Labels vary on Samsung, Xiaomi and other devices.",
+    "ru": "Откройте «Изменить сеть» или «Дополнительно» → Прокси → Вручную. На Samsung, Xiaomi и других устройствах названия могут отличаться."
+  },
+  "extra_075": {
+    "en": "Fill in the fields and save",
+    "ru": "Заполните поля и сохраните"
+  },
+  "extra_076": {
+    "en": "Proxy hostname is the SplateVPN phone's IP; port is the HTTP port below. Leave the network's IP settings on DHCP / automatic.",
+    "ru": "Имя хоста — IP телефона с SplateVPN, порт — HTTP-порт ниже. IP-настройки сети оставьте DHCP / автоматически."
+  },
+  "extra_077": {
+    "en": "Open network details",
+    "ru": "Откройте сведения о сети"
+  },
+  "extra_078": {
+    "en": "Settings → Wi-Fi → ⓘ next to the phone's hotspot network.",
+    "ru": "Настройки → Wi-Fi → ⓘ рядом с сетью точки доступа телефона."
+  },
+  "extra_079": {
+    "en": "Configure the HTTP proxy",
+    "ru": "Настройте HTTP-прокси"
+  },
+  "extra_080": {
+    "en": "Scroll down → Configure Proxy → Manual.",
+    "ru": "Прокрутите вниз → Настройка прокси → Вручную."
+  },
+  "extra_081": {
+    "en": "Enter the server and port",
+    "ru": "Введите сервер и порт"
+  },
+  "extra_082": {
+    "ru": "Сервер — IP телефона, порт — HTTP-порт ниже. Включите аутентификацию, введите splate и пароль из настроек раздачи, затем сохраните.",
+    "en": "Server is the phone IP; port is the HTTP port below. Enable authentication with splate and the sharing password, then save."
+  },
+  "extra_083": {
+    "en": "Open proxy settings",
+    "ru": "Откройте настройки прокси"
+  },
+  "extra_084": {
+    "en": "Windows 10/11: Settings → Network & internet → Proxy.",
+    "ru": "Windows 10/11: Параметры → Сеть и Интернет → Прокси-сервер."
+  },
+  "extra_085": {
+    "en": "Enable manual setup",
+    "ru": "Включите ручную настройку"
+  },
+  "extra_086": {
+    "en": "Manual proxy setup → Set up / Use a proxy server → On.",
+    "ru": "Настройка прокси вручную → Настроить / Использовать прокси-сервер → Вкл."
+  },
+  "extra_087": {
+    "en": "Enter the IP and HTTP port",
+    "ru": "Введите IP и HTTP-порт"
+  },
+  "extra_088": {
+    "en": "Fill in the illustrated fields below and save. These are the current user's proxy settings, not a Windows VPN connection.",
+    "ru": "Заполните поля по схеме ниже и сохраните. Это прокси текущего пользователя, а не отдельного VPN-подключения Windows."
+  },
+  "extra_089": {
+    "en": "Choose the active connection",
+    "ru": "Выберите активное подключение"
+  },
+  "extra_090": {
+    "en": "System Settings → Network → Wi-Fi or Ethernet → Details → Proxies.",
+    "ru": "Системные настройки → Сеть → Wi-Fi или Ethernet → Подробнее → Прокси."
+  },
+  "extra_091": {
+    "en": "Enable HTTP and HTTPS",
+    "ru": "Включите HTTP и HTTPS"
+  },
+  "extra_092": {
+    "en": "Enable Web proxy (HTTP) and Secure web proxy (HTTPS). Enter the same IP and HTTP port for both.",
+    "ru": "Включите «Веб-прокси (HTTP)» и «Защищённый веб-прокси (HTTPS)». Для обоих укажите одинаковые IP и HTTP-порт."
+  },
+  "extra_093": {
+    "en": "Save the settings",
+    "ru": "Сохраните настройки"
+  },
+  "extra_094": {
+    "ru": "Включите авторизацию прокси: splate и пароль раздачи. Нажмите OK / Готово, затем Применить. SOCKS одновременно включать не требуется.",
+    "en": "Enable proxy authentication with splate and the sharing password. Click OK / Done, then Apply. SOCKS need not be enabled at the same time."
+  },
+  "extra_095": {
+    "en": "Open Network Proxy",
+    "ru": "Откройте сетевой прокси"
+  },
+  "extra_096": {
+    "en": "Ubuntu / GNOME: Settings → Network → Network Proxy. Choose Manual.",
+    "ru": "Ubuntu / GNOME: Настройки → Сеть → Сетевой прокси. Выберите режим «Вручную»."
+  },
+  "extra_097": {
+    "en": "Fill in HTTP and HTTPS",
+    "ru": "Заполните HTTP и HTTPS"
+  },
+  "extra_098": {
+    "en": "Enter the same phone IP and HTTP port in both rows. Save; some apps need to be restarted.",
+    "ru": "В обе строки введите один IP телефона и HTTP-порт. Сохраните настройки; некоторые приложения нужно перезапустить."
+  },
+  "extra_099": {
+    "en": "Open the Proxy module",
+    "ru": "Откройте модуль прокси"
+  },
+  "extra_100": {
+    "en": "KDE Plasma: search for Proxy in System Settings → choose manual configuration.",
+    "ru": "KDE Plasma: найдите «Прокси» в параметрах системы → выберите ручную настройку."
+  },
+  "extra_101": {
+    "en": "Configure HTTP and HTTPS",
+    "ru": "Настройте HTTP и HTTPS"
+  },
+  "extra_102": {
+    "en": "Enter the phone IP and HTTP port for HTTP and HTTPS, then Apply. Apps may have their own proxy settings.",
+    "ru": "Укажите IP телефона и HTTP-порт для HTTP и HTTPS, затем «Применить». Приложения могут иметь собственные настройки прокси."
+  },
+  "extra_103": {
+    "en": "Open bash or zsh",
+    "ru": "Откройте bash или zsh"
+  },
+  "extra_104": {
+    "en": "Copy and run the commands below in your terminal. Then launch the commands you need from that same terminal.",
+    "ru": "Скопируйте команды ниже и выполните их в терминале. Затем запускайте нужные команды из этого же окна."
+  },
+  "extra_105": {
+    "en": "Find the proxy settings",
+    "ru": "Найдите настройки прокси"
+  },
+  "extra_106": {
+    "en": "Open the app's Proxy section, often found under network or data settings.",
+    "ru": "Откройте раздел «Прокси» в нужном приложении. Он часто находится в настройках сети или данных."
+  },
+  "extra_107": {
+    "en": "Choose SOCKS5",
+    "ru": "Выберите SOCKS5"
+  },
+  "extra_108": {
+    "ru": "Введите IP телефона и SOCKS5-порт ниже. Логин splate, пароль — из настроек раздачи. Если поддерживается только HTTP, используйте HTTP-порт.",
+    "en": "Enter the phone IP and SOCKS5 port below. Username is splate; use the sharing password. For HTTP-only apps, use the HTTP port."
+  },
+  "extra_109": {
+    "en": "In this Wi-Fi network's settings, set Proxy → None and save.",
+    "ru": "В настройках этой Wi-Fi-сети выберите Прокси → Нет и сохраните."
+  },
+  "extra_110": {
+    "en": "Settings → Wi-Fi → ⓘ → Configure Proxy → Off → Save.",
+    "ru": "Настройки → Wi-Fi → ⓘ → Настройка прокси → Выкл. → Сохранить."
+  },
+  "extra_111": {
+    "en": "Settings → Network & internet → Proxy → Use a proxy server → Off.",
+    "ru": "Параметры → Сеть и Интернет → Прокси-сервер → Использовать прокси-сервер → Выкл."
+  },
+  "extra_112": {
+    "en": "Network → your connection → Details → Proxies: turn HTTP and HTTPS off and save.",
+    "ru": "Сеть → ваше подключение → Подробнее → Прокси: выключите HTTP и HTTPS и сохраните."
+  },
+  "extra_113": {
+    "en": "Run the unset command below or close this terminal.",
+    "ru": "Выполните команду unset ниже или закройте этот терминал."
+  },
+  "extra_114": {
+    "en": "Set Network Proxy back to None / Disabled.",
+    "ru": "Верните режим «Нет / Отключено» в настройках сетевого прокси."
+  },
+  "extra_115": {
+    "en": "Turn the proxy off in the app's own settings.",
+    "ru": "Выключите прокси в настройках самого приложения."
+  },
+  "extra_116": {
+    "en": "Otherwise those apps may lose internet access after the phone disconnects.",
+    "ru": "Иначе после отключения телефона интернет в этих приложениях может перестать работать."
+  },
+  "extra_117": {
+    "en": "SmartDNS failover",
+    "ru": "Автопереключение SmartDNS"
+  },
+  "extra_118": {
+    "en": "While connected, checks public pages every 5 minutes using the selected SmartDNS mode. Repeated failures trigger a verified replacement and a brief VPN reconnect. CAPTCHA and sign-in are not failures.",
+    "ru": "При подключённом VPN проверяет публичные страницы каждые 5 минут в выбранном режиме SmartDNS. При повторных сбоях подтверждает замену и переподключает VPN. CAPTCHA и вход не считаются сбоем."
+  },
+  "extra_119": {
+    "en": "SmartDNS via VPN",
+    "ru": "SmartDNS через VPN"
+  },
+  "extra_120": {
+    "en": "DNS queries and the SmartDNS proxy connection use the selected VPN server. Auto-selection tests this same route. Service access also depends on the SmartDNS exit region and account settings.",
+    "ru": "Запросы DNS и подключение к SmartDNS-прокси идут через выбранный VPN-сервер. Автоподбор проверяет этот же путь. Для работы сервиса также важны регион выхода SmartDNS и настройки аккаунта."
+  },
+  "extra_121": {
+    "en": "SmartDNS auto-selection",
+    "ru": "Автоподбор SmartDNS"
+  },
+  "extra_122": {
+    "en": "Tests providers in the selected mode and applies a confirmed option. Direct mode also tests TLS fragmentation. May take a few minutes.",
+    "ru": "Проверит провайдеров в выбранном режиме и применит подтверждённый вариант. В прямом режиме проверяется также TLS-фрагментация. Может занять несколько минут."
+  },
+  "extra_123": {
+    "en": "Checks DNS, HTTPS and public Gemini, ChatGPT and Claude pages. Finalists also load Gemini with JavaScript. Account sign-in and functionality are not checked.",
+    "ru": "Проверяются DNS, HTTPS и публичные страницы Gemini, ChatGPT и Claude. У финалистов Gemini проверяется после JavaScript. Вход и работа аккаунта не проверяются."
+  },
+  "extra_124": {
+    "en": "Find and apply",
+    "ru": "Подобрать и применить"
+  },
+  "extra_125": {
+    "en": "Stop selection",
+    "ru": "Остановить подбор"
+  },
+  "extra_126": {
+    "en": "Confirming result",
+    "ru": "Повторная проверка"
+  },
+  "extra_127": {
+    "en": "The automatic check could not confirm Gemini. It may still work in your browser: sign-in and WebView restrictions can prevent verification. Settings unchanged. Details below.",
+    "ru": "Автопроверка не смогла подтвердить Gemini. Это не означает, что он не работает в вашем браузере: вход в аккаунт и ограничения WebView могут мешать проверке. Настройки не изменены. Подробности — ниже."
+  },
+  "extra_128": {
+    "en": "Selection stopped. Settings unchanged.",
+    "ru": "Подбор остановлен. Настройки не изменены."
+  },
+  "extra_129": {
+    "en": "Network changed. Start selection again.",
+    "ru": "Сеть изменилась. Запустите подбор заново."
+  },
+  "extra_130": {
+    "en": "No network connection.",
+    "ru": "Нет подключения к сети."
+  },
+  "extra_131": {
+    "en": "Could not complete the check. Settings unchanged.",
+    "ru": "Не удалось выполнить проверку. Настройки не изменены."
+  },
+  "extra_132": {
+    "en": "DoH rejected",
+    "ru": "отказ DoH"
+  },
+  "extra_133": {
+    "en": "DNS connection failed",
+    "ru": "не удалось соединиться с DNS"
+  },
+  "extra_134": {
+    "en": "DNS timed out",
+    "ru": "DNS не ответил вовремя"
+  },
+  "extra_135": {
+    "en": "DNS returned no valid public IPv4",
+    "ru": "DNS не вернул корректный публичный IPv4"
+  },
+  "extra_136": {
+    "en": "not a DNS response",
+    "ru": "вместо DNS получен другой ответ"
+  },
+  "extra_137": {
+    "en": "connection / TLS failure",
+    "ru": "ошибка соединения / TLS"
+  },
+  "extra_138": {
+    "en": "site timed out",
+    "ru": "сайт не ответил вовремя"
+  },
+  "extra_139": {
+    "en": "site TLS handshake failed",
+    "ru": "не удалось установить TLS с сайтом"
+  },
+  "extra_140": {
+    "en": "DNS checked · site response",
+    "ru": "DNS проверен · ответ сайта"
+  },
+  "extra_141": {
+    "en": "JavaScript page loaded; account not checked",
+    "ru": "страница загружена с JavaScript; аккаунт не проверен"
+  },
+  "extra_142": {
+    "en": "JavaScript: sign-in, CAPTCHA or page error",
+    "ru": "JavaScript: вход, CAPTCHA или ошибка страницы"
+  },
+  "extra_143": {
+    "en": "JavaScript: region blocked",
+    "ru": "JavaScript: региональный запрет"
+  },
+  "extra_144": {
+    "en": "JavaScript: check timed out",
+    "ru": "JavaScript: время проверки истекло"
+  },
+  "extra_145": {
+    "en": "browser check requires Android 9+ and an up-to-date Android System WebView",
+    "ru": "для браузерной проверки нужны Android 9+ и актуальный Android System WebView"
+  },
+  "extra_146": {
+    "en": "browser check did not complete",
+    "ru": "браузерная проверка не завершена"
+  },
+  "extra_147": {
+    "en": "accessible",
+    "ru": "доступно"
+  },
+  "extra_148": {
+    "en": "limited",
+    "ru": "ограничено"
+  },
+  "extra_149": {
+    "en": "region blocked",
+    "ru": "регион заблокирован"
+  },
+  "extra_150": {
+    "en": "failed",
+    "ru": "нет ответа"
+  },
+  "extra_151": {
+    "en": "Statistics and tools",
+    "ru": "Статистика и инструменты"
+  },
+  "extra_152": {
+    "en": "Traffic statistics",
+    "ru": "Статистика трафика"
+  },
+  "extra_153": {
+    "en": "Today",
+    "ru": "Сегодня"
+  },
+  "extra_154": {
+    "en": "Service availability",
+    "ru": "Доступность сервисов"
+  },
+  "extra_155": {
+    "en": "8 services · check through VPN",
+    "ru": "8 сервисов · проверка через VPN"
+  },
+  "extra_156": {
+    "en": "One-tap diagnostics",
+    "ru": "Диагностика в один тап"
+  },
+  "extra_157": {
+    "en": "Network, DNS, server and tunnel",
+    "ru": "Сеть, DNS, сервер и туннель"
+  },
+  "extra_158": {
+    "en": "Close",
+    "ru": "Закрыть"
+  },
+  "extra_159": {
+    "en": "Connection diagnostics",
+    "ru": "Диагностика соединения"
+  },
+  "extra_160": {
+    "en": "Checking connection…",
+    "ru": "Проверяем подключение…"
+  },
+  "extra_161": {
+    "en": "Check stopped",
+    "ru": "Проверка остановлена"
+  },
+  "extra_162": {
+    "en": "Check complete",
+    "ru": "Проверка завершена"
+  },
+  "extra_163": {
+    "en": "Results are incomplete.",
+    "ru": "Показаны неполные результаты."
+  },
+  "extra_164": {
+    "en": "Stop check",
+    "ru": "Остановить проверку"
+  },
+  "extra_165": {
+    "en": "Check again",
+    "ru": "Проверить снова"
+  },
+  "extra_166": {
+    "en": "Checks use the current connection and routing rules. Website availability does not guarantee login, streaming or calls.",
+    "ru": "Проверки идут через текущее подключение и его правила. Доступность сайта не гарантирует работу входа, видео или звонков."
+  },
+  "extra_167": {
+    "en": "DNS and server port use the physical network; HTTPS uses VPN. An open port does not confirm valid credentials.",
+    "ru": "DNS и порт сервера проверяются через физическую сеть, HTTPS — через VPN. Открытый порт не подтверждает правильность ключей подключения."
+  },
+  "extra_168": {
+    "en": "Network",
+    "ru": "Сеть"
+  },
+  "extra_169": {
+    "en": "System DNS",
+    "ru": "Системный DNS"
+  },
+  "extra_170": {
+    "en": "Server port",
+    "ru": "Порт сервера"
+  },
+  "extra_171": {
+    "en": "Available",
+    "ru": "Доступно"
+  },
+  "extra_172": {
+    "en": "Failed",
+    "ru": "Ошибка"
+  },
+  "extra_173": {
+    "en": "Access restricted",
+    "ru": "Ограничение доступа"
+  },
+  "extra_174": {
+    "en": "Skipped",
+    "ru": "Пропущено"
+  },
+  "extra_175": {
+    "en": "Connect VPN and retry",
+    "ru": "Сначала подключите VPN и повторите проверку"
+  },
+  "extra_176": {
+    "en": "VPN connected",
+    "ru": "VPN подключён"
+  },
+  "extra_177": {
+    "en": "Internet-capable network found",
+    "ru": "Есть сеть с доступом к интернету"
+  },
+  "extra_178": {
+    "en": "No network: check Wi-Fi or mobile data",
+    "ru": "Нет сети: проверьте Wi-Fi или мобильные данные"
+  },
+  "extra_179": {
+    "en": "Hostname resolves to an IP",
+    "ru": "Имя разрешается в IP-адрес"
+  },
+  "extra_180": {
+    "en": "Name resolution failed: check DNS",
+    "ru": "Не удалось разрешить имя: проверьте DNS"
+  },
+  "extra_181": {
+    "en": "TCP connection established",
+    "ru": "TCP-соединение установлено"
+  },
+  "extra_182": {
+    "en": "Port unavailable: check address/port or switch server",
+    "ru": "Порт недоступен: проверьте адрес, порт или смените сервер"
+  },
+  "extra_183": {
+    "en": "Select a server",
+    "ru": "Выберите сервер"
+  },
+  "extra_184": {
+    "en": "TLS failed: check device date and TLS settings",
+    "ru": "Ошибка TLS: проверьте дату устройства и настройки TLS"
+  },
+  "extra_185": {
+    "en": "Timeout: retry or switch server",
+    "ru": "Таймаут: повторите проверку или смените сервер"
+  },
+  "extra_186": {
+    "en": "Connection failed: check network and server",
+    "ru": "Сбой подключения: проверьте сеть и сервер"
+  },
+  "extra_187": {
+    "en": "Details",
+    "ru": "Подробности"
+  },
+  "extra_188": {
+    "en": "Connection mode",
+    "ru": "Режим подключения"
+  },
+  "extra_189": {
+    "en": "Save current settings",
+    "ru": "Сохранить текущие настройки"
+  },
+  "extra_190": {
+    "en": "Undo last profile",
+    "ru": "Отменить последний профиль"
+  },
+  "extra_191": {
+    "en": "VPN will reconnect after applying.",
+    "ru": "VPN переподключится после применения."
+  },
+  "extra_192": {
+    "en": "Applying…",
+    "ru": "Применяется…"
+  },
+  "extra_193": {
+    "en": "New profile",
+    "ru": "Новый профиль"
+  },
+  "extra_194": {
+    "en": "Name",
+    "ru": "Название"
+  },
+  "extra_195": {
+    "en": "Could not save profile.",
+    "ru": "Не удалось сохранить профиль."
+  },
+  "extra_196": {
+    "en": "Cancel",
+    "ru": "Отмена"
+  },
+  "extra_197": {
+    "en": "Smart routing",
+    "ru": "Умный маршрут"
+  },
+  "extra_198": {
+    "en": "All traffic",
+    "ru": "Весь трафик"
+  },
+  "extra_199": {
+    "en": "Current mode",
+    "ru": "Текущий режим"
+  },
+  "extra_200": {
+    "en": "Updating…",
+    "ru": "Применяется…"
+  },
+  "extra_201": {
+    "en": "Change",
+    "ru": "Изменить"
+  },
+  "extra_202": {
+    "en": "Search settings…",
+    "ru": "Найти настройку…"
+  },
+  "extra_203": {
+    "en": "Clear search",
+    "ru": "Очистить поиск"
+  },
+  "extra_204": {
+    "en": "No matches. Try DNS, theme or backup.",
+    "ru": "Ничего не найдено. Попробуйте DNS, тему или бэкап."
+  },
+  "extra_205": {
+    "en": "All settings",
+    "ru": "Все настройки"
+  },
+  "extra_206": {
+    "en": "Sharing interface",
+    "ru": "Интерфейс раздачи"
+  },
+  "extra_207": {
+    "en": "Automatic",
+    "ru": "Автоматически"
+  },
+  "extra_208": {
+    "en": "Proxy authentication is required. Username: splate",
+    "ru": "Прокси требует авторизацию. Логин: splate"
+  },
+  "extra_209": {
+    "en": "Password",
+    "ru": "Пароль"
+  },
+  "extra_210": {
+    "en": "Show password",
+    "ru": "Показать пароль"
+  },
+  "extra_211": {
+    "en": "Rotate password",
+    "ru": "Сменить пароль"
+  },
+  "extra_212": {
+    "en": "How should the backup be restored?",
+    "ru": "Как восстановить копию?"
+  },
+  "extra_213": {
+    "en": "Merge",
+    "ru": "Объединить"
+  },
+  "extra_214": {
+    "en": "Replace data",
+    "ru": "Заменить данные"
+  },
+  "extra_215": {
+    "en": "Add servers and rules. Settings from the file will apply.",
+    "ru": "Добавить серверы и правила. Настройки из файла применятся."
+  },
+  "extra_216": {
+    "en": "Replace servers, subscriptions, app lists and routes, including empty lists.",
+    "ru": "Заменить серверы, подписки, списки приложений и маршруты, включая пустые списки."
+  },
+  "extra_217": {
+    "en": "Choose file",
+    "ru": "Выбрать файл"
+  },
+  "extra_218": {
+    "en": "Connection",
+    "ru": "Подключение"
+  },
+  "extra_219": {
+    "en": "Auto-select, balancer, startup and subscriptions",
+    "ru": "Автовыбор, балансировщик, запуск и подписки"
+  },
+  "extra_220": {
+    "en": "Network and DNS",
+    "ru": "Сеть и DNS"
+  },
+  "extra_221": {
+    "en": "Routing, general DNS and server checks",
+    "ru": "Маршрутизация, общий DNS и проверка серверов"
+  },
+  "extra_222": {
+    "en": "AI services",
+    "ru": "Нейросети"
+  },
+  "extra_223": {
+    "en": "SmartDNS, Gemini, ChatGPT and auto-selection",
+    "ru": "SmartDNS, Gemini, ChatGPT и автоподбор"
+  },
+  "extra_224": {
+    "en": "Protection and ads",
+    "ru": "Защита и реклама"
+  },
+  "extra_225": {
+    "en": "Kill Switch, IPv6 and ad blocker",
+    "ru": "Kill Switch, IPv6 и блокировщик рекламы"
+  },
+  "extra_226": {
+    "en": "Appearance and language",
+    "ru": "Оформление и язык"
+  },
+  "extra_227": {
+    "en": "Themes, transparency and blur",
+    "ru": "Темы, прозрачность и размытие"
+  },
+  "extra_228": {
+    "en": "Backup and restore",
+    "ru": "Резервные копии"
+  },
+  "extra_229": {
+    "en": "Export, restore and automatic snapshot",
+    "ru": "Экспорт, восстановление и автокопия"
+  },
+  "extra_230": {
+    "en": "Diagnostics",
+    "ru": "Диагностика"
+  },
+  "extra_231": {
+    "en": "Connection checks, statistics and logs",
+    "ru": "Проверки подключения, статистика и журнал"
+  },
+  "extra_232": {
+    "en": "Advanced",
+    "ru": "Дополнительно"
+  },
+  "extra_233": {
+    "en": "XHTTP, FakeDNS, QUIC, sniffing and custom routes",
+    "ru": "XHTTP, FakeDNS, QUIC, сниффинг и свои маршруты"
+  },
+  "extra_234": {
+    "en": "VPN sharing",
+    "ru": "Раздача VPN"
+  },
+  "extra_235": {
+    "en": "LAN proxy and tethering",
+    "ru": "Прокси в локальной сети и модем"
+  },
+  "extra_236": {
+    "en": "About",
+    "ru": "О приложении"
+  },
+  "extra_237": {
+    "en": "Core version and app updates",
+    "ru": "Версия ядра и обновления приложения"
+  },
+  "extra_238": {
+    "en": "Applications",
+    "ru": "Приложения"
+  },
+  "extra_239": {
+    "en": "Choose which applications use VPN",
+    "ru": "Укажите, каким приложениям нужен VPN"
+  },
+  "extra_240": {
+    "en": "1. Choose a mode",
+    "ru": "1. Выберите режим"
+  },
+  "extra_241": {
+    "en": "Change mode",
+    "ru": "Изменить режим"
+  },
+  "extra_242": {
+    "en": "All applications",
+    "ru": "Все приложения"
+  },
+  "extra_243": {
+    "en": "Only selected applications",
+    "ru": "Только выбранные"
+  },
+  "extra_244": {
+    "en": "All except selected applications",
+    "ru": "Все, кроме выбранных"
+  },
+  "extra_245": {
+    "en": "VPN routing rules apply to every application.",
+    "ru": "Для всех приложений действуют правила VPN."
+  },
+  "extra_246": {
+    "en": "Selected apps use VPN. All others connect directly.",
+    "ru": "Отмеченные — через VPN. Остальные — напрямую."
+  },
+  "extra_247": {
+    "en": "Selected apps connect directly. All others use VPN.",
+    "ru": "Отмеченные — напрямую. Остальные — через VPN."
+  },
+  "extra_248": {
+    "en": "2. Select applications for VPN",
+    "ru": "2. Отметьте приложения для VPN"
+  },
+  "extra_249": {
+    "en": "2. Select applications to bypass VPN",
+    "ru": "2. Отметьте приложения без VPN"
+  },
+  "extra_250": {
+    "en": "VPN routing rules",
+    "ru": "По правилам VPN"
+  },
+  "extra_251": {
+    "en": "Without VPN · direct",
+    "ru": "Без VPN · напрямую"
+  },
+  "extra_252": {
+    "en": "VPN apps follow the mode on Home. Smart routing can send some sites directly.",
+    "ru": "«Через VPN» учитывает режим на главной: в умном режиме часть сайтов идёт напрямую."
+  },
+  "extra_253": {
+    "en": "No need to select apps individually. To add exceptions, choose “All except selected applications”.",
+    "ru": "Выбирать приложения по одному не нужно. Для исключений выберите «Все, кроме выбранных»."
+  },
+  "extra_254": {
+    "en": "Select at least one application or choose “All applications”.",
+    "ru": "Отметьте хотя бы одно приложение или выберите «Все приложения»."
+  },
+  "extra_255": {
+    "en": "No exceptions: VPN will be available to every application.",
+    "ru": "Исключений нет — VPN будет доступен всем приложениям."
+  },
+  "extra_256": {
+    "en": "Changes not applied yet",
+    "ru": "Есть неприменённые изменения"
+  },
+  "extra_257": {
+    "en": "Settings saved",
+    "ru": "Настройки сохранены"
+  },
+  "extra_258": {
+    "en": "Applying changes reconnects VPN once.",
+    "ru": "При применении VPN переподключится один раз."
+  },
+  "extra_259": {
+    "en": "Rules take effect when you connect VPN.",
+    "ru": "Правила начнут действовать после подключения VPN."
+  },
+  "extra_260": {
+    "en": "Apply changes",
+    "ru": "Применить"
+  },
+  "extra_261": {
+    "en": "Discard changes",
+    "ru": "Отменить изменения"
+  },
+  "extra_262": {
+    "en": "Selected only",
+    "ru": "Только отмеченные"
+  },
+  "extra_263": {
+    "en": "Select search results",
+    "ru": "Отметить найденные"
+  },
+  "extra_264": {
+    "en": "Select all",
+    "ru": "Отметить все"
+  },
+  "extra_265": {
+    "en": "Clear selection",
+    "ru": "Снять отметки"
+  },
+  "extra_266": {
+    "en": "No applications found. Change your search.",
+    "ru": "Приложения не найдены. Измените поиск."
+  },
+  "extra_267": {
+    "en": "Nothing selected yet. Show all applications to choose some.",
+    "ru": "Пока ничего не отмечено. Покажите все приложения и выберите нужные."
+  },
+  "extra_268": {
+    "en": "Show all applications",
+    "ru": "Показать все приложения"
+  },
+  "extra_269": {
+    "en": "Application list is empty. Try refreshing it.",
+    "ru": "Список приложений пуст. Попробуйте обновить его."
+  },
+  "extra_270": {
+    "en": "Balancer settings",
+    "ru": "Настройки балансировщика"
+  },
+  "extra_271": {
+    "en": "Automatic · default",
+    "ru": "Автоматический · по умолчанию"
+  },
+  "extra_272": {
+    "en": "Selects a server on connect, replaces failed nodes and looks for a faster one when quality drops.",
+    "ru": "Выбирает сервер при подключении, заменяет недоступный и ищет более быстрый при ухудшении связи."
+  },
+  "extra_273": {
+    "en": "On failure only",
+    "ru": "Только при сбое"
+  },
+  "extra_274": {
+    "en": "Keeps a working server. Switches only after consecutive checks confirm a failure.",
+    "ru": "Сохраняет рабочий сервер. Переключается, только когда несколько проверок подряд подтвердили сбой."
+  },
+  "extra_275": {
+    "en": "On connect only",
+    "ru": "Только при подключении"
+  },
+  "extra_276": {
+    "en": "Selects a server once on connect. Never switches during the session, even if that server stops responding.",
+    "ru": "Один раз выбирает сервер при подключении. Во время сеанса не переключает, даже если сервер перестал отвечать."
+  },
+  "extra_277": {
+    "en": "Connection check interval",
+    "ru": "Интервал проверки связи"
+  },
+  "extra_278": {
+    "en": "Failed checks before switching",
+    "ru": "Неудачных проверок до смены"
+  },
+  "extra_279": {
+    "en": "Scheduled search for a better server",
+    "ru": "Плановый поиск лучшего сервера"
+  },
+  "extra_280": {
+    "en": "Pause between improvements",
+    "ru": "Пауза между улучшениями"
+  },
+  "extra_281": {
+    "en": "Minimum latency improvement",
+    "ru": "Минимальный выигрыш по задержке"
+  },
+  "extra_282": {
+    "en": "Restore default settings",
+    "ru": "Вернуть настройки по умолчанию"
+  },
+  "extra_283": {
+    "en": "These options apply while auto-select is enabled.",
+    "ru": "Параметры применятся, когда включён автовыбор сервера."
+  },
+  "extra_284": {
+    "en": "VPN download · 2 streams · 10 s · up to 128 MB",
+    "ru": "Загрузка через VPN · 2 потока · 10 с · до 128 МБ"
+  },
+  "extra_285": {
+    "en": "Start speed test",
+    "ru": "Начать тест скорости"
+  },
+  "extra_286": {
+    "en": "Stop speed test",
+    "ru": "Остановить тест"
+  },
+  "extra_287": {
+    "en": "Connect the VPN first",
+    "ru": "Сначала подключите VPN"
+  },
+  "extra_288": {
+    "en": "The connection changed. Run the test again.",
+    "ru": "Соединение изменилось. Запустите тест заново."
+  },
+  "extra_289": {
+    "en": "The test server timed out",
+    "ru": "Сервер теста не ответил вовремя"
+  },
+  "extra_290": {
+    "en": "Could not resolve the test server",
+    "ru": "Не удалось определить адрес сервера"
+  },
+  "extra_291": {
+    "en": "Test server unavailable. Try another VPN node.",
+    "ru": "Сервер теста недоступен. Попробуйте другой VPN-узел."
+  },
+  "extra_292": {
+    "en": "Not enough data for a reliable measurement",
+    "ru": "Недостаточно данных для достоверного замера"
+  },
+  "extra_293": {
+    "en": "%.1f MB · %.1f s measured",
+    "ru": "%.1f МБ · %.1f с измерения"
+  },
+  "extra_294": {
+    "en": "MB/s",
+    "ru": "МБ/с"
+  },
+  "extra_295": {
+    "en": "MB",
+    "ru": "МБ"
+  },
+  "extra_296": {
+    "en": "Selected: %d",
+    "ru": "Отмечено: %d"
+  },
+  "extra_297": {
+    "en": "Checked %d of %d",
+    "ru": "Проверено %d из %d"
+  },
+  "extra_298": {
+    "en": "Applied %s · accessible pages: %d/3",
+    "ru": "Применён %s · доступно страниц: %d/3"
+  },
+  "extra_299": {
+    "en": "Results (%d)",
+    "ru": "Результаты (%d)"
+  },
+  "extra_300": {
+    "en": "%d s",
+    "ru": "%d с"
+  },
+  "extra_301": {
+    "en": "%d min",
+    "ru": "%d мин"
+  },
+  "extra_302": {
+    "en": "Source code on GitHub",
+    "ru": "Исходный код на GitHub"
+  },
+  "extra_303": {
+    "en": "Recent updates",
+    "ru": "Последние обновления"
+  },
+  "extra_304": {
+    "en": "Combined rules · AND / OR",
+    "ru": "Составные правила · AND / OR"
+  },
+  "extra_305": {
+    "en": "AND requires all filled fields to match; OR requires any one. Lines within a field are alternatives. The first matching rule applies.",
+    "ru": "AND — совпадают все заполненные поля. OR — любое из них. Строки в одном поле — варианты. Применяется первое подходящее правило."
+  },
+  "extra_306": {
+    "en": "Match apps, domains, IPs, ports and protocols. App conditions need Android 10+ and inclusion in VPN on the Apps screen.",
+    "ru": "Условия: приложения, домены, IP, порты и протоколы. Для приложений нужен Android 10+ и включение в VPN в разделе «Приложения»."
+  },
+  "extra_307": {
+    "en": "Rules are saved but do not apply in Tor mode.",
+    "ru": "Правила сохраняются, но в режиме Tor не применяются."
+  },
+  "extra_308": {
+    "en": "Apps: ",
+    "ru": "Приложения: "
+  },
+  "extra_309": {
+    "en": "Suffixes: ",
+    "ru": "Суффиксы: "
+  },
+  "extra_310": {
+    "en": "Domains: ",
+    "ru": "Домены: "
+  },
+  "extra_311": {
+    "en": "Keywords: ",
+    "ru": "Слова: "
+  },
+  "extra_312": {
+    "en": "Ports: ",
+    "ru": "Порты: "
+  },
+  "extra_313": {
+    "en": "Edit",
+    "ru": "Изменить"
+  },
+  "extra_314": {
+    "en": "Move up",
+    "ru": "Выше"
+  },
+  "extra_315": {
+    "en": "Move down",
+    "ru": "Ниже"
+  },
+  "extra_316": {
+    "en": "Add advanced rule",
+    "ru": "Добавить составное правило"
+  },
+  "extra_317": {
+    "en": "Custom exceptions and essential DNS rules run first. Combined rules run before subscription and region rules.",
+    "ru": "Сначала применяются пользовательские исключения и системные DNS-правила. Составные правила — перед правилами подписок и региона."
+  },
+  "extra_318": {
+    "en": "Saved rules are invalid. The VPN will not use an unvalidated set.",
+    "ru": "Сохранённые правила повреждены. До исправления VPN не будет применять непроверенный набор."
+  },
+  "extra_319": {
+    "en": "Clear invalid rules",
+    "ru": "Очистить повреждённые правила"
+  },
+  "extra_320": {
+    "en": "Combined rule",
+    "ru": "Составное правило"
+  },
+  "extra_321": {
+    "en": "All filled sections must match.",
+    "ru": "Должны совпасть все заполненные разделы."
+  },
+  "extra_322": {
+    "en": "Any filled section can match.",
+    "ru": "Достаточно любого заполненного раздела."
+  },
+  "extra_323": {
+    "en": "Direct",
+    "ru": "Напрямую"
+  },
+  "extra_324": {
+    "en": "Block",
+    "ru": "Блок"
+  },
+  "extra_325": {
+    "en": "Matching traffic goes directly, outside the VPN server.",
+    "ru": "Совпавший трафик пойдёт напрямую, вне VPN-сервера."
+  },
+  "extra_326": {
+    "en": "App package IDs",
+    "ru": "Пакеты приложений"
+  },
+  "extra_327": {
+    "en": "Choose installed apps",
+    "ru": "Выбрать установленные приложения"
+  },
+  "extra_328": {
+    "en": "One package ID per line, case-sensitive. Uninstalled apps stay in the rule. Shared-UID apps are unsupported.",
+    "ru": "Один ID пакета на строку, с учётом регистра. Отсутствующие приложения сохраняются. Приложения с общим UID не поддерживаются."
+  },
+  "extra_329": {
+    "en": "App conditions require Android 10 or later.",
+    "ru": "Для условий по приложениям требуется Android 10 или новее."
+  },
+  "extra_330": {
+    "en": "Domain suffixes",
+    "ru": "Суффиксы доменов"
+  },
+  "extra_331": {
+    "en": "One domain per line. Matches the domain and its subdomains. A leading dot is optional.",
+    "ru": "Один домен на строку. Включает сам домен и поддомены. Точка в начале необязательна."
+  },
+  "extra_332": {
+    "en": "Exact domains",
+    "ru": "Точные домены"
+  },
+  "extra_333": {
+    "en": "Domain keywords",
+    "ru": "Ключевые слова домена"
+  },
+  "extra_334": {
+    "en": "Multiple lines within a field mean OR. Empty fields are ignored.",
+    "ru": "Несколько строк внутри поля означают «или». Пустые поля не участвуют в сопоставлении."
+  },
+  "extra_335": {
+    "en": "IP, ports and protocols",
+    "ru": "IP, порты и протоколы"
+  },
+  "extra_336": {
+    "en": "Ports: 443,8000-8100",
+    "ru": "Порты: 443, 8000-8100"
+  },
+  "extra_337": {
+    "en": "Protocols: http, tls, quic",
+    "ru": "Протоколы: http, tls, quic"
+  },
+  "extra_338": {
+    "en": "Enable domain detection for these rules",
+    "ru": "Разрешить определение доменов для этих правил"
+  },
+  "extra_339": {
+    "en": "Apps for this rule",
+    "ru": "Приложения для правила"
+  },
+  "extra_340": {
+    "en": "Name or package ID",
+    "ru": "Название или пакет"
+  },
+  "extra_341": {
+    "en": "Selected: %d / %d",
+    "ru": "Выбрано: %d / %d"
+  },
+  "extra_342": {
+    "en": "No matching apps",
+    "ru": "Подходящих приложений нет"
+  },
+  "extra_343": {
+    "en": "Manually entered packages stay selected even when absent from this list.",
+    "ru": "Введённые вручную пакеты сохраняются, даже если их нет в списке."
+  },
+  "extra_344": {
+    "en": "Error reports",
+    "ru": "Отчёты об ошибках"
+  },
+  "extra_345": {
+    "en": "With your consent, reports contain only the error type, code locations and app version. IP addresses, device data, exception messages, logs, subscriptions and settings are excluded.",
+    "ru": "Только с вашего согласия сохраняются тип ошибки, строки кода и версия приложения. IP, сведения об устройстве, сообщения исключений, логи, подписки и настройки в отчёт не попадают."
+  },
+  "extra_346": {
+    "en": "Save locally",
+    "ru": "Сохранять локально"
+  },
+  "extra_347": {
+    "en": "No automatic sending: there is no report receiver. Up to five reports stay on this device. Disabling collection deletes them.",
+    "ru": "Автоматической отправки нет: сервер приёма не настроен. До пяти отчётов хранятся только на этом устройстве. Отключение сбора удаляет их."
+  },
+  "extra_348": {
+    "en": "Feature: ",
+    "ru": "Раздел: "
+  },
+  "extra_349": {
+    "en": "Record a problem",
+    "ru": "Отметить проблему"
+  },
+  "extra_350": {
+    "en": "Review report ",
+    "ru": "Посмотреть отчёт "
+  },
+  "extra_351": {
+    "en": "No saved reports",
+    "ru": "Сохранённых отчётов нет"
+  },
+  "extra_352": {
+    "en": "Delete all",
+    "ru": "Удалить все"
+  },
+  "extra_353": {
+    "en": "Review before export",
+    "ru": "Проверить перед экспортом"
+  },
+  "extra_354": {
+    "en": "Export opens the system menu. You choose the recipient.",
+    "ru": "Экспорт открывает системное меню. Вы сами выбираете получателя."
+  },
+  "extra_355": {
+    "en": "Export",
+    "ru": "Экспорт"
+  },
+  "extra_356": {
+    "en": "Copy",
+    "ru": "Копировать"
+  },
+  "extra_357": {
+    "en": "Delete",
+    "ru": "Удалить"
+  },
+  "extra_358": {
+    "en": "Restore from a cloud link",
+    "ru": "Восстановить по ссылке из облака"
+  },
+  "extra_359": {
+    "en": "Paste a link to a JSON backup file. The client downloads it and shows its contents before restoring. No folder selection is needed.",
+    "ru": "Вставьте ссылку на JSON-файл резервной копии. Клиент загрузит файл и покажет его состав перед восстановлением. Выбирать папку не нужно."
+  },
+  "extra_360": {
+    "en": "Backup file link",
+    "ru": "Ссылка на резервную копию"
+  },
+  "extra_361": {
+    "en": "Paste link",
+    "ru": "Вставить ссылку"
+  },
+  "extra_362": {
+    "en": "Password, if the backup is encrypted",
+    "ru": "Пароль, если копия зашифрована"
+  },
+  "extra_363": {
+    "en": "Google Drive, Yandex Disk, Dropbox and direct HTTPS links. The file must be accessible without signing into a cloud account. Plain backups need no password.",
+    "ru": "Google Drive, Яндекс Диск, Dropbox и прямые HTTPS-ссылки. Файл должен быть доступен по ссылке без входа в облачный аккаунт. Для обычной копии пароль не требуется."
+  },
+  "extra_364": {
+    "en": "Open downloaded backup",
+    "ru": "Открыть загруженную копию"
+  },
+  "extra_365": {
+    "en": "Download and review",
+    "ru": "Загрузить и просмотреть"
+  },
+  "extra_366": {
+    "en": "Folder auto-backup disabled",
+    "ru": "Автокопирование в папку отключено"
+  },
+  "extra_367": {
+    "en": "Folder selection was removed from cloud backup. Existing files and the encryption password were kept. Restore using a backup link, or configure WebDAV for background backups.",
+    "ru": "Выбор папки убран из облачного сценария. Существующие файлы и пароль шифрования сохранены. Для восстановления вставьте ссылку на копию; для фоновых копий можно настроить WebDAV."
+  },
+  "extra_368": {
+    "en": "Got it",
+    "ru": "Понятно"
+  },
+  "extra_369": {
+    "en": "WebDAV automatic backups",
+    "ru": "Автокопии WebDAV"
+  },
+  "extra_370": {
+    "en": "Encrypted backups every 6 or 24 hours. Restore after review and confirmation. The last 10 snapshots from this device are kept separately.",
+    "ru": "Зашифрованные копии каждые 6 или 24 часа. Восстановление выполняется после просмотра и подтверждения. Последние 10 снимков этого устройства сохраняются отдельно."
+  },
+  "extra_371": {
+    "en": "Uses WebDAV saved under transfer settings. A conflicting shared copy is kept: download and review it before syncing again.",
+    "ru": "Используется WebDAV, сохранённый в разделе переноса. При конфликте с другим устройством общий файл не перезаписывается: получите и проверьте его вручную."
+  },
+  "extra_372": {
+    "en": "New password (blank to keep)",
+    "ru": "Новый пароль (пусто — оставить)"
+  },
+  "extra_373": {
+    "en": "Encryption password, 8+ characters",
+    "ru": "Пароль шифрования от 8 символов"
+  },
+  "extra_374": {
+    "en": "Confirm password",
+    "ru": "Повторите пароль"
+  },
+  "extra_375": {
+    "en": "Background backup stores the password encrypted with Android Keystore on this device only. Keep it separately: another device needs it to restore.",
+    "ru": "Для фоновых копий пароль хранится зашифрованным ключом Android Keystore только на этом устройстве. Сохраните его отдельно: на другом устройстве он потребуется для восстановления."
+  },
+  "extra_376": {
+    "en": "Automatic backup enabled",
+    "ru": "Автокопия включена"
+  },
+  "extra_377": {
+    "en": "Unmetered network only",
+    "ru": "Только нетарифицируемая сеть"
+  },
+  "extra_378": {
+    "en": "Every %d h",
+    "ru": "Каждые %d ч"
+  },
+  "extra_379": {
+    "en": "Passwords must match and contain at least 8 characters",
+    "ru": "Пароли должны совпадать и содержать минимум 8 символов"
+  },
+  "extra_380": {
+    "en": "Save settings",
+    "ru": "Сохранить настройки"
+  },
+  "extra_381": {
+    "en": "Back up now",
+    "ru": "Создать копию сейчас"
+  },
+  "extra_382": {
+    "en": "Disable and forget password",
+    "ru": "Отключить и забыть пароль"
+  },
+  "extra_383": {
+    "en": "Last backup: ",
+    "ru": "Последняя копия: "
+  },
+  "extra_384": {
+    "en": "Delete %s",
+    "ru": "Удалить %s"
+  },
+  "extra_385": {
+    "en": "Settings received. Review before importing.",
+    "ru": "Настройки получены. Проверьте состав перед импортом."
+  },
+  "extra_386": {
+    "en": "Review the receiving device and confirm sending.",
+    "ru": "Проверьте устройство-получатель и подтвердите отправку."
+  },
+  "extra_387": {
+    "en": "Between devices",
+    "ru": "Между устройствами"
+  },
+  "extra_388": {
+    "en": "Connect your phone and TV to the same Wi-Fi or Ethernet network. Servers, subscriptions, Tor and proxy settings travel encrypted.",
+    "ru": "Телефон и телевизор должны быть в одной Wi-Fi или Ethernet-сети. Передаются серверы, подписки, Tor и настройки прокси в зашифрованном виде."
+  },
+  "extra_389": {
+    "en": "Disconnect VPN before applying received settings.",
+    "ru": "Для применения полученных настроек отключите VPN."
+  },
+  "extra_390": {
+    "en": "Send settings",
+    "ru": "Отправить настройки"
+  },
+  "extra_391": {
+    "en": "Receive on this device / TV",
+    "ru": "Получить на это устройство / TV"
+  },
+  "extra_392": {
+    "en": "Device pairing QR",
+    "ru": "QR сопряжения устройств"
+  },
+  "extra_393": {
+    "en": "Scan this QR with the phone containing your settings, then confirm the import here.",
+    "ru": "Отсканируйте этот QR телефоном, с которого нужно перенести настройки. Затем подтвердите импорт здесь."
+  },
+  "extra_394": {
+    "en": "Scan on the receiving device. For a TV without a camera, choose Receive on the TV and scan its QR with your phone.",
+    "ru": "Отсканируйте QR на принимающем устройстве. Для TV без камеры используйте «Получить» на телевизоре и сканируйте его QR телефоном."
+  },
+  "extra_395": {
+    "en": "Code expires in ",
+    "ru": "Код действует ещё "
+  },
+  "extra_396": {
+    "en": " s · one use",
+    "ru": " с · одно использование"
+  },
+  "extra_397": {
+    "en": "Copy code",
+    "ru": "Скопировать код"
+  },
+  "extra_398": {
+    "en": "Close transfer",
+    "ru": "Закрыть передачу"
+  },
+  "extra_399": {
+    "en": "Pairing code or link",
+    "ru": "Код или ссылка сопряжения"
+  },
+  "extra_400": {
+    "en": "Use code",
+    "ru": "Принять код"
+  },
+  "extra_401": {
+    "en": "The QR contains a pairing secret. Show it only to your own device. Received settings require confirmation before applying.",
+    "ru": "QR содержит секрет сопряжения. Показывайте его только своему устройству. Полученная копия применяется после подтверждения."
+  },
+  "extra_402": {
+    "en": "Hide WebDAV",
+    "ru": "Скрыть WebDAV"
+  },
+  "extra_403": {
+    "en": "WebDAV sync",
+    "ru": "Синхронизация WebDAV"
+  },
+  "extra_404": {
+    "en": "An encrypted splate-settings.v1.json file is stored in an existing WebDAV folder. Upload and download run when you choose.",
+    "ru": "В существующую папку WebDAV сохраняется зашифрованный файл splate-settings.v1.json. Отправка и получение запускаются вручную."
+  },
+  "extra_405": {
+    "en": "WebDAV folder HTTPS URL",
+    "ru": "HTTPS URL папки WebDAV"
+  },
+  "extra_406": {
+    "en": "WebDAV username",
+    "ru": "Логин WebDAV"
+  },
+  "extra_407": {
+    "en": "WebDAV password",
+    "ru": "Пароль WebDAV"
+  },
+  "extra_408": {
+    "en": "WebDAV saved",
+    "ru": "WebDAV сохранён"
+  },
+  "extra_409": {
+    "en": "Save WebDAV",
+    "ru": "Сохранить WebDAV"
+  },
+  "extra_410": {
+    "en": "Backup encryption password (8+ characters)",
+    "ru": "Пароль шифрования копии (от 8 символов)"
+  },
+  "extra_411": {
+    "en": "The encryption password is not saved. Enter the same password on the other device. WebDAV credentials stay on this device and are excluded from the backup.",
+    "ru": "Пароль шифрования не сохраняется. Он нужен и на другом устройстве. Учётные данные WebDAV хранятся только на этом устройстве и не входят в передаваемую копию."
+  },
+  "extra_412": {
+    "en": "Encrypted backup uploaded",
+    "ru": "Зашифрованная копия отправлена"
+  },
+  "extra_413": {
+    "en": "Replace copy",
+    "ru": "Заменить копию"
+  },
+  "extra_414": {
+    "en": "Backup downloaded. Confirm the import.",
+    "ru": "Копия получена. Подтвердите импорт."
+  },
+  "extra_415": {
+    "en": "Download",
+    "ru": "Получить"
+  },
+  "extra_416": {
+    "en": "Send settings to this device?",
+    "ru": "Передать настройки устройству?"
+  },
+  "extra_417": {
+    "en": "Import settings",
+    "ru": "Импорт настроек"
+  },
+  "extra_418": {
+    "en": "Received from ",
+    "ru": "Получено из "
+  },
+  "extra_419": {
+    "en": "Device on your local network: ",
+    "ru": "Устройство в локальной сети: "
+  },
+  "extra_420": {
+    "en": "Servers: ",
+    "ru": "Серверов: "
+  },
+  "extra_421": {
+    "en": " · subscriptions: ",
+    "ru": " · подписок: "
+  },
+  "extra_422": {
+    "en": "Plain JSON backup without encryption",
+    "ru": "Обычная JSON-копия без шифрования"
+  },
+  "extra_423": {
+    "en": "Advanced rules: ",
+    "ru": "Составных правил: "
+  },
+  "extra_424": {
+    "en": "Includes Tor and bridges",
+    "ru": "Включены Tor и мосты"
+  },
+  "extra_425": {
+    "en": "Includes proxy settings and sharing password",
+    "ru": "Включены прокси и пароль раздачи"
+  },
+  "extra_426": {
+    "en": "General settings will be applied to this device. Servers are added to existing entries by default.",
+    "ru": "Общие настройки будут применены к этому устройству. По умолчанию серверы добавляются к существующим."
+  },
+  "extra_427": {
+    "en": "This sends servers, subscriptions, Tor settings and the proxy password. Continue only for your own device that displayed this QR.",
+    "ru": "Будут переданы серверы, подписки, настройки Tor и пароль прокси. Продолжайте только для своего устройства, которое показало этот QR."
+  },
+  "extra_428": {
+    "en": "Replace existing servers and subscriptions",
+    "ru": "Заменить существующие серверы и подписки"
+  },
+  "extra_429": {
+    "en": "Disconnect VPN first",
+    "ru": "Сначала отключите VPN"
+  },
+  "extra_430": {
+    "en": "Apply settings",
+    "ru": "Применить настройки"
+  },
+  "extra_431": {
+    "en": "Local proxy · Mixed",
+    "ru": "Локальный прокси · Mixed"
+  },
+  "extra_432": {
+    "en": "HTTP and SOCKS on one local port. Authentication is on by default; the client generates credentials and passes them to the VPN automatically. LAN sharing is independent.",
+    "ru": "HTTP и SOCKS на одном локальном порту. Защита паролем включена по умолчанию, данные создаются клиентом и автоматически передаются VPN. Открывать доступ из локальной сети для этого не требуется."
+  },
+  "extra_433": {
+    "en": "Hide settings",
+    "ru": "Скрыть настройки"
+  },
+  "extra_434": {
+    "en": "Configure credentials",
+    "ru": "Настроить логин и пароль"
+  },
+  "extra_435": {
+    "en": "Without authentication, other apps on this phone can access the local proxy.",
+    "ru": "Без авторизации другие приложения на телефоне смогут обращаться к локальному прокси."
+  },
+  "extra_436": {
+    "en": "Username",
+    "ru": "Логин"
+  },
+  "extra_437": {
+    "en": "Hide password",
+    "ru": "Скрыть пароль"
+  },
+  "extra_438": {
+    "en": "Saved. An active VPN will reconnect.",
+    "ru": "Сохранено. Активный VPN переподключится."
+  },
+  "extra_439": {
+    "en": "New credentials saved. An active VPN will reconnect.",
+    "ru": "Новые данные сохранены. Активный VPN переподключится."
+  },
+  "extra_440": {
+    "en": "Generate new credentials",
+    "ru": "Создать новые данные"
+  },
+  "extra_441": {
+    "en": "These credentials stay on this device and are excluded from cloud backups. Proxy authentication does not hide the VPN connection from your ISP.",
+    "ru": "Эти данные остаются на устройстве и не входят в облачные копии. Авторизация прокси не скрывает само VPN-соединение от оператора."
+  },
+  "extra_442": {
+    "en": "Downloads through VPN only",
+    "ru": "Загрузка только через VPN"
+  },
+  "extra_443": {
+    "en": "Subscriptions, bridges, geodata, filters, cloud links and WebDAV. If the VPN is unavailable, downloads fail without switching to a direct connection.",
+    "ru": "Подписки, мосты, геоданные, фильтры, облачные ссылки и WebDAV. Если VPN недоступен, загрузка завершится ошибкой без перехода на прямое соединение."
+  },
+  "extra_444": {
+    "en": "Updates over Wi-Fi only",
+    "ru": "Обновления только по Wi-Fi"
+  },
+  "extra_445": {
+    "en": "Pings and checks over Wi-Fi only",
+    "ru": "Пинг и проверки только по Wi-Fi"
+  },
+  "extra_446": {
+    "en": "These operations wait on mobile data. You can still use the current VPN; a skipped check does not mark a server as dead.",
+    "ru": "На мобильной сети эти операции откладываются. Текущее VPN-соединение можно использовать; пропуск проверки не помечает сервер нерабочим."
+  },
+  "extra_447": {
+    "en": "Direct checks of other servers are visible to your ISP. Failover mode stops regular searches for faster servers; startup and failure checks remain.",
+    "ru": "Прямые проверки других серверов видны оператору. Режим «Только при сбое» убирает регулярный поиск более быстрого сервера; проверки при старте и сбое сохраняются."
+  },
+  "extra_448": {
+    "en": "Reduce background checks",
+    "ru": "Меньше фоновых проверок"
+  },
+  "extra_449": {
+    "en": "Current mode: ",
+    "ru": "Текущее поведение: "
+  },
+  "extra_450": {
+    "en": "periodic optimization",
+    "ru": "периодическая оптимизация"
+  },
+  "extra_451": {
+    "en": "failover",
+    "ru": "переключение при сбое"
+  },
+  "extra_452": {
+    "en": "initial selection only",
+    "ru": "выбор только при подключении"
+  },
+  "extra_453": {
+    "en": "Could not switch mode. Try again.",
+    "ru": "Не удалось сменить режим. Попробуйте ещё раз."
+  },
+  "extra_454": {
+    "en": "Action failed",
+    "ru": "Не удалось выполнить действие"
+  },
+  "extra_455": {
+    "en": "URL added. Tap Download subscription.",
+    "ru": "Ссылка добавлена. Нажмите «Загрузить подписку»."
+  },
+  "extra_456": {
+    "en": "Bridges added",
+    "ru": "Мосты добавлены"
+  },
+  "extra_457": {
+    "en": "Ready to connect",
+    "ru": "Готов к подключению"
+  },
+  "extra_458": {
+    "en": "Connecting",
+    "ru": "Подключение"
+  },
+  "extra_459": {
+    "en": "Connected",
+    "ru": "Подключён"
+  },
+  "extra_460": {
+    "en": "The saved bridges could not connect. Refresh the list or choose a bridge manually.",
+    "ru": "Не удалось подключиться через выбранные мосты. Обновите список или выберите мост вручную."
+  },
+  "extra_461": {
+    "en": "Could not connect. Try another bridge.",
+    "ru": "Не удалось подключиться. Попробуйте другой мост."
+  },
+  "extra_462": {
+    "en": "Automatic bridge: %d/%d",
+    "ru": "Автоподбор моста: %d/%d"
+  },
+  "extra_463": {
+    "en": "Elapsed: %d s · no progress: %d s",
+    "ru": "Прошло: %d с · без прогресса: %d с"
+  },
+  "extra_464": {
+    "en": "Tor reports a problem at this connection stage.",
+    "ru": "Tor сообщает о проблеме на этой стадии подключения."
+  },
+  "extra_465": {
+    "en": "This bridge is not responding yet. The app will try the next one if progress does not resume.",
+    "ru": "Этот мост пока не отвечает. Если прогресс не появится, приложение само попробует следующий."
+  },
+  "extra_466": {
+    "en": "The TLS handshake has not completed. This bridge may be unavailable on your network. Wait, or try another bridge or WebTunnel.",
+    "ru": "TLS-рукопожатие ещё не завершено. Этот мост может быть недоступен в вашей сети. Можно подождать или попробовать другой мост либо WebTunnel."
+  },
+  "extra_467": {
+    "en": "This stage has not advanced for a while. Wait or try another bridge.",
+    "ru": "На этой стадии давно нет прогресса. Можно подождать или попробовать другой мост."
+  },
+  "extra_468": {
+    "en": "Another bridge",
+    "ru": "Другой мост"
+  },
+  "extra_469": {
+    "en": "WebTunnel selected",
+    "ru": "WebTunnel выбран"
+  },
+  "extra_470": {
+    "en": "Tap Connect Tor and the app will select a bridge from the list. The first connection may take a few minutes.",
+    "ru": "Нажмите «Подключить Tor» — приложение само подберёт мост из списка. Первый запуск может занять несколько минут."
+  },
+  "extra_471": {
+    "en": "Connect here. The first connection may take more than a minute.",
+    "ru": "Подключайтесь прямо здесь. Первый запуск может занять больше минуты."
+  },
+  "extra_472": {
+    "en": "Tor selected",
+    "ru": "Tor выбран"
+  },
+  "extra_473": {
+    "en": "Connect Tor",
+    "ru": "Подключить Tor"
+  },
+  "extra_474": {
+    "en": "Cancel connection",
+    "ru": "Отменить подключение"
+  },
+  "extra_475": {
+    "en": "Disconnect",
+    "ru": "Отключить"
+  },
+  "extra_476": {
+    "en": "Saved Tor settings could not be read. Import bridges or save the settings again.",
+    "ru": "Сохранённые настройки Tor повреждены. Импортируйте мосты или сохраните настройки заново."
+  },
+  "extra_477": {
+    "en": "Connection bridge",
+    "ru": "Мост подключения"
+  },
+  "extra_478": {
+    "en": "Automatic selection",
+    "ru": "Автоподбор"
+  },
+  "extra_479": {
+    "en": "No bridges of this type. Choose another type.",
+    "ru": "Мостов этого типа нет. Выберите другой тип."
+  },
+  "extra_480": {
+    "en": "No bridge · direct Tor connection",
+    "ru": "Без моста · прямое подключение Tor"
+  },
+  "extra_481": {
+    "en": "Saved bridges are tried automatically, one at a time. Auto alternates Vanilla, WebTunnel and obfs4.",
+    "ru": "Приложение само пробует сохранённые мосты по очереди. В «Авто» чередуются Vanilla, WebTunnel и obfs4."
+  },
+  "extra_482": {
+    "en": "This bridge is pinned manually. Select Auto to try other saved bridges automatically.",
+    "ru": "Мост выбран вручную. Для автоматического перебора нажмите «Авто»."
+  },
+  "extra_483": {
+    "en": "Auto",
+    "ru": "Авто"
+  },
+  "extra_484": {
+    "en": "Bridge selected",
+    "ru": "Мост выбран"
+  },
+  "extra_485": {
+    "en": "Choose bridge",
+    "ru": "Выбрать мост"
+  },
+  "extra_486": {
+    "en": "Bridges disabled",
+    "ru": "Мосты отключены"
+  },
+  "extra_487": {
+    "en": "No bridges",
+    "ru": "Без мостов"
+  },
+  "extra_488": {
+    "en": "Quick import",
+    "ru": "Быстрый импорт"
+  },
+  "extra_489": {
+    "en": "TOP-100 bridge list from GitHub. Download on request; bridge availability depends on your network.",
+    "ru": "Список TOP-100 мостов из GitHub. Загружается по кнопке. Доступность мостов зависит от сети."
+  },
+  "extra_490": {
+    "en": "Bridge list downloaded",
+    "ru": "Список мостов загружен"
+  },
+  "extra_491": {
+    "en": "Disconnect before refreshing the bridge list.",
+    "ru": "Для обновления списка сначала отключите соединение."
+  },
+  "extra_492": {
+    "en": "Paste",
+    "ru": "Из буфера"
+  },
+  "extra_493": {
+    "en": "Downloaded: ",
+    "ru": "Загружено: "
+  },
+  "extra_494": {
+    "en": "Malformed bridges skipped: ",
+    "ru": "Некорректных мостов пропущено: "
+  },
+  "extra_495": {
+    "en": "Custom subscription and relays",
+    "ru": "Своя подписка и ноды"
+  },
+  "extra_496": {
+    "en": "Disconnect to edit advanced settings.",
+    "ru": "Отключитесь для изменения дополнительных настроек."
+  },
+  "extra_497": {
+    "en": "GitHub / HTTPS subscription",
+    "ru": "Подписка GitHub / HTTPS"
+  },
+  "extra_498": {
+    "en": "Update every 12 hours",
+    "ru": "Обновлять каждые 12 часов"
+  },
+  "extra_499": {
+    "en": "Subscription downloaded",
+    "ru": "Подписка загружена"
+  },
+  "extra_500": {
+    "en": "Download subscription",
+    "ru": "Загрузить подписку"
+  },
+  "extra_501": {
+    "en": "Bridges: one per line",
+    "ru": "Мосты: по одному на строку"
+  },
+  "extra_502": {
+    "en": "Leave the fields below blank for automatic selection. For manual selection, enter comma-separated 40-character relay fingerprints.",
+    "ru": "Поля ниже можно оставить пустыми. Для ручного выбора — 40-значные отпечатки реле через запятую."
+  },
+  "extra_503": {
+    "en": "Strict relay exclusions",
+    "ru": "Строго соблюдать исключения нод"
+  },
+  "extra_504": {
+    "en": "Tor carries TCP and DNS for selected apps. UDP, direct routes and SmartDNS are unavailable in this mode.",
+    "ru": "Tor передаёт TCP и DNS выбранных приложений. UDP, прямые правила и SmartDNS в этом режиме не используются."
+  },
+  "extra_505": {
+    "en": "Tor settings saved",
+    "ru": "Настройки Tor сохранены"
+  },
+  "extra_506": {
+    "en": "Choose one bridge",
+    "ru": "Выберите один мост"
+  },
+  "extra_507": {
+    "en": "Performance",
+    "ru": "Производительность"
+  },
+  "extra_508": {
+    "en": "Reduce visual effects to lower device load. Changes apply immediately.",
+    "ru": "Уменьшите количество эффектов для снижения нагрузки на устройство. Настройки применяются сразу."
+  },
+  "extra_509": {
+    "en": "Interface animations",
+    "ru": "Анимации интерфейса"
+  },
+  "extra_510": {
+    "en": "Transitions, movement and animated feedback",
+    "ru": "Переходы, движение и реакции элементов"
+  },
+  "extra_511": {
+    "en": "Decorative background",
+    "ru": "Декоративный фон"
+  },
+  "extra_512": {
+    "en": "Theme grids, particles, illustrations and decorations",
+    "ru": "Сетка, частицы, иллюстрации и украшения темы"
+  },
+  "extra_513": {
+    "en": "Glass highlights",
+    "ru": "Блики на стекле"
+  },
+  "extra_514": {
+    "en": "Decorative highlights and panel gradients",
+    "ru": "Декоративные блики и градиенты панелей"
+  },
+  "extra_515": {
+    "en": "Lightweight mode",
+    "ru": "Лёгкий режим"
+  },
+  "extra_516": {
+    "en": "Enable all effects",
+    "ru": "Включить все эффекты"
+  },
+  "extra_517": {
+    "en": "Lightweight mode also disables glass blur. You can adjust blur separately below.",
+    "ru": "Лёгкий режим также отключает размытие стекла. Его можно настроить отдельно ниже."
+  },
+  "extra_518": {
+    "en": "Successful: %d of %d",
+    "ru": "Успешно: %d из %d"
+  },
+  "extra_519": {
+    "en": "Check paused until Wi-Fi is connected",
+    "ru": "Проверка отложена до подключения к Wi-Fi"
+  },
+  "extra_520": {
+    "en": "Connecting Tor: ",
+    "ru": "Подключение Tor: "
+  },
+  "extra_521": {
+    "en": "Bridges: ",
+    "ru": "Мостов: "
+  },
+  "extra_522": {
+    "en": "Tor network · open settings",
+    "ru": "Сеть Tor · открыть настройки"
+  },
+  "extra_523": {
+    "en": "After setup, you can receive your phone's settings using a QR code. Connect after the transfer is complete.",
+    "ru": "После обучения можно перенести настройки с телефона по QR-коду. Подключитесь, когда перенос будет завершён."
+  },
+  "extra_524": {
+    "en": "Servers: +%d",
+    "ru": "Серверов: +%d"
+  },
+  "extra_525": {
+    "en": "Servers: %d",
+    "ru": "Серверов: %d"
+  },
+  "extra_526": {
+    "en": "No changes",
+    "ru": "Без изменений"
+  },
+  "extra_527": {
+    "en": "Reserved · missing from current subscription",
+    "ru": "Резерв · нет в текущей подписке"
+  },
+  "extra_528": {
+    "en": "1 h",
+    "ru": "1 ч"
+  },
+  "extra_529": {
+    "en": "3 h",
+    "ru": "3 ч"
+  },
+  "extra_530": {
+    "en": "To restore from the cloud, paste the file link in the card above. The buttons below save or open a file through the system picker.",
+    "ru": "Для восстановления из облака вставьте ссылку на файл в карточку выше. Кнопки ниже сохраняют или открывают файл через системный диалог."
+  },
+  "extra_531": {
+    "en": "Successfully downloaded: ",
+    "ru": "Успешно загружено: "
+  },
+  "extra_532": {
+    "en": "Not downloaded from the network yet",
+    "ru": "Ещё не загружалась из сети"
+  },
+  "extra_533": {
+    "en": "Last attempt: ",
+    "ru": "Последняя попытка: "
+  },
+  "extra_534": {
+    "en": " • Successful",
+    "ru": " • Успешно"
+  },
+  "extra_535": {
+    "en": "The download date changes after the subscription is retrieved successfully. Saved servers remain available if an update fails.",
+    "ru": "Дата загрузки меняется после успешного получения подписки. Если обновление не удалось, сохранённые серверы остаются доступны."
+  },
+  "extra_536": {
+    "en": "Working server reserve",
+    "ru": "Резерв рабочих серверов"
+  },
+  "extra_537": {
+    "en": "Keep working nodes missing from updates",
+    "ru": "Сохранять исчезнувшие рабочие узлы"
+  },
+  "extra_538": {
+    "en": "Up to 100 nodes for up to 30 days after a successful tunnel check. TCP ping alone is insufficient. Reserved: %d.",
+    "ru": "До 100 узлов и до 30 дней после успешной проверки через туннель. Обычный TCP-пинг не считается подтверждением. В резерве: %d."
+  },
+  "extra_539": {
+    "en": "Clear this subscription's reserve",
+    "ru": "Очистить резерв этой подписки"
+  },
+  "extra_540": {
+    "en": "Subscription rules",
+    "ru": "Правила подписки"
+  },
+  "extra_541": {
+    "en": "Use subscription rules",
+    "ru": "Использовать правила"
+  },
+  "extra_542": {
+    "en": "Unsupported conditions: %d. This set cannot be enabled safely. Supported rules: %d.",
+    "ru": "Есть неподдерживаемые условия (%d). Этот набор нельзя включить целиком безопасно. Поддерживаемых правил: %d."
+  },
+  "extra_543": {
+    "en": "No rules found. Refresh an older subscription first. A plain list of server links contains no routing rules.",
+    "ru": "Правила не найдены. Для старой подписки сначала выполните обновление. Обычный список ссылок на серверы правил не содержит."
+  },
+  "extra_544": {
+    "en": "Rules: %d. Applied only when using a server from this subscription. Changed rules require approval again.",
+    "ru": "Правил: %d. Применяются только при подключении к серверу этой подписки. Изменение правил сбрасывает согласие."
+  },
+  "extra_545": {
+    "en": "Review rules",
+    "ru": "Просмотреть правила"
+  },
+  "extra_546": {
+    "en": "Options apply immediately. Changing the URL clears the old source's rules and reserve.",
+    "ru": "Опции применяются сразу. При изменении URL правила и резерв прежнего источника сбрасываются."
+  },
+  "extra_547": {
+    "en": "Rules: %s",
+    "ru": "Правила: %s"
+  },
+  "extra_548": {
+    "en": "DIRECT sends matching traffic directly. PROXY uses the selected server. DNS, per-app settings and server choices within groups are not imported. Your own rules take priority.",
+    "ru": "DIRECT отправляет совпавший трафик напрямую. PROXY использует выбранный сервер. DNS, настройки приложений и выбор серверов внутри групп не переносятся. Ваши собственные правила имеют приоритет."
+  },
+  "extra_549": {
+    "en": "Unsupported rules are present. Activation is blocked.",
+    "ru": "Есть неподдерживаемые правила. Включение заблокировано."
+  },
+  "extra_550": {
+    "en": "The subscription changed. Close this dialog and review the new rules.",
+    "ru": "Подписка обновилась. Закройте окно и просмотрите новые правила."
+  },
+  "extra_551": {
+    "en": "Approve and enable",
+    "ru": "Разрешить и включить"
+  },
+  "extra_552": {
+    "en": "Delete reserved nodes?",
+    "ru": "Удалить резерв?"
+  },
+  "extra_553": {
+    "en": "Deletes %d nodes missing from the current subscription. Current nodes remain.",
+    "ru": "Будут удалены %d узлов, которых уже нет в актуальной подписке. Серверы из текущего ответа останутся."
+  },
+  "extra_554": {
+    "en": "%d h %d min",
+    "ru": "%d ч %d мин"
+  },
+  "extra_555": {
+    "en": "Day",
+    "ru": "День"
+  },
+  "extra_556": {
+    "en": "Month",
+    "ru": "Месяц"
+  },
+  "extra_557": {
+    "en": "Previous period",
+    "ru": "Предыдущий период"
+  },
+  "extra_558": {
+    "en": "Monthly totals",
+    "ru": "Итоги месяца"
+  },
+  "extra_559": {
+    "en": "Daily totals",
+    "ru": "Итоги дня"
+  },
+  "extra_560": {
+    "en": "Next period",
+    "ru": "Следующий период"
+  },
+  "extra_561": {
+    "en": "Choose date",
+    "ru": "Выбрать дату"
+  },
+  "extra_562": {
+    "en": "Total traffic",
+    "ru": "Всего трафика"
+  },
+  "extra_563": {
+    "en": "Connected: ",
+    "ru": "Подключение: "
+  },
+  "extra_564": {
+    "en": "Downloaded",
+    "ru": "Скачано"
+  },
+  "extra_565": {
+    "en": "Uploaded",
+    "ru": "Отправлено"
+  },
+  "extra_566": {
+    "en": "By day",
+    "ru": "По дням"
+  },
+  "extra_567": {
+    "en": "7 days",
+    "ru": "7 дней"
+  },
+  "extra_568": {
+    "en": "All",
+    "ru": "Всё"
+  },
+  "extra_569": {
+    "en": "Down",
+    "ru": "Скачано"
+  },
+  "extra_570": {
+    "en": "Up",
+    "ru": "Отправлено"
+  },
+  "extra_571": {
+    "en": "Tap a bar or drag across the chart",
+    "ru": "Коснитесь столбца или проведите по графику"
+  },
+  "extra_572": {
+    "en": "No data for this period yet. Statistics appear after connecting VPN.",
+    "ru": "За этот период данных пока нет. Статистика появится после подключения VPN."
+  },
+  "extra_573": {
+    "en": "Current period",
+    "ru": "К текущему периоду"
+  },
+  "extra_574": {
+    "en": "Clear history",
+    "ru": "Очистить историю"
+  },
+  "extra_575": {
+    "en": "VPN interface traffic, including its direct routes. History is retained for 400 days and starts with this version. A crash may lose the last 15 seconds.",
+    "ru": "Трафик VPN-интерфейса, включая прямые маршруты внутри него. История хранится 400 дней и собирается с этой версии. При аварийном завершении последние 15 секунд могут не сохраниться."
+  },
+  "extra_576": {
+    "en": "Clear statistics?",
+    "ru": "Очистить статистику?"
+  },
+  "extra_577": {
+    "en": "All traffic and connection-time history will be deleted.",
+    "ru": "Вся история трафика и времени подключения будет удалена."
+  },
+  "extra_578": {
+    "en": "Select",
+    "ru": "Выбрать"
+  },
+  "extra_579": {
+    "en": "Daily traffic. Select a day on the chart",
+    "ru": "Трафик по дням. Выберите день на графике"
+  },
+  "extra_580": {
+    "en": "Could not prepare the QR code. Connect the TV to Wi-Fi or Ethernet and retry in Transfer settings.",
+    "ru": "Не удалось подготовить QR-код. Подключите телевизор к Wi-Fi или Ethernet и повторите в разделе переноса."
+  },
+  "extra_581": {
+    "en": "Could not save your choice. Try again.",
+    "ru": "Не удалось сохранить выбор. Попробуйте ещё раз."
+  },
+  "extra_582": {
+    "en": "Servers",
+    "ru": "Серверы"
+  },
+  "extra_583": {
+    "en": "Transfer settings",
+    "ru": "Перенос настроек"
+  },
+  "extra_584": {
+    "en": "Settings",
+    "ru": "Настройки"
+  },
+  "extra_585": {
+    "en": "Use the arrow keys and OK on your remote.",
+    "ru": "Управляйте стрелками и кнопкой OK на пульте."
+  },
+  "extra_586": {
+    "en": "Choose a server",
+    "ru": "Выбрать сервер"
+  },
+  "extra_587": {
+    "en": "Receive settings from phone",
+    "ru": "Получить настройки с телефона"
+  },
+  "extra_588": {
+    "en": "Choose connection",
+    "ru": "Выбор подключения"
+  },
+  "extra_589": {
+    "en": "Receive servers and settings from your phone using Transfer settings.",
+    "ru": "Получите серверы и настройки с телефона в разделе переноса."
+  },
+  "extra_590": {
+    "en": "Connect your phone and TV to the same Wi-Fi network. No TV camera is needed.",
+    "ru": "Подключите телефон и телевизор к одной Wi-Fi сети. Камера телевизору не нужна."
+  },
+  "extra_591": {
+    "en": "Connecting Tor",
+    "ru": "Подключение Tor"
+  },
+  "extra_592": {
+    "en": "The first Tor connection can take more than a minute. Wait for it to complete.",
+    "ru": "Первое подключение Tor может занять больше минуты. Дождитесь завершения."
+  },
+  "extra_593": {
+    "en": "Transfer settings from your phone?",
+    "ru": "Перенести настройки с телефона?"
+  },
+  "extra_594": {
+    "en": "Connect your phone and TV to the same Wi-Fi or Ethernet network. The TV will show a QR code to scan in SplateVPN on your phone. You can review the settings before applying them.",
+    "ru": "Подключите телефон и телевизор к одной Wi-Fi или Ethernet-сети. Телевизор покажет QR-код: отсканируйте его в SplateVPN на телефоне. Перед применением вы увидите состав настроек."
+  },
+  "extra_595": {
+    "en": "Receive using QR code",
+    "ru": "Получить по QR-коду"
+  },
+  "extra_596": {
+    "en": "Set up later",
+    "ru": "Настроить позже"
+  },
+  "extra_597": {
+    "en": "Importing servers…",
+    "ru": "Импорт узлов…"
+  },
+  "extra_598": {
+    "en": "Import subscription",
+    "ru": "Импортировать подписку"
+  },
+  "extra_599": {
+    "en": "Import all servers",
+    "ru": "Импортировать все узлы"
+  },
+  "extra_600": {
+    "en": "Add server",
+    "ru": "Добавить узел"
+  },
+  "extra_601": {
+    "en": "You can rename a JSON profile here. To change connection settings, edit the original JSON and import it again.",
+    "ru": "Для JSON-профиля здесь можно изменить название. Остальные параметры измените в исходном JSON и импортируйте его снова."
+  },
+  "extra_602": {
+    "en": "Bundled base · works offline",
+    "ru": "База из приложения · работает без сети"
+  },
+  "extra_603": {
+    "en": "Updated: %s",
+    "ru": "Обновлено: %s"
+  },
+  "extra_604": {
+    "en": "Updates daily. Background updates apply on next connection. Manual updates reload the active VPN.",
+    "ru": "Автообновление раз в сутки. Фоновая база применяется при следующем подключении. Ручное обновление перезагружает активный VPN."
+  },
+  "extra_605": {
+    "en": "Could not update or load the extended list. Available local protection is retained.",
+    "ru": "Не удалось обновить или загрузить расширенную базу. Доступная локальная защита сохранена."
+  },
+  "extra_606": {
+    "en": "Update filters",
+    "ru": "Обновить фильтры"
+  },
+  "extra_607": {
+    "en": "Exceptions (%d)",
+    "ru": "Исключения (%d)"
+  },
+  "extra_608": {
+    "en": "Source and license: AdGuard · GPL-3.0",
+    "ru": "Источник и лицензия: AdGuard · GPL-3.0"
+  },
+  "extra_609": {
+    "en": "Ad blocker exceptions",
+    "ru": "Исключения блокировщика"
+  },
+  "extra_610": {
+    "en": "One domain per line, without https:// or paths. Allows the domain and subdomains only in the ad blocker. Up to 100 domains.",
+    "ru": "По одному домену в строке, без https:// и путей. Разрешает домен и его поддомены только в блокировщике рекламы. До 100 доменов."
+  },
+  "extra_611": {
+    "en": "Check domain names and count",
+    "ru": "Проверьте домены и их количество"
+  },
+  "extra_612": {
+    "en": "Network settings from profile “%s” will be applied.",
+    "ru": "Будут применены сетевые настройки профиля «%s»."
+  },
+  "extra_613": {
+    "en": "Application selection and AI settings stay as configured.",
+    "ru": "Выбор приложений и настройки ИИ остаются прежними."
+  },
+  "extra_614": {
+    "en": "My profiles",
+    "ru": "Мои профили"
+  },
+  "extra_615": {
+    "en": "A profile saves all network settings, including applications and DNS.",
+    "ru": "Профиль сохраняет все сетевые настройки, включая приложения и DNS."
+  },
+  "extra_616": {
+    "en": "Could not save changes. Check settings and available storage.",
+    "ru": "Не удалось сохранить изменения. Проверьте настройки и свободное место."
+  },
+  "extra_617": {
+    "en": "VPN for routed applications, with your exceptions.",
+    "ru": "Трафик выбранных приложений — через VPN, с учётом исключений."
+  },
+  "extra_618": {
+    "en": "Review diagnostic report",
+    "ru": "Проверка отчёта"
+  },
+  "extra_619": {
+    "en": "Links, keys, IP addresses and server names are hidden automatically. Review the remaining text before sharing.",
+    "ru": "Ссылки, ключи, IP и имена серверов скрыты автоматически. Проверьте оставшийся текст перед отправкой."
+  },
+  "extra_620": {
+    "en": "Share",
+    "ru": "Поделиться"
+  },
+  "extra_621": {
+    "en": "Available DNS: %s",
+    "ru": "Рабочий DNS: %s"
+  },
+  "extra_622": {
+    "en": "DNS checks failed",
+    "ru": "Проверки DNS не прошли"
+  },
+  "extra_623": {
+    "en": "Checking DNS servers…",
+    "ru": "Проверка DNS-серверов…"
+  },
+  "extra_624": {
+    "en": "%s is not responding through the VPN. Checking other DoH servers…",
+    "ru": "%s не отвечает через VPN. Проверяются другие DoH-серверы…"
+  },
+  "extra_625": {
+    "en": " (%d ms)",
+    "ru": " (%d мс)"
+  },
+  "extra_626": {
+    "en": "%s did not respond through the VPN. %s responds%s.",
+    "ru": "%s не ответил через VPN. %s отвечает%s."
+  },
+  "extra_627": {
+    "en": "The tested DoH servers did not respond through the VPN. Try another server or DNS provider.",
+    "ru": "Проверенные DoH-серверы не ответили через VPN. Попробуйте другой сервер или DNS."
+  },
+  "extra_628": {
+    "en": "Switch to %s",
+    "ru": "Выбрать %s"
+  },
+  "extra_629": {
+    "en": "Enable FakeDNS",
+    "ru": "Включить FakeDNS"
+  },
+  "extra_630": {
+    "en": "Settings recovery",
+    "ru": "Восстановление настроек"
+  },
+  "extra_631": {
+    "en": "Settings are damaged and no working snapshot is available. Original files were preserved. Create new settings? Servers and subscriptions will remain. VPN cannot connect until you decide.",
+    "ru": "Настройки повреждены, рабочая копия недоступна. Оригинальные файлы сохранены. Создать новые настройки? Серверы и подписки сохранятся. До выбора VPN не подключается."
+  },
+  "extra_632": {
+    "en": "Settings were restored from the last working snapshot. The damaged original was preserved separately.",
+    "ru": "Настройки восстановлены из последней рабочей копии. Повреждённый оригинал сохранён отдельно."
+  },
+  "extra_633": {
+    "en": "Could not save settings. Check available storage.",
+    "ru": "Не удалось записать настройки. Проверьте свободное место."
+  },
+  "extra_634": {
+    "en": "Create new",
+    "ru": "Создать новые"
+  },
+  "extra_635": {
+    "en": "Exit",
+    "ru": "Выйти"
+  },
+  "extra_636": {
+    "en": "Dismiss",
+    "ru": "Закрыть"
+  },
+  "extra_637": {
+    "en": "Current fragmentation prevents connectivity",
+    "ru": "Текущая фрагментация мешает подключению"
+  },
+  "extra_638": {
+    "en": "Two checks of the same server failed with current parameters and passed with standard fragmentation. Try the standard preset.",
+    "ru": "Две проверки того же сервера не прошли с текущими параметрами, но прошли со стандартными. Попробуйте стандартную фрагментацию."
+  },
+  "extra_639": {
+    "en": "Use standard fragmentation",
+    "ru": "Стандартная фрагментация"
+  },
+  "extra_640": {
+    "en": "Tunnel Alerts & Diagnostics",
+    "ru": "Оповещения и сбои туннеля"
+  },
+  "extra_641": {
+    "en": "Tunnel health notifications with suggested fixes",
+    "ru": "Оповещения об ошибках соединения с рекомендациями решений"
+  },
+  "extra_642": {
+    "en": "VPN connectivity checks failed",
+    "ru": "Не удалось подтвердить связь через VPN"
+  },
+  "extra_643": {
+    "en": "Two tunnel checks failed while the network was available. The cause is unknown; try another server.",
+    "ru": "Две проверки туннеля не прошли при доступной сети. Причина не установлена; попробуйте другой сервер."
+  },
+  "extra_644": {
+    "en": "Switch Server",
+    "ru": "Сменить сервер"
+  },
+  "extra_645": {
+    "en": "Packet size error",
+    "ru": "Ошибка размера пакета"
+  },
+  "extra_646": {
+    "en": "A packet size error was reported. Try MTU 1280; the source of the limit is unknown.",
+    "ru": "Обнаружена ошибка размера пакета. Попробуйте MTU 1280; источник ограничения не установлен."
+  },
+  "extra_647": {
+    "en": "Set MTU 1280",
+    "ru": "Установить MTU 1280"
+  },
+  "extra_648": {
+    "en": "Possible routing loop",
+    "ru": "Возможная петля маршрутизации"
+  },
+  "extra_649": {
+    "en": "Logs suggest a routing problem. Automatic recovery has not been confirmed.",
+    "ru": "В журнале обнаружены признаки проблемы маршрутизации. Автоматическое устранение не подтверждено."
+  },
+  "extra_650": {
+    "en": "Internet access could not be verified",
+    "ru": "Доступ к интернету не подтверждён"
+  },
+  "extra_651": {
+    "en": "VPN is running, but external network checks failed and no incoming traffic was detected. Check Wi-Fi or mobile data. No website route changes are needed.",
+    "ru": "VPN запущен, но проверки внешней сети не проходят и входящий трафик отсутствует. Проверьте Wi-Fi или мобильный интернет. Менять маршруты сайтов не требуется."
+  },
+  "extra_652": {
+    "en": "Wi-Fi sign-in required",
+    "ru": "Требуется вход в Wi-Fi"
+  },
+  "extra_653": {
+    "en": "Network requires browser sign-in. You can temporarily pause VPN to sign in.",
+    "ru": "Сеть требует авторизации в браузере. Можно временно приостановить VPN для входа."
+  },
+  "extra_654": {
+    "en": "Pause 2 min",
+    "ru": "Приостановить на 2 мин"
+  },
+  "extra_655": {
+    "en": "Open Login",
+    "ru": "Войти в сеть"
+  },
+  "extra_656": {
+    "en": "Clock differs by %d s",
+    "ru": "Время отличается на %d с"
+  },
+  "extra_657": {
+    "en": "Device time differs from the check server. Check automatic clock synchronization.",
+    "ru": "Время устройства отличается от времени проверочного сервера. Проверьте автоматическую синхронизацию часов."
+  },
+  "extra_658": {
+    "en": "Date Settings",
+    "ru": "Настройки даты"
+  },
+  "extra_659": {
+    "en": "%s failed repeated checks; %s responded. The cause is unknown.",
+    "ru": "%s не ответил на повторную проверку. %s отвечает. Причина отказа не установлена."
+  },
+  "extra_660": {
+    "en": "The tested DNS resolvers did not respond. The cause is unknown. You can try FakeDNS.",
+    "ru": "Проверенные DNS-серверы не ответили. Причина не установлена. Можно попробовать FakeDNS."
+  },
+  "extra_661": {
+    "en": "The tested DNS resolvers did not respond. FakeDNS is already enabled. Check the selected server connection.",
+    "ru": "Проверенные DNS-серверы не ответили. FakeDNS уже включён. Проверьте соединение с выбранным узлом."
+  },
+  "extra_662": {
+    "en": "Quick selection",
+    "ru": "Быстрый выбор"
+  },
+  "extra_663": {
+    "en": "Up to 10 nodes with a successful Real ping in the last 10 minutes on this network and in this app session.",
+    "ru": "До 10 узлов с успешным Real ping за последние 10 минут в этой сети и этом запуске приложения."
+  },
+  "extra_664": {
+    "en": "No freshly verified nodes. Open all servers and run Real ping.",
+    "ru": "Свежих проверенных узлов нет. Откройте все серверы и выполните Real ping."
+  },
+  "extra_665": {
+    "en": "The result expired. Refresh the list.",
+    "ru": "Результат устарел. Обновите список."
+  },
+  "extra_666": {
+    "en": "Could not switch the connection.",
+    "ru": "Не удалось переключить подключение."
+  },
+  "extra_667": {
+    "en": "All nodes",
+    "ru": "Все узлы"
+  },
+  "extra_668": {
+    "en": "Subscriptions",
+    "ru": "Подписки"
+  },
+  "extra_669": {
+    "en": "Personal",
+    "ru": "Личные"
+  },
+  "extra_670": {
+    "en": "Refresh list",
+    "ru": "Обновить список"
+  },
+  "extra_671": {
+    "en": "All servers",
+    "ru": "Все серверы"
+  },
+  "extra_672": {
+    "en": "Up to 10 nodes · Real ping from the last 10 minutes",
+    "ru": "До 10 узлов · Real ping за последние 10 минут"
+  },
+  "extra_673": {
+    "en": "%d ms",
+    "ru": "%d мс"
+  },
+  "extra_674": {
+    "en": "Server update interval: %d h",
+    "ru": "Интервал сервера: %d ч"
+  },
+  "extra_675": {
+    "en": "Website",
+    "ru": "Сайт"
+  },
+  "extra_676": {
+    "en": "Support",
+    "ru": "Поддержка"
+  },
+  "extra_677": {
+    "en": "Could not open the link",
+    "ru": "Не удалось открыть ссылку"
+  },
+  "extra_678": {
+    "en": "Needs verification",
+    "ru": "Нужна проверка"
+  },
+  "extra_679": {
+    "en": "Connection mode: %s",
+    "ru": "Режим подключения: %s"
+  }
+}

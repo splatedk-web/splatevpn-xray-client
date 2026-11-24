@@ -3,6 +3,7 @@ package com.danieldk.splatevpn.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -24,9 +25,10 @@ internal fun ThemeCharacterArtwork(colors: AppThemeColors, modifier: Modifier = 
     }
     BoxWithConstraints(modifier) {
         val preview = maxHeight < maxWidth
+        val bitmap by rememberThemeBitmap(resource, preview)
         val pony = colors.backdrop == BackdropStyle.PONY
         val alignment = if (pony && !preview) Alignment.BottomCenter else Alignment.BottomEnd
-        Image(painterResource(resource), null,
+        bitmap?.let { Image(it, null,
             Modifier.align(alignment)
                 .padding(bottom = if (preview) 0.dp else 62.dp)
                 .width(maxWidth * if (preview || pony) .98f else .83f)
@@ -38,6 +40,6 @@ internal fun ThemeCharacterArtwork(colors: AppThemeColors, modifier: Modifier = 
                     }
                 },
             contentScale = ContentScale.Fit, alignment = alignment,
-            alpha = if (preview) .95f else .82f)
+            alpha = if (preview) .95f else .82f) }
     }
 }

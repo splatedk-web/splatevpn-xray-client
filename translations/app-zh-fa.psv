@@ -1,0 +1,496 @@
+appName|SplateVPN|SplateVPN
+cancel|取消|لغو
+save|保存|ذخیره
+delete|删除|حذف
+close|关闭|بستن
+add|添加|افزودن
+refresh|刷新|تازه‌سازی
+edit|编辑|ویرایش
+tabControl|首页|خانه
+tabNodes|服务器|سرورها
+tabRouting|应用|برنامه‌ها
+tabConfig|设置|تنظیمات
+standbyUnprotected|待机 • 未保护|آماده • محافظت‌نشده
+encryptedSession|已连接 • %s|متصل • %s
+resolvingLocation|正在查询位置…|در حال تعیین موقعیت…
+protectedGateway|安全隧道|تونل محافظت‌شده
+egressIp|出口 IP：%s|IP خروجی: %s
+ping|延迟|تأخیر
+download|下载|دریافت
+upload|上传|ارسال
+routingProfile|路由配置|پروفایل مسیریابی
+smartRoute|智能路由|مسیریابی هوشمند
+smartRouteDesc|本地服务直连|اتصال مستقیم به خدمات محلی
+globalTunnel|全部流量|تمام ترافیک
+globalTunnelDesc|所有目标通过 VPN|تمام مقصدها از طریق VPN
+activeGateway|当前服务器|سرور فعال
+autoFastest|自动：关|خودکار: خاموش
+pinging|正在测试延迟…|در حال سنجش تأخیر…
+noServerSelected|未选择服务器|سروری انتخاب نشده است
+tapToChooseNode|点击选择服务器|برای انتخاب سرور بزنید
+coreConnected|已连接|متصل
+coreConnect|连接|اتصال
+latencyLabel|延迟|تأخیر
+downlinkLabel|下载|دریافت
+uplinkLabel|上传|ارسال
+coreSubtitle|Xray %s|Xray %s
+stateSelectingServer|正在寻找服务器…|در حال یافتن سرور…
+coreDiscSelect|搜索…|جستجو…
+stateStartingCore|正在启动内核…|در حال راه‌اندازی هسته…
+stateConnecting|正在连接…|در حال اتصال…
+stateHealthChecking|正在验证连接…|در حال بررسی اتصال…
+stateReconnecting|正在重新连接…|در حال اتصال مجدد…
+stateFailed|连接失败|اتصال ناموفق
+coreDiscBoot|启动…|راه‌اندازی…
+coreDiscLink|连接…|اتصال…
+coreDiscVerify|验证…|بررسی…
+coreDiscRetry|重试…|تلاش مجدد…
+coreDiscError|错误|خطا
+tagSplitTunnel|分流|تونل تفکیکی
+tagFullEncap|全局|سراسری
+searchServers|搜索名称、IP、协议…|جستجوی نام، IP یا پروتکل…
+noServersMatchingQuery|未找到匹配的服务器|سرور مطابقی یافت نشد
+linkCopied|链接已复制|پیوند کپی شد
+sessionDownloaded|已接收|دریافت‌شده
+sessionUploaded|已发送|ارسال‌شده
+networkNodes|服务器|سرورها
+presetServersTitle|预设|پیش‌تنظیم‌ها
+availableNodes|可用：%d / %d|موجود: %d / %d
+pingAll|测试全部|سنجش همه
+pasteLink|粘贴链接|چسباندن پیوند
+subs|订阅 (%d)|اشتراک‌ها (%d)
+allChip|全部 (%d)|همه (%d)
+builtinChip|⚡ 预设|⚡ پیش‌تنظیم‌ها
+noServersFound|暂无服务器。\n请添加链接或订阅。|سروری موجود نیست.\nپیوند یا اشتراکی اضافه کنید.
+noServersInFilter|此分类中没有服务器|در این دسته سروری نیست
+addServerTitle|添加服务器|افزودن سرور
+addServerPrompt|粘贴 vless://、trojan://、vmess:// 或 ss:// 链接：|پیوند vless://، trojan://، vmess:// یا ss:// را بچسبانید:
+serverAddedSuccess|服务器已添加！|سرور اضافه شد!
+invalidLinkFormat|链接格式无效|قالب پیوند نامعتبر است
+editServerTitle|编辑服务器参数|ویرایش تنظیمات سرور
+serverUpdatedSuccess|服务器参数已更新！|تنظیمات سرور به‌روزرسانی شد!
+manageSubsTitle|订阅管理|مدیریت اشتراک‌ها
+activeSubsHeader|启用的订阅：|اشتراک‌های فعال:
+serversCountSub|%d 个节点|%d گره
+subBuiltinTag|预设|پیش‌تنظیم
+subUpdatedSuccess|已更新：%d 个节点|به‌روزرسانی شد: %d گره
+subDeletedSuccess|订阅已删除|اشتراک حذف شد
+addNewSubHeader|添加订阅：|افزودن اشتراک جدید:
+subscriptionsTitle|订阅|اشتراک‌ها
+subscriptionsSearch|搜索名称或网址…|جستجوی نام یا نشانی…
+subscriptionsNoResults|未找到匹配订阅|اشتراک مطابقی یافت نشد
+subscriptionDetails|订阅详情|جزئیات اشتراک
+subscriptionName|名称|نام
+subscriptionUrl|订阅链接|نشانی اشتراک
+subscriptionUrlInvalid|请输入有效订阅链接|نشانی معتبر اشتراک را وارد کنید
+subscriptionEditHint|链接将在下次更新时生效。现有节点将保留。|تغییر نشانی در به‌روزرسانی بعدی اعمال می‌شود. گره‌های موجود حفظ می‌شوند.
+subscriptionAutoUpdate|自动更新|به‌روزرسانی خودکار
+subscriptionManual|手动|دستی
+subscriptionScheduleOff|全局更新计划已在设置中关闭|زمان‌بندی کلی در تنظیمات غیرفعال است
+subscriptionSchedule|每 %s 更新|به‌روزرسانی هر %s
+subscriptionUpdateAll|全部更新|به‌روزرسانی همه
+subscriptionRefreshSummary|已更新订阅：%d。失败：%d。|اشتراک‌های به‌روز: %d. ناموفق: %d.
+subscriptionNoUpdates|没有可更新的已启用订阅|اشتراک فعالی برای به‌روزرسانی نیست
+subscriptionBuiltIn|内置|داخلی
+subscriptionDisabled|已停用|غیرفعال
+subscriptionNodes|节点 (%d)|گره‌ها (%d)
+subscriptionDeleteTitle|删除订阅？|اشتراک حذف شود؟
+subscriptionDeleteMessage|删除“%s”及其全部节点 (%d)？|«%s» و همهٔ گره‌های آن (%d) حذف شوند؟
+subscriptionNever|从未|هرگز
+subscriptionJustNow|刚刚|همین حالا
+subscriptionMinutesAgo|%d 分钟前|%d دقیقه پیش
+subscriptionHoursAgo|%d 小时前|%d ساعت پیش
+subscriptionsTab|订阅 (%d/%d)|اشتراک‌ها (%d/%d)
+personalNodesTab|个人 (%d)|شخصی (%d)
+subscriptionEnabledMessage|“%s”：已启用|«%s»: فعال
+subscriptionDisabledMessage|“%s”：已停用，节点已隐藏|«%s»: غیرفعال، گره‌ها پنهان شدند
+subscriptionAutoEnabledMessage|已启用自动更新|به‌روزرسانی خودکار فعال شد
+subscriptionAutoDisabledMessage|已关闭自动更新|به‌روزرسانی خودکار غیرفعال شد
+subscriptionNodesLabel|节点|گره‌ها
+subscriptionsLabel|订阅|اشتراک‌ها
+personalNodesLabel|个人|شخصی
+uiPause|暂停|مکث
+uiResume|继续|ادامه
+uiClear|清除|پاک کردن
+uiMonitoring|监控中|در حال پایش
+uiPaused|已暂停|متوقف
+uiNoMatches|没有搜索结果|نتیجه‌ای یافت نشد
+uiNoPersonal|没有个人配置|پیکربندی شخصی موجود نیست
+uiPersonalHint|从剪贴板粘贴 vless://、vmess://、trojan:// 或 shadowsocks:// 链接，或扫描二维码。|پیوند vless://، vmess://، trojan:// یا shadowsocks:// را از کلیپ‌بورد بچسبانید یا کد QR را اسکن کنید.
+uiAddConfig|添加配置|افزودن پیکربندی
+uiNoSubscriptions|暂无订阅|اشتراکی موجود نیست
+uiSubscriptionHint|通过一个订阅链接更新多个节点。|اشتراک، چندین گره را با یک پیوند به‌روز نگه می‌دارد.
+uiAddSubscription|添加订阅|افزودن اشتراک
+uiRestorePresets|恢复内置订阅|بازیابی اشتراک‌های داخلی
+uiPresetsEmpty|内置订阅尚未加载或已删除。|اشتراک‌های داخلی بارگیری نشده‌اند یا حذف شده‌اند.
+uiPersonalSearch|搜索个人配置…|جستجوی پیکربندی شخصی…
+uiPresetSearch|搜索预设节点…|جستجوی گره‌های پیش‌تنظیم…
+uiAllActive|全部已启用 (%d)|همهٔ فعال‌ها (%d)
+uiPersonalServers|个人服务器|سرورهای شخصی
+uiSubscriptionPrefix|订阅：%s|اشتراک: %s
+uiDisabledNodesHidden|已停用 — 节点已隐藏|غیرفعال — گره‌ها پنهان هستند
+uiExpand|展开|باز کردن
+uiCollapse|收起|جمع کردن
+uiPresetTag|预设 • %s|پیش‌تنظیم • %s
+uiSubscriptionTag|订阅 • %s|اشتراک • %s
+uiPersonalTag|个人配置|پیکربندی شخصی
+uiActions|操作|عملیات
+uiAutoSelect|自动选择|انتخاب خودکار
+uiFastest|最快|سریع‌ترین
+uiOff|关闭|خاموش
+uiPingSummary|“%s”：已测试 %d 个节点|«%s»: %d گره آزمایش شد
+uiCamera|相机|دوربین
+uiAutoImport|自动导入|ورود خودکار
+uiLinkHint|vless://…、vmess://… 或 https://…|vless://…، vmess://… یا https://…
+uiPresetHarvester|Harvester（可用节点）|Harvester (گره‌های فعال)
+uiPresetCidr|白名单 (CIDR RU)|فهرست مجاز (CIDR RU)
+uiPresetUniversal|白名单（通用）|فهرست مجاز (عمومی)
+appRoutingConnected|VPN 已连接。应用遵循所选路由规则。|VPN متصل است. برنامه‌ها از قوانین مسیریابی انتخابی پیروی می‌کنند.
+appRoutingDisconnected|VPN 未连接。请在首页连接以应用路由。|VPN قطع است. برای اعمال مسیریابی از خانه متصل شوید.
+fieldAddressError|请输入主机名或 IP，不含协议、路径或空格|نام میزبان یا IP را بدون طرح، مسیر یا فاصله وارد کنید
+fieldPortError|请输入 1 至 65535 的端口号|شمارهٔ پورت از ۱ تا ۶۵۵۳۵ را وارد کنید
+fieldPassword|密码|گذرواژه
+fieldSniHint|domain.com（用于 Cloudflare/TLS）|domain.com (برای Cloudflare/TLS)
+fieldHostHint|HTTP Host 标头|سرآیند HTTP Host
+tlsPresetStandard|标准|استاندارد
+tlsPresetAggressive|小分片（50–100）|قطعه‌های کوچک (50–100)
+tlsPresetCustom|自定义|سفارشی
+tlsCustomTitle|TLS 分片|قطعه‌بندی TLS
+tlsParametersSummary|参数：长度=%s，间隔=%s 毫秒，数据包=%s|پارامترها: طول=%s، فاصله=%s میلی‌ثانیه، بسته‌ها=%s
+shareLanNotReady|共享尚未就绪。获得热点或 USB 网络地址后将显示代理地址及配置命令。|اشتراک‌گذاری آماده نیست. پس از دسترسی به نشانی هات‌اسپات یا USB، نشانی پروکسی و فرمان‌ها نمایش داده می‌شوند.
+shareLanCopyEnable|复制启用命令|کپی فرمان فعال‌سازی
+shareLanDisable|关闭代理|غیرفعال کردن پروکسی
+uiCopied|已复制|کپی شد
+uiCopy|复制|کپی
+lanEndpointUsb|USB 网络共享 (%s)|اشتراک USB (%s)
+lanEndpointHotspot|Wi-Fi 热点 (%s)|هات‌اسپات Wi-Fi (%s)
+lanEndpointWifi|Wi-Fi 网络 (%s)|شبکهٔ Wi-Fi (%s)
+lanEndpointOther|接口 %s|رابط %s
+subNamePlaceholder|名称（如：我的 VPN）|نام (مثلاً VPN من)
+subUrlPlaceholder|https://example.com/sub/...|https://example.com/sub/...
+subLoading|正在同步节点…|در حال همگام‌سازی گره‌ها…
+splashSubtitle|安全代理隧道|تونل پروکسی امن
+splashInitializing|正在初始化节点…|در حال آماده‌سازی گره‌ها…
+subAddedSuccess|已添加节点：%d|گره‌های افزوده: %d
+errorPrefix|错误：%s|خطا: %s
+autoSelectSelected|已选择：%s|انتخاب‌شده: %s
+fieldName|节点名称|نام گره
+fieldProtocol|协议|پروتکل
+fieldAddress|地址 / IP|نشانی / IP
+fieldPort|端口|پورت
+fieldNetwork|传输方式 (type)|انتقال شبکه (type)
+fieldSecurity|安全模式|حالت امنیت
+fieldSni|SNI 域名|دامنهٔ SNI
+fieldPath|路径 (path / serviceName)|مسیر (path / serviceName)
+fieldHost|Host 标头|سرآیند Host
+fieldUuid|UUID / 密码|UUID / گذرواژه
+fieldPublicKey|公钥 (pbk / Reality)|کلید عمومی (pbk / Reality)
+fieldShortId|短 ID (sid)|شناسهٔ کوتاه (sid)
+fieldSpiderX|SpiderX (spx)|SpiderX (spx)
+fieldFingerprint|指纹 (fp)|اثر انگشت (fp)
+appRoutingTitle|应用路由|مسیریابی برنامه‌ها
+appRoutingSubtitle|选择遵循 VPN 路由规则的应用|برنامه‌های تابع قوانین VPN را انتخاب کنید
+proxiedAppsCount|代理应用：%d / %d|برنامه‌های پروکسی‌شده: %d / %d
+selectedAppsCount|已选择：%d|انتخاب‌شده: %d
+proxyModeAll|所有应用|تمام برنامه‌ها
+proxyModeAllDesc|连接 VPN 后，所有应用遵循所选路由规则|هنگام اتصال VPN، همهٔ برنامه‌ها از قوانین انتخابی پیروی می‌کنند
+proxyModeSelected|按应用选择|انتخاب بر اساس برنامه
+proxyModeSelectedDesc|仅所选应用通过 VPN|فقط برنامه‌های انتخابی از VPN عبور می‌کنند
+globalModeActive|已选择所有应用|همهٔ برنامه‌ها انتخاب شدند
+allAppsProtected|VPN 规则适用于所有应用|قواعد VPN برای همهٔ برنامه‌ها اعمال می‌شود
+searchApps|搜索应用…|جستجوی برنامه‌ها…
+statusProxied|代理|پروکسی
+statusDirect|直连|مستقیم
+statusBypassed|绕过|مستثنا
+perAppModeInclude|仅所选应用|فقط انتخاب‌شده‌ها
+perAppModeIncludeDesc|仅所选应用通过 VPN|فقط برنامه‌های انتخابی از VPN عبور می‌کنند
+perAppModeExclude|绕过所选应用|مستثنا کردن انتخاب‌شده‌ها
+perAppModeExcludeDesc|所选应用（银行、本地服务）绕过 VPN|برنامه‌های انتخابی (بانکی، محلی) از VPN عبور نمی‌کنند
+perAppModeHeader|分应用隧道模式|حالت تونل تفکیکی
+settingsTitle|设置|تنظیمات
+settingsSubtitle|访问限制绕过、界面及内核设置|عبور از فیلترینگ، ظاهر و تنظیمات هسته
+sectionAppearance|界面与外观|رابط کاربری و ظاهر
+themeTitle|应用主题|پوستهٔ برنامه
+themeSubtitle|视觉风格与配色|سبک ظاهری و رنگ‌بندی
+themeDark|深色|تیره
+themeAmoled|AMOLED|AMOLED
+themeLight|浅色|روشن
+themeSystem|跟随系统|سیستم
+themeWinter|冬日深色|زمستان تیره
+themeWinterLight|冬日浅色|زمستان روشن
+themeRed|红色|قرمز
+themeAurora|极光|شفق قطبی
+themeSunset|落日幻境|سراب غروب
+languageTitle|语言|زبان
+languageSubtitle|选择界面语言|انتخاب زبان رابط کاربری
+langRu|Русский|Русский
+langEn|English|English
+langSystem|跟随系统|سیستم
+sectionAutomation|自动化与订阅|خودکارسازی و اشتراک‌ها
+autoSelectTitle|自动选择服务器|انتخاب خودکار سرور
+autoSelectSubtitle|自动测试延迟并选择最快节点。|سنجش خودکار تأخیر و انتخاب سریع‌ترین گره.
+autoUpdateTitle|自动更新订阅|به‌روزرسانی خودکار اشتراک‌ها
+autoUpdateSubtitle|后台同步服务器列表的频率|فاصلهٔ همگام‌سازی فهرست سرورها در پس‌زمینه
+intervalOff|关闭|خاموش
+interval6h|6 小时|۶ ساعت
+interval12h|12 小时|۱۲ ساعت
+interval24h|24 小时|۲۴ ساعت
+updateAllSubsNow|立即更新全部订阅|به‌روزرسانی همهٔ اشتراک‌ها
+updating|正在更新…|در حال به‌روزرسانی…
+updatedCount|已更新订阅：%d|اشتراک‌های به‌روز: %d
+sectionRouting|路由与访问限制绕过|مسیریابی و عبور از فیلترینگ
+dnsProviderTitle|主要 DNS|DNS اصلی
+dnsProviderSubtitle|主要 DNS。智能路由可为本地网站使用地区 DNS；AI 使用单独设置。浏览器安全 DNS 可能优先生效。|DNS اصلی. مسیریابی هوشمند ممکن است از DNS منطقه‌ای برای سایت‌های محلی استفاده کند؛ هوش مصنوعی تنظیم جداگانه دارد. DNS امن مرورگر ممکن است اولویت داشته باشد.
+xhttpModeTitle|XHTTP (SplitHTTP) 模式|حالت XHTTP (SplitHTTP)
+xhttpModeSubtitle|XHTTP 请求的传输方式。通常使用 auto 即可；其他模式需要服务器支持。|روش ارسال درخواست‌های XHTTP. معمولاً auto کافی است؛ حالت‌های دیگر باید در سرور پشتیبانی شوند.
+fakeDnsTitle|FakeDNS (198.18.0.0/15)|FakeDNS (198.18.0.0/15)
+fakeDnsSubtitle|返回虚拟 IP 地址，并通过 Xray 解析域名。|نشانی‌های IP مجازی برمی‌گرداند و دامنه‌ها را از طریق Xray تبدیل می‌کند.
+blockQuicTitle|阻止 QUIC (UDP 443)|مسدود کردن QUIC (UDP 443)
+blockQuicSubtitle|阻止端口 443 上的 UDP。支持 TCP 的应用可能会改用 TCP。|UDP روی پورت 443 را مسدود می‌کند. برنامه‌هایی که از TCP پشتیبانی می‌کنند ممکن است به آن تغییر کنند.
+sniffingTitle|域名识别|تشخیص دامنه
+sniffingSubtitle|从 SNI 或 HTTP Host 识别域名以应用路由规则，不解密 HTTPS 流量。|دامنه را از SNI یا HTTP Host برای قواعد مسیریابی تشخیص می‌دهد. ترافیک HTTPS رمزگشایی نمی‌شود.
+blockIpv6Title|IPv6 泄漏保护|محافظت در برابر نشت IPv6
+blockIpv6Subtitle|阻止进入 VPN 的所有 IPv6 流量。|تمام ترافیک IPv6 واردشده به VPN را مسدود می‌کند.
+bypassAiTitle|AI 服务 (ChatGPT、Claude、Gemini)|خدمات هوش مصنوعی (ChatGPT، Claude و Gemini)
+bypassAiSubtitle|SmartDNS：所选 DNS 与直连。VPN：通过 VPN 服务器。|SmartDNS: DNS انتخابی و اتصال مستقیم. VPN: از طریق سرور VPN.
+adBlockerTitle|广告拦截|مسدودکنندهٔ تبلیغات
+adBlockerSubtitle|拦截 VPN 流量中的广告和跟踪域名。VK 信息流及 YouTube 视频内广告可能仍会出现。|دامنه‌های تبلیغاتی و ردیابی را در ترافیک VPN مسدود می‌کند. تبلیغات درون محتوای VK و ویدیوهای YouTube ممکن است باقی بمانند.
+sectionCore|XRAY 内核|هستهٔ XRAY
+coreVersion|内核版本|نسخهٔ هسته
+coreArch|架构|معماری
+coreTunnel|隧道引擎|موتور تونل
+coreProtocols|协议|پروتکل‌ها
+coreFakeDns|FakeDNS 地址池|مخزن FakeDNS
+sectionDiagnostics|诊断与调试|عیب‌یابی و اشکال‌زدایی
+diagnosticsDesc|Xray 内核、VPN 事件及连接错误日志。|گزارش هستهٔ Xray، رویدادهای VPN و خطاهای اتصال.
+openLogsButton|打开日志|بازکردن گزارش‌ها
+logsDialogTitle|事件日志|گزارش رویدادها
+copyReport|复制报告|کپی گزارش
+shareReport|分享|اشتراک‌گذاری
+clearLogs|清除日志|پاک کردن گزارش‌ها
+reportCopied|报告已复制！|گزارش کپی شد!
+recordsCount|记录|رکوردها
+logsCleared|日志已清除|گزارش‌ها پاک شدند
+logsEmpty|暂无日志|گزارشی ثبت نشده است
+logsFilterAll|全部|همه
+logsFilterErrors|错误|خطاها
+logsFilterXray|Xray|Xray
+logsFilterVpn|VPN 服务|سرویس VPN
+logsSearchHint|搜索日志与关键词…|جستجوی گزارش و کلیدواژه…
+logsAutoscroll|自动滚动|پیمایش خودکار
+logsClose|关闭日志|بستن گزارش‌ها
+logsCopiedLine|日志行已复制|سطر گزارش کپی شد
+logsStatsTotal|总计|مجموع
+logsStatsErrors|错误|خطاها
+logsStatsWarnings|警告|هشدارها
+sectionCustomRoutes|自定义域名路由|مسیریابی سفارشی دامنه
+customRoutesSubtitle|输入域名并选择路由：直连、VPN 或阻止|دامنه را وارد و مسیر مستقیم، VPN یا مسدود را انتخاب کنید
+customRoutesDomainHint|example.com 或 domain:example.com|example.com یا domain:example.com
+customRoutesAddBtn|添加路由|افزودن مسیر
+customRoutesEmpty|暂无自定义路由|مسیر سفارشی تعریف نشده است
+customRoutesSaved|路由已添加|مسیر اضافه شد
+customRoutesRemoved|路由已删除|مسیر حذف شد
+customRouteDirect|直连|مستقیم
+customRouteProxy|通过 VPN|از طریق VPN
+customRouteBlock|阻止|مسدود
+updateAvailableTitle|有可用更新|به‌روزرسانی موجود است
+updateAvailableDesc|版本 %s 可供下载|نسخهٔ %s آمادهٔ دریافت است
+updateDownload|下载|دریافت
+updateDownloadAndInstall|下载并安装|دریافت و نصب
+updateInstall|安装|نصب
+updateDownloading|正在下载更新…|در حال دریافت به‌روزرسانی…
+updateDownloaded|更新已准备好安装|به‌روزرسانی آمادهٔ نصب است
+updateTapToInstall|点击安装|برای نصب بزنید
+updateChangelog|更新内容|تازه‌ها
+updateScrollHint|向下滚动查看详情 ↓|برای جزئیات به پایین بروید ↓
+updateExpandNotes|展开|باز کردن
+updateCollapseNotes|收起|جمع کردن
+updatePermissionRequired|请允许 SplateVPN 安装未知应用|اجازهٔ نصب برنامه‌های ناشناس را به SplateVPN بدهید
+updateFailed|更新下载失败|دریافت به‌روزرسانی ناموفق بود
+updateRetry|重试|تلاش مجدد
+updateCheck|检查更新|بررسی به‌روزرسانی
+updateChecking|正在检查…|در حال بررسی…
+updateLatest|已是最新版本|آخرین نسخه نصب است
+liveConnectionsTitle|实时连接监控|پایش زندهٔ اتصال‌ها
+liveConnectionsSubtitle|按域名和 IP 实时查看路由|نمایش زندهٔ مسیر ترافیک بر اساس دامنه و IP
+liveConnectionsHudBadge|连接|اتصال‌ها
+liveConnectionsSearchPlaceholder|搜索域名或 IP 地址…|جستجوی دامنه یا IP…
+filterAll|全部|همه
+filterProxy|代理|پروکسی
+filterDirect|直连|مستقیم
+filterBlock|阻止|مسدود
+filterDns|DNS|DNS
+clearConnections|清空列表|پاک کردن فهرست
+noConnectionsYet|暂无活动连接|اتصال فعالی نیست
+noConnectionsDesc|连接 VPN 后查看实时流量|برای پایش زندهٔ ترافیک به VPN متصل شوید
+liveConnectionsCount|%d 个活动目标|%d مقصد فعال
+liveConnectionsSummary|%d 个目标 • %d 次请求|%d مقصد • %d درخواست
+connectionOutboundLabel|出站|خروجی
+connectionDestLabel|目标|مقصد
+connectionProtocolLabel|协议|پروتکل
+autoConnectOnBootTitle|开机自动连接|اتصال خودکار هنگام راه‌اندازی
+autoConnectOnBootSubtitle|设备启动时自动连接 VPN|هنگام روشن شدن دستگاه، VPN خودکار متصل می‌شود
+batteryOptimizationTitle|后台运行（电池）|اجرای پس‌زمینه (باتری)
+batteryOptimizationDisabled|已停用优化 — 服务可持续运行|بهینه‌سازی غیرفعال است — سرویس در پس‌زمینه حفظ می‌شود
+batteryOptimizationPrompt|点击取消电池限制|برای حذف محدودیت باتری بزنید
+batterySettingsOpenError|无法打开电池设置|تنظیمات باتری باز نشد
+pingModeTitle|延迟测试方式|روش سنجش تأخیر
+pingModeSubtitle|检查服务器可达性及延迟的方法|روش بررسی دسترسی و تأخیر سرور
+pingModeRealDelay|实际延迟|تأخیر واقعی
+pingModeTcp|TCP 延迟|تأخیر TCP
+pingModeIcmp|ICMP|ICMP
+pingModeRealDelayDesc|通过代理请求 HTTP 204，测试真实传输及 DPI 拦截|درخواست HTTP 204 از پروکسی؛ آزمایش انتقال واقعی و شناسایی مسدودسازی DPI
+pingModeTcpDesc|快速测量到服务器 IP:端口的 TCP 连接延迟|سنجش سریع تأخیر اتصال TCP به IP:port سرور
+pingModeIcmpDesc|直接向服务器发送 ICMP 请求，可能被防火墙阻止|درخواست مستقیم ICMP به سرور؛ ممکن است فایروال آن را مسدود کند
+tlsFragmentTitle|TLS 数据包分片 (Fragment)|قطعه‌بندی بسته‌های TLS (Fragment)
+tlsFragmentSubtitle|将 TLS 握手拆成小片并添加短暂延迟，可能绕过基于 SNI 的 DPI。|دست‌دهی TLS را با تأخیر کوتاه قطعه‌بندی می‌کند؛ ممکن است از DPI مبتنی بر SNI عبور کند.
+killSwitchTitle|断网保护|قطع اضطراری
+sectionAppUpdates|应用更新|به‌روزرسانی برنامه
+sectionQuickSettings|快捷设置磁贴|کاشی تنظیمات سریع
+quickSettingsDesc|通过 Android 通知栏直接开关 VPN，无需打开应用。|VPN را مستقیماً از پنل اعلان Android روشن یا خاموش کنید.
+quickSettingsAddTile|添加到快捷设置|افزودن به تنظیمات سریع
+quickSettingsTileAdded|SplateVPN 磁贴已添加！|کاشی SplateVPN اضافه شد!
+quickSettingsTileAlreadyAdded|SplateVPN 磁贴已存在|کاشی SplateVPN از قبل موجود است
+quickSettingsManualPrompt|下拉通知栏两次，点击编辑，将 SplateVPN 磁贴拖入面板。|پنل اعلان را دو بار پایین بکشید، ویرایش را بزنید و کاشی SplateVPN را به پنل بکشید.
+sectionBackupRestore|备份与恢复|پشتیبان‌گیری و بازیابی
+backupRestoreDesc|将服务器、订阅、规则和设置保存为 JSON 文件，或从备份恢复。|سرورها، اشتراک‌ها، قواعد و تنظیمات را در فایل JSON ذخیره کنید یا نسخهٔ پشتیبان را بازیابی کنید.
+exportBtn|导出|صدور
+importBtn|导入|ورود
+backupExportSuccess|配置已导出！|پیکربندی صادر شد!
+backupExportError|导出错误：%s|خطای صدور: %s
+backupImportSuccess|已导入 %d 个服务器|%d سرور وارد شد
+backupImportError|导入错误：%s|خطای ورود: %s
+autoRestoreBtn|恢复自动备份|بازیابی پشتیبان خودکار
+autoRestoreSuccess|已恢复 %d 个服务器|%d سرور بازیابی شد
+autoRestoreNotFound|自动备份不存在或为空|پشتیبان خودکار یافت نشد یا خالی است
+autoSelectOn|⚡ 自动：开|⚡ خودکار: روشن
+speedtestTitle|速度测试|آزمون سرعت
+speedtestDesc|测试通过 VPN 的实际下载速度|سنجش سرعت واقعی دریافت از طریق VPN
+speedtestRunning|测试中：%d%%|در حال آزمایش: %d%%
+speedtestSpeedUnit|Mbps|Mbps
+speedtestResult|速度：%s Mbps|سرعت: %s Mbps
+speedtestLatency|HTTPS 响应：%s 毫秒|پاسخ HTTPS: %s میلی‌ثانیه
+speedtestError|测试错误：%s|خطای آزمایش: %s
+serversAddedCount|已添加服务器：%d|سرورهای افزوده: %d
+qrScanError|二维码扫描错误：%s|خطای اسکن QR: %s
+scanQr|扫描二维码|اسکن QR
+copyLink|复制链接|کپی پیوند
+autoSelectBalancer|自动选择服务器|انتخاب خودکار سرور
+activeNodePrefix|当前：%s|فعال: %s
+autoSelectBalancerDesc|根据连接设置选择和切换服务器|انتخاب و تعویض سرور بر اساس تنظیمات اتصال
+onUpper|开|روشن
+offUpper|关|خاموش
+filterSelected|已选择|انتخاب‌شده
+selectAll|全选|همه
+resetAll|重置|بازنشانی
+unifiedAddTitle|添加服务器或订阅|افزودن سرور یا اشتراک
+unifiedAddSubtitle|粘贴 VLESS/VMess/SS/Trojan 或订阅链接|پیوند VLESS/VMess/SS/Trojan یا نشانی اشتراک را بچسبانید
+pasteFromClipboard|从剪贴板粘贴|چسباندن از کلیپ‌بورد
+scanQrCode|扫描二维码|اسکن کد QR
+clipboardEmpty|剪贴板为空|کلیپ‌بورد خالی است
+detectedSubscription|🔗 检测到订阅链接|🔗 پیوند اشتراک شناسایی شد
+detectedServerNode|⚡ 检测到服务器配置|⚡ پیکربندی سرور شناسایی شد
+detectedMultipleNodes|📦 找到服务器：%d|📦 سرورهای یافت‌شده: %d
+emptyServersCta|添加第一个服务器或订阅|اولین سرور یا اشتراک را اضافه کنید
+emptyServersHint|粘贴链接或扫描二维码开始使用|برای شروع پیوندی بچسبانید یا کد QR را اسکن کنید
+importAction|导入|وارد کردن
+subNameOptional|订阅名称（可选）|نام اشتراک (اختیاری)
+addServerOrSub|添加服务器或订阅|افزودن سرور یا اشتراک
+subQuotaUsed|已用：%s / %s|مصرف‌شده: %s از %s
+subQuotaRemaining|剩余 %s / %s|%s باقی‌مانده از %s
+subQuotaUnlimited|不限流量|حجم نامحدود
+subExpireDate|到期：%s|انقضا: %s
+subExpired|订阅已到期|اشتراک منقضی شده است
+shareServerTitle|导出节点|صدور گره
+shareQrPrompt|用另一设备的相机扫描|با دوربین دستگاه دیگر اسکن کنید
+shareCopyLink|复制链接|کپی پیوند
+shareSend|分享|اشتراک‌گذاری
+shareAction|分享 / 二维码|اشتراک / QR
+sharePayloadTooLarge|配置过大，无法生成二维码 (%d 字节)。请复制链接或分享文本。|پیکربندی برای کد QR بزرگ است (%d بایت). پیوند را کپی یا به‌صورت متن ارسال کنید.
+shareSubscriptionTitle|导出订阅|صدور اشتراک
+shareSubQrPrompt|用另一设备扫描以导入订阅|برای ورود اشتراک، با دستگاه دیگر اسکن کنید
+sectionShareLan|VPN 共享（热点与 USB）|اشتراک VPN (هات‌اسپات و USB)
+shareLanTitle|通过局域网共享 VPN|اشتراک VPN در شبکهٔ محلی
+shareLanSubtitle|在所选本地接口启用带认证的 HTTP 和 SOCKS5 代理|فعال‌سازی پروکسی HTTP و SOCKS5 با احراز هویت روی رابط محلی انتخابی
+shareLanActiveEndpoints|已检测到的共享接口|رابط‌های اشتراک شناسایی‌شده
+shareLanNoEndpoints|尚未检测到热点或 USB 共享。请在手机设置中启用。|هات‌اسپات یا اشتراک USB شناسایی نشد. آن را در تنظیمات گوشی فعال کنید.
+shareLanInstructionsBtn|连接手机或电脑|اتصال گوشی یا رایانه
+shareLanHttpProxy|HTTP 代理 (Windows / Mac / TV)|پروکسی HTTP (Windows / Mac / TV)
+shareLanSocksProxy|SOCKS5 代理|پروکسی SOCKS5
+shareLanCopied|代理地址已复制：%s|نشانی پروکسی کپی شد: %s
+shareLanDialogTitle|通过手机连接电脑与设备|اتصال رایانه و دستگاه‌ها از طریق گوشی
+shareLanStep1|1. 开启手机热点或 USB 共享，并连接电脑。|۱. هات‌اسپات Wi-Fi یا اشتراک USB را در گوشی روشن و رایانه را متصل کنید.
+shareLanStep2|2. 确保 SplateVPN 已连接。|۲. مطمئن شوید SplateVPN متصل است.
+shareLanStep3Windows|3. 在 Windows 中打开设置 → 网络和 Internet → 代理 → 手动设置。填写共享设置中的手机 IP 和 HTTP 端口。|۳. در Windows به تنظیمات ← شبکه و اینترنت ← پروکسی ← تنظیم دستی بروید. IP تلفن و پورت HTTP را از تنظیمات اشتراک وارد کنید.
+shareLanStep3Mac|4. 在 macOS 或 Linux 中打开网络代理设置。为 HTTP 和 HTTPS 填写共享设置中的手机 IP 和 HTTP 端口。|۴. در macOS یا Linux تنظیمات پروکسی شبکه را باز کنید. برای HTTP و HTTPS، IP تلفن و پورت HTTP تنظیمات اشتراک را وارد کنید.
+shareLanStep3Telegram|5. 在 Telegram 中打开设置 → 数据与存储 → 代理。添加 SOCKS5，填写共享设置中的手机 IP 和 SOCKS5 端口。若已启用认证，用户名为 splate，密码为共享密码。|۵. در Telegram به تنظیمات ← داده و ذخیره‌سازی ← پروکسی بروید. SOCKS5 را با IP تلفن و پورت SOCKS5 تنظیمات اشتراک اضافه کنید. اگر احراز هویت فعال است، از نام کاربری splate و رمز اشتراک استفاده کنید.
+shareLanWindowsTitle|Windows 设置（Wi-Fi 或 USB）|راه‌اندازی Windows (Wi-Fi یا USB)
+shareLanWindowsSettingsGuide|Windows 10/11：设置 → 网络和 Internet → 代理 → 手动设置 → 使用代理服务器。|Windows 10/11: تنظیمات ← شبکه و اینترنت ← پروکسی ← تنظیم دستی ← استفاده از سرور پروکسی.
+shareLanWindowsInetcplGuide|或按 Win+R → 输入 inetcpl.cpl → 连接 → 局域网设置。|یا Win+R را بزنید ← inetcpl.cpl ← زبانهٔ Connections ← LAN settings.
+shareLanWindowsProxyString|代理地址（HTTP / HTTPS）：|نشانی پروکسی (HTTP / HTTPS):
+shareLanWindowsExceptions|本地地址不使用代理：|نشانی‌های محلی مستثنا از پروکسی:
+shareLanWindowsExceptionsValue|localhost;127.*;10.*;192.168.*;172.16.*|localhost;127.*;10.*;192.168.*;172.16.*
+shareLanWindowsCmdEnable|在 PowerShell 中启用代理：|فعال‌کردن پروکسی در PowerShell:
+shareLanWindowsCmdDisable|在 PowerShell 中关闭代理：|غیرفعال‌کردن پروکسی در PowerShell:
+shareLanExceptionsCopied|例外已复制|استثناها کپی شدند
+shareLanCommandCopied|Windows 命令已复制|فرمان Windows کپی شد
+tlsFragmentPresetTitle|分片配置|پروفایل قطعه‌بندی
+tlsFragmentPresetStandard|标准 (100-200, 10-20)|استاندارد (100-200, 10-20)
+tlsFragmentPresetAggressive|激进 (50-100, 20-40, 1-3)|تهاجمی (50-100, 20-40, 1-3)
+tlsFragmentPresetCustom|自定义|سفارشی
+tlsFragmentLengthLabel|分片大小（字节）|اندازهٔ قطعه (بایت)
+tlsFragmentIntervalLabel|间隔（毫秒）|فاصله (میلی‌ثانیه)
+tlsFragmentPacketsLabel|数据包|بسته‌ها
+dnsCustom|自定义 DoH DNS|DNS سفارشی DoH
+dnsCustomUrlHint|https://dns.nextdns.io/...|https://dns.nextdns.io/...
+dnsCustomUrlDialogTitle|自定义 DNS-over-HTTPS|DNS-over-HTTPS سفارشی
+muxTitle|多路复用 (Mux)|چندگانه‌سازی (Mux)
+muxSubtitle|在单条隧道中复用多个 TCP 连接（不兼容 Vision）|چند اتصال TCP روی یک تونل (ناسازگار با Vision)
+muxConcurrencyLabel|并发连接上限|حد اتصال هم‌زمان
+pingNoResponse|无响应|بدون پاسخ
+pingUntested|未测试|آزمایش‌نشده
+serverToolsFolders|文件夹|پوشه‌ها
+serverToolsList|列表|فهرست
+serverToolsGrouping|服务器分组|گروه‌بندی سرورها
+serverToolsGrouped|按来源分组|گروه‌بندی بر اساس منبع
+serverToolsUngrouped|所有节点显示在一个列表|تمام گره‌ها در یک فهرست
+serverToolsSort|排序|مرتب‌سازی
+serverToolsSortDescription|按延迟排序|مرتب‌سازی بر اساس تأخیر
+serverToolsAuto|自动|خودکار
+serverToolsTest|测试|آزمایش
+serversPageTitle|服务器|سرورها
+presetsPageTitle|预设|پیش‌تنظیم‌ها
+serversPageSubtitle|选择服务器并检查延迟|سرور را انتخاب و تأخیر را بررسی کنید
+subscriptionsPageSubtitle|管理来源并更新服务器列表|مدیریت منابع و به‌روزرسانی فهرست سرورها
+personalPageSubtitle|您的 VPN 配置|پیکربندی‌های شخصی VPN
+themeOcean|深海|ژرفای اقیانوس
+themeSakura|月下樱花|شکوفه زیر مهتاب
+themePony|小马|پونی
+themeWinx|Winx · Bloom|Winx · Bloom
+glassTransparencyTitle|卡片透明度|شفافیت کارت
+glassTransparencySubtitle|调整卡片与底栏透明度，文字和控件保持清晰。|شفافیت کارت‌ها و نوار پایین؛ متن و کنترل‌ها واضح می‌مانند.
+glassBlurTitle|背景模糊|محو کردن پس‌زمینه
+glassBlurSubtitle|模糊卡片和底栏后方背景，可独立调整透明度。|محو شدن پشت کارت‌ها و نوار پایین، مستقل از شفافیت.
+glassDefault|默认|پیش‌فرض
+glassMoreSolid|更不透明|مات‌تر
+glassMoreClear|更透明|شفاف‌تر
+glassLegacyHint|背景模糊需要 Android 12 或更高版本。|محو کردن پس‌زمینه در Android 12 و بالاتر موجود است.
+themeShowAll|显示全部主题 (%d)|نمایش تمام پوسته‌ها (%d)
+themeShowLess|收起主题|نمایش پوسته‌های کمتر
+themeCurrent|当前：%s|انتخاب‌شده: %s
+aiDnsProviderTitle|AI 服务 SmartDNS|SmartDNS برای خدمات هوش مصنوعی
+aiDnsProviderHint|独立于主要 DNS。Gemini 和 ChatGPT 的可用性取决于 SmartDNS、网络和账户。|مستقل از DNS اصلی. دسترسی Gemini و ChatGPT به ارائه‌دهندهٔ SmartDNS، شبکه و حساب وابسته است.
+aiTlsFragmentTitle|SmartDNS TLS 分片|قطعه‌بندی TLS برای SmartDNS
+aiTlsFragmentHint|适用于过滤 TLS 的网络，默认关闭；部分 Gemini 代理与此不兼容。|حالت اختیاری برای شبکه‌های فیلترکنندهٔ TLS؛ پیش‌فرض خاموش است چون برخی پروکسی‌های Gemini ناسازگارند.
+killSwitchActive|保护已启用|محافظت فعال است
+killSwitchAlwaysOnly|仅始终开启 VPN|فقط VPN همیشه‌روشن
+killSwitchOff|断网保护已关闭|مسدودسازی غیرفعال است
+killSwitchUnknown|状态未确认|وضعیت تأیید نشده است
+killSwitchUnknownHint|Android 未提供保护状态，可能需要活动隧道。请在 Android VPN 设置中确认。|Android وضعیت محافظت را اعلام نکرده است. ممکن است به تونل فعال نیاز باشد. تنظیمات VPN در Android را بررسی کنید.
+killSwitchBody|启用后，Android 将阻止无 VPN 的连接，包括应用停止时。|با فعال‌سازی، Android اتصال بدون VPN را حتی هنگام توقف برنامه مسدود می‌کند.
+killSwitchStepOne|在 Android VPN 列表中打开 %s 选项。|گزینه‌های %s را در فهرست VPN در Android باز کنید.
+killSwitchStepTwo|启用“始终开启 VPN”。|«VPN همیشه‌روشن» را فعال کنید.
+killSwitchStepThree|启用“屏蔽未使用 VPN 的所有连接”。|«مسدود کردن اتصال بدون VPN» را فعال کنید.
+killSwitchConfigure|设置保护|راه‌اندازی محافظت
+killSwitchManage|管理保护|مدیریت محافظت
+killSwitchExcludedApps|启用阻止功能时，被排除的应用将无法联网。|هنگام فعال بودن مسدودسازی، برنامه‌های مستثنا از VPN دسترسی به اینترنت را از دست می‌دهند.

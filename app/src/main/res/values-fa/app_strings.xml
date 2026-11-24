@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_appname" formatted="false">SplateVPN</string>
+    <string name="app_cancel" formatted="false">لغو</string>
+    <string name="app_save" formatted="false">ذخیره</string>
+    <string name="app_delete" formatted="false">حذف</string>
+    <string name="app_close" formatted="false">بستن</string>
+    <string name="app_add" formatted="false">افزودن</string>
+    <string name="app_refresh" formatted="false">تازه‌سازی</string>
+    <string name="app_edit" formatted="false">ویرایش</string>
+    <string name="app_tabcontrol" formatted="false">خانه</string>
+    <string name="app_tabnodes" formatted="false">سرورها</string>
+    <string name="app_tabrouting" formatted="false">برنامه‌ها</string>
+    <string name="app_tabconfig" formatted="false">تنظیمات</string>
+    <string name="app_standbyunprotected" formatted="false">آماده • محافظت‌نشده</string>
+    <string name="app_encryptedsession" formatted="false">متصل • %s</string>
+    <string name="app_resolvinglocation" formatted="false">در حال تعیین موقعیت…</string>
+    <string name="app_protectedgateway" formatted="false">تونل محافظت‌شده</string>
+    <string name="app_egressip" formatted="false">IP خروجی: %s</string>
+    <string name="app_ping" formatted="false">تأخیر</string>
+    <string name="app_download" formatted="false">دریافت</string>
+    <string name="app_upload" formatted="false">ارسال</string>
+    <string name="app_routingprofile" formatted="false">پروفایل مسیریابی</string>
+    <string name="app_smartroute" formatted="false">مسیریابی هوشمند</string>
+    <string name="app_smartroutedesc" formatted="false">اتصال مستقیم به خدمات محلی</string>
+    <string name="app_globaltunnel" formatted="false">تمام ترافیک</string>
+    <string name="app_globaltunneldesc" formatted="false">تمام مقصدها از طریق VPN</string>
+    <string name="app_activegateway" formatted="false">سرور فعال</string>
+    <string name="app_autofastest" formatted="false">خودکار: خاموش</string>
+    <string name="app_pingnoresponse" formatted="false">بدون پاسخ</string>
+    <string name="app_pinguntested" formatted="false">آزمایش‌نشده</string>
+    <string name="app_pinging" formatted="false">در حال سنجش تأخیر…</string>
+    <string name="app_noserverselected" formatted="false">سروری انتخاب نشده است</string>
+    <string name="app_taptochoosenode" formatted="false">برای انتخاب سرور بزنید</string>
+    <string name="app_coreconnected" formatted="false">متصل</string>
+    <string name="app_coreconnect" formatted="false">اتصال</string>
+    <string name="app_latencylabel" formatted="false">تأخیر</string>
+    <string name="app_downlinklabel" formatted="false">دریافت</string>
+    <string name="app_uplinklabel" formatted="false">ارسال</string>
+    <string name="app_coresubtitle" formatted="false">Xray %s</string>
+    <string name="app_stateselectingserver" formatted="false">در حال یافتن سرور…</string>
+    <string name="app_corediscselect" formatted="false">جستجو…</string>
+    <string name="app_statestartingcore" formatted="false">در حال راه‌اندازی هسته…</string>
+    <string name="app_stateconnecting" formatted="false">در حال اتصال…</string>
+    <string name="app_statehealthchecking" formatted="false">در حال بررسی اتصال…</string>
+    <string name="app_statereconnecting" formatted="false">در حال اتصال مجدد…</string>
+    <string name="app_statefailed" formatted="false">اتصال ناموفق</string>
+    <string name="app_corediscboot" formatted="false">راه‌اندازی…</string>
+    <string name="app_coredisclink" formatted="false">اتصال…</string>
+    <string name="app_corediscverify" formatted="false">بررسی…</string>
+    <string name="app_corediscretry" formatted="false">تلاش مجدد…</string>
+    <string name="app_corediscerror" formatted="false">خطا</string>
+    <string name="app_tagsplittunnel" formatted="false">تونل تفکیکی</string>
+    <string name="app_tagfullencap" formatted="false">سراسری</string>
+    <string name="app_searchservers" formatted="false">جستجوی نام، IP یا پروتکل…</string>
+    <string name="app_noserversmatchingquery" formatted="false">سرور مطابقی یافت نشد</string>
+    <string name="app_linkcopied" formatted="false">پیوند کپی شد</string>
+    <string name="app_sessiondownloaded" formatted="false">دریافت‌شده</string>
+    <string name="app_sessionuploaded" formatted="false">ارسال‌شده</string>
+    <string name="app_networknodes" formatted="false">سرورها</string>
+    <string name="app_presetserverstitle" formatted="false">پیش‌تنظیم‌ها</string>
+    <string name="app_availablenodes" formatted="false">موجود: %d / %d</string>
+    <string name="app_pingall" formatted="false">سنجش همه</string>
+    <string name="app_pastelink" formatted="false">چسباندن پیوند</string>
+    <string name="app_subs" formatted="false">اشتراک‌ها (%d)</string>
+    <string name="app_allchip" formatted="false">همه (%d)</string>
+    <string name="app_builtinchip" formatted="false">⚡ پیش‌تنظیم‌ها</string>
+    <string name="app_noserversfound" formatted="false">سروری موجود نیست.\nپیوند یا اشتراکی اضافه کنید.</string>
+    <string name="app_noserversinfilter" formatted="false">در این دسته سروری نیست</string>
+    <string name="app_addservertitle" formatted="false">افزودن سرور</string>
+    <string name="app_addserverprompt" formatted="false">پیوند vless://، trojan://، vmess:// یا ss:// را بچسبانید:</string>
+    <string name="app_serveraddedsuccess" formatted="false">سرور اضافه شد!</string>
+    <string name="app_invalidlinkformat" formatted="false">قالب پیوند نامعتبر است</string>
+    <string name="app_editservertitle" formatted="false">ویرایش تنظیمات سرور</string>
+    <string name="app_serverupdatedsuccess" formatted="false">تنظیمات سرور به‌روزرسانی شد!</string>
+    <string name="app_managesubstitle" formatted="false">مدیریت اشتراک‌ها</string>
+    <string name="app_activesubsheader" formatted="false">اشتراک‌های فعال:</string>
+    <string name="app_serverscountsub" formatted="false">%d گره</string>
+    <string name="app_subbuiltintag" formatted="false">پیش‌تنظیم</string>
+    <string name="app_subupdatedsuccess" formatted="false">به‌روزرسانی شد: %d گره</string>
+    <string name="app_subdeletedsuccess" formatted="false">اشتراک حذف شد</string>
+    <string name="app_addnewsubheader" formatted="false">افزودن اشتراک جدید:</string>
+    <string name="app_servertoolsfolders" formatted="false">پوشه‌ها</string>
+    <string name="app_servertoolslist" formatted="false">فهرست</string>
+    <string name="app_servertoolsgrouping" formatted="false">گروه‌بندی سرورها</string>
+    <string name="app_servertoolsgrouped" formatted="false">گروه‌بندی بر اساس منبع</string>
+    <string name="app_servertoolsungrouped" formatted="false">تمام گره‌ها در یک فهرست</string>
+    <string name="app_servertoolssort" formatted="false">مرتب‌سازی</string>
+    <string name="app_servertoolssortdescription" formatted="false">مرتب‌سازی بر اساس تأخیر</string>
+    <string name="app_servertoolsauto" formatted="false">خودکار</string>
+    <string name="app_servertoolstest" formatted="false">آزمایش</string>
+    <string name="app_serverspagetitle" formatted="false">سرورها</string>
+    <string name="app_presetspagetitle" formatted="false">پیش‌تنظیم‌ها</string>
+    <string name="app_serverspagesubtitle" formatted="false">سرور را انتخاب و تأخیر را بررسی کنید</string>
+    <string name="app_subscriptionspagesubtitle" formatted="false">مدیریت منابع و به‌روزرسانی فهرست سرورها</string>
+    <string name="app_personalpagesubtitle" formatted="false">پیکربندی‌های شخصی VPN</string>
+    <string name="app_subscriptionstitle" formatted="false">اشتراک‌ها</string>
+    <string name="app_subscriptionssearch" formatted="false">جستجوی نام یا نشانی…</string>
+    <string name="app_subscriptionsnoresults" formatted="false">اشتراک مطابقی یافت نشد</string>
+    <string name="app_subscriptiondetails" formatted="false">جزئیات اشتراک</string>
+    <string name="app_subscriptionname" formatted="false">نام</string>
+    <string name="app_subscriptionurl" formatted="false">نشانی اشتراک</string>
+    <string name="app_subscriptionurlinvalid" formatted="false">نشانی معتبر اشتراک را وارد کنید</string>
+    <string name="app_subscriptionedithint" formatted="false">تغییر نشانی در به‌روزرسانی بعدی اعمال می‌شود. گره‌های موجود حفظ می‌شوند.</string>
+    <string name="app_subscriptionautoupdate" formatted="false">به‌روزرسانی خودکار</string>
+    <string name="app_subscriptionmanual" formatted="false">دستی</string>
+    <string name="app_subscriptionscheduleoff" formatted="false">زمان‌بندی کلی در تنظیمات غیرفعال است</string>
+    <string name="app_subscriptionschedule" formatted="false">به‌روزرسانی هر %s</string>
+    <string name="app_subscriptionupdateall" formatted="false">به‌روزرسانی همه</string>
+    <string name="app_subscriptionrefreshsummary" formatted="false">اشتراک‌های به‌روز: %d. ناموفق: %d.</string>
+    <string name="app_subscriptionnoupdates" formatted="false">اشتراک فعالی برای به‌روزرسانی نیست</string>
+    <string name="app_subscriptionbuiltin" formatted="false">داخلی</string>
+    <string name="app_subscriptiondisabled" formatted="false">غیرفعال</string>
+    <string name="app_subscriptionnodes" formatted="false">گره‌ها (%d)</string>
+    <string name="app_subscriptiondeletetitle" formatted="false">اشتراک حذف شود؟</string>
+    <string name="app_subscriptiondeletemessage" formatted="false">«%s» و همهٔ گره‌های آن (%d) حذف شوند؟</string>
+    <string name="app_subscriptionnever" formatted="false">هرگز</string>
+    <string name="app_subscriptionjustnow" formatted="false">همین حالا</string>
+    <string name="app_subscriptionminutesago" formatted="false">%d دقیقه پیش</string>
+    <string name="app_subscriptionhoursago" formatted="false">%d ساعت پیش</string>
+    <string name="app_subscriptionstab" formatted="false">اشتراک‌ها (%d/%d)</string>
+    <string name="app_personalnodestab" formatted="false">شخصی (%d)</string>
+    <string name="app_subscriptionenabledmessage" formatted="false">«%s»: فعال</string>
+    <string name="app_subscriptiondisabledmessage" formatted="false">«%s»: غیرفعال، گره‌ها پنهان شدند</string>
+    <string name="app_subscriptionautoenabledmessage" formatted="false">به‌روزرسانی خودکار فعال شد</string>
+    <string name="app_subscriptionautodisabledmessage" formatted="false">به‌روزرسانی خودکار غیرفعال شد</string>
+    <string name="app_subscriptionnodeslabel" formatted="false">گره‌ها</string>
+    <string name="app_subscriptionslabel" formatted="false">اشتراک‌ها</string>
+    <string name="app_personalnodeslabel" formatted="false">شخصی</string>
+    <string name="app_uipause" formatted="false">مکث</string>
+    <string name="app_uiresume" formatted="false">ادامه</string>
+    <string name="app_uiclear" formatted="false">پاک کردن</string>
+    <string name="app_uimonitoring" formatted="false">در حال پایش</string>
+    <string name="app_uipaused" formatted="false">متوقف</string>
+    <string name="app_uinomatches" formatted="false">نتیجه‌ای یافت نشد</string>
+    <string name="app_uinopersonal" formatted="false">پیکربندی شخصی موجود نیست</string>
+    <string name="app_uipersonalhint" formatted="false">پیوند vless://، vmess://، trojan:// یا shadowsocks:// را از کلیپ‌بورد بچسبانید یا کد QR را اسکن کنید.</string>
+    <string name="app_uiaddconfig" formatted="false">افزودن پیکربندی</string>
+    <string name="app_uinosubscriptions" formatted="false">اشتراکی موجود نیست</string>
+    <string name="app_uisubscriptionhint" formatted="false">اشتراک، چندین گره را با یک پیوند به‌روز نگه می‌دارد.</string>
+    <string name="app_uiaddsubscription" formatted="false">افزودن اشتراک</string>
+    <string name="app_uirestorepresets" formatted="false">بازیابی اشتراک‌های داخلی</string>
+    <string name="app_uipresetsempty" formatted="false">اشتراک‌های داخلی بارگیری نشده‌اند یا حذف شده‌اند.</string>
+    <string name="app_uipersonalsearch" formatted="false">جستجوی پیکربندی شخصی…</string>
+    <string name="app_uipresetsearch" formatted="false">جستجوی گره‌های پیش‌تنظیم…</string>
+    <string name="app_uiallactive" formatted="false">همهٔ فعال‌ها (%d)</string>
+    <string name="app_uipersonalservers" formatted="false">سرورهای شخصی</string>
+    <string name="app_uisubscriptionprefix" formatted="false">اشتراک: %s</string>
+    <string name="app_uidisablednodeshidden" formatted="false">غیرفعال — گره‌ها پنهان هستند</string>
+    <string name="app_uiexpand" formatted="false">باز کردن</string>
+    <string name="app_uicollapse" formatted="false">جمع کردن</string>
+    <string name="app_uipresettag" formatted="false">پیش‌تنظیم • %s</string>
+    <string name="app_uisubscriptiontag" formatted="false">اشتراک • %s</string>
+    <string name="app_uipersonaltag" formatted="false">پیکربندی شخصی</string>
+    <string name="app_uiactions" formatted="false">عملیات</string>
+    <string name="app_uiautoselect" formatted="false">انتخاب خودکار</string>
+    <string name="app_uifastest" formatted="false">سریع‌ترین</string>
+    <string name="app_uioff" formatted="false">خاموش</string>
+    <string name="app_uipingsummary" formatted="false">«%s»: %d گره آزمایش شد</string>
+    <string name="app_uicamera" formatted="false">دوربین</string>
+    <string name="app_uiautoimport" formatted="false">ورود خودکار</string>
+    <string name="app_uilinkhint" formatted="false">vless://…، vmess://… یا https://…</string>
+    <string name="app_uipresetharvester" formatted="false">Harvester (گره‌های فعال)</string>
+    <string name="app_uipresetcidr" formatted="false">فهرست مجاز (CIDR RU)</string>
+    <string name="app_uipresetuniversal" formatted="false">فهرست مجاز (عمومی)</string>
+    <string name="app_approutingconnected" formatted="false">VPN متصل است. برنامه‌ها از قوانین مسیریابی انتخابی پیروی می‌کنند.</string>
+    <string name="app_approutingdisconnected" formatted="false">VPN قطع است. برای اعمال مسیریابی از خانه متصل شوید.</string>
+    <string name="app_fieldaddresserror" formatted="false">نام میزبان یا IP را بدون طرح، مسیر یا فاصله وارد کنید</string>
+    <string name="app_fieldporterror" formatted="false">شمارهٔ پورت از ۱ تا ۶۵۵۳۵ را وارد کنید</string>
+    <string name="app_fieldpassword" formatted="false">گذرواژه</string>
+    <string name="app_fieldsnihint" formatted="false">domain.com (برای Cloudflare/TLS)</string>
+    <string name="app_fieldhosthint" formatted="false">سرآیند HTTP Host</string>
+    <string name="app_tlspresetstandard" formatted="false">استاندارد</string>
+    <string name="app_tlspresetaggressive" formatted="false">قطعه‌های کوچک (50–100)</string>
+    <string name="app_tlspresetcustom" formatted="false">سفارشی</string>
+    <string name="app_tlscustomtitle" formatted="false">قطعه‌بندی TLS</string>
+    <string name="app_tlsparameterssummary" formatted="false">پارامترها: طول=%s، فاصله=%s میلی‌ثانیه، بسته‌ها=%s</string>
+    <string name="app_sharelannotready" formatted="false">اشتراک‌گذاری آماده نیست. پس از دسترسی به نشانی هات‌اسپات یا USB، نشانی پروکسی و فرمان‌ها نمایش داده می‌شوند.</string>
+    <string name="app_sharelancopyenable" formatted="false">کپی فرمان فعال‌سازی</string>
+    <string name="app_sharelandisable" formatted="false">غیرفعال کردن پروکسی</string>
+    <string name="app_uicopied" formatted="false">کپی شد</string>
+    <string name="app_uicopy" formatted="false">کپی</string>
+    <string name="app_lanendpointusb" formatted="false">اشتراک USB (%s)</string>
+    <string name="app_lanendpointhotspot" formatted="false">هات‌اسپات Wi-Fi (%s)</string>
+    <string name="app_lanendpointwifi" formatted="false">شبکهٔ Wi-Fi (%s)</string>
+    <string name="app_lanendpointother" formatted="false">رابط %s</string>
+    <string name="app_subnameplaceholder" formatted="false">نام (مثلاً VPN من)</string>
+    <string name="app_suburlplaceholder" formatted="false">https://example.com/sub/...</string>
+    <string name="app_subloading" formatted="false">در حال همگام‌سازی گره‌ها…</string>
+    <string name="app_splashsubtitle" formatted="false">تونل پروکسی امن</string>
+    <string name="app_splashinitializing" formatted="false">در حال آماده‌سازی گره‌ها…</string>
+    <string name="app_subaddedsuccess" formatted="false">گره‌های افزوده: %d</string>
+    <string name="app_errorprefix" formatted="false">خطا: %s</string>
+    <string name="app_autoselectselected" formatted="false">انتخاب‌شده: %s</string>
+    <string name="app_fieldname" formatted="false">نام گره</string>
+    <string name="app_fieldprotocol" formatted="false">پروتکل</string>
+    <string name="app_fieldaddress" formatted="false">نشانی / IP</string>
+    <string name="app_fieldport" formatted="false">پورت</string>
+    <string name="app_fieldnetwork" formatted="false">انتقال شبکه (type)</string>
+    <string name="app_fieldsecurity" formatted="false">حالت امنیت</string>
+    <string name="app_fieldsni" formatted="false">دامنهٔ SNI</string>
+    <string name="app_fieldpath" formatted="false">مسیر (path / serviceName)</string>
+    <string name="app_fieldhost" formatted="false">سرآیند Host</string>
+    <string name="app_fielduuid" formatted="false">UUID / گذرواژه</string>
+    <string name="app_fieldpublickey" formatted="false">کلید عمومی (pbk / Reality)</string>
+    <string name="app_fieldshortid" formatted="false">شناسهٔ کوتاه (sid)</string>
+    <string name="app_fieldspiderx" formatted="false">SpiderX (spx)</string>
+    <string name="app_fieldfingerprint" formatted="false">اثر انگشت (fp)</string>
+    <string name="app_approutingtitle" formatted="false">مسیریابی برنامه‌ها</string>
+    <string name="app_approutingsubtitle" formatted="false">برنامه‌های تابع قوانین VPN را انتخاب کنید</string>
+    <string name="app_proxiedappscount" formatted="false">برنامه‌های پروکسی‌شده: %d / %d</string>
+    <string name="app_selectedappscount" formatted="false">انتخاب‌شده: %d</string>
+    <string name="app_proxymodeall" formatted="false">تمام برنامه‌ها</string>
+    <string name="app_proxymodealldesc" formatted="false">هنگام اتصال VPN، همهٔ برنامه‌ها از قوانین انتخابی پیروی می‌کنند</string>
+    <string name="app_proxymodeselected" formatted="false">انتخاب بر اساس برنامه</string>
+    <string name="app_proxymodeselecteddesc" formatted="false">فقط برنامه‌های انتخابی از VPN عبور می‌کنند</string>
+    <string name="app_globalmodeactive" formatted="false">همهٔ برنامه‌ها انتخاب شدند</string>
+    <string name="app_allappsprotected" formatted="false">قواعد VPN برای همهٔ برنامه‌ها اعمال می‌شود</string>
+    <string name="app_searchapps" formatted="false">جستجوی برنامه‌ها…</string>
+    <string name="app_statusproxied" formatted="false">پروکسی</string>
+    <string name="app_statusdirect" formatted="false">مستقیم</string>
+    <string name="app_statusbypassed" formatted="false">مستثنا</string>
+    <string name="app_perappmodeinclude" formatted="false">فقط انتخاب‌شده‌ها</string>
+    <string name="app_perappmodeincludedesc" formatted="false">فقط برنامه‌های انتخابی از VPN عبور می‌کنند</string>
+    <string name="app_perappmodeexclude" formatted="false">مستثنا کردن انتخاب‌شده‌ها</string>
+    <string name="app_perappmodeexcludedesc" formatted="false">برنامه‌های انتخابی (بانکی، محلی) از VPN عبور نمی‌کنند</string>
+    <string name="app_perappmodeheader" formatted="false">حالت تونل تفکیکی</string>
+    <string name="app_settingstitle" formatted="false">تنظیمات</string>
+    <string name="app_settingssubtitle" formatted="false">عبور از فیلترینگ، ظاهر و تنظیمات هسته</string>
+    <string name="app_sectionappearance" formatted="false">رابط کاربری و ظاهر</string>
+    <string name="app_themetitle" formatted="false">پوستهٔ برنامه</string>
+    <string name="app_themesubtitle" formatted="false">سبک ظاهری و رنگ‌بندی</string>
+    <string name="app_themedark" formatted="false">تیره</string>
+    <string name="app_themeamoled" formatted="false">AMOLED</string>
+    <string name="app_themelight" formatted="false">روشن</string>
+    <string name="app_themesystem" formatted="false">سیستم</string>
+    <string name="app_themewinter" formatted="false">زمستان تیره</string>
+    <string name="app_themewinterlight" formatted="false">زمستان روشن</string>
+    <string name="app_themered" formatted="false">قرمز</string>
+    <string name="app_themeaurora" formatted="false">شفق قطبی</string>
+    <string name="app_themeocean" formatted="false">ژرفای اقیانوس</string>
+    <string name="app_themesakura" formatted="false">شکوفه زیر مهتاب</string>
+    <string name="app_themepony" formatted="false">پونی</string>
+    <string name="app_themewinx" formatted="false">Winx · Bloom</string>
+    <string name="app_glasstransparencytitle" formatted="false">شفافیت کارت</string>
+    <string name="app_glasstransparencysubtitle" formatted="false">شفافیت کارت‌ها و نوار پایین؛ متن و کنترل‌ها واضح می‌مانند.</string>
+    <string name="app_glassblurtitle" formatted="false">محو کردن پس‌زمینه</string>
+    <string name="app_glassblursubtitle" formatted="false">محو شدن پشت کارت‌ها و نوار پایین، مستقل از شفافیت.</string>
+    <string name="app_glassdefault" formatted="false">پیش‌فرض</string>
+    <string name="app_glassmoresolid" formatted="false">مات‌تر</string>
+    <string name="app_glassmoreclear" formatted="false">شفاف‌تر</string>
+    <string name="app_glasslegacyhint" formatted="false">محو کردن پس‌زمینه در Android 12 و بالاتر موجود است.</string>
+    <string name="app_themeshowall" formatted="false">نمایش تمام پوسته‌ها (%d)</string>
+    <string name="app_themeshowless" formatted="false">نمایش پوسته‌های کمتر</string>
+    <string name="app_themecurrent" formatted="false">انتخاب‌شده: %s</string>
+    <string name="app_themesunset" formatted="false">سراب غروب</string>
+    <string name="app_languagetitle" formatted="false">زبان</string>
+    <string name="app_languagesubtitle" formatted="false">انتخاب زبان رابط کاربری</string>
+    <string name="app_langru" formatted="false">Русский</string>
+    <string name="app_langen" formatted="false">English</string>
+    <string name="app_langsystem" formatted="false">سیستم</string>
+    <string name="app_sectionautomation" formatted="false">خودکارسازی و اشتراک‌ها</string>
+    <string name="app_autoselecttitle" formatted="false">انتخاب خودکار سرور</string>
+    <string name="app_autoselectsubtitle" formatted="false">سنجش خودکار تأخیر و انتخاب سریع‌ترین گره.</string>
+    <string name="app_autoupdatetitle" formatted="false">به‌روزرسانی خودکار اشتراک‌ها</string>
+    <string name="app_autoupdatesubtitle" formatted="false">فاصلهٔ همگام‌سازی فهرست سرورها در پس‌زمینه</string>
+    <string name="app_intervaloff" formatted="false">خاموش</string>
+    <string name="app_interval6h" formatted="false">۶ ساعت</string>
+    <string name="app_interval12h" formatted="false">۱۲ ساعت</string>
+    <string name="app_interval24h" formatted="false">۲۴ ساعت</string>
+    <string name="app_updateallsubsnow" formatted="false">به‌روزرسانی همهٔ اشتراک‌ها</string>
+    <string name="app_updating" formatted="false">در حال به‌روزرسانی…</string>
+    <string name="app_updatedcount" formatted="false">اشتراک‌های به‌روز: %d</string>
+    <string name="app_sectionrouting" formatted="false">مسیریابی و عبور از فیلترینگ</string>
+    <string name="app_dnsprovidertitle" formatted="false">DNS اصلی</string>
+    <string name="app_dnsprovidersubtitle" formatted="false">DNS اصلی. مسیریابی هوشمند ممکن است از DNS منطقه‌ای برای سایت‌های محلی استفاده کند؛ هوش مصنوعی تنظیم جداگانه دارد. DNS امن مرورگر ممکن است اولویت داشته باشد.</string>
+    <string name="app_xhttpmodetitle" formatted="false">حالت XHTTP (SplitHTTP)</string>
+    <string name="app_xhttpmodesubtitle" formatted="false">روش ارسال درخواست‌های XHTTP. معمولاً auto کافی است؛ حالت‌های دیگر باید در سرور پشتیبانی شوند.</string>
+    <string name="app_fakednstitle" formatted="false">FakeDNS (198.18.0.0/15)</string>
+    <string name="app_fakednssubtitle" formatted="false">نشانی‌های IP مجازی برمی‌گرداند و دامنه‌ها را از طریق Xray تبدیل می‌کند.</string>
+    <string name="app_blockquictitle" formatted="false">مسدود کردن QUIC (UDP 443)</string>
+    <string name="app_blockquicsubtitle" formatted="false">UDP روی پورت 443 را مسدود می‌کند. برنامه‌هایی که از TCP پشتیبانی می‌کنند ممکن است به آن تغییر کنند.</string>
+    <string name="app_sniffingtitle" formatted="false">تشخیص دامنه</string>
+    <string name="app_sniffingsubtitle" formatted="false">دامنه را از SNI یا HTTP Host برای قواعد مسیریابی تشخیص می‌دهد. ترافیک HTTPS رمزگشایی نمی‌شود.</string>
+    <string name="app_blockipv6title" formatted="false">محافظت در برابر نشت IPv6</string>
+    <string name="app_blockipv6subtitle" formatted="false">تمام ترافیک IPv6 واردشده به VPN را مسدود می‌کند.</string>
+    <string name="app_bypassaititle" formatted="false">خدمات هوش مصنوعی (ChatGPT، Claude و Gemini)</string>
+    <string name="app_bypassaisubtitle" formatted="false">SmartDNS: DNS انتخابی و اتصال مستقیم. VPN: از طریق سرور VPN.</string>
+    <string name="app_aidnsprovidertitle" formatted="false">SmartDNS برای خدمات هوش مصنوعی</string>
+    <string name="app_aidnsproviderhint" formatted="false">مستقل از DNS اصلی. دسترسی Gemini و ChatGPT به ارائه‌دهندهٔ SmartDNS، شبکه و حساب وابسته است.</string>
+    <string name="app_aitlsfragmenttitle" formatted="false">قطعه‌بندی TLS برای SmartDNS</string>
+    <string name="app_aitlsfragmenthint" formatted="false">حالت اختیاری برای شبکه‌های فیلترکنندهٔ TLS؛ پیش‌فرض خاموش است چون برخی پروکسی‌های Gemini ناسازگارند.</string>
+    <string name="app_adblockertitle" formatted="false">مسدودکنندهٔ تبلیغات</string>
+    <string name="app_adblockersubtitle" formatted="false">دامنه‌های تبلیغاتی و ردیابی را در ترافیک VPN مسدود می‌کند. تبلیغات درون محتوای VK و ویدیوهای YouTube ممکن است باقی بمانند.</string>
+    <string name="app_sectioncore" formatted="false">هستهٔ XRAY</string>
+    <string name="app_coreversion" formatted="false">نسخهٔ هسته</string>
+    <string name="app_corearch" formatted="false">معماری</string>
+    <string name="app_coretunnel" formatted="false">موتور تونل</string>
+    <string name="app_coreprotocols" formatted="false">پروتکل‌ها</string>
+    <string name="app_corefakedns" formatted="false">مخزن FakeDNS</string>
+    <string name="app_sectiondiagnostics" formatted="false">عیب‌یابی و اشکال‌زدایی</string>
+    <string name="app_diagnosticsdesc" formatted="false">گزارش هستهٔ Xray، رویدادهای VPN و خطاهای اتصال.</string>
+    <string name="app_openlogsbutton" formatted="false">بازکردن گزارش‌ها</string>
+    <string name="app_logsdialogtitle" formatted="false">گزارش رویدادها</string>
+    <string name="app_copyreport" formatted="false">کپی گزارش</string>
+    <string name="app_sharereport" formatted="false">اشتراک‌گذاری</string>
+    <string name="app_clearlogs" formatted="false">پاک کردن گزارش‌ها</string>
+    <string name="app_reportcopied" formatted="false">گزارش کپی شد!</string>
+    <string name="app_recordscount" formatted="false">رکوردها</string>
+    <string name="app_logscleared" formatted="false">گزارش‌ها پاک شدند</string>
+    <string name="app_logsempty" formatted="false">گزارشی ثبت نشده است</string>
+    <string name="app_logsfilterall" formatted="false">همه</string>
+    <string name="app_logsfiltererrors" formatted="false">خطاها</string>
+    <string name="app_logsfilterxray" formatted="false">Xray</string>
+    <string name="app_logsfiltervpn" formatted="false">سرویس VPN</string>
+    <string name="app_logssearchhint" formatted="false">جستجوی گزارش و کلیدواژه…</string>
+    <string name="app_logsautoscroll" formatted="false">پیمایش خودکار</string>
+    <string name="app_logsclose" formatted="false">بستن گزارش‌ها</string>
+    <string name="app_logscopiedline" formatted="false">سطر گزارش کپی شد</string>
+    <string name="app_logsstatstotal" formatted="false">مجموع</string>
+    <string name="app_logsstatserrors" formatted="false">خطاها</string>
+    <string name="app_logsstatswarnings" formatted="false">هشدارها</string>
+    <string name="app_sectioncustomroutes" formatted="false">مسیریابی سفارشی دامنه</string>
+    <string name="app_customroutessubtitle" formatted="false">دامنه را وارد و مسیر مستقیم، VPN یا مسدود را انتخاب کنید</string>
+    <string name="app_customroutesdomainhint" formatted="false">example.com یا domain:example.com</string>
+    <string name="app_customroutesaddbtn" formatted="false">افزودن مسیر</string>
+    <string name="app_customroutesempty" formatted="false">مسیر سفارشی تعریف نشده است</string>
+    <string name="app_customroutessaved" formatted="false">مسیر اضافه شد</string>
+    <string name="app_customroutesremoved" formatted="false">مسیر حذف شد</string>
+    <string name="app_customroutedirect" formatted="false">مستقیم</string>
+    <string name="app_customrouteproxy" formatted="false">از طریق VPN</string>
+    <string name="app_customrouteblock" formatted="false">مسدود</string>
+    <string name="app_updateavailabletitle" formatted="false">به‌روزرسانی موجود است</string>
+    <string name="app_updateavailabledesc" formatted="false">نسخهٔ %s آمادهٔ دریافت است</string>
+    <string name="app_updatedownload" formatted="false">دریافت</string>
+    <string name="app_updatedownloadandinstall" formatted="false">دریافت و نصب</string>
+    <string name="app_updateinstall" formatted="false">نصب</string>
+    <string name="app_updatedownloading" formatted="false">در حال دریافت به‌روزرسانی…</string>
+    <string name="app_updatedownloaded" formatted="false">به‌روزرسانی آمادهٔ نصب است</string>
+    <string name="app_updatetaptoinstall" formatted="false">برای نصب بزنید</string>
+    <string name="app_updatechangelog" formatted="false">تازه‌ها</string>
+    <string name="app_updatescrollhint" formatted="false">برای جزئیات به پایین بروید ↓</string>
+    <string name="app_updateexpandnotes" formatted="false">باز کردن</string>
+    <string name="app_updatecollapsenotes" formatted="false">جمع کردن</string>
+    <string name="app_updatepermissionrequired" formatted="false">اجازهٔ نصب برنامه‌های ناشناس را به SplateVPN بدهید</string>
+    <string name="app_updatefailed" formatted="false">دریافت به‌روزرسانی ناموفق بود</string>
+    <string name="app_updateretry" formatted="false">تلاش مجدد</string>
+    <string name="app_updatecheck" formatted="false">بررسی به‌روزرسانی</string>
+    <string name="app_updatechecking" formatted="false">در حال بررسی…</string>
+    <string name="app_updatelatest" formatted="false">آخرین نسخه نصب است</string>
+    <string name="app_liveconnectionstitle" formatted="false">پایش زندهٔ اتصال‌ها</string>
+    <string name="app_liveconnectionssubtitle" formatted="false">نمایش زندهٔ مسیر ترافیک بر اساس دامنه و IP</string>
+    <string name="app_liveconnectionshudbadge" formatted="false">اتصال‌ها</string>
+    <string name="app_liveconnectionssearchplaceholder" formatted="false">جستجوی دامنه یا IP…</string>
+    <string name="app_filterall" formatted="false">همه</string>
+    <string name="app_filterproxy" formatted="false">پروکسی</string>
+    <string name="app_filterdirect" formatted="false">مستقیم</string>
+    <string name="app_filterblock" formatted="false">مسدود</string>
+    <string name="app_filterdns" formatted="false">DNS</string>
+    <string name="app_clearconnections" formatted="false">پاک کردن فهرست</string>
+    <string name="app_noconnectionsyet" formatted="false">اتصال فعالی نیست</string>
+    <string name="app_noconnectionsdesc" formatted="false">برای پایش زندهٔ ترافیک به VPN متصل شوید</string>
+    <string name="app_liveconnectionscount" formatted="false">%d مقصد فعال</string>
+    <string name="app_liveconnectionssummary" formatted="false">%d مقصد • %d درخواست</string>
+    <string name="app_connectionoutboundlabel" formatted="false">خروجی</string>
+    <string name="app_connectiondestlabel" formatted="false">مقصد</string>
+    <string name="app_connectionprotocollabel" formatted="false">پروتکل</string>
+    <string name="app_autoconnectonboottitle" formatted="false">اتصال خودکار هنگام راه‌اندازی</string>
+    <string name="app_autoconnectonbootsubtitle" formatted="false">هنگام روشن شدن دستگاه، VPN خودکار متصل می‌شود</string>
+    <string name="app_batteryoptimizationtitle" formatted="false">اجرای پس‌زمینه (باتری)</string>
+    <string name="app_batteryoptimizationdisabled" formatted="false">بهینه‌سازی غیرفعال است — سرویس در پس‌زمینه حفظ می‌شود</string>
+    <string name="app_batteryoptimizationprompt" formatted="false">برای حذف محدودیت باتری بزنید</string>
+    <string name="app_batterysettingsopenerror" formatted="false">تنظیمات باتری باز نشد</string>
+    <string name="app_pingmodetitle" formatted="false">روش سنجش تأخیر</string>
+    <string name="app_pingmodesubtitle" formatted="false">روش بررسی دسترسی و تأخیر سرور</string>
+    <string name="app_pingmoderealdelay" formatted="false">تأخیر واقعی</string>
+    <string name="app_pingmodetcp" formatted="false">تأخیر TCP</string>
+    <string name="app_pingmodeicmp" formatted="false">ICMP</string>
+    <string name="app_pingmoderealdelaydesc" formatted="false">درخواست HTTP 204 از پروکسی؛ آزمایش انتقال واقعی و شناسایی مسدودسازی DPI</string>
+    <string name="app_pingmodetcpdesc" formatted="false">سنجش سریع تأخیر اتصال TCP به IP:port سرور</string>
+    <string name="app_pingmodeicmpdesc" formatted="false">درخواست مستقیم ICMP به سرور؛ ممکن است فایروال آن را مسدود کند</string>
+    <string name="app_tlsfragmenttitle" formatted="false">قطعه‌بندی بسته‌های TLS (Fragment)</string>
+    <string name="app_tlsfragmentsubtitle" formatted="false">دست‌دهی TLS را با تأخیر کوتاه قطعه‌بندی می‌کند؛ ممکن است از DPI مبتنی بر SNI عبور کند.</string>
+    <string name="app_killswitchactive" formatted="false">محافظت فعال است</string>
+    <string name="app_killswitchalwaysonly" formatted="false">فقط VPN همیشه‌روشن</string>
+    <string name="app_killswitchoff" formatted="false">مسدودسازی غیرفعال است</string>
+    <string name="app_killswitchunknown" formatted="false">وضعیت تأیید نشده است</string>
+    <string name="app_killswitchunknownhint" formatted="false">Android وضعیت محافظت را اعلام نکرده است. ممکن است به تونل فعال نیاز باشد. تنظیمات VPN در Android را بررسی کنید.</string>
+    <string name="app_killswitchbody" formatted="false">با فعال‌سازی، Android اتصال بدون VPN را حتی هنگام توقف برنامه مسدود می‌کند.</string>
+    <string name="app_killswitchstepone" formatted="false">گزینه‌های %s را در فهرست VPN در Android باز کنید.</string>
+    <string name="app_killswitchsteptwo" formatted="false">«VPN همیشه‌روشن» را فعال کنید.</string>
+    <string name="app_killswitchstepthree" formatted="false">«مسدود کردن اتصال بدون VPN» را فعال کنید.</string>
+    <string name="app_killswitchconfigure" formatted="false">راه‌اندازی محافظت</string>
+    <string name="app_killswitchmanage" formatted="false">مدیریت محافظت</string>
+    <string name="app_killswitchexcludedapps" formatted="false">هنگام فعال بودن مسدودسازی، برنامه‌های مستثنا از VPN دسترسی به اینترنت را از دست می‌دهند.</string>
+    <string name="app_killswitchtitle" formatted="false">قطع اضطراری</string>
+    <string name="app_sectionappupdates" formatted="false">به‌روزرسانی برنامه</string>
+    <string name="app_sectionquicksettings" formatted="false">کاشی تنظیمات سریع</string>
+    <string name="app_quicksettingsdesc" formatted="false">VPN را مستقیماً از پنل اعلان Android روشن یا خاموش کنید.</string>
+    <string name="app_quicksettingsaddtile" formatted="false">افزودن به تنظیمات سریع</string>
+    <string name="app_quicksettingstileadded" formatted="false">کاشی SplateVPN اضافه شد!</string>
+    <string name="app_quicksettingstilealreadyadded" formatted="false">کاشی SplateVPN از قبل موجود است</string>
+    <string name="app_quicksettingsmanualprompt" formatted="false">پنل اعلان را دو بار پایین بکشید، ویرایش را بزنید و کاشی SplateVPN را به پنل بکشید.</string>
+    <string name="app_sectionbackuprestore" formatted="false">پشتیبان‌گیری و بازیابی</string>
+    <string name="app_backuprestoredesc" formatted="false">سرورها، اشتراک‌ها، قواعد و تنظیمات را در فایل JSON ذخیره کنید یا نسخهٔ پشتیبان را بازیابی کنید.</string>
+    <string name="app_exportbtn" formatted="false">صدور</string>
+    <string name="app_importbtn" formatted="false">ورود</string>
+    <string name="app_backupexportsuccess" formatted="false">پیکربندی صادر شد!</string>
+    <string name="app_backupexporterror" formatted="false">خطای صدور: %s</string>
+    <string name="app_backupimportsuccess" formatted="false">%d سرور وارد شد</string>
+    <string name="app_backupimporterror" formatted="false">خطای ورود: %s</string>
+    <string name="app_autorestorebtn" formatted="false">بازیابی پشتیبان خودکار</string>
+    <string name="app_autorestoresuccess" formatted="false">%d سرور بازیابی شد</string>
+    <string name="app_autorestorenotfound" formatted="false">پشتیبان خودکار یافت نشد یا خالی است</string>
+    <string name="app_autoselecton" formatted="false">⚡ خودکار: روشن</string>
+    <string name="app_speedtesttitle" formatted="false">آزمون سرعت</string>
+    <string name="app_speedtestdesc" formatted="false">سنجش سرعت واقعی دریافت از طریق VPN</string>
+    <string name="app_speedtestrunning" formatted="false">در حال آزمایش: %d%%</string>
+    <string name="app_speedtestspeedunit" formatted="false">Mbps</string>
+    <string name="app_speedtestresult" formatted="false">سرعت: %s Mbps</string>
+    <string name="app_speedtestlatency" formatted="false">پاسخ HTTPS: %s میلی‌ثانیه</string>
+    <string name="app_speedtesterror" formatted="false">خطای آزمایش: %s</string>
+    <string name="app_serversaddedcount" formatted="false">سرورهای افزوده: %d</string>
+    <string name="app_qrscanerror" formatted="false">خطای اسکن QR: %s</string>
+    <string name="app_scanqr" formatted="false">اسکن QR</string>
+    <string name="app_copylink" formatted="false">کپی پیوند</string>
+    <string name="app_autoselectbalancer" formatted="false">انتخاب خودکار سرور</string>
+    <string name="app_activenodeprefix" formatted="false">فعال: %s</string>
+    <string name="app_autoselectbalancerdesc" formatted="false">انتخاب و تعویض سرور بر اساس تنظیمات اتصال</string>
+    <string name="app_onupper" formatted="false">روشن</string>
+    <string name="app_offupper" formatted="false">خاموش</string>
+    <string name="app_filterselected" formatted="false">انتخاب‌شده</string>
+    <string name="app_selectall" formatted="false">همه</string>
+    <string name="app_resetall" formatted="false">بازنشانی</string>
+    <string name="app_unifiedaddtitle" formatted="false">افزودن سرور یا اشتراک</string>
+    <string name="app_unifiedaddsubtitle" formatted="false">پیوند VLESS/VMess/SS/Trojan یا نشانی اشتراک را بچسبانید</string>
+    <string name="app_pastefromclipboard" formatted="false">چسباندن از کلیپ‌بورد</string>
+    <string name="app_scanqrcode" formatted="false">اسکن کد QR</string>
+    <string name="app_clipboardempty" formatted="false">کلیپ‌بورد خالی است</string>
+    <string name="app_detectedsubscription" formatted="false">🔗 پیوند اشتراک شناسایی شد</string>
+    <string name="app_detectedservernode" formatted="false">⚡ پیکربندی سرور شناسایی شد</string>
+    <string name="app_detectedmultiplenodes" formatted="false">📦 سرورهای یافت‌شده: %d</string>
+    <string name="app_emptyserverscta" formatted="false">اولین سرور یا اشتراک را اضافه کنید</string>
+    <string name="app_emptyservershint" formatted="false">برای شروع پیوندی بچسبانید یا کد QR را اسکن کنید</string>
+    <string name="app_importaction" formatted="false">وارد کردن</string>
+    <string name="app_subnameoptional" formatted="false">نام اشتراک (اختیاری)</string>
+    <string name="app_addserverorsub" formatted="false">افزودن سرور یا اشتراک</string>
+    <string name="app_subquotaused" formatted="false">مصرف‌شده: %s از %s</string>
+    <string name="app_subquotaremaining" formatted="false">%s باقی‌مانده از %s</string>
+    <string name="app_subquotaunlimited" formatted="false">حجم نامحدود</string>
+    <string name="app_subexpiredate" formatted="false">انقضا: %s</string>
+    <string name="app_subexpired" formatted="false">اشتراک منقضی شده است</string>
+    <string name="app_shareservertitle" formatted="false">صدور گره</string>
+    <string name="app_shareqrprompt" formatted="false">با دوربین دستگاه دیگر اسکن کنید</string>
+    <string name="app_sharecopylink" formatted="false">کپی پیوند</string>
+    <string name="app_sharesend" formatted="false">اشتراک‌گذاری</string>
+    <string name="app_shareaction" formatted="false">اشتراک / QR</string>
+    <string name="app_sharepayloadtoolarge" formatted="false">پیکربندی برای کد QR بزرگ است (%d بایت). پیوند را کپی یا به‌صورت متن ارسال کنید.</string>
+    <string name="app_sharesubscriptiontitle" formatted="false">صدور اشتراک</string>
+    <string name="app_sharesubqrprompt" formatted="false">برای ورود اشتراک، با دستگاه دیگر اسکن کنید</string>
+    <string name="app_sectionsharelan" formatted="false">اشتراک VPN (هات‌اسپات و USB)</string>
+    <string name="app_sharelantitle" formatted="false">اشتراک VPN در شبکهٔ محلی</string>
+    <string name="app_sharelansubtitle" formatted="false">فعال‌سازی پروکسی HTTP و SOCKS5 با احراز هویت روی رابط محلی انتخابی</string>
+    <string name="app_sharelanactiveendpoints" formatted="false">رابط‌های اشتراک شناسایی‌شده</string>
+    <string name="app_sharelannoendpoints" formatted="false">هات‌اسپات یا اشتراک USB شناسایی نشد. آن را در تنظیمات گوشی فعال کنید.</string>
+    <string name="app_sharelaninstructionsbtn" formatted="false">اتصال گوشی یا رایانه</string>
+    <string name="app_sharelanhttpproxy" formatted="false">پروکسی HTTP (Windows / Mac / TV)</string>
+    <string name="app_sharelansocksproxy" formatted="false">پروکسی SOCKS5</string>
+    <string name="app_sharelancopied" formatted="false">نشانی پروکسی کپی شد: %s</string>
+    <string name="app_sharelandialogtitle" formatted="false">اتصال رایانه و دستگاه‌ها از طریق گوشی</string>
+    <string name="app_sharelanstep1" formatted="false">۱. هات‌اسپات Wi-Fi یا اشتراک USB را در گوشی روشن و رایانه را متصل کنید.</string>
+    <string name="app_sharelanstep2" formatted="false">۲. مطمئن شوید SplateVPN متصل است.</string>
+    <string name="app_sharelanstep3windows" formatted="false">۳. در Windows به تنظیمات ← شبکه و اینترنت ← پروکسی ← تنظیم دستی بروید. IP تلفن و پورت HTTP را از تنظیمات اشتراک وارد کنید.</string>
+    <string name="app_sharelanstep3mac" formatted="false">۴. در macOS یا Linux تنظیمات پروکسی شبکه را باز کنید. برای HTTP و HTTPS، IP تلفن و پورت HTTP تنظیمات اشتراک را وارد کنید.</string>
+    <string name="app_sharelanstep3telegram" formatted="false">۵. در Telegram به تنظیمات ← داده و ذخیره‌سازی ← پروکسی بروید. SOCKS5 را با IP تلفن و پورت SOCKS5 تنظیمات اشتراک اضافه کنید. اگر احراز هویت فعال است، از نام کاربری splate و رمز اشتراک استفاده کنید.</string>
+    <string name="app_sharelanwindowstitle" formatted="false">راه‌اندازی Windows (Wi-Fi یا USB)</string>
+    <string name="app_sharelanwindowssettingsguide" formatted="false">Windows 10/11: تنظیمات ← شبکه و اینترنت ← پروکسی ← تنظیم دستی ← استفاده از سرور پروکسی.</string>
+    <string name="app_sharelanwindowsinetcplguide" formatted="false">یا Win+R را بزنید ← inetcpl.cpl ← زبانهٔ Connections ← LAN settings.</string>
+    <string name="app_sharelanwindowsproxystring" formatted="false">نشانی پروکسی (HTTP / HTTPS):</string>
+    <string name="app_sharelanwindowsexceptions" formatted="false">نشانی‌های محلی مستثنا از پروکسی:</string>
+    <string name="app_sharelanwindowsexceptionsvalue" formatted="false">localhost;127.*;10.*;192.168.*;172.16.*</string>
+    <string name="app_sharelanwindowscmdenable" formatted="false">فعال‌کردن پروکسی در PowerShell:</string>
+    <string name="app_sharelanwindowscmddisable" formatted="false">غیرفعال‌کردن پروکسی در PowerShell:</string>
+    <string name="app_sharelanexceptionscopied" formatted="false">استثناها کپی شدند</string>
+    <string name="app_sharelancommandcopied" formatted="false">فرمان Windows کپی شد</string>
+    <string name="app_tlsfragmentpresettitle" formatted="false">پروفایل قطعه‌بندی</string>
+    <string name="app_tlsfragmentpresetstandard" formatted="false">استاندارد (100-200, 10-20)</string>
+    <string name="app_tlsfragmentpresetaggressive" formatted="false">تهاجمی (50-100, 20-40, 1-3)</string>
+    <string name="app_tlsfragmentpresetcustom" formatted="false">سفارشی</string>
+    <string name="app_tlsfragmentlengthlabel" formatted="false">اندازهٔ قطعه (بایت)</string>
+    <string name="app_tlsfragmentintervallabel" formatted="false">فاصله (میلی‌ثانیه)</string>
+    <string name="app_tlsfragmentpacketslabel" formatted="false">بسته‌ها</string>
+    <string name="app_dnscustom" formatted="false">DNS سفارشی DoH</string>
+    <string name="app_dnscustomurlhint" formatted="false">https://dns.nextdns.io/...</string>
+    <string name="app_dnscustomurldialogtitle" formatted="false">DNS-over-HTTPS سفارشی</string>
+    <string name="app_muxtitle" formatted="false">چندگانه‌سازی (Mux)</string>
+    <string name="app_muxsubtitle" formatted="false">چند اتصال TCP روی یک تونل (ناسازگار با Vision)</string>
+    <string name="app_muxconcurrencylabel" formatted="false">حد اتصال هم‌زمان</string>
+</resources>

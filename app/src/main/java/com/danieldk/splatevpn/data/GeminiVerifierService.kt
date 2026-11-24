@@ -15,8 +15,11 @@ class GeminiVerifierService : Service() {
             job?.cancel()
             val reply = message.replyTo
             val port = message.arg1
+            val credentials = message.data.getString("proxy_username")?.let { user -> runCatching {
+                com.danieldk.splatevpn.vpn.LocalProxyCredentials(user, message.data.getString("proxy_password").orEmpty())
+            }.getOrNull() }
             job = scope.launch {
-                val result = GeminiWebViewCheck(this@GeminiVerifierService).check(port)
+                val result = GeminiWebViewCheck(this@GeminiVerifierService).check(port, credentials = credentials)
                 runCatching { reply.send(Message.obtain(null, 1).apply { data = Bundle().apply {
                     putString("outcome", result.outcome.name); putString("detail", result.detail?.name); putLong("elapsed", result.elapsedMs)
                 } }) }
@@ -29,7 +32,8 @@ class GeminiVerifierService : Service() {
     override fun onDestroy() { scope.cancel(); super.onDestroy() }
 }
 
-internal suspend fun verifyGeminiPage(context: Context, port: Int): AiDnsTargetResult = withContext(Dispatchers.Main.immediate) {
+internal suspend fun verifyGeminiPage(context: Context, port: Int,
+    credentials: com.danieldk.splatevpn.vpn.LocalProxyCredentials? = null): AiDnsTargetResult = withContext(Dispatchers.Main.immediate) {
     try {
         withTimeout(32_000) {
             suspendCancellableCoroutine { continuation ->
@@ -52,7 +56,12 @@ internal suspend fun verifyGeminiPage(context: Context, port: Int): AiDnsTargetR
                 connection = object : ServiceConnection {
                     override fun onServiceConnected(name: ComponentName, binder: IBinder) {
                         if (!continuation.isActive) { release(); return }
-                        runCatching { Messenger(binder).send(Message.obtain(null, 1, port, 0).apply { replyTo = reply }) }
+                        runCatching { Messenger(binder).send(Message.obtain(null, 1, port, 0).apply {
+                            replyTo = reply
+                            if (credentials != null) data = Bundle().apply {
+                                putString("proxy_username", credentials.username); putString("proxy_password", credentials.password)
+                            }
+                        }) }
                             .onFailure { finish(AiDnsTargetResult("Gemini", AiDnsOutcome.FAILED, detail = AiDnsDetail.JS_FAILED)) }
                     }
                     override fun onServiceDisconnected(name: ComponentName) { finish(AiDnsTargetResult("Gemini", AiDnsOutcome.FAILED, detail = AiDnsDetail.JS_FAILED)) }

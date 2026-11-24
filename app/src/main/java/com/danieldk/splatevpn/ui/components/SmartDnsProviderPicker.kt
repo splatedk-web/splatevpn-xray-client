@@ -1,5 +1,11 @@
 package com.danieldk.splatevpn.ui.components
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateDropdownMenuItem as DropdownMenuItem
+
+import com.danieldk.splatevpn.ui.components.SplateDropdownMenu as DropdownMenu
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -25,7 +31,7 @@ internal fun SmartDnsProviderPicker(selected: String, onSelect: (String) -> Unit
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(strings.aiDnsProviderTitle, color = colors.textPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         Box {
-            Row(Modifier.fillMaxWidth().liquidGlass(cornerRadius = 12).clickable { expanded = true }.padding(12.dp),
+            Row(Modifier.fillMaxWidth().liquidGlass(cornerRadius = 12).tvFocusOutline().clickable { expanded = true }.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Column(Modifier.weight(1f)) {
                     Text(provider.label, color = colors.textPrimary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)

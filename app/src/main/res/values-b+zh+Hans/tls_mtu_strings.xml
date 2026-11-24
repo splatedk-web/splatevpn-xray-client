@@ -1,0 +1,8 @@
+<resources>
+    <string name="tls_mixed_sni_title">TLS 混合大小写 SNI</string>
+    <string name="tls_mixed_sni_hint">混合 TLS 连接中 SNI 主机名的字母大小写。</string>
+    <string name="vpn_mtu_title">VPN MTU</string>
+    <string name="vpn_mtu_value">VPN MTU · %1$d 字节</string>
+    <string name="vpn_mtu_range">1280–1500 字节</string>
+    <string name="tls_two_parts">分两段发送 ClientHello（实验性）</string>
+</resources>

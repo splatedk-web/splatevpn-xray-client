@@ -7,7 +7,7 @@ import org.junit.Test
 
 class AiDnsSelectionTest {
     @Test fun transientBrowserFailureGetsOneFreshConfirmation() = runBlocking {
-        val initial = AiDnsCandidateResult(AiDnsChoice("comss_smart", false), listOf(
+        val initial = AiDnsCandidateResult(AiDnsChoice("dns_ai", false), listOf(
             AiDnsTargetResult("Gemini", AiDnsOutcome.ACCESSIBLE)))
         var calls = 0
         val winner = confirmBestAiDns(listOf(initial), "Gemini") {
@@ -20,7 +20,7 @@ class AiDnsSelectionTest {
     }
 
     @Test fun repeatedBrowserFailureStopsAfterOneRetry() = runBlocking {
-        val initial = AiDnsCandidateResult(AiDnsChoice("comss_smart", false), listOf(AiDnsTargetResult("Gemini", AiDnsOutcome.ACCESSIBLE)))
+        val initial = AiDnsCandidateResult(AiDnsChoice("dns_ai", false), listOf(AiDnsTargetResult("Gemini", AiDnsOutcome.ACCESSIBLE)))
         var calls = 0
         assertNull(confirmBestAiDns(listOf(initial), "Gemini") {
             calls++

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subscription_hwid_title">اتصال دستگاه (HWID)</string>
+    <string name="subscription_hwid_hint">شناسهٔ این نصب فقط برای همین اشتراک ارسال شود؛ بدون IMEI یا نشانی MAC. نصب دوباره یا پاک کردن داده‌های برنامه شناسه را تغییر می‌دهد و شاید ارائه‌دهنده لازم باشد سهم دستگاه را بازنشانی کند.</string>
+    <string name="subscription_hwid_required">این اشتراک به HWID نیاز دارد. اتصال دستگاه را در تنظیمات اشتراک فعال کنید و دوباره به‌روزرسانی کنید.</string>
+    <string name="subscription_hwid_device_limit">تعداد دستگاه‌های اشتراک به سقف مجاز رسیده است. از ارائه‌دهنده بخواهید دستگاه بلااستفاده را حذف کند. سرورهای ذخیره‌شده حفظ شده‌اند.</string>
+</resources>

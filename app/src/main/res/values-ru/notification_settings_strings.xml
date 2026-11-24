@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notice_title">Уведомления</string>
+    <string name="notice_health">Диагностические оповещения</string>
+    <string name="notice_connection">Сбои соединения</string>
+    <string name="notice_dns">Проблемы DNS</string>
+    <string name="notice_access">Блокировки и TLS</string>
+    <string name="notice_device">Рекомендации по сети и устройству</string>
+    <string name="notice_banner_hint">Отключение оповещений не скрывает рекомендации внутри приложения. Также нужно разрешение Android.</string>
+    <string name="notice_status">Уведомление о работе VPN / Tor</string>
+    <string name="notice_speed">Скорость и задержка</string>
+    <string name="notice_server">Название сервера</string>
+    <string name="notice_duration">Длительность соединения</string>
+    <string name="notice_required">Android требует служебное уведомление, пока работает VPN или Tor. Видимость и звук настраиваются в Android.</string>
+    <string name="notice_android">Настройки уведомлений Android</string>
+    <string name="recommended_title">Желательно</string>
+    <string name="recommended_optional">Необязательно. Можно продолжить без этих разрешений и вернуться к ним позже.</string>
+    <string name="recommended_notifications">Разрешить уведомления</string>
+    <string name="recommended_enabled">Включено</string>
+    <string name="recommended_notifications_hint">Получать диагностику соединения, когда приложение в фоне.</string>
+    <string name="recommended_battery">Отключить оптимизацию батареи</string>
+    <string name="recommended_battery_hint">Помогает Android сохранять работу VPN и Tor при выключенном экране.</string>
+    <string name="recommended_background">Работа в фоне и автозапуск</string>
+    <string name="recommended_background_restricted">Android сейчас ограничивает работу приложения в фоне.</string>
+    <string name="recommended_background_hint">Ограничения производителя и автозапуск проверьте вручную в настройках приложения.</string>
+    <string name="recommended_vpn">Постоянный VPN</string>
+    <string name="recommended_vpn_hint">По желанию. В Android можно настроить восстановление VPN и блокировку соединений без VPN.</string>
+    <string name="recommended_manage">Настроить</string>
+    <string name="recommended_open">Открыть настройки</string>
+    <string name="recommended_open_failed">Эта страница настроек недоступна на устройстве.</string>
+    <string name="recommended_battery_enabled">Оптимизация батареи отключена</string>
+</resources>

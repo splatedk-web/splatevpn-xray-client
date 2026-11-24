@@ -18,8 +18,6 @@ val OneSans = FontFamily(
     Font(R.font.onesans_bold, FontWeight.Black)
 )
 
-// Set of Material typography styles to start with
-// Modern Tactical Cyber Typography Scale
 val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = OneSans,
@@ -86,24 +84,24 @@ val Typography = Typography(
     ),
     labelLarge = TextStyle(
         fontFamily = OneSans,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 13.sp,
         lineHeight = 18.sp,
-        letterSpacing = 0.6.sp
+        letterSpacing = 0.1.sp
     ),
     labelMedium = TextStyle(
         fontFamily = OneSans,
         fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.1.sp
     ),
     labelSmall = TextStyle(
         fontFamily = OneSans,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
         lineHeight = 15.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.1.sp
     )
 )
 
@@ -127,3 +125,25 @@ val CyberLabelSmall = TextStyle(
     fontSize = 9.sp,
     letterSpacing = 1.2.sp
 )
+
+// Use one shaping family for scripts absent from the bundled font instead of mixing baselines.
+private val SystemScriptTypography = Typography.copy(
+    displayLarge = Typography.displayLarge.copy(fontFamily = FontFamily.Default),
+    displayMedium = Typography.displayMedium.copy(fontFamily = FontFamily.Default),
+    displaySmall = Typography.displaySmall.copy(fontFamily = FontFamily.Default),
+    headlineLarge = Typography.headlineLarge.copy(fontFamily = FontFamily.Default),
+    headlineMedium = Typography.headlineMedium.copy(fontFamily = FontFamily.Default),
+    headlineSmall = Typography.headlineSmall.copy(fontFamily = FontFamily.Default),
+    titleLarge = Typography.titleLarge.copy(fontFamily = FontFamily.Default),
+    titleMedium = Typography.titleMedium.copy(fontFamily = FontFamily.Default),
+    titleSmall = Typography.titleSmall.copy(fontFamily = FontFamily.Default),
+    bodyLarge = Typography.bodyLarge.copy(fontFamily = FontFamily.Default),
+    bodyMedium = Typography.bodyMedium.copy(fontFamily = FontFamily.Default),
+    bodySmall = Typography.bodySmall.copy(fontFamily = FontFamily.Default),
+    labelLarge = Typography.labelLarge.copy(fontFamily = FontFamily.Default),
+    labelMedium = Typography.labelMedium.copy(fontFamily = FontFamily.Default),
+    labelSmall = Typography.labelSmall.copy(fontFamily = FontFamily.Default)
+)
+
+internal fun typographyFor(language: String): Typography =
+    if (language in setOf("fa", "zh")) SystemScriptTypography else Typography

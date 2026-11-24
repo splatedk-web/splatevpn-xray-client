@@ -22,3 +22,11 @@ local.properties
 /test_cfg.json
 /app_icon_check.png
 /test_preview.png
+
+# Local signing and private build configuration
+/splate-private.properties
+*.p12
+*.aab
+**/build/
+__pycache__/
+*.pyc

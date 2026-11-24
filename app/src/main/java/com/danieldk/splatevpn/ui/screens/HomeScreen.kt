@@ -1,5 +1,10 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -16,6 +21,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
@@ -24,6 +30,7 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
@@ -37,6 +44,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,27 +66,38 @@ fun HomeScreen(
     onNavigateToServers: () -> Unit
 ) {
     val isConnected by viewModel.isConnected.collectAsState()
+    val uiMode by viewModel.uiMode.collectAsState()
+    val isSimpleMode = uiMode.isSimple
     val vpnState by viewModel.vpnState.collectAsState()
-    val selectedServer by viewModel.selectedServer.collectAsState()
-    val routingMode by viewModel.routingMode.collectAsState()
-    val countryFlag by viewModel.countryFlag.collectAsState()
-    val countryName by viewModel.countryName.collectAsState()
-    val currentIp by viewModel.currentIp.collectAsState()
-    val isDetectingIp by viewModel.isDetectingIp.collectAsState()
+    val vpnStatusMessage by viewModel.vpnStatusMessage.collectAsState()
+    val savedServer by viewModel.selectedServer.collectAsState()
+    val subscriptions by viewModel.allSubscriptions.collectAsState()
+    val disabledIds by viewModel.disabledServerIds.collectAsState()
+    val proxyServer = savedServer?.takeIf { node ->
+        !isSimpleMode || viewModel.isNodeEnabled(node, disabledIds) &&
+            (com.danieldk.splatevpn.data.QuickServerSelection.isPersonal(node) ||
+                subscriptions.any { it.id == node.subId && it.enabled })
+    }
+    val protectedWtpn = proxyServer?.let { node ->
+        com.danieldk.splatevpn.data.isProtectedWtpn(node.subId, subscriptions.firstOrNull { it.id == node.subId }?.url)
+    } == true
+    val torSettings by viewModel.torSettings.collectAsState()
+    val torRuntime by viewModel.torState.collectAsState()
+    val torMode = torSettings.enabled
+    val selectedServer = if (torMode) com.danieldk.splatevpn.data.ServerNode(
+        id = "splate-tor", name = "Tor", protocol = "tor", network = "Tor", address = "", port = 0
+    ) else proxyServer
     val isAutoSelect by viewModel.isAutoSelect.collectAsState()
     val isPinging by viewModel.isPinging.collectAsState()
     val sessionStartTime by viewModel.sessionStartTime.collectAsState()
-    val speedtestState by viewModel.speedtestState.collectAsState()
-    val updateInfo by viewModel.updateInfo.collectAsState()
-    val updateDownloadState by viewModel.updateDownloadState.collectAsState()
 
     val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
 
     var showLogsDialog by remember { mutableStateOf(false) }
+    var showQuickServers by remember { mutableStateOf(false) }
     var showUpdateDialog by remember { mutableStateOf(false) }
     var showConnectionsDialog by remember { mutableStateOf(false) }
-    val liveConnectionsCount by viewModel.liveConnectionsTotalCount.collectAsState()
 
     val isConnecting = vpnState == com.danieldk.splatevpn.vpn.VpnState.SELECTING_SERVER ||
             vpnState == com.danieldk.splatevpn.vpn.VpnState.STARTING_CORE ||
@@ -104,132 +124,9 @@ fun HomeScreen(
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Update Banner
-            AnimatedVisibility(
-                visible = updateInfo != null,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
-            ) {
-                updateInfo?.let { info ->
-                    val bannerBorderColor = when (updateDownloadState) {
-                        is UpdateDownloadState.Completed -> colors.accentEmerald
-                        is UpdateDownloadState.Downloading -> colors.accentCyan
-                        is UpdateDownloadState.Error -> colors.accentCrimson
-                        else -> colors.accentCyan
-                    }
-                    val bannerBgColor = when (updateDownloadState) {
-                        is UpdateDownloadState.Completed -> colors.accentEmerald.copy(alpha = 0.12f)
-                        is UpdateDownloadState.Error -> colors.accentCrimson.copy(alpha = 0.10f)
-                        else -> colors.accentCyan.copy(alpha = 0.10f)
-                    }
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                            .clickable { showUpdateDialog = true },
-                        color = bannerBgColor,
-                        shape = RoundedCornerShape(14.dp),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp, bannerBorderColor.copy(alpha = 0.55f)
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 14.dp, vertical = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                val bannerIcon = when (updateDownloadState) {
-                                    is UpdateDownloadState.Completed -> Icons.Default.CheckCircle
-                                    is UpdateDownloadState.Error -> Icons.Default.ErrorOutline
-                                    else -> Icons.Default.SystemUpdate
-                                }
-                                Icon(
-                                    imageVector = bannerIcon,
-                                    contentDescription = null,
-                                    tint = bannerBorderColor,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    val bannerTitle = when (updateDownloadState) {
-                                        is UpdateDownloadState.Completed -> strings.updateDownloaded
-                                        is UpdateDownloadState.Downloading -> strings.updateDownloading
-                                        is UpdateDownloadState.Error -> strings.updateFailed
-                                        else -> strings.updateAvailableTitle
-                                    }
-                                    Text(
-                                        text = bannerTitle,
-                                        color = colors.textPrimary,
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = FontFamily.Monospace
-                                    )
-                                    val bannerSubtitle = when (val st = updateDownloadState) {
-                                        is UpdateDownloadState.Completed -> strings.updateTapToInstall
-                                        is UpdateDownloadState.Downloading -> {
-                                            if (st.progress >= 0f)
-                                                "${(st.progress * 100).toInt()}% • v${info.version}"
-                                            else
-                                                "v${info.version}"
-                                        }
-                                        is UpdateDownloadState.Error -> st.message
-                                        else -> String.format(strings.updateAvailableDesc, info.version)
-                                    }
-                                    Text(
-                                        text = bannerSubtitle,
-                                        color = colors.textSecondary,
-                                        fontSize = 11.sp,
-                                        fontFamily = FontFamily.Monospace
-                                    )
-                                }
-                                Icon(
-                                    imageVector = Icons.Default.ChevronRight,
-                                    contentDescription = null,
-                                    tint = colors.textTertiary,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
-                            // Progress bar for downloading state
-                            if (updateDownloadState is UpdateDownloadState.Downloading) {
-                                val state = updateDownloadState as UpdateDownloadState.Downloading
-                                Spacer(Modifier.height(8.dp))
-                                if (state.progress >= 0f) {
-                                    val progressAnim by animateFloatAsState(
-                                        targetValue = state.progress.coerceIn(0f, 1f),
-                                        animationSpec = tween(180, easing = LinearEasing),
-                                        label = "banner_progress"
-                                    )
-                                    LinearProgressIndicator(
-                                        progress = { progressAnim },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(3.dp)
-                                            .clip(RoundedCornerShape(2.dp)),
-                                        color = colors.accentAmber,
-                                        trackColor = colors.accentAmber.copy(alpha = 0.2f)
-                                    )
-                                } else {
-                                    LinearProgressIndicator(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(3.dp)
-                                            .clip(RoundedCornerShape(2.dp)),
-                                        color = colors.accentAmber,
-                                        trackColor = colors.accentAmber.copy(alpha = 0.2f)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            HomeTunnelHealthBanner(viewModel = viewModel)
+            HomeUpdateBanner(viewModel = viewModel, onOpenDialog = { showUpdateDialog = true })
 
-            // Tactical Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -267,7 +164,7 @@ fun HomeScreen(
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
-                            text = strings.coreSubtitle,
+                            text = String.format(strings.coreSubtitle, com.danieldk.splatevpn.SplateConstants.XRAY_VERSION),
                             color = colors.textSecondary,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
@@ -281,41 +178,74 @@ fun HomeScreen(
 
                 Spacer(Modifier.width(8.dp))
 
-                // Header Action Buttons: Live Connections HUD & Terminal
+                // Header actions: Auto in Simple mode, connections and journal in Pro mode.
+                if (isSimpleMode) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (!torMode) {
+                            val boltRotationState = if (isPinging && LocalUiPerformanceSettings.current.animationsEnabled) {
+                                val boltInfinite = rememberInfiniteTransition(label = "simple_bolt_anim")
+                                boltInfinite.animateFloat(
+                                    initialValue = 0f,
+                                    targetValue = 360f,
+                                    animationSpec = infiniteRepeatable(
+                                        animation = tween(1000, easing = LinearEasing),
+                                        repeatMode = RepeatMode.Restart
+                                    ),
+                                    label = "simple_bolt_spin"
+                                )
+                            } else {
+                                rememberUpdatedState(0f)
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+                                    .liquidGlass(
+                                        cornerRadius = 12,
+                                        accentBorder = if (isAutoSelect) colors.accentCyan.copy(alpha = 0.60f) else null,
+                                        backgroundColor = if (isAutoSelect) colors.accentCyan.copy(alpha = 0.12f) else null,
+                                        innerSheen = true
+                                    )
+                                    .testTag("homeSimpleAutoToggle")
+                                    .tactileClickable(targetScale = 0.92f) {
+                                        if (isPinging) viewModel.cancelPingChecks() else viewModel.toggleAutoSelectServer()
+                                    }
+                                    .padding(horizontal = 11.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Bolt,
+                                    contentDescription = null,
+                                    tint = if (isAutoSelect) colors.accentCyan else colors.textSecondary,
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .graphicsLayer {
+                                            if (isPinging) rotationZ = boltRotationState.value
+                                        }
+                                )
+                                Text(
+                                    text = strings.localized("Авто", "Auto"),
+                                    color = if (isAutoSelect) colors.accentCyan else colors.textSecondary,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+
+                    }
+                } else {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Quick Connections Monitor Button
-                    Row(
-                        modifier = Modifier
-                            .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-                            .liquidGlass(
-                                cornerRadius = 12,
-                                accentBorder = if (liveConnectionsCount > 0) colors.accentCyan.copy(alpha = 0.55f) else null,
-                                innerSheen = true
-                            )
-                            .tactileClickable(targetScale = 0.90f) { showConnectionsDialog = true }
-                            .padding(horizontal = 9.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Hub,
-                            contentDescription = strings.liveConnectionsTitle,
-                            tint = if (liveConnectionsCount > 0) colors.accentCyan else colors.textSecondary,
-                            modifier = Modifier.size(17.dp)
-                        )
-                        if (liveConnectionsCount > 0) {
-                            Text(
-                                text = liveConnectionsCount.toString(),
-                                color = colors.accentCyan,
-                                fontSize = 11.5.sp,
-                                fontWeight = FontWeight.Medium,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        }
-                    }
+                    // Quick Connections Monitor Button (isolated recomposition scope)
+                    HomeLiveConnectionsButton(
+                        viewModel = viewModel,
+                        onClick = { showConnectionsDialog = true }
+                    )
 
                     // Quick Terminal / Diagnostics Button with tactile feedback
                     IconButton(
@@ -334,93 +264,34 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Status Badge & Live Timer (isolated recomposition scope)
-            VpnStatusBadge(
-                vpnState = vpnState,
-                sessionStartTime = sessionStartTime,
-                isConnected = isConnected,
-                isConnecting = isConnecting
-            )
-
-            // Egress IP & Location Readout (When Connected) - Smooth Animated Expansion
-            AnimatedVisibility(
-                visible = isConnected,
-                enter = fadeIn(tween(350)) + expandVertically(
-                    spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMediumLow
-                    )
-                ),
-                exit = fadeOut(tween(200)) + shrinkVertically()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .liquidGlass(
-                                cornerRadius = 16,
-                                elevated = true,
-                                innerSheen = false,
-                                accentBorder = colors.accentConnected.copy(alpha = 0.20f)
-                            )
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = if (countryFlag.isNotBlank()) countryFlag else "🌐",
-                            fontSize = 20.sp
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = if (countryName.isNotBlank()) countryName.uppercase() else if (isDetectingIp) strings.resolvingLocation else strings.protectedGateway,
-                                color = colors.textPrimary,
-                                fontSize = 12.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.5.sp
-                            )
-                            if (currentIp.isNotBlank()) {
-                                Spacer(modifier = Modifier.height(2.dp))
-                                Text(
-                                    text = strings.egressIp.format(currentIp),
-                                    color = colors.accentCyan,
-                                    fontSize = 11.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                        }
-                        // Country detection refresh button
-                        IconButton(
-                            onClick = {
-                                viewModel.refreshIpLocation()
-                            },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            if (isDetectingIp) {
-                                CircularProgressIndicator(
-                                    color = colors.accentCyan,
-                                    modifier = Modifier.size(16.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.MyLocation,
-                                    contentDescription = strings.refresh,
-                                    tint = colors.accentConnected,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
-                        }
-                    }
-                }
             }
 
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(if (isSimpleMode) 12.dp else 24.dp))
+
+            // Status Badge & Live Timer (isolated recomposition scope)
+            if (!isSimpleMode) {
+                VpnStatusBadge(
+                    vpnState = vpnState,
+                    sessionStartTime = sessionStartTime,
+                    isConnected = isConnected,
+                    isConnecting = isConnecting,
+                    statusMessage = vpnStatusMessage
+                )
+            }
+
+            AnimatedVisibility(
+                visible = isConnected && (torMode || !protectedWtpn),
+                enter = fadeIn(tween(250)) + expandVertically(tween(250)),
+                exit = fadeOut(tween(180)) + shrinkVertically(tween(180))
+            ) {
+                HomeEgressLocationSection(
+                    viewModel = viewModel,
+                    hideAddress = !torMode && protectedWtpn,
+                    isSimpleMode = isSimpleMode
+                )
+            }
+
+            Spacer(modifier = Modifier.height(if (isSimpleMode) 10.dp else 20.dp))
 
             // Central Cyber Power Core
             CyberPowerCore(
@@ -429,9 +300,12 @@ fun HomeScreen(
                 onClick = onToggleConnect
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            if (isSimpleMode) com.danieldk.splatevpn.ui.components.HomeConnectionModeSelector(viewModel)
 
-            // Active Server Node Card
+            Spacer(modifier = Modifier.height(if (isSimpleMode) 12.dp else 16.dp))
+
+            // Active Server Node Card header (hidden in Simple mode to reduce clutter)
+            if (!isSimpleMode) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -449,8 +323,9 @@ fun HomeScreen(
                     letterSpacing = 1.2.sp
                 )
 
+                if (!torMode) {
                 // Auto-Select Action with tactile click and rotation
-                val boltRotation = if (isPinging) {
+                val boltRotation = if (isPinging && LocalUiPerformanceSettings.current.animationsEnabled) {
                     val boltInfinite = rememberInfiniteTransition(label = "bolt_anim")
                     val spin by boltInfinite.animateFloat(
                         initialValue = 0f,
@@ -473,7 +348,7 @@ fun HomeScreen(
                             accentBorder = if (isAutoSelect) colors.accentCyan.copy(alpha = 0.5f) else null,
                             innerSheen = true
                         )
-                        .heightIn(min = 48.dp).tactileClickable(targetScale = 0.92f) { viewModel.toggleAutoSelectServer() }
+                        .heightIn(min = 48.dp).tactileClickable(targetScale = 0.92f) { if (isPinging) viewModel.cancelPingChecks() else viewModel.toggleAutoSelectServer() }
                         .padding(horizontal = 10.dp, vertical = 5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -491,7 +366,7 @@ fun HomeScreen(
                     Text(
                         text = when {
                             isPinging -> strings.pinging
-                            isAutoSelect -> strings.autoSelectOn
+                            isAutoSelect -> strings.autoSelectOn.removePrefix("⚡").trimStart()
                             else -> strings.autoFastest
                         },
                         color = if (isAutoSelect) colors.accentCyan else colors.textSecondary,
@@ -500,11 +375,19 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                }
+            }
+            }
+
+            if (!isSimpleMode && !torMode) {
+                val preferences by viewModel.balancerPreferences.collectAsState()
+                com.danieldk.splatevpn.ui.components.BalancerQuickControls(preferences, viewModel::setQuickBalancerPreferences)
+                Spacer(Modifier.height(8.dp))
             }
 
             val protoColor = getProtocolColor(selectedServer?.protocol ?: "", colors)
 
-            Row(
+            if (!isSimpleMode || !torMode) Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .liquidGlass(
@@ -512,7 +395,10 @@ fun HomeScreen(
                         accentBorder = if (isConnected) colors.accentEmerald.copy(alpha = 0.50f) else protoColor.copy(alpha = 0.25f),
                         innerSheen = true
                     )
-                    .tactileClickable(targetScale = 0.98f) { onNavigateToServers() }
+                    .tactileClickable(targetScale = 0.98f) {
+                        showQuickServers = true
+                    }
+                    .testTag("homeServerQuickPick")
                     .padding(14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -522,7 +408,8 @@ fun HomeScreen(
                         .liquidGlass(
                             cornerRadius = 14,
                             accentBorder = protoColor.copy(alpha = 0.45f),
-                            innerSheen = true
+                            backgroundColor = protoColor.copy(alpha = .08f),
+                            innerSheen = false
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -539,45 +426,41 @@ fun HomeScreen(
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = selectedServer?.name ?: strings.addServerOrSub,
+                            text = selectedServer?.let { server ->
+                                if (server.address.isBlank()) server.name else server.name.replace(server.address, "••••")
+                            } ?: strings.addServerOrSub,
                             color = colors.textPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
-                            maxLines = 1,
+                            maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f, fill = false)
+                            modifier = Modifier.weight(1f)
                         )
-                        if (selectedServer != null) {
-                            Spacer(modifier = Modifier.width(6.dp))
-                            // Glowing protocol tag pill
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(protoColor.copy(alpha = 0.15f))
-                                    .border(1.dp, protoColor.copy(alpha = 0.40f), RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = selectedServer!!.protocol.uppercase(),
-                                    color = protoColor,
-                                    fontSize = 9.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
                     }
                     Spacer(modifier = Modifier.height(3.dp))
+                    if (!isSimpleMode && !torMode && selectedServer != null) {
+                        Text("${selectedServer!!.protocol.uppercase()} · ${selectedServer!!.network.uppercase()}",
+                            color = colors.textSecondary, style = MaterialTheme.typography.labelSmall,
+                            maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        if (!protectedWtpn) com.danieldk.splatevpn.ui.components.SpoilerAddress(
+                            address = "${selectedServer!!.address}:${selectedServer!!.port}", modifier = Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(vertical = 4.dp))
+                    } else {
                     Text(
-                        text = selectedServer?.let {
-                            "${it.network.uppercase()} // ${it.address}:${it.port}"
-                        } ?: strings.tapToChooseNode,
+                        text = if (torMode) {
+                            if (torRuntime.phase == com.danieldk.splatevpn.vpn.TorPhase.STARTING) {
+                                strings.localized("Подключение Tor: ", "Connecting Tor: ") + "${torRuntime.progress}%"
+                            } else if (torSettings.useBridges) {
+                                strings.localized("Мостов: ", "Bridges: ") + torSettings.bridges.size
+                            } else strings.localized("Сеть Tor · открыть настройки", "Tor network · open settings")
+                        } else strings.tapToChooseNode,
                         color = colors.textSecondary,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -639,72 +522,50 @@ fun HomeScreen(
                 )
             }
 
-
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Routing Profile Selector
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = strings.routingProfile,
-                    color = colors.textTertiary,
-                    fontSize = 10.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp
-                )
+            if (isSimpleMode) {
+                if (torMode) com.danieldk.splatevpn.ui.components.TorSubscriptionCards(viewModel)
+                else SimpleHomeServerList(viewModel = viewModel, selectedServerId = proxyServer?.id)
             }
+            if (!isSimpleMode && !torMode) com.danieldk.splatevpn.ui.components.ConnectionProfilesCard(viewModel)
 
-            RoutingProfileSelector(
-                routingMode = routingMode,
-                onSelect = viewModel::setRoutingMode
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(20.dp))
 
             // Real-time Telemetry HUD with live waveform chart (isolated recomposition scope)
-            TelemetryHUDSection(
+            if (!isSimpleMode) TelemetryHUDSection(
                 viewModel = viewModel,
                 isConnected = isConnected,
                 selectedServer = selectedServer
             )
 
-            // Live Speedtest card when connected
-            AnimatedVisibility(
-                visible = isConnected,
-                enter = fadeIn(tween(300)) + expandVertically(),
-                exit = fadeOut(tween(200)) + shrinkVertically()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(14.dp))
-                    SpeedtestCard(
-                        state = speedtestState,
-                        onStart = { viewModel.startSpeedtest() },
-                        onReset = { viewModel.resetSpeedtest() }
-                    )
+            var toolsExpanded by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+            val ru = strings is RussianAppStrings
+            Spacer(Modifier.height(16.dp))
+            if (!isSimpleMode) TextButton(onClick = { toolsExpanded = !toolsExpanded }, modifier = Modifier.fillMaxWidth().testTag("homeToolsToggle")) {
+                Text(if (toolsExpanded) strings.localized("Скрыть инструменты", "Hide tools")
+                    else strings.localized("Инструменты соединения", "Connection tools"),
+                    color = colors.textPrimary, fontWeight = FontWeight.SemiBold)
+                Spacer(Modifier.width(8.dp))
+                Icon(if (toolsExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, null, tint = colors.textPrimary)
+            }
+            AnimatedVisibility(!isSimpleMode && toolsExpanded, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    if (isConnected) {
+                        val speedtestState by viewModel.speedtestState.collectAsState()
+                        SpeedtestCard(state = speedtestState,
+                            onStart = viewModel::startSpeedtest, onReset = viewModel::resetSpeedtest)
+                    }
+                    LiveConnectionsOverviewSection(viewModel = viewModel, isConnected = isConnected,
+                        onClick = { showConnectionsDialog = true })
                 }
             }
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            // Real-Time Traffic & Connections HUD Card (isolated recomposition scope)
-            LiveConnectionsOverviewSection(
-                viewModel = viewModel,
-                isConnected = isConnected,
-                onClick = { showConnectionsDialog = true }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
             Spacer(modifier = Modifier.height(20.dp))
         }
     }
 
+    if (showQuickServers) QuickServerPickerDialog(viewModel, onDismiss = { showQuickServers = false },
+        onAllServers = if (isSimpleMode) null else ({ showQuickServers = false; onNavigateToServers() }))
     if (showLogsDialog) {
         LogsDialog(
             viewModel = viewModel,
@@ -720,6 +581,7 @@ fun HomeScreen(
     }
 
     if (showUpdateDialog) {
+        val updateInfo by viewModel.updateInfo.collectAsState()
         updateInfo?.let { info ->
             UpdateDialog(
                 viewModel = viewModel,
@@ -731,11 +593,220 @@ fun HomeScreen(
 }
 
 @Composable
+private fun HomeTunnelHealthBanner(viewModel: MainViewModel) {
+    val healthIssue by viewModel.tunnelHealthIssue.collectAsState()
+    val colors = LocalAppThemeColors.current
+    AnimatedVisibility(
+        visible = healthIssue != null,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        healthIssue?.let { issue ->
+            com.danieldk.splatevpn.ui.components.TunnelHealthBanner(
+                issue = issue,
+                onPrimaryAction = { viewModel.handleHealthIssuePrimaryAction(issue) },
+                onSecondaryAction = { viewModel.handleHealthIssueSecondaryAction(issue) },
+                onDismiss = { viewModel.dismissDnsHealthIssue() },
+                colors = colors,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeUpdateBanner(viewModel: MainViewModel, onOpenDialog: () -> Unit) {
+    val updateInfo by viewModel.updateInfo.collectAsState()
+    val updateDownloadState by viewModel.updateDownloadState.collectAsState()
+    val colors = LocalAppThemeColors.current
+    val strings = LocalAppStrings.current
+    AnimatedVisibility(
+        visible = updateInfo != null,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut()
+    ) {
+        updateInfo?.let { info ->
+            val bannerBorderColor = when (updateDownloadState) {
+                is UpdateDownloadState.Completed -> colors.accentEmerald
+                is UpdateDownloadState.Downloading -> colors.accentCyan
+                is UpdateDownloadState.Error -> colors.accentCrimson
+                else -> colors.accentCyan
+            }
+            val bannerBgColor = when (updateDownloadState) {
+                is UpdateDownloadState.Completed -> colors.accentEmerald.copy(alpha = 0.12f)
+                is UpdateDownloadState.Error -> colors.accentCrimson.copy(alpha = 0.10f)
+                else -> colors.accentCyan.copy(alpha = 0.10f)
+            }
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    .tvFocusOutline().clickable { onOpenDialog() },
+                color = bannerBgColor,
+                shape = RoundedCornerShape(14.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp, bannerBorderColor.copy(alpha = 0.55f)
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val bannerIcon = when (updateDownloadState) {
+                            is UpdateDownloadState.Completed -> Icons.Default.CheckCircle
+                            is UpdateDownloadState.Error -> Icons.Default.ErrorOutline
+                            else -> Icons.Default.SystemUpdate
+                        }
+                        Icon(
+                            imageVector = bannerIcon,
+                            contentDescription = null,
+                            tint = bannerBorderColor,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            val bannerTitle = when (updateDownloadState) {
+                                is UpdateDownloadState.Completed -> strings.updateDownloaded
+                                is UpdateDownloadState.Downloading -> strings.updateDownloading
+                                is UpdateDownloadState.Error -> strings.updateFailed
+                                else -> strings.updateAvailableTitle
+                            }
+                            Text(
+                                text = bannerTitle,
+                                color = colors.textPrimary,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            val bannerSubtitle = when (val st = updateDownloadState) {
+                                is UpdateDownloadState.Completed -> strings.updateTapToInstall
+                                is UpdateDownloadState.Downloading -> {
+                                    if (st.progress >= 0f)
+                                        "${(st.progress * 100).toInt()}% • v${info.version}"
+                                    else
+                                        "v${info.version}"
+                                }
+                                is UpdateDownloadState.Error -> st.updateMessage(strings)
+                                else -> String.format(strings.updateAvailableDesc, info.version)
+                            }
+                            Text(
+                                text = bannerSubtitle,
+                                color = colors.textSecondary,
+                                fontSize = 11.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            tint = colors.textTertiary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    if (updateDownloadState is UpdateDownloadState.Downloading) {
+                        val state = updateDownloadState as UpdateDownloadState.Downloading
+                        Spacer(Modifier.height(8.dp))
+                        if (state.progress >= 0f) {
+                            val progressAnim by animateFloatAsState(
+                                targetValue = state.progress.coerceIn(0f, 1f),
+                                animationSpec = tween(180, easing = LinearEasing),
+                                label = "banner_progress"
+                            )
+                            LinearProgressIndicator(
+                                progress = { progressAnim },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(3.dp)
+                                    .clip(RoundedCornerShape(2.dp)),
+                                color = colors.accentAmber,
+                                trackColor = colors.accentAmber.copy(alpha = 0.2f)
+                            )
+                        } else {
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(3.dp)
+                                    .clip(RoundedCornerShape(2.dp)),
+                                color = colors.accentAmber,
+                                trackColor = colors.accentAmber.copy(alpha = 0.2f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeLiveConnectionsButton(viewModel: MainViewModel, onClick: () -> Unit) {
+    val liveConnectionsCount by viewModel.liveConnectionsTotalCount.collectAsState()
+    val colors = LocalAppThemeColors.current
+    val strings = LocalAppStrings.current
+    Row(
+        modifier = Modifier
+            .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+            .liquidGlass(
+                cornerRadius = 12,
+                accentBorder = if (liveConnectionsCount > 0) colors.accentCyan.copy(alpha = 0.55f) else null,
+                innerSheen = true
+            )
+            .tactileClickable(targetScale = 0.90f, onClick = onClick)
+            .padding(horizontal = 9.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Hub,
+            contentDescription = strings.liveConnectionsTitle,
+            tint = if (liveConnectionsCount > 0) colors.accentCyan else colors.textSecondary,
+            modifier = Modifier.size(17.dp)
+        )
+        if (liveConnectionsCount > 0) {
+            Text(
+                text = liveConnectionsCount.toString(),
+                color = colors.accentCyan,
+                fontSize = 11.5.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = FontFamily.Monospace
+            )
+        }
+    }
+}
+
+@Composable
+private fun HomeEgressLocationSection(
+    viewModel: MainViewModel,
+    hideAddress: Boolean,
+    isSimpleMode: Boolean
+) {
+    val countryFlag by viewModel.countryFlag.collectAsState()
+    val countryName by viewModel.countryName.collectAsState()
+    val currentIp by viewModel.currentIp.collectAsState()
+    val isDetectingIp by viewModel.isDetectingIp.collectAsState()
+    com.danieldk.splatevpn.ui.components.EgressLocationCard(
+        countryFlag = countryFlag,
+        countryName = countryName,
+        address = if (hideAddress) "" else currentIp,
+        isDetecting = isDetectingIp,
+        onRefresh = viewModel::refreshIpLocation,
+        modifier = Modifier.padding(top = if (isSimpleMode) 4.dp else 12.dp)
+    )
+}
+
+@Composable
 private fun VpnStatusBadge(
     vpnState: com.danieldk.splatevpn.vpn.VpnState,
     sessionStartTime: Long,
     isConnected: Boolean,
     isConnecting: Boolean,
+    statusMessage: String? = null,
     modifier: Modifier = Modifier
 ) {
     val colors = LocalAppThemeColors.current
@@ -776,9 +847,9 @@ private fun VpnStatusBadge(
         label = "status_color"
     )
 
-    val dotPulseScale = if (isConnecting) {
+    val dotPulseScaleState: State<Float> = if (isConnecting && LocalUiPerformanceSettings.current.animationsEnabled) {
         val badgeInfinite = rememberInfiniteTransition(label = "badge_anim")
-        val scale by badgeInfinite.animateFloat(
+        badgeInfinite.animateFloat(
             initialValue = 0.65f,
             targetValue = 1.25f,
             animationSpec = infiniteRepeatable(
@@ -787,9 +858,8 @@ private fun VpnStatusBadge(
             ),
             label = "badge_dot_scale"
         )
-        scale
     } else {
-        1f
+        rememberUpdatedState(1f)
     }
 
     Row(
@@ -806,30 +876,35 @@ private fun VpnStatusBadge(
             modifier = Modifier
                 .size(8.dp)
                 .graphicsLayer {
-                    scaleX = dotPulseScale
-                    scaleY = dotPulseScale
+                    val scale = dotPulseScaleState.value
+                    scaleX = scale
+                    scaleY = scale
                 }
                 .clip(CircleShape)
                 .background(statusColor)
         )
         Spacer(modifier = Modifier.width(8.dp))
         AnimatedContent(
-            targetState = vpnState,
+            targetState = vpnState to statusMessage,
             transitionSpec = {
                 (slideInVertically { it / 2 } + fadeIn(tween(200)))
                     .togetherWith(slideOutVertically { -it / 2 } + fadeOut(tween(150)))
             },
             label = "status_badge_text"
-        ) { state ->
-            val text = when (state) {
-                com.danieldk.splatevpn.vpn.VpnState.DISCONNECTED -> strings.standbyUnprotected
-                com.danieldk.splatevpn.vpn.VpnState.SELECTING_SERVER -> strings.stateSelectingServer
-                com.danieldk.splatevpn.vpn.VpnState.STARTING_CORE -> strings.stateStartingCore
-                com.danieldk.splatevpn.vpn.VpnState.CONNECTING -> strings.stateConnecting
-                com.danieldk.splatevpn.vpn.VpnState.HEALTH_CHECKING -> strings.stateHealthChecking
-                com.danieldk.splatevpn.vpn.VpnState.CONNECTED -> strings.encryptedSession.format(sessionTimeFormatted)
-                com.danieldk.splatevpn.vpn.VpnState.RECONNECTING -> strings.stateReconnecting
-                com.danieldk.splatevpn.vpn.VpnState.FAILED -> strings.stateFailed
+        ) { (state, customMsg) ->
+            val text = when {
+                !customMsg.isNullOrBlank() && (state == com.danieldk.splatevpn.vpn.VpnState.RECONNECTING ||
+                        state == com.danieldk.splatevpn.vpn.VpnState.SELECTING_SERVER ||
+                        state == com.danieldk.splatevpn.vpn.VpnState.FAILED) -> customMsg
+                state == com.danieldk.splatevpn.vpn.VpnState.DISCONNECTED -> strings.standbyUnprotected
+                state == com.danieldk.splatevpn.vpn.VpnState.SELECTING_SERVER -> strings.stateSelectingServer
+                state == com.danieldk.splatevpn.vpn.VpnState.STARTING_CORE -> strings.stateStartingCore
+                state == com.danieldk.splatevpn.vpn.VpnState.CONNECTING -> strings.stateConnecting
+                state == com.danieldk.splatevpn.vpn.VpnState.HEALTH_CHECKING -> strings.stateHealthChecking
+                state == com.danieldk.splatevpn.vpn.VpnState.CONNECTED -> sessionTimeFormatted
+                state == com.danieldk.splatevpn.vpn.VpnState.RECONNECTING -> strings.stateReconnecting
+                state == com.danieldk.splatevpn.vpn.VpnState.FAILED -> strings.stateFailed
+                else -> strings.standbyUnprotected
             }
             Text(
                 text = text,
@@ -898,6 +973,11 @@ fun CyberPowerCore(
 ) {
     val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
+    val labelMeasurer = rememberTextMeasurer()
+    val labelStyle = remember {
+        TextStyle(fontSize = 11.sp, lineHeight = 22.sp, fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold, letterSpacing = 1.6.sp)
+    }
 
     val isConnecting = vpnState == com.danieldk.splatevpn.vpn.VpnState.SELECTING_SERVER ||
             vpnState == com.danieldk.splatevpn.vpn.VpnState.STARTING_CORE ||
@@ -920,10 +1000,11 @@ fun CyberPowerCore(
     )
 
     val isSpinning = isConnected || isConnecting
-    val infiniteTransition = rememberInfiniteTransition(label = "core_anim")
+    val infiniteTransition = if (isSpinning && LocalUiPerformanceSettings.current.animationsEnabled)
+        rememberInfiniteTransition(label = "core_anim") else null
 
-    // Dynamic rotation: energetic orbital comet on connecting, serene gliding aura on connected
-    val orbitalRotation by infiniteTransition.animateFloat(
+    // Read animated values only inside draw / graphicsLayer phases: 0 recompositions per frame.
+    val orbitalRotationState: State<Float> = infiniteTransition?.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
@@ -934,10 +1015,10 @@ fun CyberPowerCore(
             repeatMode = RepeatMode.Restart
         ),
         label = "orbital_rotation"
-    )
+    ) ?: rememberUpdatedState(0f)
 
     // Breathing glow aura
-    val breathingGlow by infiniteTransition.animateFloat(
+    val breathingGlowState: State<Float> = infiniteTransition?.animateFloat(
         initialValue = if (isConnecting) 0.40f else 0.30f,
         targetValue = if (isConnecting) 1.0f else 0.85f,
         animationSpec = infiniteRepeatable(
@@ -948,10 +1029,10 @@ fun CyberPowerCore(
             repeatMode = RepeatMode.Reverse
         ),
         label = "breathing_glow"
-    )
+    ) ?: rememberUpdatedState(if (isConnecting) .70f else .55f)
 
     // Fluid quantum energy waves expanding outward
-    val waveProgress by infiniteTransition.animateFloat(
+    val waveProgressState: State<Float> = infiniteTransition?.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
@@ -962,7 +1043,7 @@ fun CyberPowerCore(
             repeatMode = RepeatMode.Restart
         ),
         label = "wave_progress"
-    )
+    ) ?: rememberUpdatedState(.5f)
 
     val coreText = when (vpnState) {
         com.danieldk.splatevpn.vpn.VpnState.DISCONNECTED -> strings.coreConnect
@@ -981,87 +1062,104 @@ fun CyberPowerCore(
             .size(210.dp)
             .tactileClickable(targetScale = 0.94f, onClick = onClick)
     ) {
-        // 1. Fluid Quantum Ripple Waves (Soft diffuse ambient rings)
+        // 1. Fluid Quantum Ripple Waves (cached stroke, draw-phase reads only)
         if (isConnected || isConnecting) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                val centerOffset = center
-                val baseRadius = 74.dp.toPx()
-                val maxExpansion = 28.dp.toPx()
-
-                // Wave 1
-                val r1 = baseRadius + (maxExpansion * waveProgress)
-                val alpha1 = ((1f - waveProgress) * 0.35f * breathingGlow).coerceIn(0f, 1f)
-                drawCircle(
-                    color = coreColor.copy(alpha = alpha1),
-                    radius = r1,
-                    center = centerOffset,
-                    style = Stroke(width = 1.8.dp.toPx())
-                )
-
-                // Wave 2 (offset by 50% phase)
-                val p2 = (waveProgress + 0.5f) % 1f
-                val r2 = baseRadius + (maxExpansion * p2)
-                val alpha2 = ((1f - p2) * 0.35f * breathingGlow).coerceIn(0f, 1f)
-                drawCircle(
-                    color = coreColor.copy(alpha = alpha2),
-                    radius = r2,
-                    center = centerOffset,
-                    style = Stroke(width = 1.8.dp.toPx())
-                )
-            }
-        }
-
-        // 2. Diffuse Ambient Neon Halo (Glow floor)
-        if (isConnected || isConnecting) {
-            Box(
+            Spacer(
                 modifier = Modifier
-                    .size(190.dp)
-                    .clip(CircleShape)
-                    .background(
-                        Brush.radialGradient(
-                            listOf(
-                                coreColor.copy(alpha = 0.28f * breathingGlow),
-                                coreColor.copy(alpha = 0.08f * breathingGlow),
-                                Color.Transparent
+                    .fillMaxSize()
+                    .drawWithCache {
+                        val baseRadius = 74.dp.toPx()
+                        val maxExpansion = 28.dp.toPx()
+                        val waveStroke = Stroke(width = 1.8.dp.toPx())
+                        onDrawBehind {
+                            val waveProgress = waveProgressState.value
+                            val breathingGlow = breathingGlowState.value
+                            val r1 = baseRadius + (maxExpansion * waveProgress)
+                            val alpha1 = ((1f - waveProgress) * 0.35f * breathingGlow).coerceIn(0f, 1f)
+                            drawCircle(
+                                color = coreColor.copy(alpha = alpha1),
+                                radius = r1,
+                                center = center,
+                                style = waveStroke
                             )
-                        )
-                    )
+                            val p2 = (waveProgress + 0.5f) % 1f
+                            val r2 = baseRadius + (maxExpansion * p2)
+                            val alpha2 = ((1f - p2) * 0.35f * breathingGlow).coerceIn(0f, 1f)
+                            drawCircle(
+                                color = coreColor.copy(alpha = alpha2),
+                                radius = r2,
+                                center = center,
+                                style = waveStroke
+                            )
+                        }
+                    }
             )
         }
 
-        // 3. Fluid Orbital Light Stream (Comet Sweep Gradient Ring)
-        Canvas(
+        // 2. Diffuse Ambient Neon Halo (cached radial brush, GPU alpha & scale breathing)
+        if (isConnected || isConnecting) {
+            Spacer(
+                modifier = Modifier
+                    .size(190.dp)
+                    .graphicsLayer {
+                        val glow = breathingGlowState.value
+                        alpha = glow
+                        val s = 0.95f + glow * 0.08f
+                        scaleX = s
+                        scaleY = s
+                    }
+                    .drawWithCache {
+                        val centerOffset = Offset(size.width * 0.5f, size.height * 0.5f)
+                        val haloBrush = Brush.radialGradient(
+                            colors = listOf(
+                                coreColor.copy(alpha = 0.30f),
+                                coreColor.copy(alpha = 0.09f),
+                                Color.Transparent
+                            ),
+                            center = centerOffset,
+                            radius = size.minDimension * 0.5f
+                        )
+                        onDrawBehind {
+                            drawCircle(brush = haloBrush)
+                        }
+                    }
+            )
+        }
+
+        // 3. Fluid Orbital Light Stream (cached sweep gradient, GPU rotation & alpha)
+        Spacer(
             modifier = Modifier
                 .size(174.dp)
                 .graphicsLayer {
-                    rotationZ = if (isSpinning) orbitalRotation else 0f
+                    rotationZ = if (isSpinning) orbitalRotationState.value else 0f
+                    alpha = if (isSpinning) 0.58f + breathingGlowState.value * 0.42f else 1f
                 }
-        ) {
-            val ringStrokeWidth = 2.dp.toPx()
-            if (isSpinning) {
-                // Energetic / Majestic comet stream with fading tail
-                val sweepBrush = Brush.sweepGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        coreColor.copy(alpha = 0.04f),
-                        coreColor.copy(alpha = 0.25f * breathingGlow),
-                        coreColor.copy(alpha = 0.70f * breathingGlow),
-                        coreColor.copy(alpha = 1.0f),
-                        Color.Transparent
-                    )
-                )
-                drawCircle(
-                    brush = sweepBrush,
-                    style = Stroke(width = ringStrokeWidth, cap = StrokeCap.Round)
-                )
-            } else {
-                // Minimalist dormant orbital ring
-                drawCircle(
-                    color = colors.borderSubtle.copy(alpha = 0.45f),
-                    style = Stroke(width = 1.2.dp.toPx())
-                )
-            }
-        }
+                .drawWithCache {
+                    val ringStroke = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round)
+                    val dormantStroke = Stroke(width = 1.2.dp.toPx())
+                    val sweepBrush = if (isSpinning) {
+                        Brush.sweepGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                coreColor.copy(alpha = 0.05f),
+                                coreColor.copy(alpha = 0.28f),
+                                coreColor.copy(alpha = 0.78f),
+                                coreColor.copy(alpha = 1.0f),
+                                Color.Transparent
+                            ),
+                            center = Offset(size.width * 0.5f, size.height * 0.5f)
+                        )
+                    } else null
+                    val dormantColor = colors.borderSubtle.copy(alpha = 0.45f)
+                    onDrawBehind {
+                        if (sweepBrush != null) {
+                            drawCircle(brush = sweepBrush, style = ringStroke)
+                        } else {
+                            drawCircle(color = dormantColor, style = dormantStroke)
+                        }
+                    }
+                }
+        )
 
         // 4. Central Volumetric Liquid Glass Orb
         Box(
@@ -1079,38 +1177,42 @@ fun CyberPowerCore(
                         radius = 220f
                     )
                 )
-                .drawWithContent {
-                    drawContent()
-
-                    // Inner energy reservoir glow when active
-                    if (isConnected || isConnecting) {
-                        drawCircle(
-                            brush = Brush.radialGradient(
-                                colors = listOf(
-                                    coreColor.copy(alpha = 0.22f * breathingGlow),
-                                    coreColor.copy(alpha = 0.06f * breathingGlow),
-                                    Color.Transparent
-                                ),
-                                center = center,
-                                radius = size.width * 0.45f
+                .drawWithCache {
+                    val centerOffset = Offset(size.width * 0.5f, size.height * 0.5f)
+                    val innerGlowBrush = Brush.radialGradient(
+                        colors = listOf(
+                            coreColor.copy(alpha = 0.24f),
+                            coreColor.copy(alpha = 0.07f),
+                            Color.Transparent
+                        ),
+                        center = centerOffset,
+                        radius = size.width * 0.45f
+                    )
+                    val glassHighlightBrush = Brush.radialGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = if (colors.isDark) 0.22f else 0.40f),
+                            Color.White.copy(alpha = 0.04f),
+                            Color.Transparent
+                        ),
+                        center = Offset(size.width * 0.50f, size.height * 0.20f),
+                        radius = size.width * 0.45f
+                    )
+                    val highlightTopLeft = Offset(size.width * 0.15f, size.height * 0.04f)
+                    val highlightSize = Size(size.width * 0.70f, size.height * 0.46f)
+                    onDrawWithContent {
+                        drawContent()
+                        if (isConnected || isConnecting) {
+                            drawCircle(
+                                brush = innerGlowBrush,
+                                alpha = breathingGlowState.value
                             )
+                        }
+                        drawOval(
+                            brush = glassHighlightBrush,
+                            topLeft = highlightTopLeft,
+                            size = highlightSize
                         )
                     }
-
-                    // Photorealistic soft curved glass reflection highlight (NO harsh horizontal divide!)
-                    drawOval(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                Color.White.copy(alpha = if (colors.isDark) 0.22f else 0.40f),
-                                Color.White.copy(alpha = 0.04f),
-                                Color.Transparent
-                            ),
-                            center = Offset(size.width * 0.50f, size.height * 0.20f),
-                            radius = size.width * 0.45f
-                        ),
-                        topLeft = Offset(size.width * 0.15f, size.height * 0.04f),
-                        size = Size(size.width * 0.70f, size.height * 0.46f)
-                    )
                 }
                 .border(
                     width = 1.5.dp,
@@ -1144,15 +1246,21 @@ fun CyberPowerCore(
                         else -> Icons.Default.PowerSettingsNew
                     }
                     Box(contentAlignment = Alignment.Center) {
-                        // Subtle icon shadow/glow
+                        // Subtle icon shadow/glow (GPU alpha & scale, 0 recompositions)
                         if (connected) {
                             Icon(
                                 imageVector = icon,
                                 contentDescription = null,
-                                tint = coreColor.copy(alpha = 0.35f * breathingGlow),
+                                tint = coreColor.copy(alpha = 0.35f),
                                 modifier = Modifier
                                     .size(46.dp)
-                                    .graphicsLayer { scaleX = 1.15f; scaleY = 1.15f }
+                                    .graphicsLayer {
+                                        val g = breathingGlowState.value
+                                        alpha = g
+                                        val s = 1.12f + g * 0.06f
+                                        scaleX = s
+                                        scaleY = s
+                                    }
                             )
                         }
                         Icon(
@@ -1169,39 +1277,45 @@ fun CyberPowerCore(
                 // Status Text + Optional Pulse Dot
                 AnimatedContent(
                     targetState = coreText,
+                    modifier = Modifier.fillMaxWidth(),
                     transitionSpec = {
                         (slideInVertically { it / 2 } + fadeIn(tween(180)))
                             .togetherWith(slideOutVertically { -it / 2 } + fadeOut(tween(140)))
                     },
                     label = "core_text_transition"
                 ) { text ->
+                    val label = text.uppercase(Locale.ROOT)
+                    val measuredWidth = remember(label, labelMeasurer) {
+                        labelMeasurer.measure(label, labelStyle, softWrap = false, maxLines = 1).size.width + 2f
+                    }
+                    BoxWithConstraints(Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+                    val density = LocalDensity.current
+                    val available = with(density) { (maxWidth - if (isConnected) 10.dp else 0.dp).toPx() }
+                    val fit = (available / measuredWidth).coerceIn(.1f, 1f)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         if (isConnected) {
-                            Box(
-                                modifier = Modifier
-                                    .size(5.dp)
-                                    .clip(CircleShape)
-                                    .background(coreColor)
-                                    .graphicsLayer {
-                                        scaleX = 0.85f + 0.3f * breathingGlow
-                                        scaleY = 0.85f + 0.3f * breathingGlow
-                                    }
-                            )
-                            Spacer(modifier = Modifier.width(5.dp))
+                            Box(Modifier.size(5.dp).clip(CircleShape).background(coreColor)
+                                .graphicsLayer {
+                                    val g = breathingGlowState.value
+                                    scaleX = .85f + .3f * g
+                                    scaleY = .85f + .3f * g
+                                })
+                            Spacer(Modifier.width(5.dp))
                         }
                         Text(
-                            text = text,
+                            text = label,
+                            modifier = Modifier.width(with(density) { (measuredWidth * fit).toDp() }),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                             color = if (isConnected || isConnecting) coreColor else colors.textPrimary.copy(alpha = 0.9f),
-                            fontSize = 11.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.6.sp,
+                            style = labelStyle.copy(fontSize = (11f * fit).sp, letterSpacing = (1.6f * fit).sp),
+                            softWrap = false,
                             maxLines = 1
                         )
+                    }
                     }
                 }
             }
@@ -1459,114 +1573,6 @@ fun TelemetryItem(
 }
 
 @Composable
-private fun RoutingProfileSelector(routingMode: String, onSelect: (String) -> Unit) {
-    val strings = LocalAppStrings.current
-    val fontScale = LocalDensity.current.fontScale
-
-    @Composable
-    fun Option(mode: String, modifier: Modifier) {
-        val smart = mode == "smart_ru"
-        TacticalModeChip(
-            title = if (smart) strings.smartRoute else strings.globalTunnel,
-            subtitle = if (smart) strings.smartRouteDesc else strings.globalTunnelDesc,
-            tag = if (smart) strings.tagSplitTunnel else strings.tagFullEncap,
-            isSelected = routingMode == mode,
-            modifier = modifier,
-            onClick = { onSelect(mode) }
-        )
-    }
-
-    BoxWithConstraints(Modifier.fillMaxWidth()) {
-        if (maxWidth < 320.dp || fontScale > 1.15f) {
-            Column(
-                modifier = Modifier.selectableGroup(),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Option("smart_ru", Modifier.fillMaxWidth())
-                Option("global", Modifier.fillMaxWidth())
-            }
-        } else {
-            Row(
-                modifier = Modifier.height(IntrinsicSize.Min).selectableGroup(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Option("smart_ru", Modifier.weight(1f).fillMaxHeight())
-                Option("global", Modifier.weight(1f).fillMaxHeight())
-            }
-        }
-    }
-}
-
-@Composable
-fun TacticalModeChip(
-    title: String,
-    subtitle: String,
-    tag: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    val colors = LocalAppThemeColors.current
-    val accent by animateColorAsState(
-        targetValue = if (isSelected) colors.accentCyan else colors.textSecondary,
-        animationSpec = tween(250),
-        label = "routing_accent"
-    )
-
-    Column(
-        modifier = modifier
-            .liquidGlass(
-                cornerRadius = 20,
-                accentBorder = if (isSelected) colors.accentCyan.copy(alpha = 0.65f) else null,
-                innerSheen = false
-            )
-            .semantics { selected = isSelected; role = Role.RadioButton }
-            .tactileClickable(targetScale = 0.98f, onClick = onClick)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = title,
-                color = if (isSelected) colors.accentCyan else colors.textPrimary,
-                fontSize = 13.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
-            )
-            Icon(
-                imageVector = if (isSelected) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
-                contentDescription = null,
-                tint = accent,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-        Text(
-            text = subtitle,
-            color = colors.textSecondary,
-            fontSize = 12.sp,
-            lineHeight = 18.sp
-        )
-        Surface(
-            color = accent.copy(alpha = 0.10f),
-            shape = RoundedCornerShape(6.dp)
-        ) {
-            Text(
-                text = tag,
-                color = accent,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-        }
-    }
-}
-
-@Composable
 fun SpeedWaveformChart(
     history: List<Float>,
     isConnected: Boolean,
@@ -1574,7 +1580,7 @@ fun SpeedWaveformChart(
 ) {
     val colors = LocalAppThemeColors.current
     val primaryColor = colors.accentCyan
-    val headPulseScale = if (isConnected) {
+    val headPulseScale = if (isConnected && LocalUiPerformanceSettings.current.animationsEnabled) {
         val pulseTransition = rememberInfiniteTransition(label = "waveform_pulse")
         val scale by pulseTransition.animateFloat(
             initialValue = 1f,
@@ -1668,7 +1674,6 @@ fun SpeedWaveformChart(
                 )
             )
 
-            // Live glowing head beacon on the latest data point
             if (isConnected) {
                 val lastPoint = points.last()
                 drawCircle(
@@ -1711,7 +1716,7 @@ fun LiveConnectionsOverviewCard(
     val colors = LocalAppThemeColors.current
     val strings = LocalAppStrings.current
 
-    val alphaPulse = if (isConnected && totalCount > 0) {
+    val alphaPulse = if (isConnected && totalCount > 0 && LocalUiPerformanceSettings.current.animationsEnabled) {
         val infiniteTransition = rememberInfiniteTransition(label = "conn_dot")
         val pulse by infiniteTransition.animateFloat(
             initialValue = 0.4f,
@@ -1772,7 +1777,7 @@ fun LiveConnectionsOverviewCard(
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = strings.liveConnectionsTitle.uppercase(),
+                                text = strings.liveConnectionsTitle,
                                 color = colors.textPrimary,
                                 fontSize = 11.5.sp,
                                 fontFamily = FontFamily.Monospace,
@@ -1793,7 +1798,7 @@ fun LiveConnectionsOverviewCard(
                             text = if (totalCount > 0) {
                                 String.format(strings.liveConnectionsSummary, totalCount, totalHits)
                             } else if (isConnected) {
-                                "Ожидание сетевых запросов..."
+                                strings.localized("Ожидание сетевых запросов...", "Waiting for network requests...")
                             } else {
                                 strings.noConnectionsYet
                             },
@@ -1902,7 +1907,7 @@ fun LiveConnectionsOverviewCard(
                                     .padding(horizontal = 5.dp, vertical = 1.dp)
                             ) {
                                 Text(
-                                    text = conn.ruleType.label().uppercase(),
+                                    text = conn.ruleType.label(),
                                     color = ruleColor,
                                     fontSize = 8.5.sp,
                                     fontWeight = FontWeight.Bold,

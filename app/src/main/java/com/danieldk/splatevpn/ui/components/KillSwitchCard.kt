@@ -1,5 +1,7 @@
 package com.danieldk.splatevpn.ui.components
 
+import com.danieldk.splatevpn.ui.components.SplateOutlinedButton as OutlinedButton
+
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -35,9 +37,10 @@ import kotlinx.coroutines.isActive
 private fun rememberVpnProtectionStatus(): State<VpnProtectionStatus> {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    return produceState(VpnProtectionStatus(), context, lifecycle) {
+    val status = remember(context, lifecycle) { mutableStateOf(VpnProtectionStatus()) }
+    LaunchedEffect(context, lifecycle) {
         var binder: SplateVpnService.ProtectionBinder? = null
-        fun refresh() { value = binder?.readStatus() ?: VpnProtectionStatus() }
+        fun refresh() { status.value = binder?.readStatus() ?: VpnProtectionStatus() }
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 binder = service as? SplateVpnService.ProtectionBinder
@@ -58,12 +61,13 @@ private fun rememberVpnProtectionStatus(): State<VpnProtectionStatus> {
                 delay(1000)
             }
         } catch (_: SecurityException) {
-            value = VpnProtectionStatus()
+            status.value = VpnProtectionStatus()
         } finally {
             lifecycle.removeObserver(observer)
             if (bound) try { context.unbindService(connection) } catch (_: IllegalArgumentException) { }
         }
     }
+    return status
 }
 
 @Composable

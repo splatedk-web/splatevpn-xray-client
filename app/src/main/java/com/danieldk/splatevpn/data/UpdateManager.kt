@@ -22,11 +22,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,8 +41,17 @@ data class UpdateInfo(
     val downloadUrl: String,
     val releaseUrl: String,
     val isDirectApk: Boolean = true,
-    val apkFileName: String? = null
+    val apkFileName: String? = null,
+    val apkSize: Long? = null,
+    val apkSha256: String? = null
 )
+
+sealed interface UpdateCheckResult {
+    data class Available(val info: UpdateInfo) : UpdateCheckResult
+    data object UpToDate : UpdateCheckResult
+    data object WifiRequired : UpdateCheckResult
+    data object Failed : UpdateCheckResult
+}
 
 sealed interface UpdateDownloadState {
     data object Idle : UpdateDownloadState
@@ -47,8 +61,14 @@ sealed interface UpdateDownloadState {
         val totalBytes: Long
     ) : UpdateDownloadState
     data class Completed(val file: File) : UpdateDownloadState
-    data class Error(val message: String) : UpdateDownloadState
+    data class Error(val message: String, val apkIssue: UpdateApkIssue? = null) : UpdateDownloadState
 }
+
+enum class UpdateApkIssue {
+    INCOMPLETE, INTEGRITY, UNREADABLE, PACKAGE_OR_VERSION, SIGNATURE
+}
+
+private class UpdateApkException(val issue: UpdateApkIssue) : IOException(issue.name)
 
 internal data class GithubRelease(
     @SerializedName("tag_name") val tagName: String,
@@ -59,7 +79,9 @@ internal data class GithubRelease(
 
 internal data class GithubAsset(
     @SerializedName("name") val name: String?,
-    @SerializedName("browser_download_url") val browserDownloadUrl: String
+    @SerializedName("browser_download_url") val browserDownloadUrl: String,
+    @SerializedName("size") val size: Long? = null,
+    @SerializedName("digest") val digest: String? = null
 )
 
 @Singleton
@@ -70,19 +92,28 @@ class UpdateManager @Inject constructor(
     private val apiUrl = "https://api.github.com/repos/splatedk-web/splatevpn-xray-client/releases/latest"
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var downloadJob: Job? = null
+    private val downloadMutex = Mutex()
+    private data class VerifiedApk(val path: String, val length: Long, val modifiedAt: Long, val version: String)
+    @Volatile private var verifiedApk: VerifiedApk? = null
 
     private val _downloadState = MutableStateFlow<UpdateDownloadState>(UpdateDownloadState.Idle)
     val downloadState: StateFlow<UpdateDownloadState> = _downloadState.asStateFlow()
 
-    /**
-     * Checks for updates by querying the GitHub API.
-     * Compares the remote tag with the local version name.
-     * Returns UpdateInfo if an update is available, null otherwise.
-     */
-    suspend fun checkUpdate(): UpdateInfo? = withContext(Dispatchers.IO) {
+    suspend fun checkUpdate(): UpdateCheckResult = withContext(Dispatchers.IO) {
+        if (!NetworkAccessPolicy.updatesAllowed(context)) return@withContext UpdateCheckResult.WifiRequired
+        var connection: HttpURLConnection? = null
+        val activeConnection = java.util.concurrent.atomic.AtomicReference<HttpURLConnection?>()
+        val routeWatcher = scope.launch {
+            while (isActive) {
+                delay(200)
+                if (!NetworkAccessPolicy.updatesAllowed(context)) { runCatching { activeConnection.get()?.disconnect() }; break }
+            }
+        }
         try {
+            NetworkAccessPolicy.requireUpdates(context)
             val url = URL(apiUrl)
-            val connection = url.openConnection() as HttpURLConnection
+            connection = url.openConnection() as HttpURLConnection
+            activeConnection.set(connection)
             connection.requestMethod = "GET"
             connection.connectTimeout = 5000
             connection.readTimeout = 5000
@@ -91,6 +122,7 @@ class UpdateManager @Inject constructor(
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val responseText = connection.inputStream.bufferedReader().use { it.readText() }
+                NetworkAccessPolicy.requireUpdates(context)
                 val release = gson.fromJson(responseText, GithubRelease::class.java)
 
                 val remoteVersion = release.tagName.removePrefix("v").trim()
@@ -105,52 +137,117 @@ class UpdateManager @Inject constructor(
                 }
                 val currentVersion = pInfo.versionName?.removePrefix("v")?.trim() ?: ""
 
+                val versionPattern = Regex("[0-9]+(?:\\.[0-9]+)*(?:[-+][A-Za-z0-9.+_-]+)?")
+                if (!versionPattern.matches(remoteVersion) || !versionPattern.matches(currentVersion)) {
+                    return@withContext UpdateCheckResult.Failed
+                }
                 if (isNewerVersion(currentVersion, remoteVersion)) {
                     val apkAsset = selectBestApkAsset(release.assets)
                     val downloadUrl = apkAsset?.browserDownloadUrl ?: release.htmlUrl
                     val isApk = apkAsset != null || downloadUrl.endsWith(".apk", ignoreCase = true)
                     val apkFileName = apkAsset?.name ?: "splatevpn_${remoteVersion}.apk"
 
-                    // Check if already downloaded
                     val existingFile = getDownloadedApkFile(remoteVersion, apkFileName)
                     if (existingFile != null && _downloadState.value !is UpdateDownloadState.Downloading) {
                         _downloadState.value = UpdateDownloadState.Completed(existingFile)
+                    } else if (existingFile == null && _downloadState.value is UpdateDownloadState.Completed) {
+                        _downloadState.value = UpdateDownloadState.Idle
                     }
 
-                    return@withContext UpdateInfo(
+                    return@withContext UpdateCheckResult.Available(UpdateInfo(
                         version = remoteVersion,
                         changelog = release.body ?: "",
                         downloadUrl = downloadUrl,
                         releaseUrl = release.htmlUrl,
                         isDirectApk = isApk,
-                        apkFileName = apkFileName
-                    )
+                        apkFileName = apkFileName,
+                        apkSize = apkAsset?.size?.takeIf { it > 0 },
+                        apkSha256 = UpdateFilePolicy.sha256FromAsset(apkAsset?.digest)
+                    ))
                 }
+                return@withContext UpdateCheckResult.UpToDate
             }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: WifiRequiredException) {
+            return@withContext UpdateCheckResult.WifiRequired
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.w("UpdateManager", "Update check failed", e)
+        } finally {
+            routeWatcher.cancel()
+            connection?.disconnect()
         }
-        return@withContext null
+        if (NetworkAccessPolicy.updatesAllowed(context)) UpdateCheckResult.Failed else UpdateCheckResult.WifiRequired
     }
 
-    /**
-     * Returns the update directory where APK files are stored.
-     */
     private fun getUpdatesDir(): File {
         val baseDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.cacheDir
         return File(baseDir, "updates").apply { mkdirs() }
     }
 
-    /**
-     * Checks if the APK file for this version has already been completely downloaded.
-     */
-    /**
-     * Checks if the APK file for this version has already been completely downloaded.
-     */
     fun getDownloadedApkFile(version: String, fileName: String? = null): File? {
-        val targetName = if (!fileName.isNullOrBlank()) fileName else "splatevpn_$version.apk"
-        val file = File(getUpdatesDir(), targetName)
-        return if (file.exists() && file.length() > 0) file else null
+        val file = runCatching { UpdateFilePolicy.cachedApk(getUpdatesDir(), version, fileName) }.getOrNull() ?: return null
+        if (!file.isFile || file.length() == 0L) return null
+        val fingerprint = apkFingerprint(file, version)
+        if (verifiedApk == fingerprint) return file
+        if (inspectUpdateApk(file, version) == null && apkFingerprint(file, version) == fingerprint) {
+            verifiedApk = fingerprint
+            return file
+        }
+        if (verifiedApk?.path == file.absolutePath) verifiedApk = null
+        // An invalid cache entry must not trap the update button in repeated install failures.
+        runCatching { file.delete() }
+        return null
+    }
+
+    private fun apkFingerprint(file: File, version: String) =
+        VerifiedApk(file.absolutePath, file.length(), file.lastModified(), version.trim().removePrefix("v"))
+
+    internal fun inspectUpdateApk(file: File, version: String): UpdateApkIssue? {
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            android.content.pm.PackageManager.GET_SIGNING_CERTIFICATES
+        } else {
+            @Suppress("DEPRECATION")
+            android.content.pm.PackageManager.GET_SIGNATURES
+        }
+        val archive = runCatching { context.packageManager.getPackageArchiveInfo(file.absolutePath, flags) }.getOrNull()
+            ?: return UpdateApkIssue.UNREADABLE
+        if (!UpdateFilePolicy.matchesApk(context.packageName, version, archive.packageName, archive.versionName)) {
+            return UpdateApkIssue.PACKAGE_OR_VERSION
+        }
+        val currentInfo = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(
+                    context.packageName,
+                    android.content.pm.PackageManager.PackageInfoFlags.of(flags.toLong())
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                context.packageManager.getPackageInfo(context.packageName, flags)
+            }
+        }.getOrNull() ?: return UpdateApkIssue.SIGNATURE
+
+        val currentSignatures = getSignatures(currentInfo)
+        val apkSignatures = getSignatures(archive)
+        val matches = UpdateFilePolicy.hasMatchingCertificate(currentSignatures, apkSignatures)
+        if (!matches) Log.w("UpdateManager", "Missing or mismatched update signing certificate")
+        return if (matches) null else UpdateApkIssue.SIGNATURE
+    }
+
+    private fun getSignatures(info: android.content.pm.PackageInfo?): List<ByteArray> {
+        if (info == null) return emptyList()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val signingInfo = info.signingInfo ?: return emptyList()
+            val sigs = if (signingInfo.hasMultipleSigners()) {
+                signingInfo.apkContentsSigners
+            } else {
+                signingInfo.signingCertificateHistory
+            }
+            return sigs?.map { it.toByteArray() } ?: emptyList()
+        } else {
+            @Suppress("DEPRECATION")
+            return info.signatures?.map { it.toByteArray() } ?: emptyList()
+        }
     }
 
     /**
@@ -217,12 +314,22 @@ class UpdateManager @Inject constructor(
         }
     }
 
-    /**
-     * Starts downloading the APK update with progress reporting.
-     */
+    fun openReleasePage(info: UpdateInfo) {
+        val uri = Uri.parse(info.releaseUrl)
+        if (uri.scheme != "https" || !uri.host.equals("github.com", ignoreCase = true)) return
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (error: android.content.ActivityNotFoundException) {
+            Log.w("UpdateManager", "No browser available to open release", error)
+        }
+    }
+
     fun startDownload(info: UpdateInfo) {
         if (!info.isDirectApk) {
-            // Open in browser if not a direct APK link
+            if (!NetworkAccessPolicy.updatesAllowed(context)) {
+                _downloadState.value = UpdateDownloadState.Error(WifiRequiredException().message.orEmpty())
+                return
+            }
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(info.downloadUrl)).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -230,22 +337,38 @@ class UpdateManager @Inject constructor(
             return
         }
 
-        // Check if already downloaded
-        val targetFileName = info.apkFileName ?: "splatevpn_${info.version}.apk"
-        val existing = getDownloadedApkFile(info.version, targetFileName)
+        val destination = try { UpdateFilePolicy.cachedApk(getUpdatesDir(), info.version, info.apkFileName) }
+        catch (error: Exception) {
+            _downloadState.value = UpdateDownloadState.Error(error.message.orEmpty())
+            return
+        }
+        val existing = getDownloadedApkFile(info.version, info.apkFileName)
         if (existing != null) {
             _downloadState.value = UpdateDownloadState.Completed(existing)
             installApk(existing)
             return
         }
+        if (!NetworkAccessPolicy.updatesAllowed(context)) {
+            _downloadState.value = UpdateDownloadState.Error(WifiRequiredException().message.orEmpty())
+            return
+        }
 
         downloadJob?.cancel()
         downloadJob = scope.launch {
-            val updatesDir = getUpdatesDir()
-            val destFile = File(updatesDir, targetFileName)
-            val tempFile = File(updatesDir, "$targetFileName.tmp")
+            // Cancellation of blocking HTTP reads is not immediate. The previous job
+            // must finish its cleanup before a new download touches the same .tmp file.
+            downloadMutex.withLock {
+            val destFile = destination
+            val tempFile = UpdateFilePolicy.stagedApk(destFile)
 
             var connection: HttpURLConnection? = null
+            val activeConnection = java.util.concurrent.atomic.AtomicReference<HttpURLConnection?>()
+            val routeWatcher = scope.launch {
+                while (isActive) {
+                    delay(200)
+                    if (!NetworkAccessPolicy.updatesAllowed(context)) { runCatching { activeConnection.get()?.disconnect() }; break }
+                }
+            }
             var currentUrl = info.downloadUrl
 
             try {
@@ -255,6 +378,7 @@ class UpdateManager @Inject constructor(
                 var redirects = 0
                 var responseCode: Int
                 while (true) {
+                    NetworkAccessPolicy.requireUpdates(context)
                     val url = URL(currentUrl)
                     if (url.protocol != "https") throw IOException("Update download requires HTTPS")
                     connection = (url.openConnection() as HttpURLConnection).apply {
@@ -264,6 +388,7 @@ class UpdateManager @Inject constructor(
                         setRequestProperty("User-Agent", "SplateVPN-Client")
                         setRequestProperty("Accept", "application/octet-stream")
                     }
+                    activeConnection.set(connection)
                     connection.connect()
                     responseCode = connection.responseCode
                     if (responseCode in 301..308 && responseCode != 304) {
@@ -281,7 +406,12 @@ class UpdateManager @Inject constructor(
                     throw IOException("HTTP $responseCode: ${connection?.responseMessage ?: "Download error"}")
                 }
 
-                val totalBytes = connection.contentLengthLong
+                val responseBytes = connection.contentLengthLong
+                val totalBytes = info.apkSize ?: responseBytes
+                if (info.apkSize != null && responseBytes >= 0 && responseBytes != info.apkSize) {
+                    throw UpdateApkException(UpdateApkIssue.INTEGRITY)
+                }
+                val digest = info.apkSha256?.let { MessageDigest.getInstance("SHA-256") }
                 var downloadedBytes = 0L
 
                 if (tempFile.exists()) tempFile.delete()
@@ -294,8 +424,13 @@ class UpdateManager @Inject constructor(
 
                         while (input.read(buffer).also { bytesRead = it } != -1) {
                             ensureActive()
-                            output.write(buffer, 0, bytesRead)
+                            NetworkAccessPolicy.requireUpdates(context)
                             downloadedBytes += bytesRead
+                            if (totalBytes >= 0 && downloadedBytes > totalBytes) {
+                                throw UpdateApkException(UpdateApkIssue.INTEGRITY)
+                            }
+                            digest?.update(buffer, 0, bytesRead)
+                            output.write(buffer, 0, bytesRead)
 
                             val now = System.currentTimeMillis()
                             if (now - lastEmitTime > 150 || downloadedBytes == totalBytes) {
@@ -316,21 +451,22 @@ class UpdateManager @Inject constructor(
                 }
 
                 ensureActive()
+                NetworkAccessPolicy.requireUpdates(context)
                 if (downloadedBytes == 0L || (totalBytes >= 0 && downloadedBytes != totalBytes)) {
-                    throw IOException("Incomplete update download")
+                    throw UpdateApkException(UpdateApkIssue.INCOMPLETE)
                 }
-                val archive = context.packageManager.getPackageArchiveInfo(tempFile.absolutePath, 0)
-                if (archive?.packageName != context.packageName) {
-                    throw IOException("Invalid update APK")
+                if (digest?.digest()?.joinToString("") { "%02x".format(it) } != info.apkSha256) {
+                    throw UpdateApkException(UpdateApkIssue.INTEGRITY)
                 }
+                inspectUpdateApk(tempFile, info.version)?.let { throw UpdateApkException(it) }
                 if (destFile.exists()) destFile.delete()
                 if (!tempFile.renameTo(destFile)) {
                     throw IOException("Failed to save downloaded update file")
                 }
+                verifiedApk = apkFingerprint(destFile, info.version)
 
                 _downloadState.value = UpdateDownloadState.Completed(destFile)
 
-                // Prompt user to install immediately upon download completion
                 withContext(Dispatchers.Main) {
                     installApk(destFile)
                 }
@@ -340,25 +476,25 @@ class UpdateManager @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
                 if (tempFile.exists()) tempFile.delete()
-                _downloadState.value = UpdateDownloadState.Error(e.localizedMessage ?: "Download failed")
+                _downloadState.value = if (!NetworkAccessPolicy.updatesAllowed(context)) {
+                    UpdateDownloadState.Error(WifiRequiredException().message.orEmpty())
+                } else {
+                    UpdateDownloadState.Error(e.localizedMessage ?: "Download failed", (e as? UpdateApkException)?.issue)
+                }
             } finally {
+                routeWatcher.cancel()
                 connection?.disconnect()
+            }
             }
         }
     }
 
-    /**
-     * Cancels active update download.
-     */
     fun cancelDownload() {
         downloadJob?.cancel()
         downloadJob = null
         _downloadState.value = UpdateDownloadState.Idle
     }
 
-    /**
-     * Resets the download state to Idle.
-     */
     fun resetDownloadState() {
         _downloadState.value = UpdateDownloadState.Idle
     }
@@ -425,21 +561,5 @@ class UpdateManager @Inject constructor(
         }
     }
 
-    private fun isNewerVersion(current: String, remote: String): Boolean {
-        try {
-            val currentParts = current.split(".").map { it.toIntOrNull() ?: 0 }
-            val remoteParts = remote.split(".").map { it.toIntOrNull() ?: 0 }
-
-            val maxLength = maxOf(currentParts.size, remoteParts.size)
-            for (i in 0 until maxLength) {
-                val c = currentParts.getOrElse(i) { 0 }
-                val r = remoteParts.getOrElse(i) { 0 }
-                if (r > c) return true
-                if (r < c) return false
-            }
-        } catch (e: Exception) {
-            return remote > current
-        }
-        return false
-    }
+    internal fun isNewerVersion(current: String, remote: String): Boolean = UpdateFilePolicy.isNewerVersion(current, remote)
 }

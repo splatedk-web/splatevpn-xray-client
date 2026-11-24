@@ -1,5 +1,7 @@
 package com.danieldk.splatevpn.ui.theme
 
+import androidx.compose.ui.unit.dp
+
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -99,12 +101,17 @@ private fun buildColorScheme(c: AppThemeColors): ColorScheme {
 fun SplateVPNTheme(
     themeSetting: String = "dark",
     languageSetting: String = "system",
+    performanceSettings: com.danieldk.splatevpn.data.UiPerformanceSettings = com.danieldk.splatevpn.data.UiPerformanceSettings(),
     content: @Composable () -> Unit
 ) {
     val isSystemDark = isSystemInDarkTheme()
     val appColors = resolveThemeColors(themeSetting, isSystemDark)
     val appStrings = getStringsForLanguage(languageSetting)
 
+    val locale = appLocale(languageSetting, androidx.compose.ui.platform.LocalConfiguration.current.locales[0])
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val resources = remember(context, locale, androidx.compose.ui.platform.LocalConfiguration.current) { localizedResources(context, locale) }
+    val direction = if (locale.language == "fa") androidx.compose.ui.unit.LayoutDirection.Rtl else androidx.compose.ui.unit.LayoutDirection.Ltr
     val colorScheme = remember(appColors) { buildColorScheme(appColors) }
     val selectionColors = remember(appColors) {
         TextSelectionColors(
@@ -131,13 +138,18 @@ fun SplateVPNTheme(
     }
 
     CompositionLocalProvider(
+        LocalUiPerformanceSettings provides performanceSettings,
+        LocalAppResources provides resources,
+        androidx.compose.ui.platform.LocalLayoutDirection provides direction,
         LocalAppThemeColors provides appColors,
+        androidx.compose.material3.LocalContentColor provides appColors.textPrimary,
         LocalAppStrings provides appStrings,
         LocalTextSelectionColors provides selectionColors
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography,
+            typography = typographyFor(locale.language),
+            shapes = SplateShapes,
             content = content
         )
     }

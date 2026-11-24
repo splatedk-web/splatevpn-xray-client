@@ -8,6 +8,7 @@ import com.danieldk.splatevpn.vpn.VpnState
 import com.danieldk.splatevpn.vpn.VpnStatusManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import okhttp3.*
@@ -62,8 +63,9 @@ class ConnectionChecks @Inject constructor(
     val services = _services.asStateFlow()
     private val _diagnostics = MutableStateFlow(CheckRun())
     val diagnostics = _diagnostics.asStateFlow()
+    private val servicesMutex = Mutex()
+    private val diagnosticsMutex = Mutex()
     private val client = OkHttpClient.Builder()
-        .proxy(Proxy(Proxy.Type.SOCKS, InetSocketAddress(SplateConstants.XRAY_SOCKS_ADDRESS, SplateConstants.XRAY_SOCKS_PORT)))
         .connectTimeout(5, TimeUnit.SECONDS).readTimeout(5, TimeUnit.SECONDS)
         .callTimeout(8, TimeUnit.SECONDS).followRedirects(false).followSslRedirects(false).build()
 
@@ -83,80 +85,109 @@ class ConnectionChecks @Inject constructor(
     }
 
     private suspend fun http(name: String, url: String, connectivity: Boolean = false): CheckResult =
-        checkHttp(client, name, url, connectivity)
+        try {
+            NetworkAccessPolicy.withChecks(context) {
+                checkHttp(com.danieldk.splatevpn.vpn.LocalProxyAccess.client(client), name, url, connectivity)
+            }
+        } catch (_: WifiRequiredException) { CheckResult(name, CheckOutcome.SKIPPED, "wifi_required") }
 
     suspend fun checkServices() {
-        if (_services.value.running) return
-        _services.value = CheckRun(running = true)
+        if (!servicesMutex.tryLock()) return
         try {
-            if (vpn.state.value != VpnState.CONNECTED) {
-                _services.value = CheckRun(results = targets.map { CheckResult(it.first, CheckOutcome.SKIPPED, "vpn_off") })
-                return
-            }
-            // Small batches limit sockets and make completed results visible immediately.
-            for (batch in targets.chunked(3)) {
-                val results = coroutineScope { batch.map { (name, url) -> async { http(name, url) } }.awaitAll() }
-                if (vpn.state.value != VpnState.CONNECTED) {
-                    _services.value = _services.value.copy(results = _services.value.results + batch.map { CheckResult(it.first, CheckOutcome.SKIPPED, "vpn_off") })
-                    break
+            if (_services.value.running) return
+            _services.value = CheckRun(running = true)
+            try {
+                if (!NetworkAccessPolicy.checksAllowed(context)) {
+                    _services.value = CheckRun(results = targets.map { CheckResult(it.first, CheckOutcome.SKIPPED, "wifi_required") })
+                    return
                 }
-                _services.value = _services.value.copy(results = _services.value.results + results)
+                if (vpn.state.value != VpnState.CONNECTED) {
+                    _services.value = CheckRun(results = targets.map { CheckResult(it.first, CheckOutcome.SKIPPED, "vpn_off") })
+                    return
+                }
+                // Small batches limit sockets and make completed results visible immediately.
+                for (batch in targets.chunked(3)) {
+                    val results = coroutineScope { batch.map { (name, url) -> async { http(name, url) } }.awaitAll() }
+                    if (vpn.state.value != VpnState.CONNECTED) {
+                        val processedNames = _services.value.results.map { it.name }.toSet()
+                        val remaining = targets.filter { it.first !in processedNames }
+                            .map { CheckResult(it.first, CheckOutcome.SKIPPED, "vpn_off") }
+                        _services.value = _services.value.copy(results = _services.value.results + remaining)
+                        break
+                    }
+                    _services.value = _services.value.copy(results = _services.value.results + results)
+                }
+            } catch (e: CancellationException) {
+                _services.value = _services.value.copy(cancelled = true)
+                throw e
+            } catch (_: Exception) {
+                _services.value = _services.value.copy(results = _services.value.results + CheckResult("HTTPS", CheckOutcome.FAILED, "network"))
+            } finally {
+                _services.value = _services.value.copy(running = false, completedAt = System.currentTimeMillis())
             }
-        } catch (e: CancellationException) {
-            _services.value = _services.value.copy(cancelled = true)
-            throw e
-        } catch (_: Exception) {
-            _services.value = _services.value.copy(results = _services.value.results + CheckResult("HTTPS", CheckOutcome.FAILED, "network"))
         } finally {
-            _services.value = _services.value.copy(running = false, completedAt = System.currentTimeMillis())
+            servicesMutex.unlock()
         }
     }
 
     suspend fun diagnose(node: ServerNode?) {
-        if (_diagnostics.value.running) return
-        _diagnostics.value = CheckRun(running = true)
-        fun add(result: CheckResult) { _diagnostics.value = _diagnostics.value.copy(results = _diagnostics.value.results + result) }
+        if (!diagnosticsMutex.tryLock()) return
         try {
-            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val network = cm.allNetworks.firstOrNull {
-                val caps = cm.getNetworkCapabilities(it)
-                caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
-                    !caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+            if (_diagnostics.value.running) return
+            _diagnostics.value = CheckRun(running = true)
+            fun add(result: CheckResult) { _diagnostics.value = _diagnostics.value.copy(results = _diagnostics.value.results + result) }
+            try {
+                NetworkAccessPolicy.requireChecks(context)
+                val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val network = cm.activeNetwork?.takeIf {
+                    val caps = cm.getNetworkCapabilities(it)
+                    caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
+                        !caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+                }
+                add(CheckResult("network", if (network != null) CheckOutcome.OK else CheckOutcome.FAILED,
+                    if (network != null) "network_ok" else "network_missing"))
+                if (network != null) {
+                    val dns = try { NetworkAccessPolicy.withChecks(context) {
+                        BoundedNetworkTask.run(4000) { network.getAllByName("www.google.com").isNotEmpty() } == true
+                    } }
+                        catch (e: WifiRequiredException) { throw e }
+                        catch (e: CancellationException) { throw e } catch (_: Exception) { false }
+                    add(CheckResult("dns", if (dns) CheckOutcome.OK else CheckOutcome.FAILED, if (dns) "dns_ok" else "dns_failed"))
+                } else add(CheckResult("dns", CheckOutcome.SKIPPED, "network_missing"))
+                if (node != null && network != null) {
+                    val socket = network.socketFactory.createSocket()
+                    val ping = try {
+                        NetworkAccessPolicy.withChecks(context) { BoundedNetworkTask.run(5000, onCancel = { socket.close() }) {
+                            val start = android.os.SystemClock.elapsedRealtime()
+                            val address = network.getAllByName(node.address).firstOrNull()
+                                ?: throw java.io.IOException("No address resolved for ${node.address}")
+                            socket.use { it.connect(InetSocketAddress(address, node.port), 4000) }
+                            android.os.SystemClock.elapsedRealtime() - start
+                        } }
+                    } catch (e: WifiRequiredException) { throw e
+                    } catch (e: CancellationException) { throw e } catch (_: Exception) { null }
+                    finally { try { socket.close() } catch (_: Exception) {} }
+                    add(CheckResult("server", if (ping != null) CheckOutcome.OK else CheckOutcome.FAILED,
+                        if (ping != null) "port_ok" else "port_failed", ping))
+                } else add(CheckResult("server", CheckOutcome.SKIPPED, if (node == null) "no_server" else "network_missing"))
+                val connected = vpn.state.value == VpnState.CONNECTED
+                add(CheckResult("vpn", if (connected) CheckOutcome.OK else CheckOutcome.SKIPPED, if (connected) "vpn_ok" else "vpn_off"))
+                if (connected) {
+                    add(http("Cloudflare HTTPS", "https://cp.cloudflare.com/generate_204", connectivity = true))
+                    add(http("Google HTTPS", "https://www.gstatic.com/generate_204", connectivity = true))
+                } else add(CheckResult("HTTPS", CheckOutcome.SKIPPED, "vpn_off"))
+            } catch (e: CancellationException) {
+                _diagnostics.value = _diagnostics.value.copy(cancelled = true)
+                throw e
+            } catch (_: WifiRequiredException) {
+                add(CheckResult("network", CheckOutcome.SKIPPED, "wifi_required"))
+            } catch (_: Exception) {
+                add(CheckResult("HTTPS", CheckOutcome.FAILED, "network"))
+            } finally {
+                _diagnostics.value = _diagnostics.value.copy(running = false, completedAt = System.currentTimeMillis())
             }
-            add(CheckResult("network", if (network != null) CheckOutcome.OK else CheckOutcome.FAILED,
-                if (network != null) "network_ok" else "network_missing"))
-            if (network != null) {
-                val dns = try { BoundedNetworkTask.run(4000) { network.getAllByName("www.google.com").isNotEmpty() } == true }
-                    catch (e: CancellationException) { throw e } catch (_: Exception) { false }
-                add(CheckResult("dns", if (dns) CheckOutcome.OK else CheckOutcome.FAILED, if (dns) "dns_ok" else "dns_failed"))
-            } else add(CheckResult("dns", CheckOutcome.SKIPPED, "network_missing"))
-            if (node != null && network != null) {
-                val socket = network.socketFactory.createSocket()
-                val ping = try {
-                    BoundedNetworkTask.run(5000, onCancel = { socket.close() }) {
-                        val start = android.os.SystemClock.elapsedRealtime()
-                        val address = network.getAllByName(node.address).first()
-                        socket.use { it.connect(InetSocketAddress(address, node.port), 4000) }
-                        android.os.SystemClock.elapsedRealtime() - start
-                    }
-                } catch (e: CancellationException) { throw e } catch (_: Exception) { null }
-                finally { try { socket.close() } catch (_: Exception) {} }
-                add(CheckResult("server", if (ping != null) CheckOutcome.OK else CheckOutcome.FAILED,
-                    if (ping != null) "port_ok" else "port_failed", ping))
-            } else add(CheckResult("server", CheckOutcome.SKIPPED, if (node == null) "no_server" else "network_missing"))
-            val connected = vpn.state.value == VpnState.CONNECTED
-            add(CheckResult("vpn", if (connected) CheckOutcome.OK else CheckOutcome.SKIPPED, if (connected) "vpn_ok" else "vpn_off"))
-            if (connected) {
-                add(http("Cloudflare HTTPS", "https://cp.cloudflare.com/generate_204", connectivity = true))
-                add(http("Google HTTPS", "https://www.gstatic.com/generate_204", connectivity = true))
-            } else add(CheckResult("HTTPS", CheckOutcome.SKIPPED, "vpn_off"))
-        } catch (e: CancellationException) {
-            _diagnostics.value = _diagnostics.value.copy(cancelled = true)
-            throw e
-        } catch (_: Exception) {
-            add(CheckResult("HTTPS", CheckOutcome.FAILED, "network"))
         } finally {
-            _diagnostics.value = _diagnostics.value.copy(running = false, completedAt = System.currentTimeMillis())
+            diagnosticsMutex.unlock()
         }
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="awg_import_file">وارد کردن فایل AmneziaWG (.conf)</string>
+    <string name="awg_config">پیکربندی AmneziaWG</string>
+    <string name="awg_show_keys">نمایش کلیدها</string>
+    <string name="awg_profile_help">این پیکربندی شامل کلیدهای خصوصی است. مسیریابی و حالت Smart توسط برنامه مدیریت می‌شود.</string>
+</resources>

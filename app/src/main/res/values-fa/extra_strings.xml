@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="extra_000" formatted="false">اشتراک VPN</string>
+    <string name="extra_001" formatted="false">اتصال دستگاه دیگر از طریق گوشی</string>
+    <string name="extra_002" formatted="false">چه دستگاهی را متصل می‌کنید؟</string>
+    <string name="extra_003" formatted="false">در برنامه</string>
+    <string name="extra_004" formatted="false">گوشی</string>
+    <string name="extra_005" formatted="false">دستگاه</string>
+    <string name="extra_006" formatted="false">بررسی</string>
+    <string name="extra_007" formatted="false">بازگشت</string>
+    <string name="extra_008" formatted="false">بعدی</string>
+    <string name="extra_009" formatted="false">پایان</string>
+    <string name="extra_010" formatted="false">Wi-Fi / USB / LAN</string>
+    <string name="extra_011" formatted="false">دستگاه شما</string>
+    <string name="extra_012" formatted="false">ابتدا روی گوشی دارای SplateVPN</string>
+    <string name="extra_013" formatted="false">اتصال VPN</string>
+    <string name="extra_014" formatted="false">سرور سالمی در SplateVPN انتخاب و متصل شوید. برای آزمایش، حالت تمام ترافیک مناسب است.</string>
+    <string name="extra_015" formatted="false">فعال‌سازی اشتراک در SplateVPN</string>
+    <string name="extra_016" formatted="false">تنظیمات ← اشتراک VPN در شبکهٔ محلی. رابط را انتخاب و منتظر اتصال مجدد بمانید. در دستگاه دیگر احراز هویت پروکسی را با نام splate و گذرواژهٔ تنظیمات اشتراک فعال کنید.</string>
+    <string name="extra_017" formatted="false">اتصال دستگاه‌ها</string>
+    <string name="extra_018" formatted="false">هات‌اسپات گوشی را روشن و دستگاه دیگر را با Wi-Fi متصل کنید. رایانهٔ دارای پشتیبانی اشتراک USB نیز می‌تواند از USB استفاده کند. شبکهٔ محلی بدون جداسازی کاربران هم مناسب است.</string>
+    <string name="extra_019" formatted="false">در Android و iPhone/iPad به هات‌اسپات گوشی وصل شوید و پروکسی همان شبکه را تنظیم کنید.</string>
+    <string name="extra_020" formatted="false">برای Mac از Wi-Fi یا شبکهٔ محلی استفاده کنید. پشتیبانی USB در Android به گوشی و درایور بستگی دارد.</string>
+    <string name="extra_021" formatted="false">این روش اتصال پروکسی را به اشتراک می‌گذارد. مرورگرها و برنامه‌های سازگار با پروکسی سیستم یا تنظیمات مستقل از آن استفاده می‌کنند. بازی‌ها و تماس‌ها ممکن است آن را دور بزنند؛ تمام ترافیک دستگاه خودکار وارد VPN نمی‌شود.</string>
+    <string name="extra_022" formatted="false">VPN قطع است. از صفحهٔ خانه متصل شوید.</string>
+    <string name="extra_023" formatted="false">اشتراک هنوز اجرا نشده است. فعال کنید و منتظر اتصال مجدد VPN بمانید.</string>
+    <string name="extra_024" formatted="false">هنوز نشانی شناسایی نشده است</string>
+    <string name="extra_025" formatted="false">هات‌اسپات یا اشتراک USB را روشن کنید. راهنما اکنون قابل خواندن است؛ پس از یافتن نشانی، پارامترها قابل کپی می‌شوند. نشانی ممکن است دفعهٔ بعد تغییر کند.</string>
+    <string name="extra_026" formatted="false">پارامترهای اتصال</string>
+    <string name="extra_027" formatted="false">نشانی گوشی در شبکه</string>
+    <string name="extra_028" formatted="false">شبکهٔ مورد استفادهٔ دستگاه دیگر را انتخاب کنید. نشانی Wi-Fi و USB ممکن است متفاوت باشد.</string>
+    <string name="extra_029" formatted="false">نشانی IP گوشی</string>
+    <string name="extra_030" formatted="false">IP گوشی</string>
+    <string name="extra_031" formatted="false">پورت</string>
+    <string name="extra_032" formatted="false">احراز هویت</string>
+    <string name="extra_033" formatted="false">خاموش</string>
+    <string name="extra_034" formatted="false">دستی</string>
+    <string name="extra_035" formatted="false">سرور</string>
+    <string name="extra_036" formatted="false">نام میزبان پروکسی</string>
+    <string name="extra_037" formatted="false">پورت پروکسی</string>
+    <string name="extra_038" formatted="false">ذخیره</string>
+    <string name="extra_039" formatted="false">اعمال</string>
+    <string name="extra_040" formatted="false">پروکسی</string>
+    <string name="extra_041" formatted="false">پروکسی وب (HTTP)</string>
+    <string name="extra_042" formatted="false">پروکسی امن وب (HTTPS)</string>
+    <string name="extra_043" formatted="false">نمونهٔ تصویری تنظیمات</string>
+    <string name="extra_044" formatted="false">این یک تصویر نمونه است؛ نام‌ها و ظاهر در نسخه‌های سیستم متفاوت‌اند.</string>
+    <string name="extra_045" formatted="false">فقط IP را بدون http:// یا پورت در نشانی وارد کنید. نام splate و گذرواژهٔ تنظیمات اشتراک را استفاده کنید. HTTP و HTTPS پورت یکسان و SOCKS5 پورت جداگانه دارد.</string>
+    <string name="extra_046" formatted="false">فرمان‌ها و روش‌های دیگر</string>
+    <string name="extra_047" formatted="false">فعال‌سازی در PowerShell</string>
+    <string name="extra_048" formatted="false">غیرفعال‌سازی در PowerShell</string>
+    <string name="extra_049" formatted="false">فعال‌سازی در همین پایانه</string>
+    <string name="extra_050" formatted="false">غیرفعال‌سازی در همین پایانه</string>
+    <string name="extra_051" formatted="false">برای bash/zsh و برنامه‌های پشتیبان این متغیرها است. فقط همین پایانه و برنامه‌های اجراشده از آن را تحت تأثیر قرار می‌دهد؛ برنامه‌های گرافیکی و sudo ممکن است از آن استفاده نکنند.</string>
+    <string name="extra_052" formatted="false">از PowerShell استفاده کنید. پروکسی کاربر جاری برای برنامه‌های سازگار با تنظیمات Windows تغییر و نشانی قبلی جایگزین می‌شود.</string>
+    <string name="extra_053" formatted="false">آزمایش پروکسی HTTP با curl</string>
+    <string name="extra_054" formatted="false">پاسخ باید شامل HTML سایت example.com باشد. این فقط اتصال پروکسی را می‌آزماید، نه مسیر تمام دستگاه را.</string>
+    <string name="extra_055" formatted="false">بررسی اتصال</string>
+    <string name="extra_056" formatted="false">باز کردن سایت در دستگاه دیگر</string>
+    <string name="extra_057" formatted="false">با مرورگر سازگار با پروکسی سیستم، سایتی را که باید از VPN باز شود آزمایش کنید. ترافیک از مسیر انتخابی SplateVPN پیروی می‌کند.</string>
+    <string name="extra_058" formatted="false">اگر برنامه کار نمی‌کند</string>
+    <string name="extra_059" formatted="false">برنامه ممکن است پروکسی سیستم را نادیده بگیرد. اگر تنظیم پروکسی دارد، SOCKS5 را با نشانی گوشی و پورت وارد کنید؛ در غیر این صورت ممکن است این روش کار نکند.</string>
+    <string name="extra_060" formatted="false">اتصال برقرار نمی‌شود؟</string>
+    <string name="extra_061" formatted="false">بررسی نشانی و پورت</string>
+    <string name="extra_062" formatted="false">IP ممکن است پس از راه‌اندازی مجدد هات‌اسپات تغییر کند. از نشانی فعلی مرحلهٔ دستگاه استفاده کنید. HTTP و HTTPS از پورت HTTP استفاده می‌کنند.</string>
+    <string name="extra_063" formatted="false">بررسی شبکه</string>
+    <string name="extra_064" formatted="false">دو دستگاه باید در یک شبکه به هم دسترسی داشته باشند. شبکهٔ مهمان، جداسازی کاربران، خواب گوشی یا VPN دیگر در دستگاه دریافت‌کننده می‌تواند اختلال ایجاد کند.</string>
+    <string name="extra_065" formatted="false">بررسی گوشی</string>
+    <string name="extra_066" formatted="false">VPN و اشتراک در SplateVPN باید فعال باشند. اگر سایت روی خود گوشی باز نمی‌شود، ابتدا اتصال VPN را رفع کنید. فقط با دستگاه‌های مورد اعتماد و گذرواژهٔ پروکسی اشتراک‌گذاری کنید.</string>
+    <string name="extra_067" formatted="false">اگر پروفایل کامل JSON وارد کرده‌اید</string>
+    <string name="extra_068" formatted="false">برنامه پورت‌های پروکسی محلی را مدیریت می‌کند. برای اشتراک از نشانی‌های HTTP/SOCKS5 همین صفحه استفاده کنید.</string>
+    <string name="extra_069" formatted="false">پس از استفاده پروکسی را خاموش کنید</string>
+    <string name="extra_070" formatted="false">راهنمای رسمی</string>
+    <string name="extra_071" formatted="false">باز کردن شبکهٔ Wi-Fi متصل</string>
+    <string name="extra_072" formatted="false">تنظیمات ← Wi-Fi / اینترنت ← شبکهٔ هات‌اسپات ← تنظیمات یا ویرایش.</string>
+    <string name="extra_073" formatted="false">انتخاب پروکسی دستی</string>
+    <string name="extra_074" formatted="false">تغییر شبکه یا گزینه‌های پیشرفته ← پروکسی ← دستی. نام‌ها در دستگاه‌ها متفاوت‌اند.</string>
+    <string name="extra_075" formatted="false">پر کردن فیلدها و ذخیره</string>
+    <string name="extra_076" formatted="false">نام میزبان، IP گوشی SplateVPN و پورت، پورت HTTP زیر است. تنظیم IP شبکه را DHCP / خودکار نگه دارید.</string>
+    <string name="extra_077" formatted="false">باز کردن جزئیات شبکه</string>
+    <string name="extra_078" formatted="false">تنظیمات ← Wi-Fi ← ⓘ کنار شبکهٔ هات‌اسپات.</string>
+    <string name="extra_079" formatted="false">تنظیم پروکسی HTTP</string>
+    <string name="extra_080" formatted="false">به پایین بروید ← تنظیم پروکسی ← دستی.</string>
+    <string name="extra_081" formatted="false">ورود سرور و پورت</string>
+    <string name="extra_082" formatted="false">سرور، IP گوشی و پورت، پورت HTTP زیر است. احراز هویت را با splate و گذرواژهٔ تنظیمات اشتراک روشن و ذخیره کنید.</string>
+    <string name="extra_083" formatted="false">باز کردن تنظیمات پروکسی</string>
+    <string name="extra_084" formatted="false">Windows 10/11: تنظیمات ← شبکه و اینترنت ← پروکسی.</string>
+    <string name="extra_085" formatted="false">فعال‌سازی تنظیم دستی</string>
+    <string name="extra_086" formatted="false">تنظیم دستی پروکسی ← راه‌اندازی / استفاده از سرور پروکسی ← روشن.</string>
+    <string name="extra_087" formatted="false">ورود IP و پورت HTTP</string>
+    <string name="extra_088" formatted="false">مطابق تصویر زیر پر و ذخیره کنید. این تنظیم پروکسی کاربر جاری است، نه اتصال VPN در Windows.</string>
+    <string name="extra_089" formatted="false">انتخاب اتصال فعال</string>
+    <string name="extra_090" formatted="false">تنظیمات سیستم ← شبکه ← Wi-Fi یا Ethernet ← جزئیات ← پروکسی‌ها.</string>
+    <string name="extra_091" formatted="false">فعال‌سازی HTTP و HTTPS</string>
+    <string name="extra_092" formatted="false">پروکسی وب HTTP و پروکسی امن HTTPS را فعال کنید و برای هر دو IP و پورت HTTP یکسان وارد کنید.</string>
+    <string name="extra_093" formatted="false">ذخیرهٔ تنظیمات</string>
+    <string name="extra_094" formatted="false">احراز هویت پروکسی را با splate و گذرواژهٔ اشتراک فعال کنید. تأیید و در صورت نیاز اعمال را بزنید. فعال‌سازی هم‌زمان SOCKS لازم نیست.</string>
+    <string name="extra_095" formatted="false">باز کردن پروکسی شبکه</string>
+    <string name="extra_096" formatted="false">Ubuntu / GNOME: تنظیمات ← شبکه ← پروکسی شبکه ← دستی.</string>
+    <string name="extra_097" formatted="false">پر کردن HTTP و HTTPS</string>
+    <string name="extra_098" formatted="false">در هر دو سطر IP گوشی و پورت HTTP یکسان وارد و ذخیره کنید. برخی برنامه‌ها باید بازراه‌اندازی شوند.</string>
+    <string name="extra_099" formatted="false">باز کردن بخش پروکسی</string>
+    <string name="extra_100" formatted="false">KDE Plasma: پروکسی را در تنظیمات سیستم جستجو و تنظیم دستی را انتخاب کنید.</string>
+    <string name="extra_101" formatted="false">تنظیم HTTP و HTTPS</string>
+    <string name="extra_102" formatted="false">IP گوشی و پورت HTTP را برای هر دو وارد و اعمال کنید. برنامه‌ها ممکن است تنظیم پروکسی مستقل داشته باشند.</string>
+    <string name="extra_103" formatted="false">باز کردن bash یا zsh</string>
+    <string name="extra_104" formatted="false">فرمان‌های زیر را در پایانه اجرا کنید و فرمان‌های بعدی را از همان پنجره اجرا کنید.</string>
+    <string name="extra_105" formatted="false">یافتن تنظیمات پروکسی</string>
+    <string name="extra_106" formatted="false">بخش پروکسی برنامه را که معمولاً در تنظیمات شبکه یا داده است باز کنید.</string>
+    <string name="extra_107" formatted="false">انتخاب SOCKS5</string>
+    <string name="extra_108" formatted="false">IP گوشی و پورت SOCKS5 زیر را وارد کنید. نام کاربری splate و گذرواژه در تنظیمات اشتراک است. اگر برنامه فقط HTTP دارد، از پورت HTTP استفاده کنید.</string>
+    <string name="extra_109" formatted="false">در تنظیمات همین شبکهٔ Wi-Fi، پروکسی را روی هیچ‌کدام بگذارید و ذخیره کنید.</string>
+    <string name="extra_110" formatted="false">تنظیمات ← Wi-Fi ← ⓘ ← تنظیم پروکسی ← خاموش ← ذخیره.</string>
+    <string name="extra_111" formatted="false">تنظیمات ← شبکه و اینترنت ← پروکسی ← استفاده از سرور پروکسی ← خاموش.</string>
+    <string name="extra_112" formatted="false">شبکه ← اتصال شما ← جزئیات ← پروکسی‌ها؛ HTTP و HTTPS را خاموش و ذخیره کنید.</string>
+    <string name="extra_113" formatted="false">فرمان unset زیر را اجرا یا پایانه را ببندید.</string>
+    <string name="extra_114" formatted="false">پروکسی شبکه را به هیچ‌کدام / غیرفعال برگردانید.</string>
+    <string name="extra_115" formatted="false">پروکسی را در تنظیمات خود برنامه خاموش کنید.</string>
+    <string name="extra_116" formatted="false">وگرنه پس از قطع گوشی، اینترنت این برنامه‌ها ممکن است کار نکند.</string>
+    <string name="extra_117" formatted="false">جایگزینی خودکار SmartDNS</string>
+    <string name="extra_118" formatted="false">هنگام اتصال، هر ۵ دقیقه صفحات عمومی را در حالت انتخاب‌شدهٔ SmartDNS بررسی می‌کند. پس از خرابی‌های مکرر، جایگزین را تأیید و VPN را کوتاه‌مدت دوباره متصل می‌کند. کپچا و درخواست ورود خرابی محسوب نمی‌شوند.</string>
+    <string name="extra_119" formatted="false">SmartDNS از طریق VPN</string>
+    <string name="extra_120" formatted="false">درخواست‌های DNS و اتصال به پراکسی SmartDNS از سرور VPN انتخاب‌شده عبور می‌کنند. انتخاب خودکار همین مسیر را آزمایش می‌کند. دسترسی سرویس به منطقهٔ خروجی SmartDNS و تنظیمات حساب نیز بستگی دارد.</string>
+    <string name="extra_121" formatted="false">انتخاب خودکار SmartDNS</string>
+    <string name="extra_122" formatted="false">ارائه‌دهندگان را در حالت انتخاب‌شده آزمایش و گزینهٔ تأییدشده را اعمال می‌کند. در حالت مستقیم، قطعه‌بندی TLS نیز بررسی می‌شود. ممکن است چند دقیقه طول بکشد.</string>
+    <string name="extra_123" formatted="false">DNS، HTTPS و صفحات عمومی Gemini، ChatGPT و Claude بررسی می‌شوند. نامزدهای نهایی Gemini را با JavaScript هم بارگیری می‌کنند. ورود و کارکرد حساب بررسی نمی‌شود.</string>
+    <string name="extra_124" formatted="false">یافتن و اعمال</string>
+    <string name="extra_125" formatted="false">توقف انتخاب</string>
+    <string name="extra_126" formatted="false">در حال تأیید نتیجه</string>
+    <string name="extra_127" formatted="false">بررسی خودکار Gemini را تأیید نکرد. ممکن است در مرورگر کار کند؛ ورود و محدودیت WebView می‌تواند مانع بررسی شود. تنظیمات تغییر نکرده‌اند. جزئیات در پایین.</string>
+    <string name="extra_128" formatted="false">انتخاب متوقف شد. تنظیمات تغییر نکرده‌اند.</string>
+    <string name="extra_129" formatted="false">شبکه تغییر کرد. انتخاب را دوباره آغاز کنید.</string>
+    <string name="extra_130" formatted="false">اتصال شبکه موجود نیست.</string>
+    <string name="extra_131" formatted="false">بررسی کامل نشد. تنظیمات تغییر نکرده‌اند.</string>
+    <string name="extra_132" formatted="false">DoH رد شد</string>
+    <string name="extra_133" formatted="false">اتصال DNS ناموفق</string>
+    <string name="extra_134" formatted="false">پایان مهلت DNS</string>
+    <string name="extra_135" formatted="false">DNS نشانی عمومی IPv4 معتبر نداد</string>
+    <string name="extra_136" formatted="false">پاسخ DNS نیست</string>
+    <string name="extra_137" formatted="false">خطای اتصال / TLS</string>
+    <string name="extra_138" formatted="false">پایان مهلت سایت</string>
+    <string name="extra_139" formatted="false">دست‌دهی TLS سایت ناموفق</string>
+    <string name="extra_140" formatted="false">DNS بررسی شد · پاسخ سایت</string>
+    <string name="extra_141" formatted="false">صفحهٔ JavaScript بارگیری شد؛ حساب بررسی نشد</string>
+    <string name="extra_142" formatted="false">JavaScript: ورود، CAPTCHA یا خطای صفحه</string>
+    <string name="extra_143" formatted="false">JavaScript: منطقه مسدود است</string>
+    <string name="extra_144" formatted="false">JavaScript: مهلت بررسی تمام شد</string>
+    <string name="extra_145" formatted="false">بررسی مرورگر به Android 9+ و Android System WebView به‌روز نیاز دارد</string>
+    <string name="extra_146" formatted="false">بررسی مرورگر کامل نشد</string>
+    <string name="extra_147" formatted="false">در دسترس</string>
+    <string name="extra_148" formatted="false">محدود</string>
+    <string name="extra_149" formatted="false">منطقه مسدود</string>
+    <string name="extra_150" formatted="false">ناموفق</string>
+    <string name="extra_151" formatted="false">آمار و ابزارها</string>
+    <string name="extra_152" formatted="false">آمار ترافیک</string>
+    <string name="extra_153" formatted="false">امروز</string>
+    <string name="extra_154" formatted="false">دسترسی خدمات</string>
+    <string name="extra_155" formatted="false">۸ سرویس · بررسی از طریق VPN</string>
+    <string name="extra_156" formatted="false">عیب‌یابی با یک لمس</string>
+    <string name="extra_157" formatted="false">شبکه، DNS، سرور و تونل</string>
+    <string name="extra_158" formatted="false">بستن</string>
+    <string name="extra_159" formatted="false">عیب‌یابی اتصال</string>
+    <string name="extra_160" formatted="false">در حال بررسی اتصال…</string>
+    <string name="extra_161" formatted="false">بررسی متوقف شد</string>
+    <string name="extra_162" formatted="false">بررسی کامل شد</string>
+    <string name="extra_163" formatted="false">نتایج کامل نیستند.</string>
+    <string name="extra_164" formatted="false">توقف بررسی</string>
+    <string name="extra_165" formatted="false">بررسی دوباره</string>
+    <string name="extra_166" formatted="false">بررسی با اتصال و قوانین فعلی انجام می‌شود. دسترسی سایت، ورود، پخش یا تماس را تضمین نمی‌کند.</string>
+    <string name="extra_167" formatted="false">DNS و پورت سرور از شبکهٔ فیزیکی و HTTPS از VPN بررسی می‌شوند. پورت باز، اعتبار اطلاعات ورود را تأیید نمی‌کند.</string>
+    <string name="extra_168" formatted="false">شبکه</string>
+    <string name="extra_169" formatted="false">DNS سیستم</string>
+    <string name="extra_170" formatted="false">پورت سرور</string>
+    <string name="extra_171" formatted="false">در دسترس</string>
+    <string name="extra_172" formatted="false">ناموفق</string>
+    <string name="extra_173" formatted="false">دسترسی محدود</string>
+    <string name="extra_174" formatted="false">رد شده</string>
+    <string name="extra_175" formatted="false">ابتدا VPN را متصل و دوباره تلاش کنید</string>
+    <string name="extra_176" formatted="false">VPN متصل است</string>
+    <string name="extra_177" formatted="false">شبکهٔ دارای اینترنت پیدا شد</string>
+    <string name="extra_178" formatted="false">شبکه موجود نیست: Wi-Fi یا دادهٔ همراه را بررسی کنید</string>
+    <string name="extra_179" formatted="false">نام میزبان به IP تبدیل می‌شود</string>
+    <string name="extra_180" formatted="false">نام حل نشد: DNS را بررسی کنید</string>
+    <string name="extra_181" formatted="false">اتصال TCP برقرار شد</string>
+    <string name="extra_182" formatted="false">پورت در دسترس نیست: نشانی و پورت را بررسی یا سرور را عوض کنید</string>
+    <string name="extra_183" formatted="false">انتخاب سرور</string>
+    <string name="extra_184" formatted="false">خطای TLS: تاریخ دستگاه و تنظیمات TLS را بررسی کنید</string>
+    <string name="extra_185" formatted="false">پایان مهلت: دوباره تلاش یا سرور را عوض کنید</string>
+    <string name="extra_186" formatted="false">اتصال ناموفق: شبکه و سرور را بررسی کنید</string>
+    <string name="extra_187" formatted="false">جزئیات</string>
+    <string name="extra_188" formatted="false">حالت اتصال</string>
+    <string name="extra_189" formatted="false">ذخیرهٔ تنظیمات فعلی</string>
+    <string name="extra_190" formatted="false">لغو آخرین پروفایل</string>
+    <string name="extra_191" formatted="false">پس از اعمال، VPN دوباره متصل می‌شود.</string>
+    <string name="extra_192" formatted="false">در حال اعمال…</string>
+    <string name="extra_193" formatted="false">پروفایل جدید</string>
+    <string name="extra_194" formatted="false">نام</string>
+    <string name="extra_195" formatted="false">پروفایل ذخیره نشد.</string>
+    <string name="extra_196" formatted="false">لغو</string>
+    <string name="extra_197" formatted="false">مسیریابی هوشمند</string>
+    <string name="extra_198" formatted="false">تمام ترافیک</string>
+    <string name="extra_199" formatted="false">حالت فعلی</string>
+    <string name="extra_200" formatted="false">در حال به‌روزرسانی…</string>
+    <string name="extra_201" formatted="false">تغییر</string>
+    <string name="extra_202" formatted="false">جستجوی تنظیمات…</string>
+    <string name="extra_203" formatted="false">پاک کردن جستجو</string>
+    <string name="extra_204" formatted="false">نتیجه‌ای نیست. DNS، پوسته یا پشتیبان را جستجو کنید.</string>
+    <string name="extra_205" formatted="false">تمام تنظیمات</string>
+    <string name="extra_206" formatted="false">رابط اشتراک</string>
+    <string name="extra_207" formatted="false">خودکار</string>
+    <string name="extra_208" formatted="false">احراز هویت پروکسی لازم است. نام کاربری: splate</string>
+    <string name="extra_209" formatted="false">گذرواژه</string>
+    <string name="extra_210" formatted="false">نمایش گذرواژه</string>
+    <string name="extra_211" formatted="false">تغییر گذرواژه</string>
+    <string name="extra_212" formatted="false">نسخهٔ پشتیبان چگونه بازیابی شود؟</string>
+    <string name="extra_213" formatted="false">ادغام</string>
+    <string name="extra_214" formatted="false">جایگزینی داده‌ها</string>
+    <string name="extra_215" formatted="false">سرورها و قوانین اضافه می‌شوند و تنظیمات فایل اعمال می‌شوند.</string>
+    <string name="extra_216" formatted="false">سرورها، اشتراک‌ها، فهرست برنامه‌ها و مسیرها، شامل فهرست‌های خالی، جایگزین می‌شوند.</string>
+    <string name="extra_217" formatted="false">انتخاب فایل</string>
+    <string name="extra_218" formatted="false">اتصال</string>
+    <string name="extra_219" formatted="false">انتخاب خودکار، متعادل‌سازی، راه‌اندازی و اشتراک‌ها</string>
+    <string name="extra_220" formatted="false">شبکه و DNS</string>
+    <string name="extra_221" formatted="false">مسیریابی، DNS عمومی و بررسی سرورها</string>
+    <string name="extra_222" formatted="false">خدمات هوش مصنوعی</string>
+    <string name="extra_223" formatted="false">SmartDNS، Gemini، ChatGPT و انتخاب خودکار</string>
+    <string name="extra_224" formatted="false">محافظت و تبلیغات</string>
+    <string name="extra_225" formatted="false">قطع اضطراری، IPv6 و مسدودکنندهٔ تبلیغات</string>
+    <string name="extra_226" formatted="false">ظاهر و زبان</string>
+    <string name="extra_227" formatted="false">پوسته، شفافیت و محوشدگی</string>
+    <string name="extra_228" formatted="false">پشتیبان‌گیری و بازیابی</string>
+    <string name="extra_229" formatted="false">صدور، بازیابی و پشتیبان خودکار</string>
+    <string name="extra_230" formatted="false">عیب‌یابی</string>
+    <string name="extra_231" formatted="false">بررسی اتصال، آمار و گزارش‌ها</string>
+    <string name="extra_232" formatted="false">پیشرفته</string>
+    <string name="extra_233" formatted="false">XHTTP، FakeDNS، QUIC، تشخیص دامنه و مسیرهای سفارشی</string>
+    <string name="extra_234" formatted="false">اشتراک VPN</string>
+    <string name="extra_235" formatted="false">پروکسی شبکهٔ محلی و اشتراک اینترنت</string>
+    <string name="extra_236" formatted="false">درباره</string>
+    <string name="extra_237" formatted="false">نسخهٔ هسته و به‌روزرسانی برنامه</string>
+    <string name="extra_238" formatted="false">برنامه‌ها</string>
+    <string name="extra_239" formatted="false">انتخاب برنامه‌های استفاده‌کننده از VPN</string>
+    <string name="extra_240" formatted="false">۱. انتخاب حالت</string>
+    <string name="extra_241" formatted="false">تغییر حالت</string>
+    <string name="extra_242" formatted="false">تمام برنامه‌ها</string>
+    <string name="extra_243" formatted="false">فقط برنامه‌های انتخاب‌شده</string>
+    <string name="extra_244" formatted="false">همه به‌جز برنامه‌های انتخاب‌شده</string>
+    <string name="extra_245" formatted="false">قوانین VPN برای تمام برنامه‌ها اعمال می‌شوند.</string>
+    <string name="extra_246" formatted="false">برنامه‌های انتخابی از VPN و بقیه مستقیم متصل می‌شوند.</string>
+    <string name="extra_247" formatted="false">برنامه‌های انتخابی مستقیم و بقیه از VPN متصل می‌شوند.</string>
+    <string name="extra_248" formatted="false">۲. انتخاب برنامه‌ها برای VPN</string>
+    <string name="extra_249" formatted="false">۲. انتخاب برنامه‌های بدون VPN</string>
+    <string name="extra_250" formatted="false">طبق قوانین VPN</string>
+    <string name="extra_251" formatted="false">بدون VPN · مستقیم</string>
+    <string name="extra_252" formatted="false">برنامه‌ها از حالت خانه پیروی می‌کنند. مسیریابی هوشمند می‌تواند برخی سایت‌ها را مستقیم متصل کند.</string>
+    <string name="extra_253" formatted="false">نیازی به انتخاب تک‌تک نیست. برای افزودن استثنا، «همه به‌جز انتخاب‌شده‌ها» را انتخاب کنید.</string>
+    <string name="extra_254" formatted="false">حداقل یک برنامه یا «تمام برنامه‌ها» را انتخاب کنید.</string>
+    <string name="extra_255" formatted="false">استثنایی نیست: VPN برای همهٔ برنامه‌ها در دسترس است.</string>
+    <string name="extra_256" formatted="false">تغییرات هنوز اعمال نشده‌اند</string>
+    <string name="extra_257" formatted="false">تنظیمات ذخیره شد</string>
+    <string name="extra_258" formatted="false">با اعمال تغییرات، VPN یک بار دوباره متصل می‌شود.</string>
+    <string name="extra_259" formatted="false">قوانین پس از اتصال VPN اعمال می‌شوند.</string>
+    <string name="extra_260" formatted="false">اعمال تغییرات</string>
+    <string name="extra_261" formatted="false">لغو تغییرات</string>
+    <string name="extra_262" formatted="false">فقط انتخاب‌شده‌ها</string>
+    <string name="extra_263" formatted="false">انتخاب نتایج جستجو</string>
+    <string name="extra_264" formatted="false">انتخاب همه</string>
+    <string name="extra_265" formatted="false">پاک کردن انتخاب</string>
+    <string name="extra_266" formatted="false">برنامه‌ای یافت نشد. جستجو را تغییر دهید.</string>
+    <string name="extra_267" formatted="false">هنوز چیزی انتخاب نشده است. تمام برنامه‌ها را برای انتخاب نمایش دهید.</string>
+    <string name="extra_268" formatted="false">نمایش تمام برنامه‌ها</string>
+    <string name="extra_269" formatted="false">فهرست برنامه‌ها خالی است. آن را تازه‌سازی کنید.</string>
+    <string name="extra_270" formatted="false">تنظیمات متعادل‌ساز</string>
+    <string name="extra_271" formatted="false">خودکار · پیش‌فرض</string>
+    <string name="extra_272" formatted="false">هنگام اتصال سرور را انتخاب، گره خراب را جایگزین و هنگام افت کیفیت سرور سریع‌تری پیدا می‌کند.</string>
+    <string name="extra_273" formatted="false">فقط هنگام خرابی</string>
+    <string name="extra_274" formatted="false">سرور سالم را نگه می‌دارد و فقط پس از تأیید خرابی در بررسی‌های متوالی جابه‌جا می‌شود.</string>
+    <string name="extra_275" formatted="false">فقط هنگام اتصال</string>
+    <string name="extra_276" formatted="false">فقط هنگام اتصال یک بار سرور را انتخاب می‌کند. در جلسه حتی با عدم پاسخ سرور جابه‌جا نمی‌شود.</string>
+    <string name="extra_277" formatted="false">فاصلهٔ بررسی اتصال</string>
+    <string name="extra_278" formatted="false">تعداد بررسی ناموفق پیش از تغییر</string>
+    <string name="extra_279" formatted="false">جستجوی زمان‌بندی‌شده برای سرور بهتر</string>
+    <string name="extra_280" formatted="false">فاصلهٔ بین بهبودها</string>
+    <string name="extra_281" formatted="false">حداقل بهبود تأخیر</string>
+    <string name="extra_282" formatted="false">بازیابی تنظیمات پیش‌فرض</string>
+    <string name="extra_283" formatted="false">این گزینه‌ها هنگام فعال بودن انتخاب خودکار اعمال می‌شوند.</string>
+    <string name="extra_284" formatted="false">دریافت از VPN · ۲ جریان · ۱۰ ثانیه · حداکثر ۱۲۸ مگابایت</string>
+    <string name="extra_285" formatted="false">آغاز آزمون سرعت</string>
+    <string name="extra_286" formatted="false">توقف آزمایش</string>
+    <string name="extra_287" formatted="false">ابتدا VPN را متصل کنید</string>
+    <string name="extra_288" formatted="false">اتصال تغییر کرد. آزمایش را دوباره اجرا کنید.</string>
+    <string name="extra_289" formatted="false">مهلت سرور آزمایش تمام شد</string>
+    <string name="extra_290" formatted="false">نشانی سرور آزمایش حل نشد</string>
+    <string name="extra_291" formatted="false">سرور آزمایش در دسترس نیست. گره VPN دیگری را امتحان کنید.</string>
+    <string name="extra_292" formatted="false">داده برای سنجش معتبر کافی نیست</string>
+    <string name="extra_293" formatted="false">%.1f مگابایت · %.1f ثانیه سنجش</string>
+    <string name="extra_294" formatted="false">مگابایت/ثانیه</string>
+    <string name="extra_295" formatted="false">مگابایت</string>
+    <string name="extra_296" formatted="false">انتخاب‌شده: %d</string>
+    <string name="extra_297" formatted="false">%d از %d بررسی شد</string>
+    <string name="extra_298" formatted="false">%s اعمال شد · صفحات در دسترس: %d/3</string>
+    <string name="extra_299" formatted="false">نتایج (%d)</string>
+    <string name="extra_300" formatted="false">%d ثانیه</string>
+    <string name="extra_301" formatted="false">%d دقیقه</string>
+    <string name="extra_302" formatted="false">کد منبع در GitHub</string>
+    <string name="extra_303" formatted="false">به‌روزرسانی‌های اخیر</string>
+    <string name="extra_304" formatted="false">قواعد ترکیبی · AND / OR</string>
+    <string name="extra_305" formatted="false">AND به تطبیق همهٔ فیلدهای پرشده نیاز دارد؛ در OR تطبیق یکی کافی است. سطرهای هر فیلد گزینه‌های جایگزین‌اند. نخستین قاعدهٔ منطبق اعمال می‌شود.</string>
+    <string name="extra_306" formatted="false">برنامه‌ها، دامنه‌ها، IP، پورت‌ها و پروتکل‌ها را تطبیق دهید. شرط برنامه به Android 10+ و انتخاب برنامه برای VPN در صفحهٔ برنامه‌ها نیاز دارد.</string>
+    <string name="extra_307" formatted="false">قواعد ذخیره شده‌اند، اما در حالت Tor اعمال نمی‌شوند.</string>
+    <string name="extra_308" formatted="false">"برنامه‌ها: "</string>
+    <string name="extra_309" formatted="false">"پسوندها: "</string>
+    <string name="extra_310" formatted="false">"دامنه‌ها: "</string>
+    <string name="extra_311" formatted="false">"کلیدواژه‌ها: "</string>
+    <string name="extra_312" formatted="false">"پورت‌ها: "</string>
+    <string name="extra_313" formatted="false">ویرایش</string>
+    <string name="extra_314" formatted="false">انتقال به بالا</string>
+    <string name="extra_315" formatted="false">انتقال به پایین</string>
+    <string name="extra_316" formatted="false">افزودن قاعدهٔ ترکیبی</string>
+    <string name="extra_317" formatted="false">استثناهای کاربر و قواعد ضروری DNS اولویت دارند. قواعد ترکیبی پیش از قواعد اشتراک و منطقه اعمال می‌شوند.</string>
+    <string name="extra_318" formatted="false">قواعد ذخیره‌شده نامعتبرند. VPN از مجموعهٔ تأییدنشده استفاده نمی‌کند.</string>
+    <string name="extra_319" formatted="false">پاک‌کردن قواعد نامعتبر</string>
+    <string name="extra_320" formatted="false">قاعدهٔ ترکیبی</string>
+    <string name="extra_321" formatted="false">همهٔ بخش‌های پرشده باید منطبق باشند.</string>
+    <string name="extra_322" formatted="false">تطبیق هر یک از بخش‌های پرشده کافی است.</string>
+    <string name="extra_323" formatted="false">مستقیم</string>
+    <string name="extra_324" formatted="false">مسدود</string>
+    <string name="extra_325" formatted="false">ترافیک منطبق مستقیماً و بدون عبور از سرور VPN متصل می‌شود.</string>
+    <string name="extra_326" formatted="false">شناسهٔ بستهٔ برنامه</string>
+    <string name="extra_327" formatted="false">انتخاب برنامه‌های نصب‌شده</string>
+    <string name="extra_328" formatted="false">هر سطر یک شناسهٔ بسته، با رعایت بزرگی و کوچکی حروف. برنامه‌های نصب‌نشده در قاعده می‌مانند. برنامه‌های دارای UID مشترک پشتیبانی نمی‌شوند.</string>
+    <string name="extra_329" formatted="false">شرط برنامه به Android 10 یا جدیدتر نیاز دارد.</string>
+    <string name="extra_330" formatted="false">پسوندهای دامنه</string>
+    <string name="extra_331" formatted="false">هر سطر یک دامنه؛ شامل خود دامنه و زیردامنه‌های آن می‌شود. نقطهٔ آغازین اختیاری است.</string>
+    <string name="extra_332" formatted="false">نام کامل دامنه</string>
+    <string name="extra_333" formatted="false">کلیدواژه‌های دامنه</string>
+    <string name="extra_334" formatted="false">چند سطر در یک بخش به معنی OR است. بخش‌های خالی نادیده گرفته می‌شوند.</string>
+    <string name="extra_335" formatted="false">IP، پورت‌ها و پروتکل‌ها</string>
+    <string name="extra_336" formatted="false">پورت‌ها: 443,8000-8100</string>
+    <string name="extra_337" formatted="false">پروتکل‌ها: http, tls, quic</string>
+    <string name="extra_338" formatted="false">فعال‌کردن تشخیص دامنه برای این قواعد</string>
+    <string name="extra_339" formatted="false">برنامه‌های این قاعده</string>
+    <string name="extra_340" formatted="false">نام یا شناسهٔ بسته</string>
+    <string name="extra_341" formatted="false">انتخاب‌شده: %d / %d</string>
+    <string name="extra_342" formatted="false">برنامهٔ منطبقی یافت نشد</string>
+    <string name="extra_343" formatted="false">بسته‌های واردشدهٔ دستی، حتی اگر در این فهرست نباشند، انتخاب‌شده باقی می‌مانند.</string>
+    <string name="extra_344" formatted="false">گزارش خطاها</string>
+    <string name="extra_345" formatted="false">با رضایت شما، گزارش فقط شامل نوع خطا، محل آن در کد و نسخهٔ برنامه است. نشانی IP، اطلاعات دستگاه، پیام استثنا، گزارش‌های فعالیت، اشتراک‌ها و تنظیمات درج نمی‌شوند.</string>
+    <string name="extra_346" formatted="false">ذخیره در همین دستگاه</string>
+    <string name="extra_347" formatted="false">ارسال خودکار انجام نمی‌شود؛ دریافت‌کننده‌ای برای گزارش‌ها وجود ندارد. حداکثر پنج گزارش روی این دستگاه می‌ماند. غیرفعال‌کردن جمع‌آوری آن‌ها را حذف می‌کند.</string>
+    <string name="extra_348" formatted="false">"بخش: "</string>
+    <string name="extra_349" formatted="false">ثبت مشکل</string>
+    <string name="extra_350" formatted="false">"بررسی گزارش "</string>
+    <string name="extra_351" formatted="false">گزارشی ذخیره نشده است</string>
+    <string name="extra_352" formatted="false">حذف همه</string>
+    <string name="extra_353" formatted="false">بررسی پیش از صدور</string>
+    <string name="extra_354" formatted="false">با صدور گزارش، منوی اشتراک‌گذاری سیستم باز می‌شود. گیرنده را خودتان انتخاب می‌کنید.</string>
+    <string name="extra_355" formatted="false">صدور</string>
+    <string name="extra_356" formatted="false">کپی</string>
+    <string name="extra_357" formatted="false">حذف</string>
+    <string name="extra_358" formatted="false">بازیابی از پیوند ابری</string>
+    <string name="extra_359" formatted="false">پیوند فایل پشتیبان JSON را بچسبانید. برنامه آن را دانلود می‌کند و پیش از بازیابی محتوا را نشان می‌دهد. نیازی به انتخاب پوشه نیست.</string>
+    <string name="extra_360" formatted="false">پیوند فایل پشتیبان</string>
+    <string name="extra_361" formatted="false">چسباندن پیوند</string>
+    <string name="extra_362" formatted="false">رمز عبور، اگر پشتیبان رمزگذاری شده است</string>
+    <string name="extra_363" formatted="false">Google Drive، Yandex Disk، Dropbox و پیوند مستقیم HTTPS پشتیبانی می‌شوند. فایل باید بدون ورود به حساب ابری قابل دریافت باشد. پشتیبان ساده رمز عبور نمی‌خواهد.</string>
+    <string name="extra_364" formatted="false">بازکردن پشتیبان دانلودشده</string>
+    <string name="extra_365" formatted="false">دانلود و بررسی</string>
+    <string name="extra_366" formatted="false">پشتیبان‌گیری خودکار در پوشه غیرفعال شد</string>
+    <string name="extra_367" formatted="false">انتخاب پوشه از پشتیبان‌گیری ابری حذف شد. فایل‌های موجود و رمز رمزگذاری حفظ شدند. برای بازیابی از پیوند پشتیبان استفاده کنید یا WebDAV را برای پشتیبان‌گیری در پس‌زمینه تنظیم کنید.</string>
+    <string name="extra_368" formatted="false">متوجه شدم</string>
+    <string name="extra_369" formatted="false">پشتیبان‌گیری خودکار WebDAV</string>
+    <string name="extra_370" formatted="false">هر 6 یا 24 ساعت پشتیبان رمزگذاری‌شده تهیه می‌شود. بازیابی پس از بررسی و تأیید انجام می‌شود. 10 نسخهٔ آخر این دستگاه جداگانه نگهداری می‌شوند.</string>
+    <string name="extra_371" formatted="false">از WebDAV ذخیره‌شده در تنظیمات انتقال استفاده می‌شود. نسخهٔ مشترکِ دارای تعارض حفظ می‌شود؛ پیش از همگام‌سازی دوباره، آن را دانلود و بررسی کنید.</string>
+    <string name="extra_372" formatted="false">رمز جدید (برای حفظ رمز فعلی خالی بگذارید)</string>
+    <string name="extra_373" formatted="false">رمز رمزگذاری، حداقل 8 نویسه</string>
+    <string name="extra_374" formatted="false">تأیید رمز عبور</string>
+    <string name="extra_375" formatted="false">رمز پشتیبان پس‌زمینه فقط روی این دستگاه و با Android Keystore به‌صورت رمزگذاری‌شده ذخیره می‌شود. آن را جداگانه نگه دارید؛ دستگاه دیگر برای بازیابی به این رمز نیاز دارد.</string>
+    <string name="extra_376" formatted="false">پشتیبان‌گیری خودکار فعال است</string>
+    <string name="extra_377" formatted="false">فقط شبکهٔ بدون محدودیت مصرف</string>
+    <string name="extra_378" formatted="false">هر %d ساعت</string>
+    <string name="extra_379" formatted="false">رمزها باید یکسان و حداقل 8 نویسه باشند</string>
+    <string name="extra_380" formatted="false">ذخیرهٔ تنظیمات</string>
+    <string name="extra_381" formatted="false">پشتیبان‌گیری اکنون</string>
+    <string name="extra_382" formatted="false">غیرفعال‌کردن و فراموش‌کردن رمز</string>
+    <string name="extra_383" formatted="false">"آخرین پشتیبان: "</string>
+    <string name="extra_384" formatted="false">حذف %s</string>
+    <string name="extra_385" formatted="false">تنظیمات دریافت شد. پیش از واردکردن، آن‌ها را بررسی کنید.</string>
+    <string name="extra_386" formatted="false">دستگاه دریافت‌کننده را بررسی و ارسال را تأیید کنید.</string>
+    <string name="extra_387" formatted="false">انتقال بین دستگاه‌ها</string>
+    <string name="extra_388" formatted="false">تلفن و تلویزیون را به یک شبکهٔ Wi-Fi یا Ethernet متصل کنید. سرورها، اشتراک‌ها و تنظیمات Tor و پروکسی رمزگذاری‌شده منتقل می‌شوند.</string>
+    <string name="extra_389" formatted="false">پیش از اعمال تنظیمات دریافتی، VPN را قطع کنید.</string>
+    <string name="extra_390" formatted="false">ارسال تنظیمات</string>
+    <string name="extra_391" formatted="false">دریافت در این دستگاه / تلویزیون</string>
+    <string name="extra_392" formatted="false">کد QR جفت‌سازی دستگاه</string>
+    <string name="extra_393" formatted="false">با تلفنی که تنظیمات روی آن است این QR را اسکن کنید، سپس واردکردن را در اینجا تأیید کنید.</string>
+    <string name="extra_394" formatted="false">با دستگاه دریافت‌کننده اسکن کنید. برای تلویزیون بدون دوربین، «دریافت» را در تلویزیون انتخاب و QR آن را با تلفن اسکن کنید.</string>
+    <string name="extra_395" formatted="false">"زمان باقی‌ماندهٔ کد: "</string>
+    <string name="extra_396" formatted="false">" ثانیه · یک‌بارمصرف"</string>
+    <string name="extra_397" formatted="false">کپی کد</string>
+    <string name="extra_398" formatted="false">بستن انتقال</string>
+    <string name="extra_399" formatted="false">کد یا پیوند جفت‌سازی</string>
+    <string name="extra_400" formatted="false">استفاده از کد</string>
+    <string name="extra_401" formatted="false">QR حاوی کلید جفت‌سازی است. آن را فقط به دستگاه خود نشان دهید. اعمال تنظیمات دریافتی به تأیید نیاز دارد.</string>
+    <string name="extra_402" formatted="false">بستن تنظیمات WebDAV</string>
+    <string name="extra_403" formatted="false">همگام‌سازی WebDAV</string>
+    <string name="extra_404" formatted="false">فایل رمزگذاری‌شدهٔ splate-settings.v1.json در پوشهٔ موجود WebDAV ذخیره می‌شود. بارگذاری و دانلود با انتخاب شما انجام می‌شوند.</string>
+    <string name="extra_405" formatted="false">نشانی HTTPS پوشهٔ WebDAV</string>
+    <string name="extra_406" formatted="false">نام کاربری WebDAV</string>
+    <string name="extra_407" formatted="false">رمز عبور WebDAV</string>
+    <string name="extra_408" formatted="false">WebDAV ذخیره شد</string>
+    <string name="extra_409" formatted="false">ذخیرهٔ WebDAV</string>
+    <string name="extra_410" formatted="false">رمز رمزگذاری پشتیبان (حداقل 8 نویسه)</string>
+    <string name="extra_411" formatted="false">رمز رمزگذاری ذخیره نمی‌شود. در دستگاه دیگر همان رمز را وارد کنید. اطلاعات ورود WebDAV روی همین دستگاه می‌مانند و در پشتیبان قرار نمی‌گیرند.</string>
+    <string name="extra_412" formatted="false">پشتیبان رمزگذاری‌شده بارگذاری شد</string>
+    <string name="extra_413" formatted="false">جایگزینی نسخه</string>
+    <string name="extra_414" formatted="false">پشتیبان دانلود شد. واردکردن را تأیید کنید.</string>
+    <string name="extra_415" formatted="false">دانلود</string>
+    <string name="extra_416" formatted="false">تنظیمات به این دستگاه ارسال شود؟</string>
+    <string name="extra_417" formatted="false">واردکردن تنظیمات</string>
+    <string name="extra_418" formatted="false">"دریافت‌شده از "</string>
+    <string name="extra_419" formatted="false">"دستگاه در شبکهٔ محلی شما: "</string>
+    <string name="extra_420" formatted="false">"سرورها: "</string>
+    <string name="extra_421" formatted="false">" · اشتراک‌ها: "</string>
+    <string name="extra_422" formatted="false">پشتیبان JSON بدون رمزگذاری</string>
+    <string name="extra_423" formatted="false">"قواعد ترکیبی: "</string>
+    <string name="extra_424" formatted="false">شامل Tor و پل‌ها</string>
+    <string name="extra_425" formatted="false">شامل تنظیمات پروکسی و رمز اشتراک</string>
+    <string name="extra_426" formatted="false">تنظیمات عمومی در این دستگاه اعمال می‌شوند. به‌طور پیش‌فرض، سرورها به موارد موجود افزوده می‌شوند.</string>
+    <string name="extra_427" formatted="false">سرورها، اشتراک‌ها، تنظیمات Tor و رمز پروکسی ارسال می‌شوند. فقط برای دستگاه خود که این QR را نشان داده است ادامه دهید.</string>
+    <string name="extra_428" formatted="false">جایگزینی سرورها و اشتراک‌های موجود</string>
+    <string name="extra_429" formatted="false">ابتدا VPN را قطع کنید</string>
+    <string name="extra_430" formatted="false">اعمال تنظیمات</string>
+    <string name="extra_431" formatted="false">پروکسی محلی · Mixed</string>
+    <string name="extra_432" formatted="false">HTTP و SOCKS روی یک پورت محلی اجرا می‌شوند. احراز هویت به‌طور پیش‌فرض فعال است؛ برنامه اطلاعات ورود را می‌سازد و خودکار به VPN می‌دهد. اشتراک شبکهٔ محلی مستقل است.</string>
+    <string name="extra_433" formatted="false">بستن تنظیمات</string>
+    <string name="extra_434" formatted="false">تنظیم اطلاعات ورود</string>
+    <string name="extra_435" formatted="false">بدون احراز هویت، برنامه‌های دیگر این تلفن می‌توانند به پروکسی محلی دسترسی داشته باشند.</string>
+    <string name="extra_436" formatted="false">نام کاربری</string>
+    <string name="extra_437" formatted="false">پنهان‌کردن رمز عبور</string>
+    <string name="extra_438" formatted="false">ذخیره شد. VPN فعال دوباره متصل می‌شود.</string>
+    <string name="extra_439" formatted="false">اطلاعات ورود جدید ذخیره شد. VPN فعال دوباره متصل می‌شود.</string>
+    <string name="extra_440" formatted="false">ساخت اطلاعات ورود جدید</string>
+    <string name="extra_441" formatted="false">این اطلاعات ورود روی همین دستگاه می‌مانند و در پشتیبان ابری قرار نمی‌گیرند. احراز هویت پروکسی اتصال VPN را از ارائه‌دهندهٔ اینترنت پنهان نمی‌کند.</string>
+    <string name="extra_442" formatted="false">دانلود فقط از طریق VPN</string>
+    <string name="extra_443" formatted="false">برای اشتراک‌ها، پل‌ها، داده‌های جغرافیایی، فیلترها، پیوندهای ابری و WebDAV. اگر VPN در دسترس نباشد، دانلود بدون تغییر به اتصال مستقیم متوقف می‌شود.</string>
+    <string name="extra_444" formatted="false">به‌روزرسانی فقط با Wi-Fi</string>
+    <string name="extra_445" formatted="false">پینگ و بررسی فقط با Wi-Fi</string>
+    <string name="extra_446" formatted="false">این عملیات هنگام استفاده از دادهٔ همراه منتظر می‌مانند. VPN فعلی همچنان قابل استفاده است؛ ردشدن بررسی، سرور را ازکارافتاده علامت نمی‌زند.</string>
+    <string name="extra_447" formatted="false">ارائه‌دهندهٔ اینترنت بررسی مستقیم سرورهای دیگر را می‌بیند. حالت جایگزینی هنگام خرابی، جست‌وجوی دوره‌ای سرور سریع‌تر را متوقف می‌کند؛ بررسی آغاز اتصال و خرابی باقی می‌ماند.</string>
+    <string name="extra_448" formatted="false">کاهش بررسی‌های پس‌زمینه</string>
+    <string name="extra_449" formatted="false">"حالت فعلی: "</string>
+    <string name="extra_450" formatted="false">بهینه‌سازی دوره‌ای</string>
+    <string name="extra_451" formatted="false">جایگزینی هنگام خرابی</string>
+    <string name="extra_452" formatted="false">فقط انتخاب اولیه</string>
+    <string name="extra_453" formatted="false">تغییر حالت انجام نشد. دوباره تلاش کنید.</string>
+    <string name="extra_454" formatted="false">عملیات ناموفق بود</string>
+    <string name="extra_455" formatted="false">نشانی افزوده شد. «دانلود اشتراک» را بزنید.</string>
+    <string name="extra_456" formatted="false">پل‌ها افزوده شدند</string>
+    <string name="extra_457" formatted="false">آمادهٔ اتصال</string>
+    <string name="extra_458" formatted="false">در حال اتصال</string>
+    <string name="extra_459" formatted="false">متصل</string>
+    <string name="extra_460" formatted="false">پل‌های ذخیره‌شده متصل نشدند. فهرست را تازه‌سازی کنید یا پل را دستی انتخاب کنید.</string>
+    <string name="extra_461" formatted="false">اتصال برقرار نشد. پل دیگری را امتحان کنید.</string>
+    <string name="extra_462" formatted="false">پل خودکار: %d/%d</string>
+    <string name="extra_463" formatted="false">زمان سپری‌شده: %d ثانیه · بدون پیشرفت: %d ثانیه</string>
+    <string name="extra_464" formatted="false">Tor در این مرحلهٔ اتصال مشکلی گزارش می‌کند.</string>
+    <string name="extra_465" formatted="false">این پل هنوز پاسخ نمی‌دهد. اگر پیشرفتی رخ ندهد، برنامه پل بعدی را امتحان می‌کند.</string>
+    <string name="extra_466" formatted="false">دست‌دهی TLS کامل نشده است. این پل ممکن است در شبکهٔ شما در دسترس نباشد. منتظر بمانید یا پل دیگری یا WebTunnel را امتحان کنید.</string>
+    <string name="extra_467" formatted="false">مدتی است این مرحله پیشرفت نکرده است. منتظر بمانید یا پل دیگری را امتحان کنید.</string>
+    <string name="extra_468" formatted="false">پل دیگر</string>
+    <string name="extra_469" formatted="false">WebTunnel انتخاب شد</string>
+    <string name="extra_470" formatted="false">«اتصال Tor» را بزنید تا برنامه پلی از فهرست انتخاب کند. اتصال نخست ممکن است چند دقیقه زمان ببرد.</string>
+    <string name="extra_471" formatted="false">از اینجا متصل شوید. اتصال نخست ممکن است بیش از یک دقیقه طول بکشد.</string>
+    <string name="extra_472" formatted="false">Tor انتخاب شد</string>
+    <string name="extra_473" formatted="false">اتصال Tor</string>
+    <string name="extra_474" formatted="false">لغو اتصال</string>
+    <string name="extra_475" formatted="false">قطع اتصال</string>
+    <string name="extra_476" formatted="false">خواندن تنظیمات ذخیره‌شدهٔ Tor ممکن نیست. پل‌ها را وارد کنید یا تنظیمات را دوباره ذخیره کنید.</string>
+    <string name="extra_477" formatted="false">پل اتصال</string>
+    <string name="extra_478" formatted="false">انتخاب خودکار</string>
+    <string name="extra_479" formatted="false">پلی از این نوع وجود ندارد. نوع دیگری را انتخاب کنید.</string>
+    <string name="extra_480" formatted="false">بدون پل · اتصال مستقیم به Tor</string>
+    <string name="extra_481" formatted="false">پل‌های ذخیره‌شده خودکار و یکی‌یکی امتحان می‌شوند. حالت خودکار بین Vanilla، WebTunnel و obfs4 جابه‌جا می‌شود.</string>
+    <string name="extra_482" formatted="false">این پل دستی ثابت شده است. برای امتحان خودکار پل‌های ذخیره‌شدهٔ دیگر، «خودکار» را انتخاب کنید.</string>
+    <string name="extra_483" formatted="false">خودکار</string>
+    <string name="extra_484" formatted="false">پل انتخاب شد</string>
+    <string name="extra_485" formatted="false">انتخاب پل</string>
+    <string name="extra_486" formatted="false">پل‌ها غیرفعال‌اند</string>
+    <string name="extra_487" formatted="false">بدون پل</string>
+    <string name="extra_488" formatted="false">واردکردن سریع</string>
+    <string name="extra_489" formatted="false">فهرست TOP-100 پل‌ها از GitHub. دانلود با انتخاب شما انجام می‌شود؛ دسترسی پل‌ها به شبکه وابسته است.</string>
+    <string name="extra_490" formatted="false">فهرست پل‌ها دانلود شد</string>
+    <string name="extra_491" formatted="false">پیش از تازه‌سازی فهرست پل‌ها، اتصال را قطع کنید.</string>
+    <string name="extra_492" formatted="false">چسباندن</string>
+    <string name="extra_493" formatted="false">"دانلودشده: "</string>
+    <string name="extra_494" formatted="false">"پل‌های نامعتبر ردشده: "</string>
+    <string name="extra_495" formatted="false">اشتراک و رله‌های سفارشی</string>
+    <string name="extra_496" formatted="false">برای ویرایش تنظیمات پیشرفته، اتصال را قطع کنید.</string>
+    <string name="extra_497" formatted="false">اشتراک GitHub / HTTPS</string>
+    <string name="extra_498" formatted="false">به‌روزرسانی هر 12 ساعت</string>
+    <string name="extra_499" formatted="false">اشتراک دانلود شد</string>
+    <string name="extra_500" formatted="false">دانلود اشتراک</string>
+    <string name="extra_501" formatted="false">پل‌ها: هر کدام در یک سطر</string>
+    <string name="extra_502" formatted="false">برای انتخاب خودکار، فیلدهای زیر را خالی بگذارید. برای انتخاب دستی، اثرانگشت 40 نویسه‌ای رله‌ها را با ویرگول از هم جدا کنید.</string>
+    <string name="extra_503" formatted="false">اعمال سخت‌گیرانهٔ استثناهای رله</string>
+    <string name="extra_504" formatted="false">Tor، TCP و DNS برنامه‌های انتخاب‌شده را منتقل می‌کند. UDP، مسیر مستقیم و SmartDNS در این حالت در دسترس نیستند.</string>
+    <string name="extra_505" formatted="false">تنظیمات Tor ذخیره شد</string>
+    <string name="extra_506" formatted="false">انتخاب یک پل</string>
+    <string name="extra_507" formatted="false">کارایی</string>
+    <string name="extra_508" formatted="false">برای کاهش بار دستگاه، جلوه‌های بصری را کم کنید. تغییرات فوراً اعمال می‌شوند.</string>
+    <string name="extra_509" formatted="false">پویانمایی رابط</string>
+    <string name="extra_510" formatted="false">گذارها، حرکت و بازخوردهای متحرک</string>
+    <string name="extra_511" formatted="false">پس‌زمینهٔ تزئینی</string>
+    <string name="extra_512" formatted="false">شبکه‌ها، ذرات، تصاویر و تزئینات پوسته</string>
+    <string name="extra_513" formatted="false">بازتاب شیشه</string>
+    <string name="extra_514" formatted="false">بازتاب‌های تزئینی و طیف رنگ پنل‌ها</string>
+    <string name="extra_515" formatted="false">حالت سبک</string>
+    <string name="extra_516" formatted="false">فعال‌کردن همهٔ جلوه‌ها</string>
+    <string name="extra_517" formatted="false">حالت سبک، تاری شیشه را هم غیرفعال می‌کند. می‌توانید تاری را جداگانه در پایین تنظیم کنید.</string>
+    <string name="extra_518" formatted="false">موفق: %d از %d</string>
+    <string name="extra_519" formatted="false">بررسی تا اتصال Wi-Fi متوقف است</string>
+    <string name="extra_520" formatted="false">"در حال اتصال Tor: "</string>
+    <string name="extra_521" formatted="false">"پل‌ها: "</string>
+    <string name="extra_522" formatted="false">شبکهٔ Tor · بازکردن تنظیمات</string>
+    <string name="extra_523" formatted="false">پس از راه‌اندازی می‌توانید تنظیمات تلفن را با QR دریافت کنید. پس از پایان انتقال متصل شوید.</string>
+    <string name="extra_524" formatted="false">سرورها: +%d</string>
+    <string name="extra_525" formatted="false">سرورها: %d</string>
+    <string name="extra_526" formatted="false">بدون تغییر</string>
+    <string name="extra_527" formatted="false">ذخیره‌شده · در اشتراک فعلی وجود ندارد</string>
+    <string name="extra_528" formatted="false">1 ساعت</string>
+    <string name="extra_529" formatted="false">3 ساعت</string>
+    <string name="extra_530" formatted="false">برای بازیابی ابری، پیوند فایل را در کارت بالا بچسبانید. دکمه‌های زیر فایل را از طریق انتخاب‌گر سیستم ذخیره یا باز می‌کنند.</string>
+    <string name="extra_531" formatted="false">"آخرین دانلود موفق: "</string>
+    <string name="extra_532" formatted="false">هنوز از شبکه دانلود نشده است</string>
+    <string name="extra_533" formatted="false">"آخرین تلاش: "</string>
+    <string name="extra_534" formatted="false">" • موفق"</string>
+    <string name="extra_535" formatted="false">تاریخ دانلود فقط پس از دریافت موفق اشتراک تغییر می‌کند. اگر به‌روزرسانی ناموفق باشد، سرورهای ذخیره‌شده در دسترس می‌مانند.</string>
+    <string name="extra_536" formatted="false">ذخیرهٔ سرورهای فعال</string>
+    <string name="extra_537" formatted="false">حفظ گره‌های فعال حذف‌شده از به‌روزرسانی</string>
+    <string name="extra_538" formatted="false">حداکثر 100 گره تا 30 روز پس از بررسی موفق تونل نگهداری می‌شوند. پینگ TCP به‌تنهایی کافی نیست. ذخیره‌شده: %d.</string>
+    <string name="extra_539" formatted="false">پاک‌کردن ذخیرهٔ این اشتراک</string>
+    <string name="extra_540" formatted="false">قواعد اشتراک</string>
+    <string name="extra_541" formatted="false">استفاده از قواعد اشتراک</string>
+    <string name="extra_542" formatted="false">شرط‌های پشتیبانی‌نشده: %d. این مجموعه را نمی‌توان با اطمینان فعال کرد. قواعد پشتیبانی‌شده: %d.</string>
+    <string name="extra_543" formatted="false">قاعده‌ای یافت نشد. ابتدا اشتراک قدیمی را تازه‌سازی کنید. فهرست سادهٔ پیوند سرورها قاعدهٔ مسیریابی ندارد.</string>
+    <string name="extra_544" formatted="false">قواعد: %d. فقط هنگام استفاده از سرور این اشتراک اعمال می‌شوند. قواعد تغییریافته به تأیید دوباره نیاز دارند.</string>
+    <string name="extra_545" formatted="false">بررسی قواعد</string>
+    <string name="extra_546" formatted="false">گزینه‌ها فوراً اعمال می‌شوند. تغییر نشانی، قواعد و ذخیرهٔ منبع قبلی را پاک می‌کند.</string>
+    <string name="extra_547" formatted="false">قواعد: %s</string>
+    <string name="extra_548" formatted="false">DIRECT ترافیک منطبق را مستقیم و PROXY آن را از سرور انتخاب‌شده می‌فرستد. DNS، تنظیمات هر برنامه و انتخاب سرور در گروه‌ها وارد نمی‌شوند. قواعد خودتان اولویت دارند.</string>
+    <string name="extra_549" formatted="false">قواعد پشتیبانی‌نشده وجود دارند. فعال‌سازی مسدود است.</string>
+    <string name="extra_550" formatted="false">اشتراک تغییر کرده است. این پنجره را ببندید و قواعد جدید را بررسی کنید.</string>
+    <string name="extra_551" formatted="false">تأیید و فعال‌کردن</string>
+    <string name="extra_552" formatted="false">گره‌های ذخیره‌شده حذف شوند؟</string>
+    <string name="extra_553" formatted="false">%d گره که در اشتراک فعلی نیستند حذف می‌شوند. گره‌های فعلی باقی می‌مانند.</string>
+    <string name="extra_554" formatted="false">%d ساعت %d دقیقه</string>
+    <string name="extra_555" formatted="false">روز</string>
+    <string name="extra_556" formatted="false">ماه</string>
+    <string name="extra_557" formatted="false">دورهٔ قبل</string>
+    <string name="extra_558" formatted="false">مجموع ماهانه</string>
+    <string name="extra_559" formatted="false">مجموع روزانه</string>
+    <string name="extra_560" formatted="false">دورهٔ بعد</string>
+    <string name="extra_561" formatted="false">انتخاب تاریخ</string>
+    <string name="extra_562" formatted="false">کل ترافیک</string>
+    <string name="extra_563" formatted="false">"مدت اتصال: "</string>
+    <string name="extra_564" formatted="false">دریافت‌شده</string>
+    <string name="extra_565" formatted="false">ارسال‌شده</string>
+    <string name="extra_566" formatted="false">روزانه</string>
+    <string name="extra_567" formatted="false">7 روز</string>
+    <string name="extra_568" formatted="false">همه</string>
+    <string name="extra_569" formatted="false">دریافت</string>
+    <string name="extra_570" formatted="false">ارسال</string>
+    <string name="extra_571" formatted="false">ستونی را بزنید یا روی نمودار بکشید</string>
+    <string name="extra_572" formatted="false">هنوز داده‌ای برای این دوره وجود ندارد. آمار پس از اتصال VPN ثبت می‌شود.</string>
+    <string name="extra_573" formatted="false">دورهٔ فعلی</string>
+    <string name="extra_574" formatted="false">پاک‌کردن سابقه</string>
+    <string name="extra_575" formatted="false">ترافیک رابط VPN، شامل مسیرهای مستقیم آن. سابقه 400 روز نگهداری می‌شود و از این نسخه آغاز شده است. خرابی برنامه ممکن است 15 ثانیهٔ آخر را از بین ببرد.</string>
+    <string name="extra_576" formatted="false">آمار پاک شود؟</string>
+    <string name="extra_577" formatted="false">همهٔ سابقهٔ ترافیک و زمان اتصال حذف می‌شود.</string>
+    <string name="extra_578" formatted="false">انتخاب</string>
+    <string name="extra_579" formatted="false">ترافیک روزانه. روزی را در نمودار انتخاب کنید</string>
+    <string name="extra_580" formatted="false">آماده‌سازی QR انجام نشد. تلویزیون را به Wi-Fi یا Ethernet متصل و در تنظیمات انتقال دوباره تلاش کنید.</string>
+    <string name="extra_581" formatted="false">ذخیرهٔ انتخاب انجام نشد. دوباره تلاش کنید.</string>
+    <string name="extra_582" formatted="false">سرورها</string>
+    <string name="extra_583" formatted="false">انتقال تنظیمات</string>
+    <string name="extra_584" formatted="false">تنظیمات</string>
+    <string name="extra_585" formatted="false">از کلیدهای جهت و OK کنترل استفاده کنید.</string>
+    <string name="extra_586" formatted="false">انتخاب سرور</string>
+    <string name="extra_587" formatted="false">دریافت تنظیمات از تلفن</string>
+    <string name="extra_588" formatted="false">انتخاب اتصال</string>
+    <string name="extra_589" formatted="false">سرورها و تنظیمات تلفن را از بخش انتقال تنظیمات دریافت کنید.</string>
+    <string name="extra_590" formatted="false">تلفن و تلویزیون را به یک Wi-Fi متصل کنید. دوربین تلویزیون لازم نیست.</string>
+    <string name="extra_591" formatted="false">در حال اتصال Tor</string>
+    <string name="extra_592" formatted="false">اتصال نخست Tor ممکن است بیش از یک دقیقه زمان ببرد. منتظر تکمیل آن بمانید.</string>
+    <string name="extra_593" formatted="false">تنظیمات از تلفن منتقل شوند؟</string>
+    <string name="extra_594" formatted="false">تلفن و تلویزیون را به یک Wi-Fi یا Ethernet متصل کنید. تلویزیون QR نشان می‌دهد تا با SplateVPN تلفن اسکن کنید. پیش از اعمال می‌توانید تنظیمات را بررسی کنید.</string>
+    <string name="extra_595" formatted="false">دریافت با کد QR</string>
+    <string name="extra_596" formatted="false">راه‌اندازی بعداً</string>
+    <string name="extra_597" formatted="false">در حال واردکردن سرورها…</string>
+    <string name="extra_598" formatted="false">واردکردن اشتراک</string>
+    <string name="extra_599" formatted="false">واردکردن همهٔ سرورها</string>
+    <string name="extra_600" formatted="false">افزودن سرور</string>
+    <string name="extra_601" formatted="false">اینجا می‌توانید نام نمایهٔ JSON را تغییر دهید. برای تغییر تنظیمات اتصال، JSON اصلی را ویرایش و دوباره وارد کنید.</string>
+    <string name="extra_602" formatted="false">فهرست همراه برنامه · قابل استفاده بدون اینترنت</string>
+    <string name="extra_603" formatted="false">به‌روزشده: %s</string>
+    <string name="extra_604" formatted="false">روزانه به‌روز می‌شود. به‌روزرسانی پس‌زمینه در اتصال بعدی اعمال می‌شود. به‌روزرسانی دستی VPN فعال را دوباره بارگذاری می‌کند.</string>
+    <string name="extra_605" formatted="false">به‌روزرسانی یا بارگذاری فهرست گسترده انجام نشد. حفاظت محلی موجود حفظ شده است.</string>
+    <string name="extra_606" formatted="false">به‌روزرسانی فیلترها</string>
+    <string name="extra_607" formatted="false">استثناها (%d)</string>
+    <string name="extra_608" formatted="false">منبع و مجوز: AdGuard · GPL-3.0</string>
+    <string name="extra_609" formatted="false">استثناهای مسدودکنندهٔ تبلیغات</string>
+    <string name="extra_610" formatted="false">هر سطر یک دامنه، بدون https:// یا مسیر. دامنه و زیردامنه‌های آن فقط در مسدودکنندهٔ تبلیغات مجاز می‌شوند. حداکثر 100 دامنه.</string>
+    <string name="extra_611" formatted="false">نام دامنه‌ها و تعداد آن‌ها را بررسی کنید</string>
+    <string name="extra_612" formatted="false">تنظیمات شبکهٔ نمایهٔ «%s» اعمال می‌شود.</string>
+    <string name="extra_613" formatted="false">انتخاب برنامه‌ها و تنظیمات هوش مصنوعی به حالت فعلی می‌مانند.</string>
+    <string name="extra_614" formatted="false">نمایه‌های من</string>
+    <string name="extra_615" formatted="false">نمایه همهٔ تنظیمات شبکه، از جمله برنامه‌ها و DNS را ذخیره می‌کند.</string>
+    <string name="extra_616" formatted="false">ذخیرهٔ تغییرات انجام نشد. تنظیمات و فضای ذخیره‌سازی را بررسی کنید.</string>
+    <string name="extra_617" formatted="false">VPN برای برنامه‌های انتخاب‌شده، با رعایت استثناهای شما.</string>
+    <string name="extra_618" formatted="false">بررسی گزارش تشخیصی</string>
+    <string name="extra_619" formatted="false">پیوندها، کلیدها، نشانی‌های IP و نام سرورها خودکار پنهان می‌شوند. پیش از اشتراک‌گذاری، متن باقی‌مانده را بررسی کنید.</string>
+    <string name="extra_620" formatted="false">اشتراک‌گذاری</string>
+    <string name="extra_621" formatted="false">DNS در دسترس: %s</string>
+    <string name="extra_622" formatted="false">بررسی DNS ناموفق بود</string>
+    <string name="extra_623" formatted="false">در حال بررسی سرورهای DNS…</string>
+    <string name="extra_624" formatted="false">%s از طریق VPN پاسخ نمی‌دهد. سرورهای DoH دیگر بررسی می‌شوند…</string>
+    <string name="extra_625" formatted="false">" (%d میلی‌ثانیه)"</string>
+    <string name="extra_626" formatted="false">%s از طریق VPN پاسخ نداد. %s پاسخ می‌دهد%s.</string>
+    <string name="extra_627" formatted="false">سرورهای DoH بررسی‌شده از طریق VPN پاسخ ندادند. سرور یا ارائه‌دهندهٔ DNS دیگری را امتحان کنید.</string>
+    <string name="extra_628" formatted="false">تغییر به %s</string>
+    <string name="extra_629" formatted="false">فعال‌کردن FakeDNS</string>
+    <string name="extra_630" formatted="false">بازیابی تنظیمات</string>
+    <string name="extra_631" formatted="false">تنظیمات آسیب دیده‌اند و نسخهٔ سالمی در دسترس نیست. فایل‌های اصلی حفظ شدند. تنظیمات جدید ساخته شوند؟ سرورها و اشتراک‌ها باقی می‌مانند. تا تصمیم نگیرید VPN متصل نمی‌شود.</string>
+    <string name="extra_632" formatted="false">تنظیمات از آخرین نسخهٔ سالم بازیابی شدند. فایل اصلی آسیب‌دیده جداگانه نگهداری شد.</string>
+    <string name="extra_633" formatted="false">ذخیرهٔ تنظیمات انجام نشد. فضای ذخیره‌سازی را بررسی کنید.</string>
+    <string name="extra_634" formatted="false">ساخت تنظیمات جدید</string>
+    <string name="extra_635" formatted="false">خروج</string>
+    <string name="extra_636" formatted="false">بستن</string>
+    <string name="extra_637" formatted="false">تنظیمات فعلی قطعه‌بندی مانع اتصال است</string>
+    <string name="extra_638" formatted="false">دو بررسی همان سرور با پارامترهای فعلی ناموفق و با قطعه‌بندی استاندارد موفق بودند. حالت استاندارد را امتحان کنید.</string>
+    <string name="extra_639" formatted="false">استفاده از قطعه‌بندی استاندارد</string>
+    <string name="extra_640" formatted="false">هشدارها و عیب‌یابی تونل</string>
+    <string name="extra_641" formatted="false">اعلان‌های وضعیت تونل با راهکارهای پیشنهادی</string>
+    <string name="extra_642" formatted="false">بررسی اتصال VPN ناموفق بود</string>
+    <string name="extra_643" formatted="false">با وجود دسترسی به شبکه، دو بررسی تونل ناموفق بودند. علت مشخص نیست؛ سرور دیگری را امتحان کنید.</string>
+    <string name="extra_644" formatted="false">تعویض سرور</string>
+    <string name="extra_645" formatted="false">خطای اندازهٔ بسته</string>
+    <string name="extra_646" formatted="false">خطای اندازهٔ بسته گزارش شد. MTU 1280 را امتحان کنید؛ منبع محدودیت مشخص نیست.</string>
+    <string name="extra_647" formatted="false">تنظیم MTU روی 1280</string>
+    <string name="extra_648" formatted="false">احتمال حلقهٔ مسیریابی</string>
+    <string name="extra_649" formatted="false">گزارش‌ها نشانهٔ مشکل مسیریابی دارند. بازیابی خودکار تأیید نشده است.</string>
+    <string name="extra_650" formatted="false">دسترسی به اینترنت تأیید نشد</string>
+    <string name="extra_651" formatted="false">VPN فعال است، اما بررسی شبکهٔ بیرونی ناموفق بود و ترافیک ورودی دریافت نشد. Wi-Fi یا دادهٔ همراه را بررسی کنید. نیازی به تغییر مسیر سایت‌ها نیست.</string>
+    <string name="extra_652" formatted="false">نیاز به ورود به Wi-Fi</string>
+    <string name="extra_653" formatted="false">شبکه به ورود در مرورگر نیاز دارد. می‌توانید VPN را موقتاً متوقف کنید تا وارد شوید.</string>
+    <string name="extra_654" formatted="false">توقف برای 2 دقیقه</string>
+    <string name="extra_655" formatted="false">بازکردن صفحهٔ ورود</string>
+    <string name="extra_656" formatted="false">ساعت %d ثانیه اختلاف دارد</string>
+    <string name="extra_657" formatted="false">زمان دستگاه با سرور بررسی تفاوت دارد. همگام‌سازی خودکار ساعت را بررسی کنید.</string>
+    <string name="extra_658" formatted="false">تنظیمات تاریخ</string>
+    <string name="extra_659" formatted="false">%s در بررسی‌های تکراری پاسخ نداد؛ %s پاسخ داد. علت مشخص نیست.</string>
+    <string name="extra_660" formatted="false">سرورهای DNS بررسی‌شده پاسخ ندادند. علت مشخص نیست. می‌توانید FakeDNS را امتحان کنید.</string>
+    <string name="extra_661" formatted="false">سرورهای DNS بررسی‌شده پاسخ ندادند. FakeDNS از قبل فعال است. اتصال سرور انتخاب‌شده را بررسی کنید.</string>
+    <string name="extra_662" formatted="false">انتخاب سریع</string>
+    <string name="extra_663" formatted="false">حداکثر ۱۰ سرور با آزمون موفق Real ping در ۱۰ دقیقهٔ گذشته، در شبکه و اجرای فعلی برنامه.</string>
+    <string name="extra_664" formatted="false">سرور تازه تأییدشده‌ای وجود ندارد. همهٔ سرورها را باز کرده و Real ping را اجرا کنید.</string>
+    <string name="extra_665" formatted="false">نتیجه منقضی شده است. فهرست را تازه‌سازی کنید.</string>
+    <string name="extra_666" formatted="false">تغییر اتصال انجام نشد.</string>
+    <string name="extra_667" formatted="false">همهٔ سرورها</string>
+    <string name="extra_668" formatted="false">اشتراک‌ها</string>
+    <string name="extra_669" formatted="false">شخصی</string>
+    <string name="extra_670" formatted="false">تازه‌سازی فهرست</string>
+    <string name="extra_671" formatted="false">همهٔ سرورها</string>
+    <string name="extra_672" formatted="false">حداکثر ۱۰ گره · آزمون تأخیر واقعی در ۱۰ دقیقهٔ گذشته</string>
+    <string name="extra_673" formatted="false">%d میلی‌ثانیه</string>
+    <string name="extra_674" formatted="false">فاصلهٔ به‌روزرسانی سرور: %d ساعت</string>
+    <string name="extra_675" formatted="false">وب‌سایت</string>
+    <string name="extra_676" formatted="false">پشتیبانی</string>
+    <string name="extra_677" formatted="false">باز کردن پیوند ممکن نشد</string>
+    <string name="extra_678" formatted="false">نیاز به بررسی</string>
+    <string name="extra_679" formatted="false">حالت اتصال: %s</string>
+    <string name="extra_680" formatted="false">در صورت خالی بودن خودکار ساخته می‌شود</string>
+    <string name="extra_681" formatted="false">سرور برای این قانون</string>
+    <string name="extra_682" formatted="false">وی‌پی‌ان پیش‌فرض (فعال کنونی)</string>
+    <string name="extra_683" formatted="false">حداقل یک شرط را پر کنید (دامنه‌ها، برنامه‌ها، IP یا پورت‌ها)</string>
+    <string name="extra_684" formatted="false">قانون: %s</string>
+    <string name="extra_685" formatted="false">خطای اعتبارسنجی قانون</string>
+    <string name="extra_686" formatted="false">انتخاب سرور برای قانون</string>
+    <string name="extra_687" formatted="false">جستجوی سرور</string>
+    <string name="extra_688" formatted="false">وی‌پی‌ان پیش‌فرض (انتخاب خودکار)</string>
+    <string name="extra_689" formatted="false">استفاده از سرور متصل فعلی</string>
+    <string name="extra_690" formatted="false">شبکه و بررسی‌ها</string>
+    <string name="extra_691" formatted="false">اشتراک‌ها، پل‌ها، داده‌های جغرافیایی، فیلترها و WebDAV. بدون بازگشت به اتصال مستقیم.</string>
+    <string name="extra_692" formatted="false">آدرس سرور پنهان است. نمایش به مدت ۱۵ ثانیه</string>
+    <string name="extra_693" formatted="false">فهرست پل‌ها خالی است. TOP-100 را در پایین دانلود کنید یا پل‌ها را غیرفعال کنید.</string>
+    <string name="extra_694" formatted="false">تست تاخیر</string>
+    <string name="extra_695" formatted="false">در حال بررسی دسترس‌پذیری و تاخیر پل‌ها…</string>
+    <string name="extra_696" formatted="false">مدار جدید Tor (هویت جدید)</string>
+    <string name="extra_697" formatted="false">فهرست پل‌های TOP-100 از GitHub. پس از اولین دانلود، به‌روزرسانی خودکار فعال می‌شود.</string>
+    <string name="extra_698" formatted="false">به‌روزرسانی TOP-100 هر ۱۲ ساعت</string>
+    <string name="extra_699" formatted="false">زمان‌بندی به‌روزرسانی ذخیره شد</string>
+    <string name="extra_700" formatted="false">معمولی</string>
+    <string name="extra_701" formatted="false">انتقال خوش‌بینانه داده (OptimisticData)</string>
+    <string name="extra_702" formatted="false">انتخاب خودکار سریع‌ترین پل بر اساس تاخیر</string>
+    <string name="extra_703" formatted="false">SNI سفارشی / Fronting (اختیاری)</string>
+    <string name="extra_704" formatted="false">تست</string>
+    <string name="extra_705" formatted="false">غیرقابل دسترس</string>
+    <string name="extra_706" formatted="false">تنظیمات پیشرفته</string>
+    <string name="extra_707" formatted="false">حرفه‌ای</string>
+    <string name="extra_708" formatted="false">پنهان کردن ابزارها</string>
+    <string name="extra_709" formatted="false">ابزارهای اتصال</string>
+    <string name="extra_710" formatted="false">در انتظار درخواست‌های شبکه...</string>
+    <string name="extra_711" formatted="false">همه (%d)</string>
+    <string name="extra_712" formatted="false">فعال (%d)</string>
+    <string name="extra_713" formatted="false">تاریخچه (%d)</string>
+    <string name="extra_714" formatted="false">وضعیت</string>
+    <string name="extra_715" formatted="false">فعال</string>
+    <string name="extra_716" formatted="false">پایان‌یافته</string>
+    <string name="extra_717" formatted="false">پروتکل انتقال</string>
+    <string name="extra_718" formatted="false">منبع</string>
+    <string name="extra_719" formatted="false">مسیر</string>
+    <string name="extra_720" formatted="false">درخواست‌ها</string>
+    <string name="extra_721" formatted="false">زمان</string>
+    <string name="extra_722" formatted="false">کپی شد: %s</string>
+    <string name="extra_723" formatted="false">کپی آدرس</string>
+    <string name="extra_724" formatted="false">به مستقیم اضافه شد: %s</string>
+    <string name="extra_725" formatted="false">به پروکسی اضافه شد: %s</string>
+    <string name="extra_726" formatted="false">مسدود شد: %s</string>
+    <string name="extra_727" formatted="false">%d پل Tor بارگیری شد (WebTunnel · obfs4 · Vanilla)!</string>
+    <string name="extra_728" formatted="false">خطا در دریافت فهرست پل‌های Tor</string>
+    <string name="extra_729" formatted="false">آیا راهنمای آموزشی را می‌خواهید؟</string>
+    <string name="extra_730" formatted="false">با اتصال، انتخاب خودکار سریع و مسیریابی برنامه‌ها آشنا شوید. انتخاب خودکار اتصال HTTPS را از طریق سرور بررسی می‌کند و در صورت اختلال، جایگزین می‌یابد. می‌توانید آن را در صفحه اصلی خاموش کنید.</string>
+    <string name="extra_731" formatted="false">نمایش راهنما</string>
+    <string name="extra_732" formatted="false">ادامه بدون آموزش</string>
+    <string name="extra_733" formatted="false">تنظیم سریع</string>
+    <string name="extra_734" formatted="false">منطقه و مسیریابی خود را تأیید کنید. آموزش دقیق رد خواهد شد.</string>
+    <string name="extra_735" formatted="false">حالت هوشمند با عبور مستقیم ترافیک داخلی سرعت را افزایش می‌دهد. حالت کل ترافیک ۱۰۰٪ داده‌ها را رمزنگاری می‌کند.</string>
+    <string name="extra_736" formatted="false">سرورها و اتصال</string>
+    <string name="extra_737" formatted="false">پل‌های Tor TOP-100 از igareck</string>
+    <string name="extra_738" formatted="false">راهکار آماده بدون نیاز به سرور شخصی</string>
+    <string name="extra_739" formatted="false">گره‌های معمولی Tor در مناطق محدود مسدود هستند. این مجموعه شامل پل‌های تأییدشده WebTunnel (پوشش HTTPS) و obfs4 برای عبور از DPI است.</string>
+    <string name="extra_740" formatted="false">به‌روزرسانی پل‌های TOP-100</string>
+    <string name="extra_741" formatted="false">دانلود پل‌های Tor TOP-100</string>
+    <string name="extra_742" formatted="false">در حال دریافت و بررسی پل‌ها از GitHub…</string>
+    <string name="extra_743" formatted="false">حالت پیش‌فرض: Tor</string>
+    <string name="extra_744" formatted="false">اتصال مستقیم از طریق Tor پس از تنظیم</string>
+    <string name="extra_745" formatted="false">برنامه</string>
+    <string name="extra_746" formatted="false">زبان</string>
+    <string name="extra_747" formatted="false">منطقه قوانین</string>
+    <string name="extra_748" formatted="false">مسیریابی</string>
+    <string name="extra_749" formatted="false">لینک VPN</string>
+    <string name="extra_750" formatted="false">آماده وارد کردن</string>
+    <string name="extra_751" formatted="false">پشتیبان</string>
+    <string name="extra_752" formatted="false">فایل پشتیبان انتخاب شد</string>
+    <string name="extra_753" formatted="false">پل‌های Tor</string>
+    <string name="extra_754" formatted="false">%d پل TOP-100</string>
+    <string name="extra_755" formatted="false">حالت شروع</string>
+    <string name="extra_756" formatted="false">برنامه‌ها</string>
+    <string name="extra_757" formatted="false">پس از تنظیم، می‌توانید پیکربندی‌ها را با کد QR از گوشی انتقال دهید.</string>
+    <string name="extra_758" formatted="false">پایان و اتصال</string>
+    <string name="extra_759" formatted="false">رد کردن</string>
+    <string name="extra_760" formatted="false">آموزش تعاملی</string>
+    <string name="extra_761" formatted="false">محیط آزمایشی · تنظیمات تغییر نمی‌کند</string>
+    <string name="extra_762" formatted="false">تمرین</string>
+    <string name="extra_763" formatted="false">حالت آزمایشی</string>
+    <string name="extra_764" formatted="false">اتصال VPN</string>
+    <string name="extra_765" formatted="false">آلمان</string>
+    <string name="extra_766" formatted="false">هلند</string>
+    <string name="extra_767" formatted="false">تاخیر</string>
+    <string name="extra_768" formatted="false">سرعت</string>
+    <string name="extra_769" formatted="false">افزودن سرور (+)</string>
+    <string name="extra_770" formatted="false">از لینک (کلیپ‌بورد)</string>
+    <string name="extra_771" formatted="false">اسکن کد QR</string>
+    <string name="extra_772" formatted="false">آلمان (VLESS)</string>
+    <string name="extra_773" formatted="false">سرور نمونه اضافه شد ✓</string>
+    <string name="extra_774" formatted="false">۱۰۰ پل تأییدشده آماده است</string>
+    <string name="extra_775" formatted="false">عبور از مسدودسازی سختگیرانه DPI</string>
+    <string name="extra_776" formatted="false">وارد کردن سریع TOP-100 (پل‌های igareck)</string>
+    <string name="extra_777" formatted="false">پل‌های جدید (WebTunnel، obfs4) از مخزن igareck.</string>
+    <string name="extra_778" formatted="false">در حال دانلود ۱۰۰ پل igareck از GitHub…</string>
+    <string name="extra_779" formatted="false">پروتکل‌های پل:</string>
+    <string name="extra_780" formatted="false">خودکار · ۱۰۰</string>
+    <string name="extra_781" formatted="false">راز عبور از فیلترینگ</string>
+    <string name="extra_782" formatted="false">WebTunnel ترافیک را شبیه وب HTTPS عادی می‌کند و obfs4 آن را مبهم می‌سازد تا از DPI عبور کند!</string>
+    <string name="extra_783" formatted="false">استفاده از VPN فقط برای برنامه‌های انتخاب‌شده</string>
+    <string name="extra_784" formatted="false">مرورگر وب (Chrome / Firefox)</string>
+    <string name="extra_785" formatted="false">ظاهر و پوسته‌ها</string>
+    <string name="extra_786" formatted="false">عالی! درس کامل شد.</string>
+    <string name="extra_787" formatted="false">برای رفتن به مرحله بعد «ادامه» را بزنید.</string>
+    <string name="extra_788" formatted="false">روی بخش هایلایت‌شده در صفحه آزمایشی ضربه بزنید</string>
+    <string name="extra_789" formatted="false">دوربین را به سمت کد QR ارائه‌دهنده بگیرید. کلاینت اصلی پیکربندی را فوراً روی دستگاه تجزیه می‌کند.</string>
+    <string name="extra_790" formatted="false">پیکربندی نمونه</string>
+    <string name="extra_791" formatted="false">لینک سرور VLESS/Shadowsocks یا اشتراک را کپی کرده، در کادر بچسبانید و افزودن را بزنید.</string>
+    <string name="extra_792" formatted="false">افزودن نمونه</string>
+    <string name="extra_793" formatted="false">انتخاب سریع سرور</string>
+    <string name="extra_794" formatted="false">آلمان (فرانکفورت)</string>
+    <string name="extra_795" formatted="false">هلند (آمستردام)</string>
+    <string name="extra_796" formatted="false">ضربه بزنید</string>
+    <string name="extra_797" formatted="false">سهمیه ترافیک تست سرعت تمام شده است. نمونه‌گیری جدید پس از %s. می‌توانید سقف را در تنظیمات متعادل‌ساز افزایش دهید.</string>
+    <string name="extra_798" formatted="false">حداکثر ۱۰ گره · حداکثر ۶ تست سرعت در هر به‌روزرسانی در محدوده سهمیه ترافیک</string>
+    <string name="extra_799" formatted="false">سرعت اندازه‌گیری نشده</string>
+    <string name="extra_800" formatted="false">«%s»: خطا (%s در دسترس نیست)</string>
+    <string name="extra_801" formatted="false">%d سرور بازیابی شد</string>
+    <string name="extra_802" formatted="false">%d گره پیش‌فرض بازیابی شد</string>
+    <string name="extra_803" formatted="false">سایبرپانک</string>
+    <string name="extra_804" formatted="false">آموزش تعاملی</string>
+    <string name="extra_805" formatted="false">اتصال هنگام باز کردن برنامه</string>
+    <string name="extra_806" formatted="false">شروع خودکار حالت انتخاب‌شده VPN یا Tor هنگام ورود به برنامه</string>
+    <string name="extra_807" formatted="false">حمایت از پروژه</string>
+    <string name="extra_808" formatted="false">کمک مالی داوطلبانه به توسعه SplateVPN کمک می‌کند. از حمایت شما سپاسگزاریم!</string>
+    <string name="extra_809" formatted="false">حمایت از طریق DonationAlerts</string>
+    <string name="extra_810" formatted="false">سرورهای شخصی</string>
+    <string name="extra_811" formatted="false">اشتراک</string>
+    <string name="extra_812" formatted="false">سرورها (%d)</string>
+    <string name="extra_813" formatted="false">افزودن</string>
+    <string name="extra_814" formatted="false">توقف</string>
+    <string name="extra_815" formatted="false">پینگ</string>
+    <string name="extra_816" formatted="false">جستجوی سرور…</string>
+    <string name="extra_817" formatted="false">سرور مطابقی یافت نشد</string>
+    <string name="extra_818" formatted="false">هنوز سروری موجود نیست</string>
+    <string name="extra_819" formatted="false">افزودن سرور یا اشتراک</string>
+    <string name="extra_820" formatted="false">گره‌ها (%d)</string>
+    <string name="extra_821" formatted="false">پینگ اشتراک</string>
+    <string name="extra_822" formatted="false">نمایش بیشتر (%d)</string>
+    <string name="extra_823" formatted="false">حالت رابط کاربری</string>
+    <string name="extra_824" formatted="false">ساده</string>
+    <string name="extra_825" formatted="false">رابط ساده: دکمه اتصال، انتخاب سرور و محافظت پایه.</string>
+    <string name="extra_826" formatted="false">دسترسی کامل: سرورها، قوانین مسیریابی، Tor، متعادل‌ساز، DNS و عیب‌یابی.</string>
+</resources>

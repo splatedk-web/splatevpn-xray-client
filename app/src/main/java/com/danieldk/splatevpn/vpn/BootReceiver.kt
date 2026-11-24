@@ -29,7 +29,9 @@ class BootReceiver : BroadcastReceiver() {
                 val vpnIntent = Intent(context, SplateVpnService::class.java).apply {
                     action = "START"
                 }
-                ContextCompat.startForegroundService(context, vpnIntent)
+                try { ContextCompat.startForegroundService(context, vpnIntent) }
+                catch (error: IllegalStateException) { Log.w("BootReceiver", "Android did not allow background VPN startup: ${error.javaClass.simpleName}") }
+                catch (error: SecurityException) { Log.w("BootReceiver", "Android denied VPN startup") }
             } else {
                 Log.w("BootReceiver", "Cannot auto-start VPN on boot: VpnService requires user preparation")
             }

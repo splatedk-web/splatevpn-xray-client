@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="node_limits_unknown">来源未提供流量限制或到期时间</string>
+    <string name="node_enable_all">启用所有节点</string>
+    <string name="node_disable_all">停用所有节点</string>
+    <string name="folder_enable">启用文件夹</string>
+    <string name="folder_disable">停用文件夹</string>
+</resources>

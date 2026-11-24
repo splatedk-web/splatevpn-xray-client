@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_appname" formatted="false">SplateVPN</string>
+    <string name="app_cancel" formatted="false">Cancel</string>
+    <string name="app_save" formatted="false">Save</string>
+    <string name="app_delete" formatted="false">Delete</string>
+    <string name="app_close" formatted="false">Close</string>
+    <string name="app_add" formatted="false">Add</string>
+    <string name="app_refresh" formatted="false">Refresh</string>
+    <string name="app_edit" formatted="false">Edit</string>
+    <string name="app_tabcontrol" formatted="false">Home</string>
+    <string name="app_tabnodes" formatted="false">Servers</string>
+    <string name="app_tabrouting" formatted="false">Apps</string>
+    <string name="app_tabconfig" formatted="false">Settings</string>
+    <string name="app_standbyunprotected" formatted="false">Standby • unprotected</string>
+    <string name="app_encryptedsession" formatted="false">Connected • %s</string>
+    <string name="app_resolvinglocation" formatted="false">Finding location…</string>
+    <string name="app_protectedgateway" formatted="false">Protected tunnel</string>
+    <string name="app_egressip" formatted="false">Exit IP: %s</string>
+    <string name="app_ping" formatted="false">Ping</string>
+    <string name="app_download" formatted="false">Download</string>
+    <string name="app_upload" formatted="false">Upload</string>
+    <string name="app_routingprofile" formatted="false">Routing profile</string>
+    <string name="app_smartroute" formatted="false">Smart route</string>
+    <string name="app_smartroutedesc" formatted="false">Local services connect directly</string>
+    <string name="app_globaltunnel" formatted="false">All traffic</string>
+    <string name="app_globaltunneldesc" formatted="false">All destinations through VPN</string>
+    <string name="app_activegateway" formatted="false">Active server</string>
+    <string name="app_autofastest" formatted="false">Auto: off</string>
+    <string name="app_pingnoresponse" formatted="false">No response</string>
+    <string name="app_pinguntested" formatted="false">Untested</string>
+    <string name="app_pinging" formatted="false">Pinging...</string>
+    <string name="app_noserverselected" formatted="false">No server selected</string>
+    <string name="app_taptochoosenode" formatted="false">Tap to choose a server</string>
+    <string name="app_coreconnected" formatted="false">Connected</string>
+    <string name="app_coreconnect" formatted="false">Connect</string>
+    <string name="app_latencylabel" formatted="false">Latency</string>
+    <string name="app_downlinklabel" formatted="false">Downlink</string>
+    <string name="app_uplinklabel" formatted="false">Uplink</string>
+    <string name="app_coresubtitle" formatted="false">Xray %s</string>
+    <string name="app_stateselectingserver" formatted="false">Finding server...</string>
+    <string name="app_corediscselect" formatted="false">Search...</string>
+    <string name="app_statestartingcore" formatted="false">Starting core...</string>
+    <string name="app_stateconnecting" formatted="false">Connecting...</string>
+    <string name="app_statehealthchecking" formatted="false">Verifying link...</string>
+    <string name="app_statereconnecting" formatted="false">Reconnecting...</string>
+    <string name="app_statefailed" formatted="false">Connection failed</string>
+    <string name="app_corediscboot" formatted="false">Boot...</string>
+    <string name="app_coredisclink" formatted="false">Link...</string>
+    <string name="app_corediscverify" formatted="false">Verify...</string>
+    <string name="app_corediscretry" formatted="false">Retry...</string>
+    <string name="app_corediscerror" formatted="false">Error</string>
+    <string name="app_tagsplittunnel" formatted="false">Split-tunnel</string>
+    <string name="app_tagfullencap" formatted="false">Global</string>
+    <string name="app_searchservers" formatted="false">Search by name, IP, protocol...</string>
+    <string name="app_noserversmatchingquery" formatted="false">No servers match your search</string>
+    <string name="app_linkcopied" formatted="false">Link copied to clipboard</string>
+    <string name="app_sessiondownloaded" formatted="false">Received</string>
+    <string name="app_sessionuploaded" formatted="false">Sent</string>
+    <string name="app_networknodes" formatted="false">Servers</string>
+    <string name="app_presetserverstitle" formatted="false">Presets</string>
+    <string name="app_availablenodes" formatted="false">AVAILABLE: %d / %d</string>
+    <string name="app_pingall" formatted="false">Ping all</string>
+    <string name="app_pastelink" formatted="false">Paste link</string>
+    <string name="app_subs" formatted="false">SUBS (%d)</string>
+    <string name="app_allchip" formatted="false">All (%d)</string>
+    <string name="app_builtinchip" formatted="false">⚡ Presets</string>
+    <string name="app_noserversfound" formatted="false">No servers available.\nAdd a link or subscription.</string>
+    <string name="app_noserversinfilter" formatted="false">No servers in this category</string>
+    <string name="app_addservertitle" formatted="false">Add Server</string>
+    <string name="app_addserverprompt" formatted="false">Paste vless://, trojan://, vmess://, or ss:// link:</string>
+    <string name="app_serveraddedsuccess" formatted="false">Server added successfully!</string>
+    <string name="app_invalidlinkformat" formatted="false">Invalid link format</string>
+    <string name="app_editservertitle" formatted="false">Edit Server Parameters</string>
+    <string name="app_serverupdatedsuccess" formatted="false">Server parameters updated!</string>
+    <string name="app_managesubstitle" formatted="false">Subscription Management</string>
+    <string name="app_activesubsheader" formatted="false">Active Subscriptions:</string>
+    <string name="app_serverscountsub" formatted="false">%d nodes</string>
+    <string name="app_subbuiltintag" formatted="false">Preset</string>
+    <string name="app_subupdatedsuccess" formatted="false">Updated: %d nodes</string>
+    <string name="app_subdeletedsuccess" formatted="false">Subscription removed</string>
+    <string name="app_addnewsubheader" formatted="false">Add New Subscription:</string>
+    <string name="app_servertoolsfolders" formatted="false">Folders</string>
+    <string name="app_servertoolslist" formatted="false">List</string>
+    <string name="app_servertoolsgrouping" formatted="false">Server grouping</string>
+    <string name="app_servertoolsgrouped" formatted="false">Grouped by source</string>
+    <string name="app_servertoolsungrouped" formatted="false">All nodes in one list</string>
+    <string name="app_servertoolssort" formatted="false">Sort</string>
+    <string name="app_servertoolssortdescription" formatted="false">Sort by latency</string>
+    <string name="app_servertoolsauto" formatted="false">Auto</string>
+    <string name="app_servertoolstest" formatted="false">Test</string>
+    <string name="app_serverspagetitle" formatted="false">Servers</string>
+    <string name="app_presetspagetitle" formatted="false">Presets</string>
+    <string name="app_serverspagesubtitle" formatted="false">Choose a server and check latency</string>
+    <string name="app_subscriptionspagesubtitle" formatted="false">Manage sources and update server lists</string>
+    <string name="app_personalpagesubtitle" formatted="false">Your own VPN configurations</string>
+    <string name="app_subscriptionstitle" formatted="false">Subscriptions</string>
+    <string name="app_subscriptionssearch" formatted="false">Search by name or URL…</string>
+    <string name="app_subscriptionsnoresults" formatted="false">No matching subscriptions</string>
+    <string name="app_subscriptiondetails" formatted="false">Subscription details</string>
+    <string name="app_subscriptionname" formatted="false">Name</string>
+    <string name="app_subscriptionurl" formatted="false">Subscription URL</string>
+    <string name="app_subscriptionurlinvalid" formatted="false">Enter a valid subscription URL</string>
+    <string name="app_subscriptionedithint" formatted="false">URL changes apply on the next update. Existing nodes are retained.</string>
+    <string name="app_subscriptionautoupdate" formatted="false">Auto-update</string>
+    <string name="app_subscriptionmanual" formatted="false">Manual</string>
+    <string name="app_subscriptionscheduleoff" formatted="false">The global schedule is disabled in Settings</string>
+    <string name="app_subscriptionschedule" formatted="false">Update every %s</string>
+    <string name="app_subscriptionupdateall" formatted="false">Update all</string>
+    <string name="app_subscriptionrefreshsummary" formatted="false">Updated subscriptions: %d. Failed: %d.</string>
+    <string name="app_subscriptionnoupdates" formatted="false">No enabled subscriptions to update</string>
+    <string name="app_subscriptionbuiltin" formatted="false">Built-in</string>
+    <string name="app_subscriptiondisabled" formatted="false">Disabled</string>
+    <string name="app_subscriptionnodes" formatted="false">Nodes (%d)</string>
+    <string name="app_subscriptiondeletetitle" formatted="false">Delete subscription?</string>
+    <string name="app_subscriptiondeletemessage" formatted="false">Delete “%s” and all its nodes (%d)?</string>
+    <string name="app_subscriptionnever" formatted="false">Never</string>
+    <string name="app_subscriptionjustnow" formatted="false">Just now</string>
+    <string name="app_subscriptionminutesago" formatted="false">%d min ago</string>
+    <string name="app_subscriptionhoursago" formatted="false">%d h ago</string>
+    <string name="app_subscriptionstab" formatted="false">Subscriptions (%d/%d)</string>
+    <string name="app_personalnodestab" formatted="false">Personal (%d)</string>
+    <string name="app_subscriptionenabledmessage" formatted="false">“%s”: enabled</string>
+    <string name="app_subscriptiondisabledmessage" formatted="false">“%s”: disabled, nodes hidden</string>
+    <string name="app_subscriptionautoenabledmessage" formatted="false">Auto-update enabled</string>
+    <string name="app_subscriptionautodisabledmessage" formatted="false">Auto-update disabled</string>
+    <string name="app_subscriptionnodeslabel" formatted="false">Nodes</string>
+    <string name="app_subscriptionslabel" formatted="false">Subscriptions</string>
+    <string name="app_personalnodeslabel" formatted="false">Personal</string>
+    <string name="app_uipause" formatted="false">Pause</string>
+    <string name="app_uiresume" formatted="false">Resume</string>
+    <string name="app_uiclear" formatted="false">Clear</string>
+    <string name="app_uimonitoring" formatted="false">Monitoring</string>
+    <string name="app_uipaused" formatted="false">Paused</string>
+    <string name="app_uinomatches" formatted="false">No results for this search</string>
+    <string name="app_uinopersonal" formatted="false">No personal configurations</string>
+    <string name="app_uipersonalhint" formatted="false">Paste a vless://, vmess://, trojan:// or shadowsocks:// link from the clipboard or scan a QR code.</string>
+    <string name="app_uiaddconfig" formatted="false">Add configuration</string>
+    <string name="app_uinosubscriptions" formatted="false">No subscriptions</string>
+    <string name="app_uisubscriptionhint" formatted="false">A subscription keeps multiple nodes up to date using a single link.</string>
+    <string name="app_uiaddsubscription" formatted="false">Add subscription</string>
+    <string name="app_uirestorepresets" formatted="false">Restore built-in subscriptions</string>
+    <string name="app_uipresetsempty" formatted="false">Built-in subscriptions have not been loaded or were deleted.</string>
+    <string name="app_uipersonalsearch" formatted="false">Search personal configurations…</string>
+    <string name="app_uipresetsearch" formatted="false">Search preset nodes…</string>
+    <string name="app_uiallactive" formatted="false">All enabled (%d)</string>
+    <string name="app_uipersonalservers" formatted="false">Personal servers</string>
+    <string name="app_uisubscriptionprefix" formatted="false">Subscription: %s</string>
+    <string name="app_uidisablednodeshidden" formatted="false">Disabled — nodes hidden</string>
+    <string name="app_uiexpand" formatted="false">Expand</string>
+    <string name="app_uicollapse" formatted="false">Collapse</string>
+    <string name="app_uipresettag" formatted="false">Preset • %s</string>
+    <string name="app_uisubscriptiontag" formatted="false">Subscription • %s</string>
+    <string name="app_uipersonaltag" formatted="false">Personal configuration</string>
+    <string name="app_uiactions" formatted="false">Actions</string>
+    <string name="app_uiautoselect" formatted="false">Auto-select</string>
+    <string name="app_uifastest" formatted="false">fastest</string>
+    <string name="app_uioff" formatted="false">off</string>
+    <string name="app_uipingsummary" formatted="false">“%s”: tested %d nodes</string>
+    <string name="app_uicamera" formatted="false">Camera</string>
+    <string name="app_uiautoimport" formatted="false">Auto-import</string>
+    <string name="app_uilinkhint" formatted="false">vless://…, vmess://… or https://…</string>
+    <string name="app_uipresetharvester" formatted="false">Harvester (Working nodes)</string>
+    <string name="app_uipresetcidr" formatted="false">Allowlist (CIDR RU)</string>
+    <string name="app_uipresetuniversal" formatted="false">Allowlist (Universal)</string>
+    <string name="app_approutingconnected" formatted="false">VPN is connected. Apps follow the selected routing rules.</string>
+    <string name="app_approutingdisconnected" formatted="false">VPN is disconnected. Connect on the Home tab to apply routing.</string>
+    <string name="app_fieldaddresserror" formatted="false">Enter a hostname or IP without a scheme, path or spaces</string>
+    <string name="app_fieldporterror" formatted="false">Enter a port from 1 to 65535</string>
+    <string name="app_fieldpassword" formatted="false">Password</string>
+    <string name="app_fieldsnihint" formatted="false">domain.com (for Cloudflare/TLS)</string>
+    <string name="app_fieldhosthint" formatted="false">HTTP Host header</string>
+    <string name="app_tlspresetstandard" formatted="false">Standard</string>
+    <string name="app_tlspresetaggressive" formatted="false">Small fragments (50–100)</string>
+    <string name="app_tlspresetcustom" formatted="false">Custom</string>
+    <string name="app_tlscustomtitle" formatted="false">TLS fragmentation</string>
+    <string name="app_tlsparameterssummary" formatted="false">Parameters: length=%s, interval=%s ms, packets=%s</string>
+    <string name="app_sharelannotready" formatted="false">Sharing is not ready. Proxy addresses and setup commands will appear when a hotspot or USB tethering address is available.</string>
+    <string name="app_sharelancopyenable" formatted="false">Copy enable command</string>
+    <string name="app_sharelandisable" formatted="false">Disable proxy</string>
+    <string name="app_uicopied" formatted="false">Copied</string>
+    <string name="app_uicopy" formatted="false">Copy</string>
+    <string name="app_lanendpointusb" formatted="false">USB tethering (%s)</string>
+    <string name="app_lanendpointhotspot" formatted="false">Wi-Fi hotspot (%s)</string>
+    <string name="app_lanendpointwifi" formatted="false">Wi-Fi network (%s)</string>
+    <string name="app_lanendpointother" formatted="false">Interface %s</string>
+    <string name="app_subnameplaceholder" formatted="false">Name (e.g. My VPN)</string>
+    <string name="app_suburlplaceholder" formatted="false">https://example.com/sub/...</string>
+    <string name="app_subloading" formatted="false">Syncing nodes...</string>
+    <string name="app_splashsubtitle" formatted="false">Secure Proxy Tunnel</string>
+    <string name="app_splashinitializing" formatted="false">Initializing nodes...</string>
+    <string name="app_subaddedsuccess" formatted="false">Added nodes: %d</string>
+    <string name="app_errorprefix" formatted="false">Error: %s</string>
+    <string name="app_autoselectselected" formatted="false">Selected: %s</string>
+    <string name="app_fieldname" formatted="false">Node Name</string>
+    <string name="app_fieldprotocol" formatted="false">Protocol</string>
+    <string name="app_fieldaddress" formatted="false">Address / IP</string>
+    <string name="app_fieldport" formatted="false">Port</string>
+    <string name="app_fieldnetwork" formatted="false">Network Transport (type)</string>
+    <string name="app_fieldsecurity" formatted="false">Security Mode</string>
+    <string name="app_fieldsni" formatted="false">SNI Domain</string>
+    <string name="app_fieldpath" formatted="false">Path (path / serviceName)</string>
+    <string name="app_fieldhost" formatted="false">Host Header</string>
+    <string name="app_fielduuid" formatted="false">UUID / Password</string>
+    <string name="app_fieldpublickey" formatted="false">Public Key (pbk / Reality)</string>
+    <string name="app_fieldshortid" formatted="false">Short ID (sid)</string>
+    <string name="app_fieldspiderx" formatted="false">SpiderX (spx)</string>
+    <string name="app_fieldfingerprint" formatted="false">Fingerprint (fp)</string>
+    <string name="app_approutingtitle" formatted="false">App routing</string>
+    <string name="app_approutingsubtitle" formatted="false">Choose which apps follow VPN routing rules</string>
+    <string name="app_proxiedappscount" formatted="false">PROXIED APPS: %d / %d</string>
+    <string name="app_selectedappscount" formatted="false">Selected: %d</string>
+    <string name="app_proxymodeall" formatted="false">All applications</string>
+    <string name="app_proxymodealldesc" formatted="false">When VPN is connected, all apps follow the selected routing rules</string>
+    <string name="app_proxymodeselected" formatted="false">Selective Mode (Per-App)</string>
+    <string name="app_proxymodeselecteddesc" formatted="false">Only selected applications are routed through VPN</string>
+    <string name="app_globalmodeactive" formatted="false">All apps selected</string>
+    <string name="app_allappsprotected" formatted="false">VPN rules apply to all apps</string>
+    <string name="app_searchapps" formatted="false">Search applications...</string>
+    <string name="app_statusproxied" formatted="false">Proxied</string>
+    <string name="app_statusdirect" formatted="false">Direct</string>
+    <string name="app_statusbypassed" formatted="false">Bypass</string>
+    <string name="app_perappmodeinclude" formatted="false">Only Selected</string>
+    <string name="app_perappmodeincludedesc" formatted="false">Only selected applications are routed via VPN</string>
+    <string name="app_perappmodeexclude" formatted="false">Bypass Selected</string>
+    <string name="app_perappmodeexcludedesc" formatted="false">Selected applications (banking, local apps) will bypass VPN</string>
+    <string name="app_perappmodeheader" formatted="false">Split tunneling mode</string>
+    <string name="app_settingstitle" formatted="false">Settings</string>
+    <string name="app_settingssubtitle" formatted="false">Censorship bypass, UI appearance and core engine config</string>
+    <string name="app_sectionappearance" formatted="false">Interface &amp; appearance</string>
+    <string name="app_themetitle" formatted="false">App Theme</string>
+    <string name="app_themesubtitle" formatted="false">Visual style and color palette</string>
+    <string name="app_themedark" formatted="false">Dark</string>
+    <string name="app_themeamoled" formatted="false">AMOLED</string>
+    <string name="app_themelight" formatted="false">Light</string>
+    <string name="app_themesystem" formatted="false">System</string>
+    <string name="app_themewinter" formatted="false">Winter dark</string>
+    <string name="app_themewinterlight" formatted="false">Winter light</string>
+    <string name="app_themered" formatted="false">Red</string>
+    <string name="app_themeaurora" formatted="false">Aurora</string>
+    <string name="app_themeocean" formatted="false">Ocean Depths</string>
+    <string name="app_themesakura" formatted="false">Moonlit Sakura</string>
+    <string name="app_themepony" formatted="false">Pony</string>
+    <string name="app_themewinx" formatted="false">Winx · Bloom</string>
+    <string name="app_glasstransparencytitle" formatted="false">Card transparency</string>
+    <string name="app_glasstransparencysubtitle" formatted="false">Card and bottom dock transparency. Text and controls stay sharp.</string>
+    <string name="app_glassblurtitle" formatted="false">Background blur</string>
+    <string name="app_glassblursubtitle" formatted="false">Blur behind cards and the bottom dock. Transparency stays independent.</string>
+    <string name="app_glassdefault" formatted="false">Default</string>
+    <string name="app_glassmoresolid" formatted="false">More solid</string>
+    <string name="app_glassmoreclear" formatted="false">More transparent</string>
+    <string name="app_glasslegacyhint" formatted="false">Background blur is available on Android 12 and newer.</string>
+    <string name="app_themeshowall" formatted="false">Show all themes (%d)</string>
+    <string name="app_themeshowless" formatted="false">Show fewer themes</string>
+    <string name="app_themecurrent" formatted="false">Selected: %s</string>
+    <string name="app_themesunset" formatted="false">Sunset Mirage</string>
+    <string name="app_languagetitle" formatted="false">Language</string>
+    <string name="app_languagesubtitle" formatted="false">Interface language selection</string>
+    <string name="app_langru" formatted="false">Русский</string>
+    <string name="app_langen" formatted="false">English</string>
+    <string name="app_langsystem" formatted="false">System</string>
+    <string name="app_sectionautomation" formatted="false">Automation &amp; subscriptions</string>
+    <string name="app_autoselecttitle" formatted="false">Auto-select Server</string>
+    <string name="app_autoselectsubtitle" formatted="false">Automatically test latency and select the fastest node.</string>
+    <string name="app_autoupdatetitle" formatted="false">Auto-update Subscriptions</string>
+    <string name="app_autoupdatesubtitle" formatted="false">Frequency of background server list synchronization</string>
+    <string name="app_intervaloff" formatted="false">Off</string>
+    <string name="app_interval6h" formatted="false">6 h</string>
+    <string name="app_interval12h" formatted="false">12 h</string>
+    <string name="app_interval24h" formatted="false">24 h</string>
+    <string name="app_updateallsubsnow" formatted="false">Update all subscriptions now</string>
+    <string name="app_updating" formatted="false">Updating...</string>
+    <string name="app_updatedcount" formatted="false">Updated subscriptions: %d</string>
+    <string name="app_sectionrouting" formatted="false">Routing &amp; anti-censorship</string>
+    <string name="app_dnsprovidertitle" formatted="false">General DNS</string>
+    <string name="app_dnsprovidersubtitle" formatted="false">Main DNS. Local DNS depends on region and routing mode; AI has separate settings. Browser Secure DNS may take priority.</string>
+    <string name="app_xhttpmodetitle" formatted="false">XHTTP (SplitHTTP) Mode</string>
+    <string name="app_xhttpmodesubtitle" formatted="false">How XHTTP sends requests. Usually, auto is sufficient; other modes must be supported by the server.</string>
+    <string name="app_fakednstitle" formatted="false">FakeDNS (198.18.0.0/15)</string>
+    <string name="app_fakednssubtitle" formatted="false">Returns virtual IP addresses and resolves domains through Xray.</string>
+    <string name="app_blockquictitle" formatted="false">Block QUIC (UDP 443)</string>
+    <string name="app_blockquicsubtitle" formatted="false">Blocks UDP on port 443. Apps that support TCP may switch to it.</string>
+    <string name="app_sniffingtitle" formatted="false">Domain detection</string>
+    <string name="app_sniffingsubtitle" formatted="false">Detects domains from SNI or HTTP Host for routing rules. HTTPS traffic is not decrypted.</string>
+    <string name="app_blockipv6title" formatted="false">IPv6 Leak Protection</string>
+    <string name="app_blockipv6subtitle" formatted="false">Blocks all IPv6 traffic entering the VPN.</string>
+    <string name="app_bypassaititle" formatted="false">AI Services (ChatGPT, Claude &amp; Gemini)</string>
+    <string name="app_bypassaisubtitle" formatted="false">SmartDNS: selected DNS and direct routing. VPN: via the VPN server.</string>
+    <string name="app_aidnsprovidertitle" formatted="false">SmartDNS for AI services</string>
+    <string name="app_aidnsproviderhint" formatted="false">Independent of general DNS. Gemini and ChatGPT availability depends on the SmartDNS provider, network and account.</string>
+    <string name="app_aitlsfragmenttitle" formatted="false">SmartDNS TLS fragmentation</string>
+    <string name="app_aitlsfragmenthint" formatted="false">Optional mode for networks filtering TLS. Off by default: some Gemini proxies are incompatible with it.</string>
+    <string name="app_adblockertitle" formatted="false">Ad Blocker</string>
+    <string name="app_adblockersubtitle" formatted="false">Blocks advertising and tracking domains in VPN traffic: Yandex, VK / Mail.ru and other networks. Embedded VK feed and YouTube video ads may remain.</string>
+    <string name="app_sectioncore" formatted="false">XRAY core engine</string>
+    <string name="app_coreversion" formatted="false">Core Version</string>
+    <string name="app_corearch" formatted="false">Architecture</string>
+    <string name="app_coretunnel" formatted="false">Tunnel Engine</string>
+    <string name="app_coreprotocols" formatted="false">Protocols</string>
+    <string name="app_corefakedns" formatted="false">FakeDNS Pool</string>
+    <string name="app_sectiondiagnostics" formatted="false">Diagnostics &amp; debugging</string>
+    <string name="app_diagnosticsdesc" formatted="false">Logs of Xray core execution, VPN events and connection errors.</string>
+    <string name="app_openlogsbutton" formatted="false">Open logs</string>
+    <string name="app_logsdialogtitle" formatted="false">Event log</string>
+    <string name="app_copyreport" formatted="false">Copy Report</string>
+    <string name="app_sharereport" formatted="false">Share</string>
+    <string name="app_clearlogs" formatted="false">Clear Logs</string>
+    <string name="app_reportcopied" formatted="false">Report copied to clipboard!</string>
+    <string name="app_recordscount" formatted="false">Records</string>
+    <string name="app_logscleared" formatted="false">Logs cleared</string>
+    <string name="app_logsempty" formatted="false">No logs recorded</string>
+    <string name="app_logsfilterall" formatted="false">All</string>
+    <string name="app_logsfiltererrors" formatted="false">Errors</string>
+    <string name="app_logsfilterxray" formatted="false">Xray</string>
+    <string name="app_logsfiltervpn" formatted="false">VPN Service</string>
+    <string name="app_logssearchhint" formatted="false">Search logs and keywords...</string>
+    <string name="app_logsautoscroll" formatted="false">Autoscroll</string>
+    <string name="app_logsclose" formatted="false">Close Logs</string>
+    <string name="app_logscopiedline" formatted="false">Log line copied</string>
+    <string name="app_logsstatstotal" formatted="false">Total</string>
+    <string name="app_logsstatserrors" formatted="false">Errors</string>
+    <string name="app_logsstatswarnings" formatted="false">Warnings</string>
+    <string name="app_sectioncustomroutes" formatted="false">Custom domain routes</string>
+    <string name="app_customroutessubtitle" formatted="false">Enter a domain and pick a routing mode: direct, proxy, or block</string>
+    <string name="app_customroutesdomainhint" formatted="false">example.com or domain:example.com</string>
+    <string name="app_customroutesaddbtn" formatted="false">Add route</string>
+    <string name="app_customroutesempty" formatted="false">No custom routes defined</string>
+    <string name="app_customroutessaved" formatted="false">Route added</string>
+    <string name="app_customroutesremoved" formatted="false">Route removed</string>
+    <string name="app_customroutedirect" formatted="false">Direct</string>
+    <string name="app_customrouteproxy" formatted="false">Via VPN</string>
+    <string name="app_customrouteblock" formatted="false">Block</string>
+    <string name="app_updateavailabletitle" formatted="false">Update Available</string>
+    <string name="app_updateavailabledesc" formatted="false">Version %s is ready to download</string>
+    <string name="app_updatedownload" formatted="false">Download</string>
+    <string name="app_updatedownloadandinstall" formatted="false">Download &amp; Install</string>
+    <string name="app_updateinstall" formatted="false">Install</string>
+    <string name="app_updatedownloading" formatted="false">Downloading update...</string>
+    <string name="app_updatedownloaded" formatted="false">Update ready to install</string>
+    <string name="app_updatetaptoinstall" formatted="false">Tap to install</string>
+    <string name="app_updatechangelog" formatted="false">What\'s new</string>
+    <string name="app_updatescrollhint" formatted="false">Scroll down for details ↓</string>
+    <string name="app_updateexpandnotes" formatted="false">Expand</string>
+    <string name="app_updatecollapsenotes" formatted="false">Collapse</string>
+    <string name="app_updatepermissionrequired" formatted="false">Please allow installing unknown apps for SplateVPN</string>
+    <string name="app_updatefailed" formatted="false">Failed to download update</string>
+    <string name="app_updateretry" formatted="false">Retry</string>
+    <string name="app_updatecheck" formatted="false">Check for updates</string>
+    <string name="app_updatechecking" formatted="false">Checking...</string>
+    <string name="app_updatelatest" formatted="false">You are on the latest version</string>
+    <string name="app_liveconnectionstitle" formatted="false">Live Connections Monitor</string>
+    <string name="app_liveconnectionssubtitle" formatted="false">Real-time traffic routing by domain and IP</string>
+    <string name="app_liveconnectionshudbadge" formatted="false">Connections</string>
+    <string name="app_liveconnectionssearchplaceholder" formatted="false">Search domain or IP address...</string>
+    <string name="app_filterall" formatted="false">All</string>
+    <string name="app_filterproxy" formatted="false">Proxy</string>
+    <string name="app_filterdirect" formatted="false">Direct</string>
+    <string name="app_filterblock" formatted="false">Block</string>
+    <string name="app_filterdns" formatted="false">DNS</string>
+    <string name="app_clearconnections" formatted="false">Clear list</string>
+    <string name="app_noconnectionsyet" formatted="false">No active connections</string>
+    <string name="app_noconnectionsdesc" formatted="false">Connect to VPN to monitor real-time inbound &amp; outbound traffic streams</string>
+    <string name="app_liveconnectionscount" formatted="false">%d active endpoints</string>
+    <string name="app_liveconnectionssummary" formatted="false">%d endpoints • %d requests</string>
+    <string name="app_connectionoutboundlabel" formatted="false">Outbound</string>
+    <string name="app_connectiondestlabel" formatted="false">Destination</string>
+    <string name="app_connectionprotocollabel" formatted="false">Protocol</string>
+    <string name="app_autoconnectonboottitle" formatted="false">Auto-connect on Boot</string>
+    <string name="app_autoconnectonbootsubtitle" formatted="false">Automatically connect VPN when device powers on</string>
+    <string name="app_batteryoptimizationtitle" formatted="false">Background Execution (Battery)</string>
+    <string name="app_batteryoptimizationdisabled" formatted="false">Optimization disabled — service protected from kill</string>
+    <string name="app_batteryoptimizationprompt" formatted="false">Tap to disable battery restrictions</string>
+    <string name="app_batterysettingsopenerror" formatted="false">Failed to open battery settings</string>
+    <string name="app_pingmodetitle" formatted="false">Ping Mode</string>
+    <string name="app_pingmodesubtitle" formatted="false">Method to check server reachability and latency</string>
+    <string name="app_pingmoderealdelay" formatted="false">Real Delay</string>
+    <string name="app_pingmodetcp" formatted="false">TCP Ping</string>
+    <string name="app_pingmodeicmp" formatted="false">Icmp</string>
+    <string name="app_pingmoderealdelaydesc" formatted="false">HTTP 204 via proxy — tests actual data delivery and detects DPI blocking</string>
+    <string name="app_pingmodetcpdesc" formatted="false">Fast measurement of TCP socket connection latency to server IP:port</string>
+    <string name="app_pingmodeicmpdesc" formatted="false">Direct ICMP echo request to server host (may be blocked by firewalls)</string>
+    <string name="app_tlsfragmenttitle" formatted="false">TLS Packet Fragmentation (Fragment)</string>
+    <string name="app_tlsfragmentsubtitle" formatted="false">Splits TLS handshake packets into 100-200 byte chunks with micro-delays. Bypasses SNI-based DPI blocking.</string>
+    <string name="app_killswitchactive" formatted="false">Protection enabled</string>
+    <string name="app_killswitchalwaysonly" formatted="false">Always-on only</string>
+    <string name="app_killswitchoff" formatted="false">Blocking disabled</string>
+    <string name="app_killswitchunknown" formatted="false">Status not confirmed</string>
+    <string name="app_killswitchunknownhint" formatted="false">Android has not provided a protection status. It may be unavailable without an active tunnel. Verify the VPN options in Android settings.</string>
+    <string name="app_killswitchbody" formatted="false">When enabled, Android blocks connections without VPN, including when the app stops.</string>
+    <string name="app_killswitchstepone" formatted="false">Open %s options in the Android VPN list.</string>
+    <string name="app_killswitchsteptwo" formatted="false">Enable “Always-on VPN”.</string>
+    <string name="app_killswitchstepthree" formatted="false">Enable “Block connections without VPN”.</string>
+    <string name="app_killswitchconfigure" formatted="false">Set up protection</string>
+    <string name="app_killswitchmanage" formatted="false">Manage protection</string>
+    <string name="app_killswitchexcludedapps" formatted="false">Apps excluded from the VPN will lose internet access while blocking is enabled.</string>
+    <string name="app_killswitchtitle" formatted="false">Kill Switch</string>
+    <string name="app_sectionappupdates" formatted="false">App updates</string>
+    <string name="app_sectionquicksettings" formatted="false">Quick settings tile</string>
+    <string name="app_quicksettingsdesc" formatted="false">Toggle VPN directly from the Android notification shade without opening the app.</string>
+    <string name="app_quicksettingsaddtile" formatted="false">Add tile to quick settings</string>
+    <string name="app_quicksettingstileadded" formatted="false">SplateVPN tile added to quick settings!</string>
+    <string name="app_quicksettingstilealreadyadded" formatted="false">SplateVPN tile is already in quick settings</string>
+    <string name="app_quicksettingsmanualprompt" formatted="false">Pull down notification shade twice, tap edit icon, and drag SplateVPN tile onto panel.</string>
+    <string name="app_sectionbackuprestore" formatted="false">Backup &amp; restore</string>
+    <string name="app_backuprestoredesc" formatted="false">Save servers, subscriptions, rules and settings to a JSON file, or restore a backup.</string>
+    <string name="app_exportbtn" formatted="false">Export</string>
+    <string name="app_importbtn" formatted="false">Import</string>
+    <string name="app_backupexportsuccess" formatted="false">Configuration exported successfully!</string>
+    <string name="app_backupexporterror" formatted="false">Export error: %s</string>
+    <string name="app_backupimportsuccess" formatted="false">Successfully imported %d servers</string>
+    <string name="app_backupimporterror" formatted="false">Import error: %s</string>
+    <string name="app_autorestorebtn" formatted="false">Restore automatic backup</string>
+    <string name="app_autorestoresuccess" formatted="false">Successfully restored %d servers</string>
+    <string name="app_autorestorenotfound" formatted="false">Automatic backup is missing or empty</string>
+    <string name="app_autoselecton" formatted="false">⚡ auto: on</string>
+    <string name="app_speedtesttitle" formatted="false">Speed test</string>
+    <string name="app_speedtestdesc" formatted="false">Measure real download speed through VPN</string>
+    <string name="app_speedtestrunning" formatted="false">TESTING: %d%%</string>
+    <string name="app_speedtestspeedunit" formatted="false">Mbps</string>
+    <string name="app_speedtestresult" formatted="false">SPEED: %s Mbps</string>
+    <string name="app_speedtestlatency" formatted="false">HTTPS response: %s ms</string>
+    <string name="app_speedtesterror" formatted="false">Test error: %s</string>
+    <string name="app_serversaddedcount" formatted="false">Added servers: %d</string>
+    <string name="app_qrscanerror" formatted="false">QR scan error: %s</string>
+    <string name="app_scanqr" formatted="false">Scan QR</string>
+    <string name="app_copylink" formatted="false">Copy link</string>
+    <string name="app_autoselectbalancer" formatted="false">Auto-select Server</string>
+    <string name="app_activenodeprefix" formatted="false">Active: %s</string>
+    <string name="app_autoselectbalancerdesc" formatted="false">Select and switch servers using your connection settings</string>
+    <string name="app_onupper" formatted="false">On</string>
+    <string name="app_offupper" formatted="false">Off</string>
+    <string name="app_filterselected" formatted="false">Selected</string>
+    <string name="app_selectall" formatted="false">All</string>
+    <string name="app_resetall" formatted="false">Reset</string>
+    <string name="app_unifiedaddtitle" formatted="false">Add Server or Subscription</string>
+    <string name="app_unifiedaddsubtitle" formatted="false">Paste VLESS/VMess/SS/Trojan link or subscription URL</string>
+    <string name="app_pastefromclipboard" formatted="false">Paste from Clipboard</string>
+    <string name="app_scanqrcode" formatted="false">Scan QR Code</string>
+    <string name="app_clipboardempty" formatted="false">Clipboard is empty</string>
+    <string name="app_detectedsubscription" formatted="false">🔗 Subscription link detected</string>
+    <string name="app_detectedservernode" formatted="false">⚡ Server configuration detected</string>
+    <string name="app_detectedmultiplenodes" formatted="false">📦 Servers found: %d</string>
+    <string name="app_emptyserverscta" formatted="false">Add first server or subscription</string>
+    <string name="app_emptyservershint" formatted="false">Paste link from clipboard or scan a QR code to get started</string>
+    <string name="app_importaction" formatted="false">Import</string>
+    <string name="app_subnameoptional" formatted="false">Subscription name (optional)</string>
+    <string name="app_addserverorsub" formatted="false">Add server or subscription</string>
+    <string name="app_subquotaused" formatted="false">Used: %s of %s</string>
+    <string name="app_subquotaremaining" formatted="false">%s remaining of %s</string>
+    <string name="app_subquotaunlimited" formatted="false">Unlimited bandwidth</string>
+    <string name="app_subexpiredate" formatted="false">Expires: %s</string>
+    <string name="app_subexpired" formatted="false">Subscription expired</string>
+    <string name="app_shareservertitle" formatted="false">Export Node</string>
+    <string name="app_shareqrprompt" formatted="false">Scan with another device\'s camera</string>
+    <string name="app_sharecopylink" formatted="false">Copy Link</string>
+    <string name="app_sharesend" formatted="false">Share</string>
+    <string name="app_shareaction" formatted="false">Share / QR</string>
+    <string name="app_sharepayloadtoolarge" formatted="false">Configuration is too large for QR code (%d bytes). Copy link or share via text.</string>
+    <string name="app_sharesubscriptiontitle" formatted="false">Export Subscription</string>
+    <string name="app_sharesubqrprompt" formatted="false">Scan with another device\'s camera to import subscription</string>
+    <string name="app_sectionsharelan" formatted="false">VPN Sharing (Hotspot &amp; USB)</string>
+    <string name="app_sharelantitle" formatted="false">Share VPN over LAN / Tethering</string>
+    <string name="app_sharelansubtitle" formatted="false">Enables authenticated HTTP and SOCKS5 proxies on the selected local interface</string>
+    <string name="app_sharelanactiveendpoints" formatted="false">Detected Tethering Endpoints</string>
+    <string name="app_sharelannoendpoints" formatted="false">Hotspot or USB tethering not detected yet. Enable tethering in phone settings.</string>
+    <string name="app_sharelaninstructionsbtn" formatted="false">Connect a phone or computer</string>
+    <string name="app_sharelanhttpproxy" formatted="false">HTTP Proxy (Windows / Mac / TV)</string>
+    <string name="app_sharelansocksproxy" formatted="false">SOCKS5 Proxy</string>
+    <string name="app_sharelancopied" formatted="false">Proxy address copied: %s</string>
+    <string name="app_sharelandialogtitle" formatted="false">Connect PC &amp; Devices via Phone</string>
+    <string name="app_sharelanstep1" formatted="false">1. Enable Wi-Fi Hotspot or USB tethering on your phone and connect your PC/laptop.</string>
+    <string name="app_sharelanstep2" formatted="false">2. Make sure VPN is connected in SplateVPN.</string>
+    <string name="app_sharelanstep3windows" formatted="false">3. On Windows, open Settings → Network &amp; internet → Proxy → Manual setup. Enter the phone IP and HTTP port from sharing settings.</string>
+    <string name="app_sharelanstep3mac" formatted="false">4. On macOS or Linux, open the network proxy settings. For HTTP and HTTPS, enter the phone IP and HTTP port from sharing settings.</string>
+    <string name="app_sharelanstep3telegram" formatted="false">5. In Telegram, open Settings → Data and Storage → Proxy. Add SOCKS5 with the phone IP and SOCKS5 port from sharing settings. If authentication is enabled, use splate and the sharing password.</string>
+    <string name="app_sharelanwindowstitle" formatted="false">Windows Setup (Wi-Fi or USB)</string>
+    <string name="app_sharelanwindowssettingsguide" formatted="false">In Windows 10/11: Settings ➔ Network &amp; Internet ➔ Proxy ➔ Manual setup ➔ turn on \"Use a proxy server\".</string>
+    <string name="app_sharelanwindowsinetcplguide" formatted="false">Or press Win+R ➔ type inetcpl.cpl ➔ \"Connections\" tab ➔ \"LAN settings\".</string>
+    <string name="app_sharelanwindowsproxystring" formatted="false">Proxy string (HTTP / HTTPS):</string>
+    <string name="app_sharelanwindowsexceptions" formatted="false">Bypass proxy for local addresses:</string>
+    <string name="app_sharelanwindowsexceptionsvalue" formatted="false">localhost;127.*;10.*;192.168.*;172.16.*</string>
+    <string name="app_sharelanwindowscmdenable" formatted="false">Enable proxy in PowerShell:</string>
+    <string name="app_sharelanwindowscmddisable" formatted="false">Disable proxy in PowerShell:</string>
+    <string name="app_sharelanexceptionscopied" formatted="false">Exceptions copied</string>
+    <string name="app_sharelancommandcopied" formatted="false">Windows command copied</string>
+    <string name="app_tlsfragmentpresettitle" formatted="false">Fragmentation Profile</string>
+    <string name="app_tlsfragmentpresetstandard" formatted="false">Standard (100-200, 10-20)</string>
+    <string name="app_tlsfragmentpresetaggressive" formatted="false">Aggressive (50-100, 20-40, 1-3)</string>
+    <string name="app_tlsfragmentpresetcustom" formatted="false">Custom</string>
+    <string name="app_tlsfragmentlengthlabel" formatted="false">Fragment size (bytes)</string>
+    <string name="app_tlsfragmentintervallabel" formatted="false">Interval (ms)</string>
+    <string name="app_tlsfragmentpacketslabel" formatted="false">Packets</string>
+    <string name="app_dnscustom" formatted="false">Custom DoH DNS</string>
+    <string name="app_dnscustomurlhint" formatted="false">https://dns.nextdns.io/...</string>
+    <string name="app_dnscustomurldialogtitle" formatted="false">Custom DNS-over-HTTPS</string>
+    <string name="app_muxtitle" formatted="false">Multiplexing (Mux)</string>
+    <string name="app_muxsubtitle" formatted="false">Multiplex multiple TCP connections over a single tunnel (incompatible with Vision)</string>
+    <string name="app_muxconcurrencylabel" formatted="false">Concurrency limit</string>
+</resources>

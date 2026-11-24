@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tor_metric_title">انتخاب پل</string>
+    <string name="tor_metric_latency">بر اساس تأخیر</string>
+    <string name="tor_metric_speed">بر اساس سرعت</string>
+    <string name="tor_metric_latency_hint">رتبه‌بندی سریع با زمان اتصال TCP. کارکرد پل را Tor تأیید می‌کند.</string>
+    <string name="tor_metric_speed_hint">مقایسهٔ بارگیری از طریق Tor برای حداکثر سه پل. آزمایش نخست طولانی‌تر است؛ نتایج ۱۰ دقیقه معتبرند.</string>
+    <string name="tor_speed_progress">مدارهای آزمایش‌شده: %1$d/%2$d</string>
+    <string name="tor_metric_probe">آزمایش سرعت</string>
+    <string name="tor_metric_speed_value">%1$.2f Mbps</string>
+    <string name="tor_metric_saved">روش انتخاب پل ذخیره شد</string>
+    <string name="tor_speed_unavailable">اندازه‌گیری سرعت ممکن نشد. انتخاب بر اساس دسترسی‌پذیری پل ادامه می‌یابد.</string>
+</resources>

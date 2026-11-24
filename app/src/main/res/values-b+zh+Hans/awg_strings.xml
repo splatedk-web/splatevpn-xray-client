@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="awg_import_file">导入 AmneziaWG 文件 (.conf)</string>
+    <string name="awg_config">AmneziaWG 配置</string>
+    <string name="awg_show_keys">显示密钥</string>
+    <string name="awg_profile_help">配置包含私钥。路由和 Smart 模式由应用管理。</string>
+</resources>

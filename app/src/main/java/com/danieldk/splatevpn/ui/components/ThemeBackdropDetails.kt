@@ -181,7 +181,7 @@ internal fun createBackdropDetails(c: AppThemeColors, w: Float, h: Float): DrawS
                     drawLine(color, center - Offset(0f, radius), center + Offset(0f, radius), unit * .0013f)
                 }
             }
-            BackdropStyle.SUNSET -> Unit
+            BackdropStyle.SUNSET, BackdropStyle.WINTER -> Unit
         }
     }
 }

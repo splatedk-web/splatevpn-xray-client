@@ -1,0 +1,8 @@
+<resources>
+    <string name="tls_mixed_sni_title">TLS Mixed SNI</string>
+    <string name="tls_mixed_sni_hint">Mixes letter case in the SNI of TLS connections.</string>
+    <string name="vpn_mtu_title">VPN MTU</string>
+    <string name="vpn_mtu_value">VPN MTU · %1$d bytes</string>
+    <string name="vpn_mtu_range">1280–1500 bytes</string>
+    <string name="tls_two_parts">ClientHello in two parts (experimental)</string>
+</resources>

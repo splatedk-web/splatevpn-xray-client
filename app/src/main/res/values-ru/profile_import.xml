@@ -1,0 +1,5 @@
+<resources>
+    <string name="onboarding_preset_failed">Не удалось подготовить встроенные списки серверов. Попробуйте завершить настройку ещё раз.</string>
+    <string name="profile_import_invalid_reality_key">Ключ проверки REALITY (pqv) повреждён. Импортируйте исходную ссылку или QR-код. Утраченные символы нельзя восстановить автоматически.</string>
+    <string name="profile_import_invalid">Не удалось импортировать профиль. Проверьте исходную конфигурацию.</string>
+</resources>

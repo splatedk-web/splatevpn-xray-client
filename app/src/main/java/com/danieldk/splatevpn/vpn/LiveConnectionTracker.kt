@@ -16,7 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class LiveConnectionTracker @Inject constructor() {
 
-    private val maxConnections = 150
+    private val maxConnections = 400
+    private val activeWindowMs = 45_000L
 
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val lock = Any()
@@ -25,13 +26,24 @@ class LiveConnectionTracker @Inject constructor() {
     // Map of unique endpoints: key = "$network:$cleanDest:$port"
     private val endpointMap = LinkedHashMap<String, LiveConnection>()
     private var totalRequestsCount = 0
+    private var sequenceCounter = 0
+    @Volatile
+    private var activeServerName: String = ""
 
     private val _connections = MutableStateFlow<List<LiveConnection>>(emptyList())
     val connections: StateFlow<List<LiveConnection>> = _connections.asStateFlow()
 
-    // Unique endpoints count (e.g. 8)
+    // Total unique endpoints in session history
     private val _totalCount = MutableStateFlow(0)
     val totalCount: StateFlow<Int> = _totalCount.asStateFlow()
+
+    // Currently active endpoints (activity within last 45s)
+    private val _activeCount = MutableStateFlow(0)
+    val activeCount: StateFlow<Int> = _activeCount.asStateFlow()
+
+    // Completed/inactive endpoints kept in session history
+    private val _historyCount = MutableStateFlow(0)
+    val historyCount: StateFlow<Int> = _historyCount.asStateFlow()
 
     // Total requests/packets processed (e.g. 352)
     private val _totalHits = MutableStateFlow(0)
@@ -64,23 +76,26 @@ class LiveConnectionTracker @Inject constructor() {
     private val ipv4Pattern = Regex("""^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$""")
 
     init {
-        // High-performance batched publisher: eliminates Compose recomposition storms
-        // and periodically prunes inactive connections (idle > 45 seconds) to keep the list clean.
+        // Batched publisher: avoids Compose recomposition storms while keeping active/history status fresh.
         scope.launch {
-            var pruneTickCounter = 0
+            var refreshTickCounter = 0
             while (isActive) {
                 val hasPending = hasPendingUpdates.compareAndSet(true, false)
                 val hasConnections = synchronized(lock) { endpointMap.isNotEmpty() }
-                val shouldPrune = pruneTickCounter >= 10 && hasConnections && !_isPaused.value
-                if (hasPending || shouldPrune) {
-                    pruneTickCounter = 0
+                val shouldRefreshActivity = refreshTickCounter >= 10 && hasConnections && !_isPaused.value
+                if (hasPending || shouldRefreshActivity) {
+                    refreshTickCounter = 0
                     publishSnapshot()
                 }
                 val isIdle = !hasConnections && !hasPendingUpdates.get()
                 delay(if (isIdle) 1000L else 350L)
-                pruneTickCounter++
+                refreshTickCounter++
             }
         }
+    }
+
+    fun setActiveServerName(name: String) {
+        activeServerName = name.trim()
     }
 
     fun recordLine(line: String): Boolean {
@@ -128,8 +143,11 @@ class LiveConnectionTracker @Inject constructor() {
 
         val isDomain = !ipv4Pattern.matches(cleanDest) && !cleanDest.contains(":")
         val status = if (action == "rejected") ConnectionStatus.REJECTED else ConnectionStatus.ACCEPTED
+        val protocolHint = inferProtocolHint(network, port, ruleType)
+        val routedServer = if (ruleType == OutboundRuleType.PROXY) activeServerName else ""
 
         val endpointKey = "$network:$cleanDest:$port"
+        val now = System.currentTimeMillis()
 
         synchronized(lock) {
             totalRequestsCount += 1
@@ -137,27 +155,33 @@ class LiveConnectionTracker @Inject constructor() {
             if (!_isPaused.value) {
                 val existing = endpointMap[endpointKey]
                 if (existing != null) {
-                    // Endpoint already tracked: increment hit count and update timestamp
                     val updated = existing.copy(
-                        lastSeen = System.currentTimeMillis(),
+                        lastSeen = now,
+                        source = source,
                         status = status,
                         inboundTag = inboundTag,
                         outboundTag = outboundTag,
                         ruleType = ruleType,
-                        hitCount = existing.hitCount + 1
+                        hitCount = existing.hitCount + 1,
+                        isActive = true,
+                        protocolHint = protocolHint,
+                        serverName = routedServer.ifBlank { existing.serverName }
                     )
                     // Move to latest in LRU order
                     endpointMap.remove(endpointKey)
                     endpointMap[endpointKey] = updated
                 } else {
-                    // New endpoint: enforce maxConnections capacity
                     if (endpointMap.size >= maxConnections) {
                         val oldestKey = endpointMap.keys.firstOrNull()
                         if (oldestKey != null) {
                             endpointMap.remove(oldestKey)
                         }
                     }
+                    sequenceCounter += 1
                     val newConnection = LiveConnection(
+                        sequenceNumber = sequenceCounter,
+                        timestamp = now,
+                        lastSeen = now,
                         source = source,
                         status = status,
                         network = network,
@@ -167,7 +191,10 @@ class LiveConnectionTracker @Inject constructor() {
                         outboundTag = outboundTag,
                         ruleType = ruleType,
                         isDomain = isDomain,
-                        hitCount = 1
+                        hitCount = 1,
+                        isActive = true,
+                        protocolHint = protocolHint,
+                        serverName = routedServer
                     )
                     endpointMap[endpointKey] = newConnection
                 }
@@ -178,30 +205,44 @@ class LiveConnectionTracker @Inject constructor() {
         return true
     }
 
+    private fun inferProtocolHint(network: String, port: Int, ruleType: OutboundRuleType): String = when {
+        ruleType == OutboundRuleType.DNS || port == 53 || port == 853 -> "dns"
+        network == "UDP" && port == 443 -> "quic"
+        port == 443 || port == 8443 -> "tls"
+        port == 80 || port == 8080 -> "http"
+        port == 3478 || port == 5349 -> "stun"
+        port == 5353 -> "mdns"
+        else -> network.lowercase()
+    }
+
     private fun publishSnapshot() {
         var proxies = 0
         var directs = 0
         var blocks = 0
         var dns = 0
+        var active = 0
+        var history = 0
 
         val now = System.currentTimeMillis()
-        val inactivityTimeoutMs = 45_000L // 45 seconds idle TTL to prune closed/inactive streams
 
         synchronized(lock) {
             if (_isPaused.value) return
-            // Automatically clean up connections that have had no packets for > 45 seconds
+
+            // Keep completed connections in session history instead of deleting them after 45s.
             val iterator = endpointMap.entries.iterator()
             while (iterator.hasNext()) {
                 val entry = iterator.next()
-                if (now - entry.value.lastSeen > inactivityTimeoutMs) {
-                    iterator.remove()
+                val conn = entry.value
+                val stillActive = now - conn.lastSeen <= activeWindowMs
+                if (conn.isActive != stillActive) {
+                    entry.setValue(conn.copy(isActive = stillActive))
                 }
             }
 
             // Most recently seen endpoints first
-            // The map already keeps endpoints in LRU order; no sort is needed.
             val snapshot = endpointMap.values.toList().asReversed()
             for (conn in snapshot) {
+                if (conn.isActive) active++ else history++
                 when (conn.ruleType) {
                     OutboundRuleType.PROXY -> proxies++
                     OutboundRuleType.DIRECT -> directs++
@@ -210,10 +251,10 @@ class LiveConnectionTracker @Inject constructor() {
                     OutboundRuleType.OTHER -> {}
                 }
             }
-            // Publish under the same lock as clear() so a stale snapshot cannot
-            // restore rows after the user has cleared the monitor.
             _connections.value = snapshot
             _totalCount.value = snapshot.size
+            _activeCount.value = active
+            _historyCount.value = history
             _totalHits.value = totalRequestsCount
             _proxyCount.value = proxies
             _directCount.value = directs
@@ -226,9 +267,12 @@ class LiveConnectionTracker @Inject constructor() {
         synchronized(lock) {
             endpointMap.clear()
             totalRequestsCount = 0
+            sequenceCounter = 0
             hasPendingUpdates.set(false)
             _connections.value = emptyList()
             _totalCount.value = 0
+            _activeCount.value = 0
+            _historyCount.value = 0
             _totalHits.value = 0
             _proxyCount.value = 0
             _directCount.value = 0

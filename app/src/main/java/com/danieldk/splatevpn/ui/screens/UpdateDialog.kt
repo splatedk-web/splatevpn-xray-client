@@ -8,6 +8,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
@@ -17,12 +18,14 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -36,16 +39,21 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.launch
 import com.danieldk.splatevpn.data.UpdateDownloadState
 import com.danieldk.splatevpn.data.UpdateInfo
 import com.danieldk.splatevpn.ui.MainViewModel
 import com.danieldk.splatevpn.ui.components.MarkdownContent
 import com.danieldk.splatevpn.ui.components.liquidGlass
 import com.danieldk.splatevpn.ui.components.tactileClickable
+import com.danieldk.splatevpn.data.UpdateApkIssue
+import com.danieldk.splatevpn.ui.theme.AppStrings
+import com.danieldk.splatevpn.ui.theme.localized
 import com.danieldk.splatevpn.ui.theme.LocalAppStrings
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 
@@ -59,6 +67,29 @@ fun UpdateDialog(
     val strings = LocalAppStrings.current
     val downloadState by viewModel.updateDownloadState.collectAsState()
     var isChangelogExpanded by remember { mutableStateOf(false) }
+    val language by viewModel.appLanguage.collectAsState()
+    val targetLanguage = com.danieldk.splatevpn.ui.theme.appLocale(language, java.util.Locale.getDefault()).language
+    val resources = com.danieldk.splatevpn.ui.theme.LocalAppResources.current
+    var translatedNotes by remember(updateInfo.changelog, targetLanguage) { mutableStateOf<String?>(null) }
+    var translating by remember(updateInfo.changelog, targetLanguage) { mutableStateOf(false) }
+    var translationFailed by remember(updateInfo.changelog, targetLanguage) { mutableStateOf(false) }
+    var showOriginal by remember(updateInfo.changelog, targetLanguage) { mutableStateOf(false) }
+    LaunchedEffect(updateInfo.changelog, targetLanguage) {
+        if (targetLanguage != "ru" && updateInfo.changelog.any { it in 'А'..'я' || it == 'ё' || it == 'Ё' }) {
+            translating = true
+            try {
+                translatedNotes = viewModel.translateReleaseNotes(updateInfo.changelog, targetLanguage)
+            } catch (_: kotlinx.coroutines.TimeoutCancellationException) {
+                translationFailed = true
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                translationFailed = true
+            } finally {
+                translating = false
+            }
+        }
+    }
 
     val hintPulse = rememberInfiniteTransition(label = "hint_pulse")
     val bounceY by hintPulse.animateFloat(
@@ -84,6 +115,7 @@ fun UpdateDialog(
             usePlatformDefaultWidth = false
         )
     ) {
+        com.danieldk.splatevpn.ui.components.rememberAndApplyPopupWindowBlur(blurBehind = true, backgroundBlur = false)
         CompositionLocalProvider(
             LocalContentColor provides colors.textPrimary
         ) {
@@ -91,14 +123,28 @@ fun UpdateDialog(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(colors.background.copy(alpha = 0.70f))
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        enabled = downloadState !is UpdateDownloadState.Downloading,
+                        onClick = {
+                            viewModel.cancelUpdateDownload()
+                            onDismiss()
+                        }
+                    )
                     .systemBarsPadding()
                     .padding(horizontal = 20.dp, vertical = 24.dp),
                 contentAlignment = Alignment.Center
             ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .widthIn(max = 520.dp)
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { /* Intercept clicks inside update dialog content */ }
+                    )
                     .liquidGlass(
                         cornerRadius = 24,
                         specularSheen = true,
@@ -215,6 +261,22 @@ fun UpdateDialog(
 
                     // — Rich Markdown Changelog Section with Scroll Guidance —
                     if (updateInfo.changelog.isNotBlank()) {
+                        if (translating || translationFailed) {
+                            Text(resources.getString(if (translating) com.danieldk.splatevpn.R.string.release_translating
+                                else com.danieldk.splatevpn.R.string.release_translation_failed),
+                                style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                        }
+                        if (translatedNotes != null) {
+                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(resources.getString(com.danieldk.splatevpn.R.string.release_machine_translation),
+                                    style = MaterialTheme.typography.bodySmall, color = colors.textSecondary)
+                                TextButton(onClick = { showOriginal = !showOriginal }) {
+                                    Text(resources.getString(if (showOriginal) com.danieldk.splatevpn.R.string.release_translated
+                                        else com.danieldk.splatevpn.R.string.release_original))
+                                }
+                            }
+                        }
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -227,7 +289,7 @@ fun UpdateDialog(
                                 horizontalArrangement = Arrangement.spacedBy(6.dp)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Article,
+                                    imageVector = Icons.AutoMirrored.Filled.Article,
                                     contentDescription = null,
                                     tint = colors.accentCyan,
                                     modifier = Modifier.size(15.dp)
@@ -269,7 +331,13 @@ fun UpdateDialog(
                         }
 
                         val changelogScrollState = rememberScrollState()
-                        val changelogMaxHeight = if (isChangelogExpanded) 340.dp else 190.dp
+                        val changelogMaxHeight by animateDpAsState(
+                            targetValue = if (isChangelogExpanded) 340.dp else 190.dp,
+                            animationSpec = tween(280, easing = FastOutSlowInEasing),
+                            label = "changelog_max_height"
+                        )
+                        val coroutineScope = rememberCoroutineScope()
+                        val density = LocalDensity.current
 
                         Box(
                             modifier = Modifier
@@ -292,36 +360,48 @@ fun UpdateDialog(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .verticalScroll(changelogScrollState)
-                                    .padding(end = 6.dp)
+                                    .padding(end = 8.dp)
                             ) {
-                                MarkdownContent(markdown = updateInfo.changelog)
+                                MarkdownContent(markdown = if (showOriginal) updateInfo.changelog else translatedNotes ?: updateInfo.changelog)
                             }
 
-                            // Dynamic Visible Scrollbar Track
+                            // Dynamic Visible Scrollbar Track with accurate full-range travel
                             val canScroll = changelogScrollState.maxValue > 0
                             if (canScroll) {
-                                val scrollFraction = changelogScrollState.value.toFloat() / changelogScrollState.maxValue.toFloat()
-                                Box(
+                                val scrollFraction = (changelogScrollState.value.toFloat() / changelogScrollState.maxValue.toFloat()).coerceIn(0f, 1f)
+                                BoxWithConstraints(
                                     modifier = Modifier
                                         .align(Alignment.CenterEnd)
                                         .fillMaxHeight()
-                                        .width(3.dp)
-                                        .clip(RoundedCornerShape(1.5.dp))
-                                        .background(colors.glassBorderLight.copy(alpha = 0.20f))
+                                        .width(3.5.dp)
+                                        .clip(RoundedCornerShape(2.dp))
+                                        .background(colors.glassBorderLight.copy(alpha = 0.18f))
                                 ) {
+                                    val trackHeight = maxHeight
+                                    val minThumb = 24.dp.coerceAtMost(trackHeight)
+                                    val thumbHeight = (trackHeight * 0.30f).coerceIn(minThumb, trackHeight)
+                                    val maxTravel = (trackHeight - thumbHeight).coerceAtLeast(0.dp)
+                                    val thumbOffset = maxTravel * scrollFraction
+
                                     Box(
                                         modifier = Modifier
-                                            .align(Alignment.TopCenter)
-                                            .fillMaxHeight(0.35f)
+                                            .offset(y = thumbOffset)
+                                            .height(thumbHeight)
                                             .fillMaxWidth()
-                                            .offset(y = (scrollFraction * 60).dp)
-                                            .clip(RoundedCornerShape(1.5.dp))
-                                            .background(colors.accentCyan.copy(alpha = 0.85f))
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .background(
+                                                Brush.verticalGradient(
+                                                    listOf(
+                                                        colors.accentCyan.copy(alpha = 0.95f),
+                                                        colors.accentCyan.copy(alpha = 0.70f)
+                                                    )
+                                                )
+                                            )
                                     )
                                 }
                             }
 
-                            // Interactive Bouncing Scroll Hint (Disappears when scrolled down)
+                            // Interactive Bouncing Scroll Hint (Disappears when scrolled down, click to scroll)
                             val showScrollHint = canScroll && changelogScrollState.value < 20
                             val hintAlpha by animateFloatAsState(
                                 targetValue = if (showScrollHint) 1f else 0f,
@@ -348,6 +428,13 @@ fun UpdateDialog(
                                             color = colors.accentCyan.copy(alpha = 0.45f * hintAlpha),
                                             shape = RoundedCornerShape(20.dp)
                                         )
+                                        .clickable {
+                                            coroutineScope.launch {
+                                                changelogScrollState.animateScrollTo(
+                                                    (changelogScrollState.value + 280).coerceAtMost(changelogScrollState.maxValue)
+                                                )
+                                            }
+                                        }
                                         .padding(horizontal = 10.dp, vertical = 4.dp)
                                 ) {
                                     Row(
@@ -484,7 +571,7 @@ fun UpdateDialog(
                                         modifier = Modifier.size(18.dp)
                                     )
                                     Text(
-                                        text = state.message.ifBlank { strings.updateFailed },
+                                        text = state.updateMessage(strings),
                                         color = colors.accentCrimson,
                                         fontSize = 11.sp,
                                         fontFamily = FontFamily.Monospace,
@@ -498,6 +585,12 @@ fun UpdateDialog(
                     }
 
                     Spacer(modifier = Modifier.height(20.dp))
+
+                    if ((downloadState as? UpdateDownloadState.Error)?.apkIssue != null) {
+                        TextButton(onClick = { viewModel.openUpdateRelease(updateInfo) }, modifier = Modifier.fillMaxWidth()) {
+                            Text(strings.localized("Открыть релиз на GitHub", "Open release on GitHub"))
+                        }
+                    }
 
                     // — Action buttons —
                     when (downloadState) {
@@ -615,4 +708,14 @@ private fun formatBytes(bytes: Long): String {
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"
         else -> "${"%.1f".format(bytes / (1024.0 * 1024.0))} MB"
     }
+}
+
+
+internal fun UpdateDownloadState.Error.updateMessage(strings: AppStrings): String = when (apkIssue) {
+    UpdateApkIssue.INCOMPLETE -> strings.localized("Файл обновления загрузился не полностью.", "The update download is incomplete.")
+    UpdateApkIssue.INTEGRITY -> strings.localized("Загруженный файл отличается от файла релиза.", "The downloaded file does not match the release.")
+    UpdateApkIssue.UNREADABLE -> strings.localized("Android не смог прочитать APK обновления.", "Android could not read the update APK.")
+    UpdateApkIssue.PACKAGE_OR_VERSION -> strings.localized("APK относится к другому приложению или версии.", "The APK is for a different app or version.")
+    UpdateApkIssue.SIGNATURE -> strings.localized("Подпись APK не совпадает с установленной версией.", "The APK signature does not match the installed app.")
+    null -> message.ifBlank { strings.updateFailed }
 }

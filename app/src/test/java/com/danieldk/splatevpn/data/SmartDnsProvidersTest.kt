@@ -24,11 +24,16 @@ class SmartDnsProvidersTest {
     @Test fun unknownAndLegacyValuesPreserveDnsAiDefault() {
         assertEquals("dns_ai", SmartDnsProviders.forAi("unknown").key)
         assertEquals("dns_ai", SmartDnsProviders.find("comss")!!.key)
+        assertEquals("dns_ai", SmartDnsProviders.find("comss_smart")!!.key)
         assertEquals("dns_ai", SmartDnsProviders.find("xbox")!!.key)
-        assertEquals("comss_smart", SmartDnsProviders.forAi("comss_smart").key)
+        assertFalse(SmartDnsProviders.all.any { it.key.contains("comss") })
         assertNull(SmartDnsProviders.find("cloudflare"))
     }
     @Test fun malwGatewayUsesTheOperatorsComEndpoint() {
         assertEquals("https://5u35p8m9i7.cloudflare-gateway.com/dns-query", SmartDnsProviders.forAi("malw_gateway").dohUrl)
+    }
+    @Test fun dnsAiBootstrapMatchesTheCurrentPublishedEncryptedEndpoints() {
+        // https://dns-ai.ru/ — operator settings reviewed 2026-11-02.
+        assertEquals(listOf("194.87.196.13", "45.151.102.219"), SmartDnsProviders.forAi("dns_ai").bootstrapIpv4)
     }
 }

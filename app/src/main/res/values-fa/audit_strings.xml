@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_search_failed">جست‌وجوی سرور ناموفق بود. اشتراک‌ها و اتصال را بررسی کنید و دوباره تلاش کنید.</string>
+</resources>

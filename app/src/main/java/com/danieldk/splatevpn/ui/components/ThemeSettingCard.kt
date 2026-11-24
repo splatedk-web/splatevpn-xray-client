@@ -1,5 +1,7 @@
 package com.danieldk.splatevpn.ui.components
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -13,6 +15,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +38,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.danieldk.splatevpn.ui.theme.LocalAppThemeColors
 import com.danieldk.splatevpn.ui.theme.resolveThemeColors
+import com.danieldk.splatevpn.ui.theme.BackdropStyle
+
+@Composable
+internal fun ThemeSelectionGrid(themes: List<Pair<String, String>>, expanded: Boolean,
+    selected: String, onSelect: (String) -> Unit) {
+    LazyVerticalGrid(columns = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxWidth().height(if (expanded) 420.dp else 288.dp),
+        userScrollEnabled = expanded,
+        horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(if (expanded) themes else themes.take(4), key = { it.first }) { (key, label) ->
+            ThemeSettingCard(label = label, themeKey = key, isSelected = selected == key, onClick = { onSelect(key) })
+        }
+    }
+}
 
 @Composable
 fun ThemeSettingCard(
@@ -46,7 +65,7 @@ fun ThemeSettingCard(
     val isDark = isSystemInDarkTheme()
     val previewColors = androidx.compose.runtime.remember(themeKey, isDark) { resolveThemeColors(themeKey, isDark) }
     val shape = RoundedCornerShape(16.dp)
-    val showArtwork = hasThemeObject(previewColors.backdrop) || themeKey in listOf("pony", "winx")
+    val showArtwork = previewColors.backdrop == BackdropStyle.WINTER || hasThemeObject(previewColors.backdrop) || themeKey in listOf("pony", "winx")
 
     val animatedBorderWidth by animateDpAsState(
         targetValue = if (isSelected) 2.dp else 1.dp,
@@ -65,7 +84,7 @@ fun ThemeSettingCard(
                 shape = shape
             )
             .semantics { selected = isSelected }
-            .clickable(role = Role.RadioButton, onClick = onClick)
+            .tvFocusOutline().clickable(role = Role.RadioButton, onClick = onClick)
     ) {
         Box(Modifier.fillMaxWidth().weight(1f), contentAlignment = Alignment.Center) {
             ThemeBackdropPreview(previewColors, Modifier.fillMaxSize())

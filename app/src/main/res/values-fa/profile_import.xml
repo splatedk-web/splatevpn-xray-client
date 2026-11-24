@@ -1,0 +1,5 @@
+<resources>
+    <string name="onboarding_preset_failed">آماده‌سازی فهرست‌های سرور همراه برنامه انجام نشد. دوباره تلاش کنید راه‌اندازی را کامل کنید.</string>
+    <string name="profile_import_invalid_reality_key">کلید تأیید REALITY (pqv) آسیب دیده است. پیوند یا کد QR اصلی را وارد کنید. نویسه‌های ازدست‌رفته را نمی‌توان خودکار بازیابی کرد.</string>
+    <string name="profile_import_invalid">واردکردن این نمایه انجام نشد. پیکربندی اصلی را بررسی کنید.</string>
+</resources>

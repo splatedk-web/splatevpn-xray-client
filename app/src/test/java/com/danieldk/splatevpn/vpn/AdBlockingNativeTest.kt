@@ -29,14 +29,14 @@ class AdBlockingNativeTest {
             return output.trim()
         }
         val generator = XrayConfigGenerator()
-        val imported = ServerNode("native-ads", "Native ads", "vless", "example.com", 443,
-            fullConfigJson = """{"outbounds":[{"tag":"direct","protocol":"freedom"}]}""")
+        val imported = ServerNode("native-ads", "Native ads", "trojan", "example.com", 443, uuid = "test-password", security = "tls",
+            fullConfigJson = """{"outbounds":[{"tag":"custom","protocol":"trojan","settings":{"servers":[{"address":"example.com","port":443,"password":"test-password"}]},"streamSettings":{"network":"tcp","security":"tls"}}]}""")
         val configs = listOf(
             generator.generateConfig(null, bypassAi = false, enableSniffing = false),
             generator.generateConfig(null, bypassAi = false, isFakeDns = true),
             generator.generateConfig(imported),
             generator.generateConfig(null, bypassAi = false, adBlocker = false),
-            generator.generateConfig(imported.copy(fullConfigJson = "{}")),
+            generator.generateConfig(imported, isFakeDns = true),
             generator.generateConfig(null, bypassAi = false, adBlockMatcher = "ext:splate-ads-test.dat:ads", adBlockAllowlist = listOf("adsdk.yandex.ru")),
             generator.generateConfig(imported, adBlockMatcher = "ext:splate-ads-test.dat:ads", adBlockAllowlist = listOf("adsdk.yandex.ru"))
         )

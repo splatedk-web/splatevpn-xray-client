@@ -1,0 +1,5 @@
+<resources>
+    <string name="subscription_agent_title">کلاینت اشتراک: %1$s</string>
+    <string name="subscription_agent_auto">خودکار</string>
+    <string name="subscription_agent_hint">User-Agent ارسال‌شده به این ارائه‌دهنده اشتراک را تغییر می‌دهد. HWID جداگانه کنترل می‌شود.</string>
+</resources>

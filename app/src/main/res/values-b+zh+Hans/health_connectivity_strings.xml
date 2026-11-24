@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="health_connectivity_unverified_title">尚未确认 VPN 连接是否可用</string>
+    <string name="health_connectivity_unverified_description">VPN 接口已创建，但连接检测未通过，原因尚不明确。请尝试其他服务器或检查 DNS 设置。</string>
+</resources>

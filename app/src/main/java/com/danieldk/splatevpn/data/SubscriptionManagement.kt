@@ -12,5 +12,6 @@ fun subscriptionsToUpdate(subscriptions: List<SubscriptionEntity>, manual: Boole
 
 data class SubscriptionUpdateReport(
     val updated: Int,
-    val failures: List<Pair<String, String>>
+    val failures: List<Pair<String, String>>,
+    val retryableFailures: Int = 0
 )

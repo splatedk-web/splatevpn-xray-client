@@ -1,0 +1,5 @@
+<resources>
+    <string name="onboarding_preset_failed">Could not prepare bundled server lists. Please try completing setup again.</string>
+    <string name="profile_import_invalid_reality_key">The REALITY verification key (pqv) is damaged. Import the original link or QR code. Missing characters cannot be restored automatically.</string>
+    <string name="profile_import_invalid">Could not import this profile. Check the original configuration.</string>
+</resources>

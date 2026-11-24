@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">Splate · وضعیت VPN</string>
+    <string name="widget_quick_name">Splate · دکمهٔ VPN</string>
+    <string name="widget_description">اتصال VPN، سرور انتخابی و سرعت. قابل تغییر اندازه.</string>
+    <string name="widget_quick_description">با یک لمس VPN را روشن یا خاموش کنید.</string>
+    <string name="widget_brand">SplateVPN</string>
+    <string name="widget_download">↓ دریافت</string>
+    <string name="widget_upload">↑ ارسال</string>
+    <string name="widget_connected">متصل</string>
+    <string name="widget_disconnected">قطع</string>
+    <string name="widget_connecting">در حال اتصال</string>
+    <string name="widget_disconnecting">در حال قطع اتصال</string>
+    <string name="widget_failed">اتصال ناموفق</string>
+    <string name="widget_choose_server">انتخاب سرور</string>
+    <string name="widget_tunnel_active">VPN فعال است</string>
+    <string name="widget_servers">انتخاب سرور</string>
+    <string name="widget_on">روشن</string>
+    <string name="widget_off">خاموش</string>
+    <string name="widget_wait">···</string>
+    <string name="widget_tap_to_connect">برای اتصال دکمهٔ روشن را بزنید</string>
+    <string name="widget_tap_to_retry">تلاش مجدد اتصال</string>
+    <string name="widget_starting">در حال اتصال به سرور…</string>
+    <string name="widget_stopping">در حال بستن اتصال…</string>
+    <string name="widget_ping">%1$d میلی‌ثانیه</string>
+    <string name="widget_traffic">↓ %1$s   ↑ %2$s</string>
+    <string name="widget_quick_on">روشن</string>
+    <string name="widget_start_vpn">روشن کردن VPN</string>
+    <string name="widget_stop_vpn">خاموش کردن VPN</string>
+    <string name="widget_quick_off">خاموش</string>
+    <string name="widget_quick_connecting">انتظار</string>
+    <string name="widget_quick_failed">ناموفق</string>
+</resources>

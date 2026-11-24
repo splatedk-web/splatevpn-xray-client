@@ -1,5 +1,12 @@
 package com.danieldk.splatevpn.ui.screens
 
+import com.danieldk.splatevpn.ui.components.tvFocusOutline
+
+import com.danieldk.splatevpn.ui.components.SplateTextButton as TextButton
+import com.danieldk.splatevpn.ui.components.SplateIconButton as IconButton
+
+import com.danieldk.splatevpn.ui.components.SplateAlertDialog as AlertDialog
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -73,7 +80,7 @@ internal fun TrafficStatisticsSheet(days: List<TrafficDay>, onClear: () -> Unit,
     val tx = totals.sumOf { it.tx }
     val timeMs = totals.sumOf { it.connectedMs }
     fun navigate(date: LocalDate) { anchorEpoch = date.toEpochDay(); selectedEpoch = anchorEpoch }
-    fun duration(value: Long) = text("${value / 3_600_000} ч ${(value / 60_000) % 60} мин", "${value / 3_600_000} h ${(value / 60_000) % 60} min")
+    fun duration(value: Long) = String.format(text("%d ч %d мин", "%d h %d min"), value / 3_600_000, (value / 60_000) % 60)
     val dayFormat = DateTimeFormatter.ofPattern("d MMMM yyyy", text.locale)
     val monthFormat = DateTimeFormatter.ofPattern("LLLL yyyy", text.locale)
 
@@ -100,7 +107,7 @@ internal fun TrafficStatisticsSheet(days: List<TrafficDay>, onClear: () -> Unit,
             }
         }
         Column(Modifier.fillMaxWidth().liquidGlass(cornerRadius = 20, accentBorder = colors.accentCyan).padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text("ВСЕГО ТРАФИКА", "TOTAL TRAFFIC"), color = colors.textSecondary, fontSize = 10.sp, fontFamily = FontFamily.Monospace, letterSpacing = 1.4.sp)
+            Text(text("Всего трафика", "Total traffic"), color = colors.textSecondary, fontSize = 10.sp, fontFamily = FontFamily.Monospace, letterSpacing = 0.1.sp)
             AnimatedContent(targetState = trafficBytes(rx + tx), label = "traffic_total") { amount ->
                 Text(amount, color = colors.textPrimary, fontWeight = FontWeight.Bold, fontSize = 32.sp, fontFamily = FontFamily.Monospace, maxLines = 1)
             }
@@ -143,7 +150,7 @@ internal fun TrafficStatisticsSheet(days: List<TrafficDay>, onClear: () -> Unit,
             items(chartDates, key = { it.toEpochDay() }) { date ->
                 val active = date == selected
                 Column(Modifier.widthIn(min = 48.dp).liquidGlass(cornerRadius = 12, accentBorder = if (active) colors.accentCyan else null)
-                    .selectable(selected = active, enabled = date <= today, role = Role.Tab, onClick = { selectedEpoch = date.toEpochDay() })
+                    .tvFocusOutline().selectable(selected = active, enabled = date <= today, role = Role.Tab, onClick = { selectedEpoch = date.toEpochDay() })
                     .padding(horizontal = 10.dp, vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(date.format(DateTimeFormatter.ofPattern("EE", text.locale)), color = colors.textSecondary, fontSize = 10.sp)
                     Text("${date.dayOfMonth}", color = (if (active) colors.accentCyan else colors.textPrimary).copy(alpha = if (date <= today) 1f else 0.3f), fontWeight = FontWeight.Bold)
@@ -195,7 +202,7 @@ private fun PeriodChip(label: String, selected: Boolean, modifier: Modifier, onC
     val colors = LocalAppThemeColors.current
     Box(modifier.liquidGlass(cornerRadius = 12, accentBorder = if (selected) colors.accentCyan else null,
         backgroundColor = if (selected) colors.accentCyan.copy(alpha = 0.12f) else null)
-        .selectable(selected = selected, role = Role.Tab, onClick = onClick).padding(horizontal = 8.dp, vertical = 11.dp), contentAlignment = Alignment.Center) {
+        .tvFocusOutline().selectable(selected = selected, role = Role.Tab, onClick = onClick).padding(horizontal = 8.dp, vertical = 11.dp), contentAlignment = Alignment.Center) {
         Text(label, color = if (selected) colors.accentCyan else colors.textSecondary, fontSize = 12.sp,
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }

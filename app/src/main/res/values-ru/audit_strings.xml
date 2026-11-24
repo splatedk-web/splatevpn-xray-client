@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="server_search_failed">Не удалось завершить поиск. Проверьте подписки и подключение, затем повторите.</string>
+</resources>

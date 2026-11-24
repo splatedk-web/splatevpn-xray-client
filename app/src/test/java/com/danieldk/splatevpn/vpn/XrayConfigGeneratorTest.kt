@@ -17,6 +17,244 @@ class XrayConfigGeneratorTest {
         generator = XrayConfigGenerator()
     }
 
+    @Test fun realDelayNeverBypassesTheCandidateWhenTheHttpTargetSharesItsAddress() {
+        val candidates = listOf(
+            ServerNode("ip", "IP endpoint", "vless", "192.0.2.25", 443,
+                uuid = "11111111-2222-3333-4444-555555555555", security = "tls"),
+            ServerNode("dns", "Domain endpoint", "vless", "vpn.example", 443,
+                uuid = "11111111-2222-3333-4444-555555555555", security = "tls"),
+            ServerNode("plain", "Plain endpoint", "vless", "vpn.example", 8080,
+                uuid = "11111111-2222-3333-4444-555555555555"),
+            ServerNode("quic", "Hysteria endpoint", "hysteria2", "127.0.0.1", 443,
+                uuid = "test-password", security = "tls")
+        )
+        for (node in candidates) {
+            val config = JsonParser.parseString(generator.generateTestConfig(node, 25001)).asJsonObject
+            val rules = config.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }
+            val directRules = rules.filter { it["outboundTag"]?.asString == "direct" }
+            assertTrue("Direct traffic must be limited to DNS bootstrap for ${node.address}",
+                directRules.all { it["port"]?.asString == "53" && !it.has("domain") })
+            assertEquals("proxy", rules.last()["outboundTag"].asString)
+            assertEquals("tcp,udp", rules.last()["network"].asString)
+            assertFalse("Imported transport must not replace the probe with a direct outbound",
+                config.getAsJsonArray("outbounds").first { it.asJsonObject["tag"]?.asString == "proxy" }
+                    .asJsonObject["protocol"].asString == "freedom")
+        }
+    }
+
+    @Test fun diagnosticLoggingKeepsTransportFailuresVisibleWithoutChangingNormalLogging() {
+        val normal = JsonParser.parseString(generator.generateConfig(null)).asJsonObject
+        val diagnostic = JsonParser.parseString(generator.generateConfig(null, diagnosticLogging = true)).asJsonObject
+        assertEquals("warning", normal.getAsJsonObject("log")["loglevel"].asString)
+        assertEquals("info", diagnostic.getAsJsonObject("log")["loglevel"].asString)
+    }
+    @Test fun importedTcpRealityRetainsInfoLevelTransportFailures() {
+        val raw = """{"outbounds":[{"tag":"remote","protocol":"vless","settings":{"vnext":[{"address":"vpn.example","port":443,"users":[{"id":"11111111-2222-3333-4444-555555555555","encryption":"none"}]}]},"streamSettings":{"network":"tcp","security":"reality","realitySettings":{"serverName":"example.com","publicKey":"fixture-key","shortId":"abcd","fingerprint":"chrome"}}}]}"""
+        val node = com.danieldk.splatevpn.data.LinkParser.parseSubscription(raw).single()
+        val config = JsonParser.parseString(generator.generateConfig(node)).asJsonObject
+        assertEquals("info", config.getAsJsonObject("log")["loglevel"].asString)
+        val imported = config.getAsJsonArray("outbounds")[0].asJsonObject.getAsJsonObject("streamSettings")
+        assertEquals("tcp", imported["network"].asString)
+        assertEquals("fixture-key", imported.getAsJsonObject("realitySettings")["publicKey"].asString)
+    }
+    @Test fun tcpPathsAndHostsDoNotEnableHttpCamouflageWithoutAnExplicitHeaderType() {
+        val link = "vless://11111111-2222-3333-4444-555555555555@vpn.example:443?security=reality&pbk=fixture&type=tcp"
+        for (suffix in listOf("", "&path=%2F", "&path=%2Fmobile&host=example.com&headerType=none")) {
+            val node = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse(link + suffix))
+            for (json in listOf(generator.generateConfig(node), generator.generateTestConfig(node, 25001))) {
+                val stream = JsonParser.parseString(json).asJsonObject.getAsJsonArray("outbounds")[0].asJsonObject
+                    .getAsJsonObject("streamSettings")
+                assertFalse("Unexpected HTTP camouflage for $suffix", stream.has("tcpSettings"))
+            }
+        }
+        val http = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse(link + "&headerType=http&path=%2F"))
+        val stream = JsonParser.parseString(generator.generateConfig(http)).asJsonObject.getAsJsonArray("outbounds")[0].asJsonObject
+            .getAsJsonObject("streamSettings")
+        assertEquals("http", stream.getAsJsonObject("tcpSettings").getAsJsonObject("header")["type"].asString)
+        for (headerType in listOf("http", "none")) {
+            val raw = """{"v":"2","ps":"VMess","add":"vpn.example","port":"443","id":"11111111-2222-3333-4444-555555555555","net":"tcp","type":"$headerType","path":"/","host":"example.com","tls":"tls"}"""
+            val encoded = java.util.Base64.getEncoder().encodeToString(raw.toByteArray())
+            val vmess = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse("vmess://$encoded"))
+            val vmessStream = JsonParser.parseString(generator.generateConfig(vmess)).asJsonObject.getAsJsonArray("outbounds")[0]
+                .asJsonObject.getAsJsonObject("streamSettings")
+            assertEquals(headerType == "http", vmessStream.has("tcpSettings"))
+        }
+    }
+
+    @Test fun privateDnsCheckerDoesNotResolveEveryProviderUsingTheCurrentlySelectedDns() {
+        val config = JsonParser.parseString(generator.generateConfig(null, dnsProbePort = SplateConstants.DNS_CHECK_SOCKS_PORT)).asJsonObject
+        val checker = config.getAsJsonArray("inbounds").first { it.asJsonObject["tag"].asString == "dns-check-in" }.asJsonObject
+        assertEquals("127.0.0.1", checker["listen"].asString)
+        assertEquals(SplateConstants.DNS_CHECK_SOCKS_PORT, checker["port"].asInt)
+        assertFalse(checker.has("sniffing"))
+        assertFalse(checker.getAsJsonObject("settings")["udp"].asBoolean)
+        val probeRoute = config.getAsJsonObject("routing").getAsJsonArray("rules").first().asJsonObject
+        assertEquals(listOf("dns-check-in"), probeRoute.getAsJsonArray("inboundTag").map { it.asString })
+        assertEquals("dns-check-proxy", probeRoute["outboundTag"].asString)
+        val probeOutbound = config.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "dns-check-proxy" }.asJsonObject
+        assertEquals("AsIs", probeOutbound["targetStrategy"].asString)
+        val intercept = config.getAsJsonObject("routing").getAsJsonArray("rules").first {
+            it.asJsonObject["outboundTag"].asString == "dns-out"
+        }.asJsonObject
+        assertEquals(listOf("socks-in"), intercept.getAsJsonArray("inboundTag").map { it.asString })
+        assertThrows(IllegalArgumentException::class.java) { generator.generateConfig(null, dnsProbePort = SplateConstants.XRAY_SOCKS_PORT) }
+    }
+
+    @Test fun dnsDiagnosticsAndCustomBootstrapRetainTheEffectiveImportedProxyChain() {
+        val raw = """{"outbounds":[
+            {"tag":"entry","protocol":"socks","settings":{"servers":[{"address":"127.0.0.2","port":10400}]},"proxySettings":{"tag":"hop"}},
+            {"tag":"hop","protocol":"socks","settings":{"servers":[{"address":"127.0.0.3","port":10401}]}}
+        ]}"""
+        val node = ServerNode("dns-chain", "DNS chain", "socks", "127.0.0.2", 10400, fullConfigJson = raw)
+        val config = JsonParser.parseString(generator.generateConfig(node, dnsProvider = "custom",
+            customDohUrl = "https://resolver.example/dns-query", dnsProbePort = SplateConstants.DNS_CHECK_SOCKS_PORT)).asJsonObject
+        val outbounds = config.getAsJsonArray("outbounds").map { it.asJsonObject }.associateBy { it["tag"].asString }
+        val primary = outbounds.getValue("proxy")
+        assertEquals("import-hop", primary.getAsJsonObject("proxySettings")["tag"].asString)
+        for (tag in listOf("dns-check-proxy", "dns-bootstrap")) {
+            assertEquals(primary.deepCopy().apply { addProperty("tag", tag); addProperty("targetStrategy", "AsIs") }, outbounds.getValue(tag))
+        }
+    }
+
+    @Test fun optionalRealitySignatureVerificationIsPreservedInGeneratedCoreConfig() {
+        val key = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(ByteArray(1952) { (it % 251).toByte() })
+        val node = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse(
+            "vless://00000000-0000-0000-0000-000000000000@vpn.example:443?security=reality&type=xhttp&pbk=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&pqv=$key"))
+        fun reality(rawLink: String) = JsonParser.parseString(generator.generateConfig(node.copy(rawLink = rawLink)))
+            .asJsonObject.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "proxy" }
+            .asJsonObject.getAsJsonObject("streamSettings").getAsJsonObject("realitySettings")
+        assertEquals(key, reality(node.rawLink)["mldsa65Verify"].asString)
+        assertFalse(reality("").has("mldsa65Verify"))
+    }
+
+    @Test fun realityVerificationNormalizesLinksAndImportedJsonButRejectsDamagedKeys() {
+        val bytes = ByteArray(1952) { (it % 251).toByte() }
+        val canonical = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+        val standard = java.util.Base64.getEncoder().encodeToString(bytes)
+        val raw = "vless://00000000-0000-0000-0000-000000000000@vpn.example:443?security=reality&type=xhttp&pbk=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&pqv="
+        val node = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse(raw + standard))
+        fun key(config: String) = JsonParser.parseString(config).asJsonObject.getAsJsonArray("outbounds")
+            .first { it.asJsonObject["tag"].asString == "proxy" }.asJsonObject
+            .getAsJsonObject("streamSettings").getAsJsonObject("realitySettings")["mldsa65Verify"].asString
+        assertEquals(canonical, key(generator.generateConfig(node)))
+        assertEquals(canonical, key(generator.generateTestConfig(node, 25001)))
+        val imported = JsonParser.parseString(generator.generateConfig(node)).asJsonObject
+        val reality = imported.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "proxy" }
+            .asJsonObject.getAsJsonObject("streamSettings").getAsJsonObject("realitySettings")
+        reality.addProperty("mldsa65Verify", standard)
+        val jsonNode = node.copy(rawLink = "", fullConfigJson = imported.toString())
+        assertEquals(canonical, key(generator.generateConfig(jsonNode)))
+        assertEquals(canonical, key(generator.generateTestConfig(jsonNode, 25001)))
+        reality.addProperty("mldsa65Verify", "truncated-key")
+        assertThrows(IllegalArgumentException::class.java) { generator.generateConfig(jsonNode.copy(fullConfigJson = imported.toString())) }
+        assertThrows(IllegalArgumentException::class.java) { generator.generateConfig(node.copy(rawLink = raw + "truncated-key")) }
+    }
+
+    @Test fun ordinaryProxyDoesNotRequireDnsBeforeTransportButCustomResolverStillApplies() {
+        val ordinary = JsonParser.parseString(generator.generateConfig(null)).asJsonObject
+        assertEquals("AsIs", ordinary.getAsJsonArray("outbounds").first {
+            it.asJsonObject["tag"].asString == "proxy"
+        }.asJsonObject["targetStrategy"].asString)
+        assertFalse(ordinary.getAsJsonArray("outbounds").any { it.asJsonObject["tag"].asString == "dns-bootstrap" })
+        val custom = JsonParser.parseString(generator.generateConfig(null, dnsProvider = "custom",
+            customDohUrl = "https://resolver.example/dns-query")).asJsonObject
+        assertEquals("ForceIP", custom.getAsJsonArray("outbounds").first {
+            it.asJsonObject["tag"].asString == "proxy"
+        }.asJsonObject["targetStrategy"].asString)
+        val bootstrap = custom.getAsJsonArray("outbounds").first {
+            it.asJsonObject["tag"].asString == "dns-bootstrap"
+        }.asJsonObject
+        assertEquals("AsIs", bootstrap["targetStrategy"].asString)
+        val rule = custom.getAsJsonObject("routing").getAsJsonArray("rules").first {
+            it.asJsonObject["outboundTag"].asString == "dns-bootstrap"
+        }.asJsonObject
+        assertEquals(listOf("full:resolver.example"), rule.getAsJsonArray("domain").map { it.asString })
+        val numeric = JsonParser.parseString(generator.generateConfig(null, dnsProvider = "custom",
+            customDohUrl = "https://1.1.1.1/dns-query")).asJsonObject
+        assertFalse(numeric.getAsJsonArray("outbounds").any { it.asJsonObject["tag"].asString == "dns-bootstrap" })
+    }
+
+    @Test fun xhttpAllowlistedSniDoesNotReplaceServerAddressOrRequireExternalDns() {
+        val node = requireNotNull(com.danieldk.splatevpn.data.LinkParser.parse(
+            "vless://11111111-2222-3333-4444-555555555555@192.0.2.25:443?type=xhttp&security=tls&sni=max.ru&host=origin.example&path=%2Fmobile&mode=packet-up"))
+        for (raw in listOf(generator.generateConfig(node, mode = "global", bypassAi = false), generator.generateTestConfig(node, 25001))) {
+            val config = JsonParser.parseString(raw).asJsonObject
+            val proxy = config.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "proxy" }.asJsonObject
+            assertEquals("AsIs", proxy["targetStrategy"].asString)
+            assertEquals("192.0.2.25", proxy.getAsJsonObject("settings").getAsJsonArray("vnext")[0].asJsonObject["address"].asString)
+            val stream = proxy.getAsJsonObject("streamSettings")
+            assertEquals("max.ru", stream.getAsJsonObject("tlsSettings")["serverName"].asString)
+            assertEquals("/mobile", stream.getAsJsonObject("xhttpSettings")["path"].asString)
+            assertEquals("packet-up", stream.getAsJsonObject("xhttpSettings")["mode"].asString)
+            assertEquals("origin.example", stream.getAsJsonObject("xhttpSettings")["host"].asString)
+            assertFalse(config.getAsJsonObject("dns").getAsJsonArray("servers").any {
+                it.isJsonObject && it.asJsonObject["address"]?.asString == "localhost"
+            })
+        }
+    }
+
+    @Test fun selectedDnsNeverAddsOtherProvidersAsGeneralFallbacks() {
+        val providers = mapOf("cloudflare" to "https://1.1.1.1/dns-query", "google" to "https://8.8.8.8/dns-query",
+            "quad9" to "https://9.9.9.9/dns-query", "adguard" to "https://94.140.14.14/dns-query",
+            "yandex" to "tcp://77.88.8.8:53", "custom" to "https://resolver.example/dns-query")
+        for ((provider, address) in providers) {
+            for (aiMode in listOf("vpn", "dns_ai", "dns_vpn")) {
+                val dns = JsonParser.parseString(generator.generateConfig(null, dnsProvider = provider,
+                    customDohUrl = "https://resolver.example/dns-query", aiRoutingMode = aiMode)).asJsonObject.getAsJsonObject("dns")
+                val servers = dns.getAsJsonArray("servers")
+                val general = servers.filter { it.isJsonPrimitive }.map { it.asString }
+                val expected = if (address.contains("://")) listOf(address) else listOf(address, "tcp://$address:53")
+                assertEquals("$provider/$aiMode", expected, general)
+                val scoped = servers.filter { it.isJsonObject }.map { it.asJsonObject }
+                assertTrue(scoped.isNotEmpty())
+                assertTrue(scoped.all { it.get("skipFallback").asBoolean && it.getAsJsonArray("domains").size() > 0 })
+                assertTrue(dns.get("disableFallbackIfMatch").asBoolean)
+            }
+        }
+    }
+
+    @Test
+    fun tunneledSmartDnsKeepsRelayResolutionAndUsesSelectedTransport() {
+        SmartDnsProviders.all.forEach { provider ->
+            listOf("xhttp", "tcp", "ws", "grpc").forEach { transport ->
+                val node = ServerNode("test", "test", "vless", "vpn.example.com", 443,
+                    uuid = "11111111-2222-3333-4444-555555555555", network = transport, security = "tls")
+                val json = JsonParser.parseString(generator.generateConfig(node, aiRoutingMode = "dns_vpn",
+                    aiDnsProvider = provider.key, aiTlsFragment = true, blockQuic = false)).asJsonObject
+                val relay = json.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "ai-direct" }.asJsonObject
+                val socket = relay.getAsJsonObject("streamSettings").getAsJsonObject("sockopt")
+                assertEquals("proxy", socket["dialerProxy"].asString)
+                assertEquals("ForceIPv4", socket["domainStrategy"].asString)
+                assertFalse(relay.getAsJsonObject("settings").has("fragment"))
+                val rules = json.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }
+                val doh = rules.first { it.getAsJsonArray("domain")?.any { d -> d.asString == "full:${provider.host}" } == true }
+                assertEquals("proxy", doh["outboundTag"].asString)
+                val ai = rules.first { it["network"]?.asString != "udp" &&
+                    it.getAsJsonArray("domain")?.any { d -> d.asString == "full:gemini.google.com" } == true }
+                assertEquals("ai-direct", ai["outboundTag"].asString)
+                assertTrue(rules.any { it["network"]?.asString == "udp" && it["port"]?.asString == "443" &&
+                    it["outboundTag"]?.asString == "block" })
+                val proxy = json.getAsJsonArray("outbounds").first { it.asJsonObject["tag"].asString == "proxy" }.asJsonObject
+                assertEquals(transport, proxy.getAsJsonObject("streamSettings")["network"].asString)
+                assertFalse(proxy.getAsJsonObject("streamSettings").getAsJsonObject("sockopt").has("dialerProxy"))
+            }
+        }
+    }
+
+    @Test
+    fun tunneledAiDnsDoesNotTunnelAnUnrelatedGeneralSmartDns() {
+        val json = JsonParser.parseString(generator.generateConfig(null, aiRoutingMode = "dns_vpn",
+            aiDnsProvider = "geohide", dnsProvider = "malw")).asJsonObject
+        val rules = json.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }
+        fun route(host: String) = rules.first {
+            it.getAsJsonArray("domain")?.any { d -> d.asString == "full:$host" } == true
+        }["outboundTag"].asString
+        assertEquals("proxy", route("geohide.ru"))
+        assertEquals("direct", route("dns.malw.link"))
+        val disabled = JsonParser.parseString(generator.generateConfig(null, aiRoutingMode = "dns_vpn", bypassAi = false)).asJsonObject
+        assertFalse(disabled.getAsJsonArray("outbounds").any { it.asJsonObject["tag"].asString == "ai-direct" })
+    }
+
     @Test
     fun autoDnsProbeUsesOnlyItsLoopbackPortAndSelectedResolver() {
         SmartDnsProviders.all.forEach { provider ->
@@ -36,7 +274,7 @@ class XrayConfigGeneratorTest {
                 assertTrue(server.getAsJsonArray("domains").any { it.asString == "full:gemini.google.com" })
                 assertEquals("https://1.1.1.1/dns-query", servers.last().asJsonObject.get("address").asString)
                 val rules = json.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }
-                assertEquals("dns-probe", rules.first().get("outboundTag").asString)
+                assertEquals(if (fragment) "provider-probe" else "dns-probe", rules.first().get("outboundTag").asString)
                 assertEquals("ai-probe", rules[1].get("outboundTag").asString)
                 assertEquals("dns-probe", rules.last().get("outboundTag").asString)
                 val outbounds = json.getAsJsonArray("outbounds").map { it.asJsonObject }
@@ -45,6 +283,9 @@ class XrayConfigGeneratorTest {
                 assertEquals("ForceIPv4", ai.getAsJsonObject("streamSettings").getAsJsonObject("sockopt").get("domainStrategy").asString)
                 val doh = outbounds.first { it.get("tag").asString == "dns-probe" }
                 assertFalse(doh.has("settings"))
+                val providerOut = outbounds.firstOrNull { it.get("tag").asString == "provider-probe" }
+                assertEquals(fragment, providerOut != null)
+                if (fragment) assertTrue(requireNotNull(providerOut).getAsJsonObject("settings").has("fragment"))
                 assertFalse(json.toString().contains("\"tag\":\"proxy\""))
             }
         }
@@ -95,7 +336,7 @@ class XrayConfigGeneratorTest {
             val aiDns = dns.getAsJsonArray("servers").first {
                 it.isJsonObject && it.asJsonObject.getAsJsonArray("domains")?.any { d -> d.asString == "full:gemini.google.com" } == true
             }.asJsonObject
-            assertEquals(provider.key, "1.1.1.1", aiDns.get("address").asString)
+            assertEquals(provider.key, "https://1.1.1.1/dns-query", aiDns.get("address").asString)
             val aiRoute = config.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }.first {
                 it.get("network")?.asString != "udp" && it.getAsJsonArray("domain")?.any { d -> d.asString == "full:gemini.google.com" } == true
             }
@@ -111,7 +352,7 @@ class XrayConfigGeneratorTest {
             val firstMatchedDns = config.getAsJsonObject("dns").getAsJsonArray("servers").filter { it.isJsonObject }.map { it.asJsonObject }.first {
                 it.getAsJsonArray("domains")?.any { d -> d.asString in listOf("domain:chatgpt.com", "full:chatgpt.com") } == true
             }
-            assertEquals(provider.key, "1.1.1.1", firstMatchedDns.get("address").asString)
+            assertEquals(provider.key, "https://1.1.1.1/dns-query", firstMatchedDns.get("address").asString)
         }
     }
 
@@ -132,12 +373,12 @@ class XrayConfigGeneratorTest {
     }
 
     @Test
-    fun optionalAiFragmentationNeverFragmentsDohConnections() {
+    fun optionalAiFragmentationIncludesSelectedDohConnections() {
         val json = JsonParser.parseString(generator.generateConfig(null, aiDnsProvider = "malw_gateway", aiTlsFragment = true)).asJsonObject
         val rule = json.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }.first {
             it.getAsJsonArray("domain")?.any { d -> d.asString == "full:5u35p8m9i7.cloudflare-gateway.com" } == true
         }
-        assertEquals("direct", rule.get("outboundTag").asString)
+        assertEquals("ai-direct", rule.get("outboundTag").asString)
         val outbound = json.getAsJsonArray("outbounds").first { it.asJsonObject.get("tag").asString == "ai-direct" }.asJsonObject
         assertTrue(outbound.getAsJsonObject("settings").has("fragment"))
     }
@@ -159,7 +400,7 @@ class XrayConfigGeneratorTest {
         assertFalse(domains.contains("domain:bing.com"))
         assertTrue(smartDns.get("skipFallback").asBoolean)
         assertTrue(dns.get("disableFallbackIfMatch").asBoolean)
-        assertEquals(listOf("194.87.196.13", "186.246.49.127"),
+        assertEquals(listOf("194.87.196.13", "45.151.102.219"),
             dns.getAsJsonObject("hosts").getAsJsonArray("dns.dns-ai.ru").map { it.asString })
 
         val rules = json.getAsJsonObject("routing").getAsJsonArray("rules").map { it.asJsonObject }
@@ -259,35 +500,33 @@ class XrayConfigGeneratorTest {
     }
 
     @Test
-    fun adBlocking_importedProfilesKeepDefaultOutboundButCannotBypassFilter() {
-        val raw = """{"inbounds":[{"protocol":"socks","tag":"custom-in","sniffing":{"enabled":false,"destOverride":["fakedns"]}}],
-            "outbounds":[{"protocol":"freedom","tag":"splate-ad-block"}],
-            "dns":{"hosts":{"example.com":"203.0.113.10"}},
-            "routing":{"domainStrategy":"AsIs","rules":[{"type":"field","network":"tcp,udp","outboundTag":"splate-ad-block"}]}}"""
-        val node = ServerNode("import", "Imported", "vless", "example.com", 443, fullConfigJson = raw)
-        val config = JsonParser.parseString(generator.generateConfig(node, adBlocker = true)).asJsonObject
-        val outbounds = config.getAsJsonArray("outbounds")
-        assertEquals("freedom", outbounds[0].asJsonObject.get("protocol").asString)
-        val rules = config.getAsJsonObject("routing").getAsJsonArray("rules")
-        assertEquals("splate-ad-block-1", rules[0].asJsonObject.get("outboundTag").asString)
-        assertEquals("53", rules[1].asJsonObject.get("port").asString)
-        assertEquals("splate-ad-block", rules[2].asJsonObject.get("outboundTag").asString)
-        assertEquals("203.0.113.10", config.getAsJsonObject("dns").getAsJsonObject("hosts").get("example.com").asString)
-        assertTrue(config.getAsJsonArray("inbounds")[0].asJsonObject.getAsJsonObject("sniffing")
-            .getAsJsonArray("destOverride").any { it.asString == "fakedns" })
-        val disabled = JsonParser.parseString(generator.generateConfig(node, adBlocker = false)).asJsonObject
-        assertEquals(1, disabled.getAsJsonArray("outbounds").size())
-        assertEquals(1, disabled.getAsJsonObject("routing").getAsJsonArray("rules").size())
-        assertFalse(disabled.getAsJsonObject("dns").getAsJsonObject("hosts").has("domain:adsdk.yandex.ru"))
-        val implicitDefault = JsonParser.parseString(generator.generateConfig(node.copy(fullConfigJson = "{}"))).asJsonObject
-        assertEquals("freedom", implicitDefault.getAsJsonArray("outbounds")[0].asJsonObject.get("protocol").asString)
+    fun importedProfilesUseManagedDnsRoutesAndListeners() {
+        val raw = """{"inbounds":[{"protocol":"http","listen":"0.0.0.0","port":8888}],
+            "outbounds":[{"protocol":"trojan","tag":"custom","settings":{"servers":[{"address":"example.com","port":443,"password":"test-password"}]},"streamSettings":{"network":"tcp","security":"tls"}}],
+            "dns":{"servers":["evil.example"]},"routing":{"rules":[{"outboundTag":"direct"}]},
+            "log":{"access":"/arbitrary/path"}}"""
+        val node = ServerNode("import", "Imported", "trojan", "example.com", 443, uuid = "test-password", fullConfigJson = raw)
+        val config = JsonParser.parseString(generator.generateConfig(node, mode = "global", bypassAi = false, blockQuic = true)).asJsonObject
+        assertEquals("trojan", config.getAsJsonArray("outbounds")[0].asJsonObject["protocol"].asString)
+        assertEquals("proxy", config.getAsJsonArray("outbounds")[0].asJsonObject["tag"].asString)
+        assertEquals(1, config.getAsJsonArray("inbounds").size())
+        assertEquals("127.0.0.1", config.getAsJsonArray("inbounds")[0].asJsonObject["listen"].asString)
+        assertFalse(config.toString().contains("evil.example"))
+        assertFalse(config.toString().contains("/arbitrary/path"))
+        assertTrue(config.getAsJsonObject("routing").getAsJsonArray("rules").any {
+            it.asJsonObject["network"]?.asString == "udp" && it.asJsonObject["port"]?.asString == "443" && it.asJsonObject["outboundTag"]?.asString == "block"
+        })
+        val probe = JsonParser.parseString(generator.generateTestConfig(node, 25001)).asJsonObject
+        assertEquals(1, probe.getAsJsonArray("inbounds").size())
+        assertEquals(25001, probe.getAsJsonArray("inbounds")[0].asJsonObject["port"].asInt)
+        assertEquals("none", probe.getAsJsonObject("log")["loglevel"].asString)
     }
 
     @Test
     fun aiBypass_disabledDoesNotInstallSmartDnsOrDirectAiRoute() {
         val json = JsonParser.parseString(generator.generateConfig(node = null, bypassAi = false)).asJsonObject
         assertFalse(json.toString().contains("dns.dns-ai.ru"))
-        assertFalse(json.getAsJsonObject("dns").has("disableFallbackIfMatch"))
+        assertTrue(json.getAsJsonObject("dns").get("disableFallbackIfMatch").asBoolean)
         val rules = json.getAsJsonObject("routing").getAsJsonArray("rules")
         assertFalse(rules.any { it.asJsonObject.getAsJsonArray("domain")?.any {
             domain -> domain.asString == "full:gemini.google.com"
@@ -317,7 +556,7 @@ class XrayConfigGeneratorTest {
         val dns = json.getAsJsonObject("dns").getAsJsonArray("servers").first {
             it.isJsonObject && it.asJsonObject.getAsJsonArray("domains")?.any { d -> d.asString == "full:gemini.google.com" } == true
         }.asJsonObject
-        assertEquals("1.1.1.1", dns.get("address").asString)
+        assertEquals("https://1.1.1.1/dns-query", dns.get("address").asString)
     }
 
     @Test
@@ -326,13 +565,13 @@ class XrayConfigGeneratorTest {
         val matchedDns = json.getAsJsonObject("dns").getAsJsonArray("servers").filter { it.isJsonObject }.map { it.asJsonObject }.first {
             it.getAsJsonArray("domains")?.any { d -> d.asString in listOf("domain:chatgpt.com", "full:chatgpt.com") } == true
         }
-        assertEquals("1.1.1.1", matchedDns.get("address").asString)
+        assertEquals("https://1.1.1.1/dns-query", matchedDns.get("address").asString)
     }
 
     @Test
     fun fakeDns_enablesDestinationRecoveryDespiteConflictingSniffingSettings() {
         val json = JsonParser.parseString(generator.generateConfig(null, isFakeDns = true,
-            enableSniffing = false, routeOnlySniffing = true, shareLan = true)).asJsonObject
+            enableSniffing = false, routeOnlySniffing = true, shareLan = true, lanAccess = LanAccess("192.168.43.1", "splate", "test-password"))).asJsonObject
         json.getAsJsonArray("inbounds").forEach {
             val sniffing = it.asJsonObject.getAsJsonObject("sniffing")
             assertTrue(sniffing.get("enabled").asBoolean)
@@ -406,9 +645,73 @@ class XrayConfigGeneratorTest {
     }
 
     @Test
-    fun testGenerateConfig_ipAddressDoesNotSetVerifyPeerCertByName() {
-        // Fix verification: if address is IP and sni is empty, verifyPeerCertByName must NOT be set to IP
+    fun testGenerateConfig_vlessReality_withoutFlow_doesNotForceVision() {
         val node = ServerNode(
+            id = "test-node-no-flow",
+            name = "Test VLESS Reality No Flow",
+            protocol = "vless",
+            address = "vpn.example.com",
+            port = 443,
+            uuid = "11111111-2222-3333-4444-555555555555",
+            flow = "",
+            encryption = "none",
+            network = "tcp",
+            security = "reality",
+            sni = "reality.example.com",
+            fingerprint = "chrome",
+            publicKey = "abcdef0123456789",
+            shortId = "abcd"
+        )
+
+        val prodConfig = JsonParser.parseString(generator.generateConfig(node = node)).asJsonObject
+        val prodUser = prodConfig.getAsJsonArray("outbounds")[0].asJsonObject
+            .getAsJsonObject("settings").getAsJsonArray("vnext")[0].asJsonObject
+            .getAsJsonArray("users")[0].asJsonObject
+        assertFalse("VLESS Reality node without flow must NOT have xtls-rprx-vision forced", prodUser.has("flow"))
+
+        val testConfig = JsonParser.parseString(generator.generateTestConfig(node = node, socksPort = 25001)).asJsonObject
+        val testUser = testConfig.getAsJsonArray("outbounds")[0].asJsonObject
+            .getAsJsonObject("settings").getAsJsonArray("vnext")[0].asJsonObject
+            .getAsJsonArray("users")[0].asJsonObject
+        assertFalse("VLESS Reality test config without flow must NOT have xtls-rprx-vision forced", testUser.has("flow"))
+    }
+
+    @Test
+    fun testGenerateConfig_vlessReality_withExplicitFlow_preservesFlow() {
+        val node = ServerNode(
+            id = "test-node-explicit-flow",
+            name = "Test VLESS Reality Explicit Flow",
+            protocol = "vless",
+            address = "vpn.example.com",
+            port = 443,
+            uuid = "11111111-2222-3333-4444-555555555555",
+            flow = "xtls-rprx-vision",
+            encryption = "none",
+            network = "tcp",
+            security = "reality",
+            sni = "reality.example.com",
+            fingerprint = "chrome",
+            publicKey = "abcdef0123456789",
+            shortId = "abcd"
+        )
+
+        val prodConfig = JsonParser.parseString(generator.generateConfig(node = node)).asJsonObject
+        val prodUser = prodConfig.getAsJsonArray("outbounds")[0].asJsonObject
+            .getAsJsonObject("settings").getAsJsonArray("vnext")[0].asJsonObject
+            .getAsJsonArray("users")[0].asJsonObject
+        assertEquals("xtls-rprx-vision", prodUser.get("flow").asString)
+
+        val testConfig = JsonParser.parseString(generator.generateTestConfig(node = node, socksPort = 25001)).asJsonObject
+        val testUser = testConfig.getAsJsonArray("outbounds")[0].asJsonObject
+            .getAsJsonObject("settings").getAsJsonArray("vnext")[0].asJsonObject
+            .getAsJsonArray("users")[0].asJsonObject
+        assertEquals("xtls-rprx-vision", testUser.get("flow").asString)
+    }
+
+    @Test
+    fun testGenerateConfig_ipAddressDoesNotSetVerifyPeerCertByName() {
+        // Fix verification: if address is IP, verifyPeerCertByName must NOT be set to IP (even with non-empty SNI)
+        val nodeWithEmptySni = ServerNode(
             id = "test-node-ip",
             name = "Test IP Node",
             protocol = "vless",
@@ -419,17 +722,37 @@ class XrayConfigGeneratorTest {
             sni = ""
         )
 
-        val configJson = generator.generateConfig(node = node)
-        val json = JsonParser.parseString(configJson).asJsonObject
-        val proxyOutbound = json.getAsJsonArray("outbounds")[0].asJsonObject
-        val streamSettings = proxyOutbound.getAsJsonObject("streamSettings")
-        val tlsSettings = streamSettings.getAsJsonObject("tlsSettings")
+        val configJson1 = generator.generateConfig(node = nodeWithEmptySni)
+        val json1 = JsonParser.parseString(configJson1).asJsonObject
+        val proxyOutbound1 = json1.getAsJsonArray("outbounds")[0].asJsonObject
+        val tlsSettings1 = proxyOutbound1.getAsJsonObject("streamSettings").getAsJsonObject("tlsSettings")
 
-        // Should NOT contain verifyPeerCertByName because address is an IP and sni is empty
         assertFalse(
-            "verifyPeerCertByName should not be set for raw IP addresses",
-            tlsSettings.has("verifyPeerCertByName")
+            "verifyPeerCertByName should not be set for raw IP addresses with empty SNI",
+            tlsSettings1.has("verifyPeerCertByName")
         )
+
+        val nodeWithSni = ServerNode(
+            id = "test-node-ip-sni",
+            name = "Test IP Node with SNI",
+            protocol = "vless",
+            address = "192.168.1.100",
+            port = 443,
+            uuid = "11111111-2222-3333-4444-555555555555",
+            security = "tls",
+            sni = "server.example.com"
+        )
+
+        val configJson2 = generator.generateConfig(node = nodeWithSni)
+        val json2 = JsonParser.parseString(configJson2).asJsonObject
+        val proxyOutbound2 = json2.getAsJsonArray("outbounds")[0].asJsonObject
+        val tlsSettings2 = proxyOutbound2.getAsJsonObject("streamSettings").getAsJsonObject("tlsSettings")
+
+        assertFalse(
+            "verifyPeerCertByName should not be set for raw IP addresses even when SNI is present",
+            tlsSettings2.has("verifyPeerCertByName")
+        )
+        assertEquals("server.example.com", tlsSettings2.get("serverName").asString)
     }
 
     @Test
@@ -571,8 +894,10 @@ class XrayConfigGeneratorTest {
         val dns = json.getAsJsonObject("dns")
         val servers = dns.getAsJsonArray("servers")
         assertTrue(servers.size() > 0)
-        // All servers must be valid string primitives, NOT objects with nested properties
-        assertTrue("DNS servers must be strings", servers.all { it.isJsonPrimitive && it.asJsonPrimitive.isString })
+        // Bootstrap is a scoped object; general resolvers remain strings.
+        assertTrue(servers.first().isJsonObject)
+        assertEquals("localhost", servers.first().asJsonObject["address"].asString)
+        assertTrue(servers.drop(1).all { it.isJsonPrimitive && it.asJsonPrimitive.isString })
 
         // 4. Routing check: ensure port and network are strings, not arrays
         val routing = json.getAsJsonObject("routing")

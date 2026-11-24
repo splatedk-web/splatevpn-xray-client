@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="qr_camera_private">离线扫描 · 不上传图片</string>
+    <string name="qr_camera_zoom_ratio">%1$.1f×</string>
+    <string name="qr_camera_light">手电筒</string>
+    <string name="setup_country_suggested">建议国家：%1$s</string>
+    <string name="setup_country_network">根据设备上的移动网络国家信息建议。此项设置本地路由规则，不是 VPN 服务器所在国家，可在下方修改。</string>
+    <string name="setup_country_sim">根据设备上的 SIM 卡国家信息建议。此项设置本地路由规则，不是 VPN 服务器所在国家，可在下方修改。</string>
+    <string name="setup_country_device">根据设备地区建议。此项设置本地路由规则，不是 VPN 服务器所在国家，可在下方修改。</string>
+    <string name="setup_tour_title">试用主要操作</string>
+    <string name="setup_tour_demo">这是演示：此处操作不会连接 VPN 或更改设置。</string>
+    <string name="setup_tour_quick">快速选择</string>
+    <string name="setup_tour_import">添加服务器</string>
+    <string name="setup_tour_settings">设置</string>
+    <string name="setup_tour_server_card">点按首页的服务器卡片</string>
+    <string name="setup_tour_quick_help">快速选择显示最近检测过的备用服务器。试着选择下方另一台服务器。完整列表在“服务器”页。</string>
+    <string name="setup_tour_germany">德国</string>
+    <string name="setup_tour_netherlands">荷兰</string>
+    <string name="setup_tour_ping">%1$s 毫秒</string>
+    <string name="setup_tour_ping_note">结果仅为示例。低延迟有助于响应速度，但不保证下载速度或所有服务都可用。</string>
+    <string name="setup_tour_add_server">使用二维码或链接即可</string>
+    <string name="setup_tour_link">链接</string>
+    <string name="setup_tour_qr_help">打开二维码导入，将相机对准二维码，或选择保存的图片。二维码在设备上识别。</string>
+    <string name="setup_tour_link_help">在“服务器”页点按添加，粘贴服务器或订阅链接。订阅提供可更新的服务器列表。</string>
+    <string name="setup_tour_protocols">VLESS、Hysteria 2 和 Tor 是什么？</string>
+    <string name="setup_tour_protocol_help">VLESS 和 Hysteria 2 是连接协议，导入链接已包含所需参数。Tor 使用独立网络，有时需要网桥；首次连接可能较慢。</string>
+    <string name="setup_tour_routing">路由</string>
+    <string name="setup_tour_dns">DNS</string>
+    <string name="setup_tour_appearance">外观</string>
+    <string name="setup_tour_routing_help">全局隧道将流量发送至 VPN。智能路由应用例外规则，包括所选地区的规则。应用规则可指定哪些应用使用隧道。</string>
+    <string name="setup_tour_dns_help">DNS 用于查找网站地址。如果隧道已连接但网站无法打开，请先使用连接诊断，再修改高级选项。</string>
+    <string name="setup_tour_appearance_help">选择主题并调整视觉效果。设备较慢时，可以关闭动画、装饰背景或玻璃高光。</string>
+</resources>

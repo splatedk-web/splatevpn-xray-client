@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="node_limits_unknown">Источник не передал лимит и срок действия</string>
+    <string name="node_enable_all">Включить все узлы</string>
+    <string name="node_disable_all">Отключить все узлы</string>
+    <string name="folder_enable">Включить папку</string>
+    <string name="folder_disable">Отключить папку</string>
+</resources>

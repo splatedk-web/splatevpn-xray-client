@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="extra_000" formatted="false">Раздача VPN</string>
+    <string name="extra_001" formatted="false">Подключите другое устройство через телефон</string>
+    <string name="extra_002" formatted="false">Что подключаем?</string>
+    <string name="extra_003" formatted="false">В приложении</string>
+    <string name="extra_004" formatted="false">Телефон</string>
+    <string name="extra_005" formatted="false">Устройство</string>
+    <string name="extra_006" formatted="false">Проверка</string>
+    <string name="extra_007" formatted="false">Назад</string>
+    <string name="extra_008" formatted="false">Далее</string>
+    <string name="extra_009" formatted="false">Готово</string>
+    <string name="extra_010" formatted="false">Wi-Fi / USB / LAN</string>
+    <string name="extra_011" formatted="false">Ваше устройство</string>
+    <string name="extra_012" formatted="false">Сначала на телефоне с SplateVPN</string>
+    <string name="extra_013" formatted="false">Подключите VPN</string>
+    <string name="extra_014" formatted="false">Выберите рабочий сервер в SplateVPN и подключитесь. Для проверки раздачи удобно выбрать маршрут «Весь трафик».</string>
+    <string name="extra_015" formatted="false">Включите раздачу в SplateVPN</string>
+    <string name="extra_016" formatted="false">Настройки → Раздача VPN в локальную сеть. Выберите интерфейс, затем дождитесь переподключения VPN. На втором устройстве включите авторизацию прокси: логин splate, пароль из настроек раздачи.</string>
+    <string name="extra_017" formatted="false">Соедините устройства</string>
+    <string name="extra_018" formatted="false">Включите точку доступа телефона и подключите второе устройство по Wi-Fi. Для ПК с поддержкой USB-модема можно использовать USB. Также подойдёт общая локальная сеть без изоляции клиентов.</string>
+    <string name="extra_019" formatted="false">Для Android и iPhone/iPad проще подключиться к точке доступа телефона по Wi-Fi. Прокси настраивается именно у этой сети.</string>
+    <string name="extra_020" formatted="false">Для Mac используйте Wi-Fi или общую локальную сеть. Поддержка USB-модема Android зависит от телефона и драйвера; Wi-Fi — основной вариант.</string>
+    <string name="extra_021" formatted="false">Это раздача через прокси. Она работает в браузерах и приложениях, которые используют системный прокси или поддерживают собственную настройку. Игры, звонки и другие приложения могут обходить его; весь трафик устройства автоматически в VPN не попадает.</string>
+    <string name="extra_022" formatted="false">VPN отключён. Подключите его на главной странице.</string>
+    <string name="extra_023" formatted="false">Раздача ещё не запущена. Включите её и дождитесь переподключения VPN.</string>
+    <string name="extra_024" formatted="false">Адрес пока не обнаружен</string>
+    <string name="extra_025" formatted="false">Включите точку доступа или USB-модем. Инструкцию можно читать сейчас, но копирование параметров появится после обнаружения адреса. Адрес может измениться при следующем подключении.</string>
+    <string name="extra_026" formatted="false">Параметры для подключения</string>
+    <string name="extra_027" formatted="false">Адрес телефона в вашей сети</string>
+    <string name="extra_028" formatted="false">Выберите сеть, к которой подключено второе устройство. Адрес Wi-Fi и адрес USB могут отличаться.</string>
+    <string name="extra_029" formatted="false">IP-адрес телефона</string>
+    <string name="extra_030" formatted="false">IP телефона</string>
+    <string name="extra_031" formatted="false">Порт</string>
+    <string name="extra_032" formatted="false">Авторизация</string>
+    <string name="extra_033" formatted="false">Выключена</string>
+    <string name="extra_034" formatted="false">Вручную</string>
+    <string name="extra_035" formatted="false">Сервер</string>
+    <string name="extra_036" formatted="false">Имя хоста прокси</string>
+    <string name="extra_037" formatted="false">Порт прокси</string>
+    <string name="extra_038" formatted="false">Сохранить</string>
+    <string name="extra_039" formatted="false">Применить</string>
+    <string name="extra_040" formatted="false">Прокси</string>
+    <string name="extra_041" formatted="false">Веб-прокси (HTTP)</string>
+    <string name="extra_042" formatted="false">Защищённый веб-прокси (HTTPS)</string>
+    <string name="extra_043" formatted="false">Наглядная схема настроек</string>
+    <string name="extra_044" formatted="false">Это схема: названия пунктов и внешний вид зависят от версии системы.</string>
+    <string name="extra_045" formatted="false">В поле адреса укажите только IP, без http:// и порта. Для авторизации используйте splate и пароль из настроек раздачи. HTTP и HTTPS используют один HTTP-порт; SOCKS5 — отдельный.</string>
+    <string name="extra_046" formatted="false">Команды и дополнительные способы</string>
+    <string name="extra_047" formatted="false">Включить в PowerShell</string>
+    <string name="extra_048" formatted="false">Выключить в PowerShell</string>
+    <string name="extra_049" formatted="false">Включить в текущем терминале</string>
+    <string name="extra_050" formatted="false">Выключить в текущем терминале</string>
+    <string name="extra_051" formatted="false">Для bash / zsh и программ, которые читают эти переменные. Действует только в текущем терминале и запущенных из него программах; графические приложения и sudo могут их не использовать.</string>
+    <string name="extra_052" formatted="false">Только PowerShell, не CMD. Меняет прокси текущего пользователя для приложений, которые используют настройки Windows. Предыдущий адрес прокси будет заменён.</string>
+    <string name="extra_053" formatted="false">Проверить HTTP-прокси через curl</string>
+    <string name="extra_054" formatted="false">В ответ должен прийти HTML example.com. Это проверяет соединение через прокси, но не подтверждает маршрут всего устройства.</string>
+    <string name="extra_055" formatted="false">Проверим соединение</string>
+    <string name="extra_056" formatted="false">Откройте сайт на втором устройстве</string>
+    <string name="extra_057" formatted="false">Используйте браузер с системным прокси. Проверьте сайт, который должен открываться через VPN. Трафик следует выбранному маршруту SplateVPN.</string>
+    <string name="extra_058" formatted="false">Если приложение не работает</string>
+    <string name="extra_059" formatted="false">Оно может игнорировать системный прокси. Если внутри приложения есть пункт «Прокси», выберите SOCKS5 и укажите адрес телефона и SOCKS5-порт. При отсутствии такой настройки этот способ может не подойти.</string>
+    <string name="extra_060" formatted="false">Не подключается?</string>
+    <string name="extra_061" formatted="false">Сверьте адрес и порт</string>
+    <string name="extra_062" formatted="false">После перезапуска точки доступа IP мог измениться. Возьмите текущий адрес из шага «Устройство». HTTP и HTTPS используют HTTP-порт, а не SOCKS5-порт.</string>
+    <string name="extra_063" formatted="false">Проверьте сеть</string>
+    <string name="extra_064" formatted="false">Оба устройства должны видеть друг друга в одной сети. Гостевой Wi-Fi, изоляция клиентов, сон телефона или другой VPN на получателе могут мешать подключению.</string>
+    <string name="extra_065" formatted="false">Проверьте телефон</string>
+    <string name="extra_066" formatted="false">VPN и раздача должны быть включены. Если сайт не работает на телефоне, сначала исправьте VPN. Используйте пароль прокси и подключайте доверенные устройства.</string>
+    <string name="extra_067" formatted="false">Если импортирован полный JSON-профиль</string>
+    <string name="extra_068" formatted="false">Локальные порты прокси задаются приложением. Используйте адреса HTTP/SOCKS5 из этой инструкции.</string>
+    <string name="extra_069" formatted="false">После использования выключите прокси</string>
+    <string name="extra_070" formatted="false">Официальная справка</string>
+    <string name="extra_071" formatted="false">Откройте подключённую сеть Wi-Fi</string>
+    <string name="extra_072" formatted="false">Настройки → Wi-Fi / Интернет → сеть точки доступа → шестерёнка или значок редактирования.</string>
+    <string name="extra_073" formatted="false">Выберите прокси вручную</string>
+    <string name="extra_074" formatted="false">Откройте «Изменить сеть» или «Дополнительно» → Прокси → Вручную. На Samsung, Xiaomi и других устройствах названия могут отличаться.</string>
+    <string name="extra_075" formatted="false">Заполните поля и сохраните</string>
+    <string name="extra_076" formatted="false">Имя хоста — IP телефона с SplateVPN, порт — HTTP-порт ниже. IP-настройки сети оставьте DHCP / автоматически.</string>
+    <string name="extra_077" formatted="false">Откройте сведения о сети</string>
+    <string name="extra_078" formatted="false">Настройки → Wi-Fi → ⓘ рядом с сетью точки доступа телефона.</string>
+    <string name="extra_079" formatted="false">Настройте HTTP-прокси</string>
+    <string name="extra_080" formatted="false">Прокрутите вниз → Настройка прокси → Вручную.</string>
+    <string name="extra_081" formatted="false">Введите сервер и порт</string>
+    <string name="extra_082" formatted="false">Сервер — IP телефона, порт — HTTP-порт ниже. Включите аутентификацию, введите splate и пароль из настроек раздачи, затем сохраните.</string>
+    <string name="extra_083" formatted="false">Откройте настройки прокси</string>
+    <string name="extra_084" formatted="false">Windows 10/11: Параметры → Сеть и Интернет → Прокси-сервер.</string>
+    <string name="extra_085" formatted="false">Включите ручную настройку</string>
+    <string name="extra_086" formatted="false">Настройка прокси вручную → Настроить / Использовать прокси-сервер → Вкл.</string>
+    <string name="extra_087" formatted="false">Введите IP и HTTP-порт</string>
+    <string name="extra_088" formatted="false">Заполните поля по схеме ниже и сохраните. Это прокси текущего пользователя, а не отдельного VPN-подключения Windows.</string>
+    <string name="extra_089" formatted="false">Выберите активное подключение</string>
+    <string name="extra_090" formatted="false">Системные настройки → Сеть → Wi-Fi или Ethernet → Подробнее → Прокси.</string>
+    <string name="extra_091" formatted="false">Включите HTTP и HTTPS</string>
+    <string name="extra_092" formatted="false">Включите «Веб-прокси (HTTP)» и «Защищённый веб-прокси (HTTPS)». Для обоих укажите одинаковые IP и HTTP-порт.</string>
+    <string name="extra_093" formatted="false">Сохраните настройки</string>
+    <string name="extra_094" formatted="false">Включите авторизацию прокси: splate и пароль раздачи. Нажмите OK / Готово, затем Применить. SOCKS одновременно включать не требуется.</string>
+    <string name="extra_095" formatted="false">Откройте сетевой прокси</string>
+    <string name="extra_096" formatted="false">Ubuntu / GNOME: Настройки → Сеть → Сетевой прокси. Выберите режим «Вручную».</string>
+    <string name="extra_097" formatted="false">Заполните HTTP и HTTPS</string>
+    <string name="extra_098" formatted="false">В обе строки введите один IP телефона и HTTP-порт. Сохраните настройки; некоторые приложения нужно перезапустить.</string>
+    <string name="extra_099" formatted="false">Откройте модуль прокси</string>
+    <string name="extra_100" formatted="false">KDE Plasma: найдите «Прокси» в параметрах системы → выберите ручную настройку.</string>
+    <string name="extra_101" formatted="false">Настройте HTTP и HTTPS</string>
+    <string name="extra_102" formatted="false">Укажите IP телефона и HTTP-порт для HTTP и HTTPS, затем «Применить». Приложения могут иметь собственные настройки прокси.</string>
+    <string name="extra_103" formatted="false">Откройте bash или zsh</string>
+    <string name="extra_104" formatted="false">Скопируйте команды ниже и выполните их в терминале. Затем запускайте нужные команды из этого же окна.</string>
+    <string name="extra_105" formatted="false">Найдите настройки прокси</string>
+    <string name="extra_106" formatted="false">Откройте раздел «Прокси» в нужном приложении. Он часто находится в настройках сети или данных.</string>
+    <string name="extra_107" formatted="false">Выберите SOCKS5</string>
+    <string name="extra_108" formatted="false">Введите IP телефона и SOCKS5-порт ниже. Логин splate, пароль — из настроек раздачи. Если поддерживается только HTTP, используйте HTTP-порт.</string>
+    <string name="extra_109" formatted="false">В настройках этой Wi-Fi-сети выберите Прокси → Нет и сохраните.</string>
+    <string name="extra_110" formatted="false">Настройки → Wi-Fi → ⓘ → Настройка прокси → Выкл. → Сохранить.</string>
+    <string name="extra_111" formatted="false">Параметры → Сеть и Интернет → Прокси-сервер → Использовать прокси-сервер → Выкл.</string>
+    <string name="extra_112" formatted="false">Сеть → ваше подключение → Подробнее → Прокси: выключите HTTP и HTTPS и сохраните.</string>
+    <string name="extra_113" formatted="false">Выполните команду unset ниже или закройте этот терминал.</string>
+    <string name="extra_114" formatted="false">Верните режим «Нет / Отключено» в настройках сетевого прокси.</string>
+    <string name="extra_115" formatted="false">Выключите прокси в настройках самого приложения.</string>
+    <string name="extra_116" formatted="false">Иначе после отключения телефона интернет в этих приложениях может перестать работать.</string>
+    <string name="extra_117" formatted="false">Автопереключение SmartDNS</string>
+    <string name="extra_118" formatted="false">При подключённом VPN проверяет публичные страницы каждые 5 минут в выбранном режиме SmartDNS. При повторных сбоях подтверждает замену и переподключает VPN. CAPTCHA и вход не считаются сбоем.</string>
+    <string name="extra_119" formatted="false">SmartDNS через VPN</string>
+    <string name="extra_120" formatted="false">Запросы DNS и подключение к SmartDNS-прокси идут через выбранный VPN-сервер. Автоподбор проверяет этот же путь. Для работы сервиса также важны регион выхода SmartDNS и настройки аккаунта.</string>
+    <string name="extra_121" formatted="false">Автоподбор SmartDNS</string>
+    <string name="extra_122" formatted="false">Проверит провайдеров в выбранном режиме и применит подтверждённый вариант. В прямом режиме проверяется также TLS-фрагментация. Может занять несколько минут.</string>
+    <string name="extra_123" formatted="false">Проверяются DNS, HTTPS и публичные страницы Gemini, ChatGPT и Claude. У финалистов Gemini проверяется после JavaScript. Вход и работа аккаунта не проверяются.</string>
+    <string name="extra_124" formatted="false">Подобрать и применить</string>
+    <string name="extra_125" formatted="false">Остановить подбор</string>
+    <string name="extra_126" formatted="false">Повторная проверка</string>
+    <string name="extra_127" formatted="false">Автопроверка не смогла подтвердить Gemini. Это не означает, что он не работает в вашем браузере: вход в аккаунт и ограничения WebView могут мешать проверке. Настройки не изменены. Подробности — ниже.</string>
+    <string name="extra_128" formatted="false">Подбор остановлен. Настройки не изменены.</string>
+    <string name="extra_129" formatted="false">Сеть изменилась. Запустите подбор заново.</string>
+    <string name="extra_130" formatted="false">Нет подключения к сети.</string>
+    <string name="extra_131" formatted="false">Не удалось выполнить проверку. Настройки не изменены.</string>
+    <string name="extra_132" formatted="false">отказ DoH</string>
+    <string name="extra_133" formatted="false">не удалось соединиться с DNS</string>
+    <string name="extra_134" formatted="false">DNS не ответил вовремя</string>
+    <string name="extra_135" formatted="false">DNS не вернул корректный публичный IPv4</string>
+    <string name="extra_136" formatted="false">вместо DNS получен другой ответ</string>
+    <string name="extra_137" formatted="false">ошибка соединения / TLS</string>
+    <string name="extra_138" formatted="false">сайт не ответил вовремя</string>
+    <string name="extra_139" formatted="false">не удалось установить TLS с сайтом</string>
+    <string name="extra_140" formatted="false">DNS проверен · ответ сайта</string>
+    <string name="extra_141" formatted="false">страница загружена с JavaScript; аккаунт не проверен</string>
+    <string name="extra_142" formatted="false">JavaScript: вход, CAPTCHA или ошибка страницы</string>
+    <string name="extra_143" formatted="false">JavaScript: региональный запрет</string>
+    <string name="extra_144" formatted="false">JavaScript: время проверки истекло</string>
+    <string name="extra_145" formatted="false">для браузерной проверки нужны Android 9+ и актуальный Android System WebView</string>
+    <string name="extra_146" formatted="false">браузерная проверка не завершена</string>
+    <string name="extra_147" formatted="false">доступно</string>
+    <string name="extra_148" formatted="false">ограничено</string>
+    <string name="extra_149" formatted="false">регион заблокирован</string>
+    <string name="extra_150" formatted="false">нет ответа</string>
+    <string name="extra_151" formatted="false">Статистика и инструменты</string>
+    <string name="extra_152" formatted="false">Статистика трафика</string>
+    <string name="extra_153" formatted="false">Сегодня</string>
+    <string name="extra_154" formatted="false">Доступность сервисов</string>
+    <string name="extra_155" formatted="false">8 сервисов · проверка через VPN</string>
+    <string name="extra_156" formatted="false">Диагностика в один тап</string>
+    <string name="extra_157" formatted="false">Сеть, DNS, сервер и туннель</string>
+    <string name="extra_158" formatted="false">Закрыть</string>
+    <string name="extra_159" formatted="false">Диагностика соединения</string>
+    <string name="extra_160" formatted="false">Проверяем подключение…</string>
+    <string name="extra_161" formatted="false">Проверка остановлена</string>
+    <string name="extra_162" formatted="false">Проверка завершена</string>
+    <string name="extra_163" formatted="false">Показаны неполные результаты.</string>
+    <string name="extra_164" formatted="false">Остановить проверку</string>
+    <string name="extra_165" formatted="false">Проверить снова</string>
+    <string name="extra_166" formatted="false">Проверки идут через текущее подключение и его правила. Доступность сайта не гарантирует работу входа, видео или звонков.</string>
+    <string name="extra_167" formatted="false">DNS и порт сервера проверяются через физическую сеть, HTTPS — через VPN. Открытый порт не подтверждает правильность ключей подключения.</string>
+    <string name="extra_168" formatted="false">Сеть</string>
+    <string name="extra_169" formatted="false">Системный DNS</string>
+    <string name="extra_170" formatted="false">Порт сервера</string>
+    <string name="extra_171" formatted="false">Доступно</string>
+    <string name="extra_172" formatted="false">Ошибка</string>
+    <string name="extra_173" formatted="false">Ограничение доступа</string>
+    <string name="extra_174" formatted="false">Пропущено</string>
+    <string name="extra_175" formatted="false">Сначала подключите VPN и повторите проверку</string>
+    <string name="extra_176" formatted="false">VPN подключён</string>
+    <string name="extra_177" formatted="false">Есть сеть с доступом к интернету</string>
+    <string name="extra_178" formatted="false">Нет сети: проверьте Wi-Fi или мобильные данные</string>
+    <string name="extra_179" formatted="false">Имя разрешается в IP-адрес</string>
+    <string name="extra_180" formatted="false">Не удалось разрешить имя: проверьте DNS</string>
+    <string name="extra_181" formatted="false">TCP-соединение установлено</string>
+    <string name="extra_182" formatted="false">Порт недоступен: проверьте адрес, порт или смените сервер</string>
+    <string name="extra_183" formatted="false">Выберите сервер</string>
+    <string name="extra_184" formatted="false">Ошибка TLS: проверьте дату устройства и настройки TLS</string>
+    <string name="extra_185" formatted="false">Таймаут: повторите проверку или смените сервер</string>
+    <string name="extra_186" formatted="false">Сбой подключения: проверьте сеть и сервер</string>
+    <string name="extra_187" formatted="false">Подробности</string>
+    <string name="extra_188" formatted="false">Режим подключения</string>
+    <string name="extra_189" formatted="false">Сохранить текущие настройки</string>
+    <string name="extra_190" formatted="false">Отменить последний профиль</string>
+    <string name="extra_191" formatted="false">VPN переподключится после применения.</string>
+    <string name="extra_192" formatted="false">Применяется…</string>
+    <string name="extra_193" formatted="false">Новый профиль</string>
+    <string name="extra_194" formatted="false">Название</string>
+    <string name="extra_195" formatted="false">Не удалось сохранить профиль.</string>
+    <string name="extra_196" formatted="false">Отмена</string>
+    <string name="extra_197" formatted="false">Умный маршрут</string>
+    <string name="extra_198" formatted="false">Весь трафик</string>
+    <string name="extra_199" formatted="false">Текущий режим</string>
+    <string name="extra_200" formatted="false">Применяется…</string>
+    <string name="extra_201" formatted="false">Изменить</string>
+    <string name="extra_202" formatted="false">Найти настройку…</string>
+    <string name="extra_203" formatted="false">Очистить поиск</string>
+    <string name="extra_204" formatted="false">Ничего не найдено. Попробуйте DNS, тему или бэкап.</string>
+    <string name="extra_205" formatted="false">Все настройки</string>
+    <string name="extra_206" formatted="false">Интерфейс раздачи</string>
+    <string name="extra_207" formatted="false">Автоматически</string>
+    <string name="extra_208" formatted="false">Прокси требует авторизацию. Логин: splate</string>
+    <string name="extra_209" formatted="false">Пароль</string>
+    <string name="extra_210" formatted="false">Показать пароль</string>
+    <string name="extra_211" formatted="false">Сменить пароль</string>
+    <string name="extra_212" formatted="false">Как восстановить копию?</string>
+    <string name="extra_213" formatted="false">Объединить</string>
+    <string name="extra_214" formatted="false">Заменить данные</string>
+    <string name="extra_215" formatted="false">Добавить серверы и правила. Настройки из файла применятся.</string>
+    <string name="extra_216" formatted="false">Заменить серверы, подписки, списки приложений и маршруты, включая пустые списки.</string>
+    <string name="extra_217" formatted="false">Выбрать файл</string>
+    <string name="extra_218" formatted="false">Подключение</string>
+    <string name="extra_219" formatted="false">Автовыбор, балансировщик, запуск и подписки</string>
+    <string name="extra_220" formatted="false">Сеть и DNS</string>
+    <string name="extra_221" formatted="false">Маршрутизация, общий DNS и проверка серверов</string>
+    <string name="extra_222" formatted="false">Нейросети</string>
+    <string name="extra_223" formatted="false">SmartDNS, Gemini, ChatGPT и автоподбор</string>
+    <string name="extra_224" formatted="false">Защита и реклама</string>
+    <string name="extra_225" formatted="false">Kill Switch, IPv6 и блокировщик рекламы</string>
+    <string name="extra_226" formatted="false">Оформление и язык</string>
+    <string name="extra_227" formatted="false">Темы, прозрачность и размытие</string>
+    <string name="extra_228" formatted="false">Резервные копии</string>
+    <string name="extra_229" formatted="false">Экспорт, восстановление и автокопия</string>
+    <string name="extra_230" formatted="false">Диагностика</string>
+    <string name="extra_231" formatted="false">Проверки подключения, статистика и журнал</string>
+    <string name="extra_232" formatted="false">Дополнительно</string>
+    <string name="extra_233" formatted="false">XHTTP, FakeDNS, QUIC, сниффинг и свои маршруты</string>
+    <string name="extra_234" formatted="false">Раздача VPN</string>
+    <string name="extra_235" formatted="false">Прокси в локальной сети и модем</string>
+    <string name="extra_236" formatted="false">О приложении</string>
+    <string name="extra_237" formatted="false">Версия ядра и обновления приложения</string>
+    <string name="extra_238" formatted="false">Приложения</string>
+    <string name="extra_239" formatted="false">Укажите, каким приложениям нужен VPN</string>
+    <string name="extra_240" formatted="false">1. Выберите режим</string>
+    <string name="extra_241" formatted="false">Изменить режим</string>
+    <string name="extra_242" formatted="false">Все приложения</string>
+    <string name="extra_243" formatted="false">Только выбранные</string>
+    <string name="extra_244" formatted="false">Все, кроме выбранных</string>
+    <string name="extra_245" formatted="false">Для всех приложений действуют правила VPN.</string>
+    <string name="extra_246" formatted="false">Отмеченные — через VPN. Остальные — напрямую.</string>
+    <string name="extra_247" formatted="false">Отмеченные — напрямую. Остальные — через VPN.</string>
+    <string name="extra_248" formatted="false">2. Отметьте приложения для VPN</string>
+    <string name="extra_249" formatted="false">2. Отметьте приложения без VPN</string>
+    <string name="extra_250" formatted="false">По правилам VPN</string>
+    <string name="extra_251" formatted="false">Без VPN · напрямую</string>
+    <string name="extra_252" formatted="false">«Через VPN» учитывает режим на главной: в умном режиме часть сайтов идёт напрямую.</string>
+    <string name="extra_253" formatted="false">Выбирать приложения по одному не нужно. Для исключений выберите «Все, кроме выбранных».</string>
+    <string name="extra_254" formatted="false">Отметьте хотя бы одно приложение или выберите «Все приложения».</string>
+    <string name="extra_255" formatted="false">Исключений нет — VPN будет доступен всем приложениям.</string>
+    <string name="extra_256" formatted="false">Есть неприменённые изменения</string>
+    <string name="extra_257" formatted="false">Настройки сохранены</string>
+    <string name="extra_258" formatted="false">При применении VPN переподключится один раз.</string>
+    <string name="extra_259" formatted="false">Правила начнут действовать после подключения VPN.</string>
+    <string name="extra_260" formatted="false">Применить</string>
+    <string name="extra_261" formatted="false">Отменить изменения</string>
+    <string name="extra_262" formatted="false">Только отмеченные</string>
+    <string name="extra_263" formatted="false">Отметить найденные</string>
+    <string name="extra_264" formatted="false">Отметить все</string>
+    <string name="extra_265" formatted="false">Снять отметки</string>
+    <string name="extra_266" formatted="false">Приложения не найдены. Измените поиск.</string>
+    <string name="extra_267" formatted="false">Пока ничего не отмечено. Покажите все приложения и выберите нужные.</string>
+    <string name="extra_268" formatted="false">Показать все приложения</string>
+    <string name="extra_269" formatted="false">Список приложений пуст. Попробуйте обновить его.</string>
+    <string name="extra_270" formatted="false">Настройки балансировщика</string>
+    <string name="extra_271" formatted="false">Автоматический · по умолчанию</string>
+    <string name="extra_272" formatted="false">Выбирает сервер при подключении, заменяет недоступный и ищет более быстрый при ухудшении связи.</string>
+    <string name="extra_273" formatted="false">Только при сбое</string>
+    <string name="extra_274" formatted="false">Сохраняет рабочий сервер. Переключается, только когда несколько проверок подряд подтвердили сбой.</string>
+    <string name="extra_275" formatted="false">Только при подключении</string>
+    <string name="extra_276" formatted="false">Один раз выбирает сервер при подключении. Во время сеанса не переключает, даже если сервер перестал отвечать.</string>
+    <string name="extra_277" formatted="false">Интервал проверки связи</string>
+    <string name="extra_278" formatted="false">Неудачных проверок до смены</string>
+    <string name="extra_279" formatted="false">Плановый поиск лучшего сервера</string>
+    <string name="extra_280" formatted="false">Пауза между улучшениями</string>
+    <string name="extra_281" formatted="false">Минимальный выигрыш по задержке</string>
+    <string name="extra_282" formatted="false">Вернуть настройки по умолчанию</string>
+    <string name="extra_283" formatted="false">Параметры применятся, когда включён автовыбор сервера.</string>
+    <string name="extra_284" formatted="false">Загрузка через VPN · 2 потока · 10 с · до 128 МБ</string>
+    <string name="extra_285" formatted="false">Начать тест скорости</string>
+    <string name="extra_286" formatted="false">Остановить тест</string>
+    <string name="extra_287" formatted="false">Сначала подключите VPN</string>
+    <string name="extra_288" formatted="false">Соединение изменилось. Запустите тест заново.</string>
+    <string name="extra_289" formatted="false">Сервер теста не ответил вовремя</string>
+    <string name="extra_290" formatted="false">Не удалось определить адрес сервера</string>
+    <string name="extra_291" formatted="false">Сервер теста недоступен. Попробуйте другой VPN-узел.</string>
+    <string name="extra_292" formatted="false">Недостаточно данных для достоверного замера</string>
+    <string name="extra_293" formatted="false">%.1f МБ · %.1f с измерения</string>
+    <string name="extra_294" formatted="false">МБ/с</string>
+    <string name="extra_295" formatted="false">МБ</string>
+    <string name="extra_296" formatted="false">Отмечено: %d</string>
+    <string name="extra_297" formatted="false">Проверено %d из %d</string>
+    <string name="extra_298" formatted="false">Применён %s · доступно страниц: %d/3</string>
+    <string name="extra_299" formatted="false">Результаты (%d)</string>
+    <string name="extra_300" formatted="false">%d с</string>
+    <string name="extra_301" formatted="false">%d мин</string>
+    <string name="extra_302" formatted="false">Исходный код на GitHub</string>
+    <string name="extra_303" formatted="false">Последние обновления</string>
+    <string name="extra_304" formatted="false">Составные правила · AND / OR</string>
+    <string name="extra_305" formatted="false">AND — совпадают все заполненные поля. OR — любое из них. Строки в одном поле — варианты. Применяется первое подходящее правило.</string>
+    <string name="extra_306" formatted="false">Условия: приложения, домены, IP, порты и протоколы. Для приложений нужен Android 10+ и включение в VPN в разделе «Приложения».</string>
+    <string name="extra_307" formatted="false">Правила сохраняются, но в режиме Tor не применяются.</string>
+    <string name="extra_308" formatted="false">"Приложения: "</string>
+    <string name="extra_309" formatted="false">"Суффиксы: "</string>
+    <string name="extra_310" formatted="false">"Домены: "</string>
+    <string name="extra_311" formatted="false">"Слова: "</string>
+    <string name="extra_312" formatted="false">"Порты: "</string>
+    <string name="extra_313" formatted="false">Изменить</string>
+    <string name="extra_314" formatted="false">Выше</string>
+    <string name="extra_315" formatted="false">Ниже</string>
+    <string name="extra_316" formatted="false">Добавить составное правило</string>
+    <string name="extra_317" formatted="false">Сначала применяются пользовательские исключения и системные DNS-правила. Составные правила — перед правилами подписок и региона.</string>
+    <string name="extra_318" formatted="false">Сохранённые правила повреждены. До исправления VPN не будет применять непроверенный набор.</string>
+    <string name="extra_319" formatted="false">Очистить повреждённые правила</string>
+    <string name="extra_320" formatted="false">Составное правило</string>
+    <string name="extra_321" formatted="false">Должны совпасть все заполненные разделы.</string>
+    <string name="extra_322" formatted="false">Достаточно любого заполненного раздела.</string>
+    <string name="extra_323" formatted="false">Напрямую</string>
+    <string name="extra_324" formatted="false">Блок</string>
+    <string name="extra_325" formatted="false">Совпавший трафик пойдёт напрямую, вне VPN-сервера.</string>
+    <string name="extra_326" formatted="false">Пакеты приложений</string>
+    <string name="extra_327" formatted="false">Выбрать установленные приложения</string>
+    <string name="extra_328" formatted="false">Один ID пакета на строку, с учётом регистра. Отсутствующие приложения сохраняются. Приложения с общим UID не поддерживаются.</string>
+    <string name="extra_329" formatted="false">Для условий по приложениям требуется Android 10 или новее.</string>
+    <string name="extra_330" formatted="false">Суффиксы доменов</string>
+    <string name="extra_331" formatted="false">Один домен на строку. Включает сам домен и поддомены. Точка в начале необязательна.</string>
+    <string name="extra_332" formatted="false">Точные домены</string>
+    <string name="extra_333" formatted="false">Ключевые слова домена</string>
+    <string name="extra_334" formatted="false">Несколько строк внутри поля означают «или». Пустые поля не участвуют в сопоставлении.</string>
+    <string name="extra_335" formatted="false">IP, порты и протоколы</string>
+    <string name="extra_336" formatted="false">Порты: 443, 8000-8100</string>
+    <string name="extra_337" formatted="false">Протоколы: http, tls, quic</string>
+    <string name="extra_338" formatted="false">Разрешить определение доменов для этих правил</string>
+    <string name="extra_339" formatted="false">Приложения для правила</string>
+    <string name="extra_340" formatted="false">Название или пакет</string>
+    <string name="extra_341" formatted="false">Выбрано: %d / %d</string>
+    <string name="extra_342" formatted="false">Подходящих приложений нет</string>
+    <string name="extra_343" formatted="false">Введённые вручную пакеты сохраняются, даже если их нет в списке.</string>
+    <string name="extra_344" formatted="false">Отчёты об ошибках</string>
+    <string name="extra_345" formatted="false">Только с вашего согласия сохраняются тип ошибки, строки кода и версия приложения. IP, сведения об устройстве, сообщения исключений, логи, подписки и настройки в отчёт не попадают.</string>
+    <string name="extra_346" formatted="false">Сохранять локально</string>
+    <string name="extra_347" formatted="false">Автоматической отправки нет: сервер приёма не настроен. До пяти отчётов хранятся только на этом устройстве. Отключение сбора удаляет их.</string>
+    <string name="extra_348" formatted="false">"Раздел: "</string>
+    <string name="extra_349" formatted="false">Отметить проблему</string>
+    <string name="extra_350" formatted="false">"Посмотреть отчёт "</string>
+    <string name="extra_351" formatted="false">Сохранённых отчётов нет</string>
+    <string name="extra_352" formatted="false">Удалить все</string>
+    <string name="extra_353" formatted="false">Проверить перед экспортом</string>
+    <string name="extra_354" formatted="false">Экспорт открывает системное меню. Вы сами выбираете получателя.</string>
+    <string name="extra_355" formatted="false">Экспорт</string>
+    <string name="extra_356" formatted="false">Копировать</string>
+    <string name="extra_357" formatted="false">Удалить</string>
+    <string name="extra_358" formatted="false">Восстановить по ссылке из облака</string>
+    <string name="extra_359" formatted="false">Вставьте ссылку на JSON-файл резервной копии. Клиент загрузит файл и покажет его состав перед восстановлением. Выбирать папку не нужно.</string>
+    <string name="extra_360" formatted="false">Ссылка на резервную копию</string>
+    <string name="extra_361" formatted="false">Вставить ссылку</string>
+    <string name="extra_362" formatted="false">Пароль, если копия зашифрована</string>
+    <string name="extra_363" formatted="false">Google Drive, Яндекс Диск, Dropbox и прямые HTTPS-ссылки. Файл должен быть доступен по ссылке без входа в облачный аккаунт. Для обычной копии пароль не требуется.</string>
+    <string name="extra_364" formatted="false">Открыть загруженную копию</string>
+    <string name="extra_365" formatted="false">Загрузить и просмотреть</string>
+    <string name="extra_366" formatted="false">Автокопирование в папку отключено</string>
+    <string name="extra_367" formatted="false">Выбор папки убран из облачного сценария. Существующие файлы и пароль шифрования сохранены. Для восстановления вставьте ссылку на копию; для фоновых копий можно настроить WebDAV.</string>
+    <string name="extra_368" formatted="false">Понятно</string>
+    <string name="extra_369" formatted="false">Автокопии WebDAV</string>
+    <string name="extra_370" formatted="false">Зашифрованные копии каждые 6 или 24 часа. Восстановление выполняется после просмотра и подтверждения. Последние 10 снимков этого устройства сохраняются отдельно.</string>
+    <string name="extra_371" formatted="false">Используется WebDAV, сохранённый в разделе переноса. При конфликте с другим устройством общий файл не перезаписывается: получите и проверьте его вручную.</string>
+    <string name="extra_372" formatted="false">Новый пароль (пусто — оставить)</string>
+    <string name="extra_373" formatted="false">Пароль шифрования от 8 символов</string>
+    <string name="extra_374" formatted="false">Повторите пароль</string>
+    <string name="extra_375" formatted="false">Для фоновых копий пароль хранится зашифрованным ключом Android Keystore только на этом устройстве. Сохраните его отдельно: на другом устройстве он потребуется для восстановления.</string>
+    <string name="extra_376" formatted="false">Автокопия включена</string>
+    <string name="extra_377" formatted="false">Только нетарифицируемая сеть</string>
+    <string name="extra_378" formatted="false">Каждые %d ч</string>
+    <string name="extra_379" formatted="false">Пароли должны совпадать и содержать минимум 8 символов</string>
+    <string name="extra_380" formatted="false">Сохранить настройки</string>
+    <string name="extra_381" formatted="false">Создать копию сейчас</string>
+    <string name="extra_382" formatted="false">Отключить и забыть пароль</string>
+    <string name="extra_383" formatted="false">"Последняя копия: "</string>
+    <string name="extra_384" formatted="false">Удалить %s</string>
+    <string name="extra_385" formatted="false">Настройки получены. Проверьте состав перед импортом.</string>
+    <string name="extra_386" formatted="false">Проверьте устройство-получатель и подтвердите отправку.</string>
+    <string name="extra_387" formatted="false">Между устройствами</string>
+    <string name="extra_388" formatted="false">Телефон и телевизор должны быть в одной Wi-Fi или Ethernet-сети. Передаются серверы, подписки, Tor и настройки прокси в зашифрованном виде.</string>
+    <string name="extra_389" formatted="false">Для применения полученных настроек отключите VPN.</string>
+    <string name="extra_390" formatted="false">Отправить настройки</string>
+    <string name="extra_391" formatted="false">Получить на это устройство / TV</string>
+    <string name="extra_392" formatted="false">QR сопряжения устройств</string>
+    <string name="extra_393" formatted="false">Отсканируйте этот QR телефоном, с которого нужно перенести настройки. Затем подтвердите импорт здесь.</string>
+    <string name="extra_394" formatted="false">Отсканируйте QR на принимающем устройстве. Для TV без камеры используйте «Получить» на телевизоре и сканируйте его QR телефоном.</string>
+    <string name="extra_395" formatted="false">"Код действует ещё "</string>
+    <string name="extra_396" formatted="false">" с · одно использование"</string>
+    <string name="extra_397" formatted="false">Скопировать код</string>
+    <string name="extra_398" formatted="false">Закрыть передачу</string>
+    <string name="extra_399" formatted="false">Код или ссылка сопряжения</string>
+    <string name="extra_400" formatted="false">Принять код</string>
+    <string name="extra_401" formatted="false">QR содержит секрет сопряжения. Показывайте его только своему устройству. Полученная копия применяется после подтверждения.</string>
+    <string name="extra_402" formatted="false">Скрыть WebDAV</string>
+    <string name="extra_403" formatted="false">Синхронизация WebDAV</string>
+    <string name="extra_404" formatted="false">В существующую папку WebDAV сохраняется зашифрованный файл splate-settings.v1.json. Отправка и получение запускаются вручную.</string>
+    <string name="extra_405" formatted="false">HTTPS URL папки WebDAV</string>
+    <string name="extra_406" formatted="false">Логин WebDAV</string>
+    <string name="extra_407" formatted="false">Пароль WebDAV</string>
+    <string name="extra_408" formatted="false">WebDAV сохранён</string>
+    <string name="extra_409" formatted="false">Сохранить WebDAV</string>
+    <string name="extra_410" formatted="false">Пароль шифрования копии (от 8 символов)</string>
+    <string name="extra_411" formatted="false">Пароль шифрования не сохраняется. Он нужен и на другом устройстве. Учётные данные WebDAV хранятся только на этом устройстве и не входят в передаваемую копию.</string>
+    <string name="extra_412" formatted="false">Зашифрованная копия отправлена</string>
+    <string name="extra_413" formatted="false">Заменить копию</string>
+    <string name="extra_414" formatted="false">Копия получена. Подтвердите импорт.</string>
+    <string name="extra_415" formatted="false">Получить</string>
+    <string name="extra_416" formatted="false">Передать настройки устройству?</string>
+    <string name="extra_417" formatted="false">Импорт настроек</string>
+    <string name="extra_418" formatted="false">"Получено из "</string>
+    <string name="extra_419" formatted="false">"Устройство в локальной сети: "</string>
+    <string name="extra_420" formatted="false">"Серверов: "</string>
+    <string name="extra_421" formatted="false">" · подписок: "</string>
+    <string name="extra_422" formatted="false">Обычная JSON-копия без шифрования</string>
+    <string name="extra_423" formatted="false">"Составных правил: "</string>
+    <string name="extra_424" formatted="false">Включены Tor и мосты</string>
+    <string name="extra_425" formatted="false">Включены прокси и пароль раздачи</string>
+    <string name="extra_426" formatted="false">Общие настройки будут применены к этому устройству. По умолчанию серверы добавляются к существующим.</string>
+    <string name="extra_427" formatted="false">Будут переданы серверы, подписки, настройки Tor и пароль прокси. Продолжайте только для своего устройства, которое показало этот QR.</string>
+    <string name="extra_428" formatted="false">Заменить существующие серверы и подписки</string>
+    <string name="extra_429" formatted="false">Сначала отключите VPN</string>
+    <string name="extra_430" formatted="false">Применить настройки</string>
+    <string name="extra_431" formatted="false">Локальный прокси · Mixed</string>
+    <string name="extra_432" formatted="false">HTTP и SOCKS на одном локальном порту. Защита паролем включена по умолчанию, данные создаются клиентом и автоматически передаются VPN. Открывать доступ из локальной сети для этого не требуется.</string>
+    <string name="extra_433" formatted="false">Скрыть настройки</string>
+    <string name="extra_434" formatted="false">Настроить логин и пароль</string>
+    <string name="extra_435" formatted="false">Без авторизации другие приложения на телефоне смогут обращаться к локальному прокси.</string>
+    <string name="extra_436" formatted="false">Логин</string>
+    <string name="extra_437" formatted="false">Скрыть пароль</string>
+    <string name="extra_438" formatted="false">Сохранено. Активный VPN переподключится.</string>
+    <string name="extra_439" formatted="false">Новые данные сохранены. Активный VPN переподключится.</string>
+    <string name="extra_440" formatted="false">Создать новые данные</string>
+    <string name="extra_441" formatted="false">Эти данные остаются на устройстве и не входят в облачные копии. Авторизация прокси не скрывает само VPN-соединение от оператора.</string>
+    <string name="extra_442" formatted="false">Загрузка только через VPN</string>
+    <string name="extra_443" formatted="false">Подписки, мосты, геоданные, фильтры, облачные ссылки и WebDAV. Если VPN недоступен, загрузка завершится ошибкой без перехода на прямое соединение.</string>
+    <string name="extra_444" formatted="false">Обновления только по Wi-Fi</string>
+    <string name="extra_445" formatted="false">Пинг и проверки только по Wi-Fi</string>
+    <string name="extra_446" formatted="false">На мобильной сети эти операции откладываются. Текущее VPN-соединение можно использовать; пропуск проверки не помечает сервер нерабочим.</string>
+    <string name="extra_447" formatted="false">Прямые проверки других серверов видны оператору. Режим «Только при сбое» убирает регулярный поиск более быстрого сервера; проверки при старте и сбое сохраняются.</string>
+    <string name="extra_448" formatted="false">Меньше фоновых проверок</string>
+    <string name="extra_449" formatted="false">"Текущее поведение: "</string>
+    <string name="extra_450" formatted="false">периодическая оптимизация</string>
+    <string name="extra_451" formatted="false">переключение при сбое</string>
+    <string name="extra_452" formatted="false">выбор только при подключении</string>
+    <string name="extra_453" formatted="false">Не удалось сменить режим. Попробуйте ещё раз.</string>
+    <string name="extra_454" formatted="false">Не удалось выполнить действие</string>
+    <string name="extra_455" formatted="false">Ссылка добавлена. Нажмите «Загрузить подписку».</string>
+    <string name="extra_456" formatted="false">Мосты добавлены</string>
+    <string name="extra_457" formatted="false">Готов к подключению</string>
+    <string name="extra_458" formatted="false">Подключение</string>
+    <string name="extra_459" formatted="false">Подключён</string>
+    <string name="extra_460" formatted="false">Не удалось подключиться через выбранные мосты. Обновите список или выберите мост вручную.</string>
+    <string name="extra_461" formatted="false">Не удалось подключиться. Попробуйте другой мост.</string>
+    <string name="extra_462" formatted="false">Автоподбор моста: %d/%d</string>
+    <string name="extra_463" formatted="false">Прошло: %d с · без прогресса: %d с</string>
+    <string name="extra_464" formatted="false">Tor сообщает о проблеме на этой стадии подключения.</string>
+    <string name="extra_465" formatted="false">Этот мост пока не отвечает. Если прогресс не появится, приложение само попробует следующий.</string>
+    <string name="extra_466" formatted="false">TLS-рукопожатие ещё не завершено. Этот мост может быть недоступен в вашей сети. Можно подождать или попробовать другой мост либо WebTunnel.</string>
+    <string name="extra_467" formatted="false">На этой стадии давно нет прогресса. Можно подождать или попробовать другой мост.</string>
+    <string name="extra_468" formatted="false">Другой мост</string>
+    <string name="extra_469" formatted="false">WebTunnel выбран</string>
+    <string name="extra_470" formatted="false">Нажмите «Подключить Tor» — приложение само подберёт мост из списка. Первый запуск может занять несколько минут.</string>
+    <string name="extra_471" formatted="false">Подключайтесь прямо здесь. Первый запуск может занять больше минуты.</string>
+    <string name="extra_472" formatted="false">Tor выбран</string>
+    <string name="extra_473" formatted="false">Подключить Tor</string>
+    <string name="extra_474" formatted="false">Отменить подключение</string>
+    <string name="extra_475" formatted="false">Отключить</string>
+    <string name="extra_476" formatted="false">Сохранённые настройки Tor повреждены. Импортируйте мосты или сохраните настройки заново.</string>
+    <string name="extra_477" formatted="false">Мост подключения</string>
+    <string name="extra_478" formatted="false">Автоподбор</string>
+    <string name="extra_479" formatted="false">Мостов этого типа нет. Выберите другой тип.</string>
+    <string name="extra_480" formatted="false">Без моста · прямое подключение Tor</string>
+    <string name="extra_481" formatted="false">Приложение само пробует сохранённые мосты по очереди. В «Авто» чередуются Vanilla, WebTunnel и obfs4.</string>
+    <string name="extra_482" formatted="false">Мост выбран вручную. Для автоматического перебора нажмите «Авто».</string>
+    <string name="extra_483" formatted="false">Авто</string>
+    <string name="extra_484" formatted="false">Мост выбран</string>
+    <string name="extra_485" formatted="false">Выбрать мост</string>
+    <string name="extra_486" formatted="false">Мосты отключены</string>
+    <string name="extra_487" formatted="false">Без мостов</string>
+    <string name="extra_488" formatted="false">Быстрый импорт</string>
+    <string name="extra_489" formatted="false">Список TOP-100 мостов из GitHub. Загружается по кнопке. Доступность мостов зависит от сети.</string>
+    <string name="extra_490" formatted="false">Список мостов загружен</string>
+    <string name="extra_491" formatted="false">Для обновления списка сначала отключите соединение.</string>
+    <string name="extra_492" formatted="false">Из буфера</string>
+    <string name="extra_493" formatted="false">"Загружено: "</string>
+    <string name="extra_494" formatted="false">"Некорректных мостов пропущено: "</string>
+    <string name="extra_495" formatted="false">Своя подписка и ноды</string>
+    <string name="extra_496" formatted="false">Отключитесь для изменения дополнительных настроек.</string>
+    <string name="extra_497" formatted="false">Подписка GitHub / HTTPS</string>
+    <string name="extra_498" formatted="false">Обновлять каждые 12 часов</string>
+    <string name="extra_499" formatted="false">Подписка загружена</string>
+    <string name="extra_500" formatted="false">Загрузить подписку</string>
+    <string name="extra_501" formatted="false">Мосты: по одному на строку</string>
+    <string name="extra_502" formatted="false">Поля ниже можно оставить пустыми. Для ручного выбора — 40-значные отпечатки реле через запятую.</string>
+    <string name="extra_503" formatted="false">Строго соблюдать исключения нод</string>
+    <string name="extra_504" formatted="false">Tor передаёт TCP и DNS выбранных приложений. UDP, прямые правила и SmartDNS в этом режиме не используются.</string>
+    <string name="extra_505" formatted="false">Настройки Tor сохранены</string>
+    <string name="extra_506" formatted="false">Выберите один мост</string>
+    <string name="extra_507" formatted="false">Производительность</string>
+    <string name="extra_508" formatted="false">Уменьшите количество эффектов для снижения нагрузки на устройство. Настройки применяются сразу.</string>
+    <string name="extra_509" formatted="false">Анимации интерфейса</string>
+    <string name="extra_510" formatted="false">Переходы, движение и реакции элементов</string>
+    <string name="extra_511" formatted="false">Декоративный фон</string>
+    <string name="extra_512" formatted="false">Сетка, частицы, иллюстрации и украшения темы</string>
+    <string name="extra_513" formatted="false">Блики на стекле</string>
+    <string name="extra_514" formatted="false">Декоративные блики и градиенты панелей</string>
+    <string name="extra_515" formatted="false">Лёгкий режим</string>
+    <string name="extra_516" formatted="false">Включить все эффекты</string>
+    <string name="extra_517" formatted="false">Лёгкий режим также отключает размытие стекла. Его можно настроить отдельно ниже.</string>
+    <string name="extra_518" formatted="false">Успешно: %d из %d</string>
+    <string name="extra_519" formatted="false">Проверка отложена до подключения к Wi-Fi</string>
+    <string name="extra_520" formatted="false">"Подключение Tor: "</string>
+    <string name="extra_521" formatted="false">"Мостов: "</string>
+    <string name="extra_522" formatted="false">Сеть Tor · открыть настройки</string>
+    <string name="extra_523" formatted="false">После обучения можно перенести настройки с телефона по QR-коду. Подключитесь, когда перенос будет завершён.</string>
+    <string name="extra_524" formatted="false">Серверов: +%d</string>
+    <string name="extra_525" formatted="false">Серверов: %d</string>
+    <string name="extra_526" formatted="false">Без изменений</string>
+    <string name="extra_527" formatted="false">Резерв · нет в текущей подписке</string>
+    <string name="extra_528" formatted="false">1 ч</string>
+    <string name="extra_529" formatted="false">3 ч</string>
+    <string name="extra_530" formatted="false">Для восстановления из облака вставьте ссылку на файл в карточку выше. Кнопки ниже сохраняют или открывают файл через системный диалог.</string>
+    <string name="extra_531" formatted="false">"Успешно загружено: "</string>
+    <string name="extra_532" formatted="false">Ещё не загружалась из сети</string>
+    <string name="extra_533" formatted="false">"Последняя попытка: "</string>
+    <string name="extra_534" formatted="false">" • Успешно"</string>
+    <string name="extra_535" formatted="false">Дата загрузки меняется после успешного получения подписки. Если обновление не удалось, сохранённые серверы остаются доступны.</string>
+    <string name="extra_536" formatted="false">Резерв рабочих серверов</string>
+    <string name="extra_537" formatted="false">Сохранять исчезнувшие рабочие узлы</string>
+    <string name="extra_538" formatted="false">До 100 узлов и до 30 дней после успешной проверки через туннель. Обычный TCP-пинг не считается подтверждением. В резерве: %d.</string>
+    <string name="extra_539" formatted="false">Очистить резерв этой подписки</string>
+    <string name="extra_540" formatted="false">Правила подписки</string>
+    <string name="extra_541" formatted="false">Использовать правила</string>
+    <string name="extra_542" formatted="false">Есть неподдерживаемые условия (%d). Этот набор нельзя включить целиком безопасно. Поддерживаемых правил: %d.</string>
+    <string name="extra_543" formatted="false">Правила не найдены. Для старой подписки сначала выполните обновление. Обычный список ссылок на серверы правил не содержит.</string>
+    <string name="extra_544" formatted="false">Правил: %d. Применяются только при подключении к серверу этой подписки. Изменение правил сбрасывает согласие.</string>
+    <string name="extra_545" formatted="false">Просмотреть правила</string>
+    <string name="extra_546" formatted="false">Опции применяются сразу. При изменении URL правила и резерв прежнего источника сбрасываются.</string>
+    <string name="extra_547" formatted="false">Правила: %s</string>
+    <string name="extra_548" formatted="false">DIRECT отправляет совпавший трафик напрямую. PROXY использует выбранный сервер. DNS, настройки приложений и выбор серверов внутри групп не переносятся. Ваши собственные правила имеют приоритет.</string>
+    <string name="extra_549" formatted="false">Есть неподдерживаемые правила. Включение заблокировано.</string>
+    <string name="extra_550" formatted="false">Подписка обновилась. Закройте окно и просмотрите новые правила.</string>
+    <string name="extra_551" formatted="false">Разрешить и включить</string>
+    <string name="extra_552" formatted="false">Удалить резерв?</string>
+    <string name="extra_553" formatted="false">Будут удалены %d узлов, которых уже нет в актуальной подписке. Серверы из текущего ответа останутся.</string>
+    <string name="extra_554" formatted="false">%d ч %d мин</string>
+    <string name="extra_555" formatted="false">День</string>
+    <string name="extra_556" formatted="false">Месяц</string>
+    <string name="extra_557" formatted="false">Предыдущий период</string>
+    <string name="extra_558" formatted="false">Итоги месяца</string>
+    <string name="extra_559" formatted="false">Итоги дня</string>
+    <string name="extra_560" formatted="false">Следующий период</string>
+    <string name="extra_561" formatted="false">Выбрать дату</string>
+    <string name="extra_562" formatted="false">Всего трафика</string>
+    <string name="extra_563" formatted="false">"Подключение: "</string>
+    <string name="extra_564" formatted="false">Скачано</string>
+    <string name="extra_565" formatted="false">Отправлено</string>
+    <string name="extra_566" formatted="false">По дням</string>
+    <string name="extra_567" formatted="false">7 дней</string>
+    <string name="extra_568" formatted="false">Всё</string>
+    <string name="extra_569" formatted="false">Скачано</string>
+    <string name="extra_570" formatted="false">Отправлено</string>
+    <string name="extra_571" formatted="false">Коснитесь столбца или проведите по графику</string>
+    <string name="extra_572" formatted="false">За этот период данных пока нет. Статистика появится после подключения VPN.</string>
+    <string name="extra_573" formatted="false">К текущему периоду</string>
+    <string name="extra_574" formatted="false">Очистить историю</string>
+    <string name="extra_575" formatted="false">Трафик VPN-интерфейса, включая прямые маршруты внутри него. История хранится 400 дней и собирается с этой версии. При аварийном завершении последние 15 секунд могут не сохраниться.</string>
+    <string name="extra_576" formatted="false">Очистить статистику?</string>
+    <string name="extra_577" formatted="false">Вся история трафика и времени подключения будет удалена.</string>
+    <string name="extra_578" formatted="false">Выбрать</string>
+    <string name="extra_579" formatted="false">Трафик по дням. Выберите день на графике</string>
+    <string name="extra_580" formatted="false">Не удалось подготовить QR-код. Подключите телевизор к Wi-Fi или Ethernet и повторите в разделе переноса.</string>
+    <string name="extra_581" formatted="false">Не удалось сохранить выбор. Попробуйте ещё раз.</string>
+    <string name="extra_582" formatted="false">Серверы</string>
+    <string name="extra_583" formatted="false">Перенос настроек</string>
+    <string name="extra_584" formatted="false">Настройки</string>
+    <string name="extra_585" formatted="false">Управляйте стрелками и кнопкой OK на пульте.</string>
+    <string name="extra_586" formatted="false">Выбрать сервер</string>
+    <string name="extra_587" formatted="false">Получить настройки с телефона</string>
+    <string name="extra_588" formatted="false">Выбор подключения</string>
+    <string name="extra_589" formatted="false">Получите серверы и настройки с телефона в разделе переноса.</string>
+    <string name="extra_590" formatted="false">Подключите телефон и телевизор к одной Wi-Fi сети. Камера телевизору не нужна.</string>
+    <string name="extra_591" formatted="false">Подключение Tor</string>
+    <string name="extra_592" formatted="false">Первое подключение Tor может занять больше минуты. Дождитесь завершения.</string>
+    <string name="extra_593" formatted="false">Перенести настройки с телефона?</string>
+    <string name="extra_594" formatted="false">Подключите телефон и телевизор к одной Wi-Fi или Ethernet-сети. Телевизор покажет QR-код: отсканируйте его в SplateVPN на телефоне. Перед применением вы увидите состав настроек.</string>
+    <string name="extra_595" formatted="false">Получить по QR-коду</string>
+    <string name="extra_596" formatted="false">Настроить позже</string>
+    <string name="extra_597" formatted="false">Импорт узлов…</string>
+    <string name="extra_598" formatted="false">Импортировать подписку</string>
+    <string name="extra_599" formatted="false">Импортировать все узлы</string>
+    <string name="extra_600" formatted="false">Добавить узел</string>
+    <string name="extra_601" formatted="false">Для JSON-профиля здесь можно изменить название. Остальные параметры измените в исходном JSON и импортируйте его снова.</string>
+    <string name="extra_602" formatted="false">База из приложения · работает без сети</string>
+    <string name="extra_603" formatted="false">Обновлено: %s</string>
+    <string name="extra_604" formatted="false">Автообновление раз в сутки. Фоновая база применяется при следующем подключении. Ручное обновление перезагружает активный VPN.</string>
+    <string name="extra_605" formatted="false">Не удалось обновить или загрузить расширенную базу. Доступная локальная защита сохранена.</string>
+    <string name="extra_606" formatted="false">Обновить фильтры</string>
+    <string name="extra_607" formatted="false">Исключения (%d)</string>
+    <string name="extra_608" formatted="false">Источник и лицензия: AdGuard · GPL-3.0</string>
+    <string name="extra_609" formatted="false">Исключения блокировщика</string>
+    <string name="extra_610" formatted="false">По одному домену в строке, без https:// и путей. Разрешает домен и его поддомены только в блокировщике рекламы. До 100 доменов.</string>
+    <string name="extra_611" formatted="false">Проверьте домены и их количество</string>
+    <string name="extra_612" formatted="false">Будут применены сетевые настройки профиля «%s».</string>
+    <string name="extra_613" formatted="false">Выбор приложений и настройки ИИ остаются прежними.</string>
+    <string name="extra_614" formatted="false">Мои профили</string>
+    <string name="extra_615" formatted="false">Профиль сохраняет все сетевые настройки, включая приложения и DNS.</string>
+    <string name="extra_616" formatted="false">Не удалось сохранить изменения. Проверьте настройки и свободное место.</string>
+    <string name="extra_617" formatted="false">Трафик выбранных приложений — через VPN, с учётом исключений.</string>
+    <string name="extra_618" formatted="false">Проверка отчёта</string>
+    <string name="extra_619" formatted="false">Ссылки, ключи, IP и имена серверов скрыты автоматически. Проверьте оставшийся текст перед отправкой.</string>
+    <string name="extra_620" formatted="false">Поделиться</string>
+    <string name="extra_621" formatted="false">Рабочий DNS: %s</string>
+    <string name="extra_622" formatted="false">Проверки DNS не прошли</string>
+    <string name="extra_623" formatted="false">Проверка DNS-серверов…</string>
+    <string name="extra_624" formatted="false">%s не отвечает через VPN. Проверяются другие DoH-серверы…</string>
+    <string name="extra_625" formatted="false">" (%d мс)"</string>
+    <string name="extra_626" formatted="false">%s не ответил через VPN. %s отвечает%s.</string>
+    <string name="extra_627" formatted="false">Проверенные DoH-серверы не ответили через VPN. Попробуйте другой сервер или DNS.</string>
+    <string name="extra_628" formatted="false">Выбрать %s</string>
+    <string name="extra_629" formatted="false">Включить FakeDNS</string>
+    <string name="extra_630" formatted="false">Восстановление настроек</string>
+    <string name="extra_631" formatted="false">Настройки повреждены, рабочая копия недоступна. Оригинальные файлы сохранены. Создать новые настройки? Серверы и подписки сохранятся. До выбора VPN не подключается.</string>
+    <string name="extra_632" formatted="false">Настройки восстановлены из последней рабочей копии. Повреждённый оригинал сохранён отдельно.</string>
+    <string name="extra_633" formatted="false">Не удалось записать настройки. Проверьте свободное место.</string>
+    <string name="extra_634" formatted="false">Создать новые</string>
+    <string name="extra_635" formatted="false">Выйти</string>
+    <string name="extra_636" formatted="false">Закрыть</string>
+    <string name="extra_637" formatted="false">Текущая фрагментация мешает подключению</string>
+    <string name="extra_638" formatted="false">Две проверки того же сервера не прошли с текущими параметрами, но прошли со стандартными. Попробуйте стандартную фрагментацию.</string>
+    <string name="extra_639" formatted="false">Стандартная фрагментация</string>
+    <string name="extra_640" formatted="false">Оповещения и сбои туннеля</string>
+    <string name="extra_641" formatted="false">Оповещения об ошибках соединения с рекомендациями решений</string>
+    <string name="extra_642" formatted="false">Не удалось подтвердить связь через VPN</string>
+    <string name="extra_643" formatted="false">Две проверки туннеля не прошли при доступной сети. Причина не установлена; попробуйте другой сервер.</string>
+    <string name="extra_644" formatted="false">Сменить сервер</string>
+    <string name="extra_645" formatted="false">Ошибка размера пакета</string>
+    <string name="extra_646" formatted="false">Обнаружена ошибка размера пакета. Попробуйте MTU 1280; источник ограничения не установлен.</string>
+    <string name="extra_647" formatted="false">Установить MTU 1280</string>
+    <string name="extra_648" formatted="false">Возможная петля маршрутизации</string>
+    <string name="extra_649" formatted="false">В журнале обнаружены признаки проблемы маршрутизации. Автоматическое устранение не подтверждено.</string>
+    <string name="extra_650" formatted="false">Доступ к интернету не подтверждён</string>
+    <string name="extra_651" formatted="false">VPN запущен, но проверки внешней сети не проходят и входящий трафик отсутствует. Проверьте Wi-Fi или мобильный интернет. Менять маршруты сайтов не требуется.</string>
+    <string name="extra_652" formatted="false">Требуется вход в Wi-Fi</string>
+    <string name="extra_653" formatted="false">Сеть требует авторизации в браузере. Можно временно приостановить VPN для входа.</string>
+    <string name="extra_654" formatted="false">Приостановить на 2 мин</string>
+    <string name="extra_655" formatted="false">Войти в сеть</string>
+    <string name="extra_656" formatted="false">Время отличается на %d с</string>
+    <string name="extra_657" formatted="false">Время устройства отличается от времени проверочного сервера. Проверьте автоматическую синхронизацию часов.</string>
+    <string name="extra_658" formatted="false">Настройки даты</string>
+    <string name="extra_659" formatted="false">%s не ответил на повторную проверку. %s отвечает. Причина отказа не установлена.</string>
+    <string name="extra_660" formatted="false">Проверенные DNS-серверы не ответили. Причина не установлена. Можно попробовать FakeDNS.</string>
+    <string name="extra_661" formatted="false">Проверенные DNS-серверы не ответили. FakeDNS уже включён. Проверьте соединение с выбранным узлом.</string>
+    <string name="extra_662" formatted="false">Быстрый выбор</string>
+    <string name="extra_663" formatted="false">До 10 узлов с успешным Real ping за последние 10 минут в этой сети и этом запуске приложения.</string>
+    <string name="extra_664" formatted="false">Свежих проверенных узлов нет. Откройте все серверы и выполните Real ping.</string>
+    <string name="extra_665" formatted="false">Результат устарел. Обновите список.</string>
+    <string name="extra_666" formatted="false">Не удалось переключить подключение.</string>
+    <string name="extra_667" formatted="false">Все узлы</string>
+    <string name="extra_668" formatted="false">Подписки</string>
+    <string name="extra_669" formatted="false">Личные</string>
+    <string name="extra_670" formatted="false">Обновить список</string>
+    <string name="extra_671" formatted="false">Все серверы</string>
+    <string name="extra_672" formatted="false">До 10 узлов · Real ping за последние 10 минут</string>
+    <string name="extra_673" formatted="false">%d мс</string>
+    <string name="extra_674" formatted="false">Интервал сервера: %d ч</string>
+    <string name="extra_675" formatted="false">Сайт</string>
+    <string name="extra_676" formatted="false">Поддержка</string>
+    <string name="extra_677" formatted="false">Не удалось открыть ссылку</string>
+    <string name="extra_678" formatted="false">Нужна проверка</string>
+    <string name="extra_679" formatted="false">Режим подключения: %s</string>
+    <string name="extra_680" formatted="false">Автоматически при сохранении</string>
+    <string name="extra_681" formatted="false">Сервер для этого правила</string>
+    <string name="extra_682" formatted="false">Основной VPN (текущий активный)</string>
+    <string name="extra_683" formatted="false">Заполните хотя бы одно условие (домены, приложения, IP или порты)</string>
+    <string name="extra_684" formatted="false">Правило: %s</string>
+    <string name="extra_685" formatted="false">Ошибка валидации правила</string>
+    <string name="extra_686" formatted="false">Выбор сервера для правила</string>
+    <string name="extra_687" formatted="false">Поиск сервера</string>
+    <string name="extra_688" formatted="false">Основной VPN (автовыбор)</string>
+    <string name="extra_689" formatted="false">Использовать текущий подключённый узел</string>
+    <string name="extra_690" formatted="false">Сеть и проверки</string>
+    <string name="extra_691" formatted="false">Подписки, мосты, геоданные, фильтры и WebDAV. Без перехода на прямое соединение.</string>
+    <string name="extra_692" formatted="false">Адрес сервера скрыт. Показать на 15 секунд</string>
+    <string name="extra_693" formatted="false">Список мостов пуст. Загрузите TOP-100 ниже или отключите использование мостов.</string>
+    <string name="extra_694" formatted="false">Тест задержки</string>
+    <string name="extra_695" formatted="false">Проверка доступности и задержки мостов…</string>
+    <string name="extra_696" formatted="false">Сменить цепочку (New Identity)</string>
+    <string name="extra_697" formatted="false">Список мостов TOP-100 из GitHub. После первой загрузки можно обновлять его автоматически.</string>
+    <string name="extra_698" formatted="false">Обновлять TOP-100 каждые 12 часов</string>
+    <string name="extra_699" formatted="false">Расписание обновлений сохранено</string>
+    <string name="extra_700" formatted="false">Обычные</string>
+    <string name="extra_701" formatted="false">Оптимистичная передача данных (OptimisticData)</string>
+    <string name="extra_702" formatted="false">Автовыбор быстрейшего моста по задержке</string>
+    <string name="extra_703" formatted="false">Пользовательский SNI / Fronting (опционально)</string>
+    <string name="extra_704" formatted="false">Тест</string>
+    <string name="extra_705" formatted="false">недоступен</string>
+    <string name="extra_706" formatted="false">Дополнительные параметры</string>
+    <string name="extra_707" formatted="false">Профи</string>
+    <string name="extra_708" formatted="false">Скрыть инструменты</string>
+    <string name="extra_709" formatted="false">Инструменты соединения</string>
+    <string name="extra_710" formatted="false">Ожидание сетевых запросов...</string>
+    <string name="extra_711" formatted="false">Все (%d)</string>
+    <string name="extra_712" formatted="false">Активные (%d)</string>
+    <string name="extra_713" formatted="false">История (%d)</string>
+    <string name="extra_714" formatted="false">Состояние</string>
+    <string name="extra_715" formatted="false">Активно</string>
+    <string name="extra_716" formatted="false">Завершено</string>
+    <string name="extra_717" formatted="false">Транспорт</string>
+    <string name="extra_718" formatted="false">Источник</string>
+    <string name="extra_719" formatted="false">Маршрут</string>
+    <string name="extra_720" formatted="false">Запросы</string>
+    <string name="extra_721" formatted="false">Время</string>
+    <string name="extra_722" formatted="false">Скопировано: %s</string>
+    <string name="extra_723" formatted="false">Копировать адрес</string>
+    <string name="extra_724" formatted="false">Добавлено в Direct: %s</string>
+    <string name="extra_725" formatted="false">Добавлено в Proxy: %s</string>
+    <string name="extra_726" formatted="false">Заблокировано: %s</string>
+    <string name="extra_727" formatted="false">Загружено %d мостов Tor (WebTunnel · obfs4 · Vanilla)!</string>
+    <string name="extra_728" formatted="false">Ошибка загрузки списка мостов</string>
+    <string name="extra_729" formatted="false">Показать обучение?</string>
+    <string name="extra_730" formatted="false">Разберём подключение, быстрый автоподбор и маршруты приложений. Автоподбор проверяет HTTPS через сервер и в режиме контроля связи ищет замену при отказе. Его можно отключить на главной.</string>
+    <string name="extra_731" formatted="false">Показать</string>
+    <string name="extra_732" formatted="false">Продолжить без обучения</string>
+    <string name="extra_733" formatted="false">Короткая настройка</string>
+    <string name="extra_734" formatted="false">Подтвердите регион и маршрут. Подробное обучение будет пропущено.</string>
+    <string name="extra_735" formatted="false">«Smart» ускоряет интернет, пропуская сайты вашей страны напрямую. «Весь трафик» шифрует 100% данных.</string>
+    <string name="extra_736" formatted="false">Серверы и подключение</string>
+    <string name="extra_737" formatted="false">Мосты Tor TOP-100 от igareck</string>
+    <string name="extra_738" formatted="false">Готовое решение без личного VPS</string>
+    <string name="extra_739" formatted="false">В РФ стандартные узлы Tor заблокированы. Этот набор включает актуальные мосты WebTunnel (маскировка под HTTPS) и obfs4, которые обходят ТСПУ и белые списки.</string>
+    <string name="extra_740" formatted="false">Обновить TOP-100 мостов</string>
+    <string name="extra_741" formatted="false">Загрузить TOP-100 мостов Tor</string>
+    <string name="extra_742" formatted="false">Загрузка и парсинг мостов с GitHub…</string>
+    <string name="extra_743" formatted="false">Основной режим: Tor</string>
+    <string name="extra_744" formatted="false">Подключаться через Tor сразу после настройки</string>
+    <string name="extra_745" formatted="false">прил.</string>
+    <string name="extra_746" formatted="false">Язык</string>
+    <string name="extra_747" formatted="false">Регион правил</string>
+    <string name="extra_748" formatted="false">Режим обхода</string>
+    <string name="extra_749" formatted="false">VPN ссылка</string>
+    <string name="extra_750" formatted="false">Готова к импорту</string>
+    <string name="extra_751" formatted="false">Резервная копия</string>
+    <string name="extra_752" formatted="false">Выбран файл бэкапа</string>
+    <string name="extra_753" formatted="false">Мосты Tor</string>
+    <string name="extra_754" formatted="false">%d мостов (TOP-100 igareck)</string>
+    <string name="extra_755" formatted="false">Режим запуска</string>
+    <string name="extra_756" formatted="false">Приложения</string>
+    <string name="extra_757" formatted="false">После настройки можно перенести конфигурации с телефона по QR-коду.</string>
+    <string name="extra_758" formatted="false">Завершить и подключиться</string>
+    <string name="extra_759" formatted="false">Пропустить</string>
+    <string name="extra_760" formatted="false">Интерактивный тренажёр</string>
+    <string name="extra_761" formatted="false">Учебный интерфейс · настройки не меняются</string>
+    <string name="extra_762" formatted="false">Задание</string>
+    <string name="extra_763" formatted="false">ДЕМО-РЕЖИМ</string>
+    <string name="extra_764" formatted="false">Подключить VPN</string>
+    <string name="extra_765" formatted="false">Германия</string>
+    <string name="extra_766" formatted="false">Нидерланды</string>
+    <string name="extra_767" formatted="false">Задержка</string>
+    <string name="extra_768" formatted="false">Скорость</string>
+    <string name="extra_769" formatted="false">Добавить сервер (+)</string>
+    <string name="extra_770" formatted="false">Из ссылки (Буфер)</string>
+    <string name="extra_771" formatted="false">Сканировать QR-код</string>
+    <string name="extra_772" formatted="false">Германия (VLESS)</string>
+    <string name="extra_773" formatted="false">Учебный сервер добавлен ✓</string>
+    <string name="extra_774" formatted="false">100 проверенных мостов готово</string>
+    <string name="extra_775" formatted="false">Обход цензуры ТСПУ в РФ</string>
+    <string name="extra_776" formatted="false">Быстрый импорт TOP-100 (мосты igareck)</string>
+    <string name="extra_777" formatted="false">Свежие мосты для РФ (WebTunnel, obfs4). Обновляются из репозитория igareck/vpn-configs-for-russia.</string>
+    <string name="extra_778" formatted="false">Загрузка 100 мостов igareck с GitHub…</string>
+    <string name="extra_779" formatted="false">Транспорты мостов:</string>
+    <string name="extra_780" formatted="false">Авто · 100</string>
+    <string name="extra_781" formatted="false">Секрет обхода блокировок</string>
+    <string name="extra_782" formatted="false">WebTunnel маскирует трафик под обычный веб-сайт с HTTPS, а obfs4 шифрует его шумом. ТСПУ пропускает соединение!</string>
+    <string name="extra_783" formatted="false">Через VPN — только выбранные приложения</string>
+    <string name="extra_784" formatted="false">Веб-браузер (Chrome / Firefox)</string>
+    <string name="extra_785" formatted="false">Оформление и темы</string>
+    <string name="extra_786" formatted="false">Отлично! Урок освоен.</string>
+    <string name="extra_787" formatted="false">Нажмите «Дальше» для перехода к следующему шагу.</string>
+    <string name="extra_788" formatted="false">Нажмите на подсвеченный элемент интерфейса</string>
+    <string name="extra_789" formatted="false">Наведите камеру на QR-код от вашего провайдера. В настоящем клиенте камера моментально распознает конфигурацию на лету.</string>
+    <string name="extra_790" formatted="false">Учебная конфигурация</string>
+    <string name="extra_791" formatted="false">Скопируйте ссылку сервера VLESS/Shadowsocks или подписки, вставьте в поле и нажмите «Добавить».</string>
+    <string name="extra_792" formatted="false">Добавить пример</string>
+    <string name="extra_793" formatted="false">Быстрый выбор узла</string>
+    <string name="extra_794" formatted="false">Германия (Франкфурт)</string>
+    <string name="extra_795" formatted="false">Нидерланды (Амстердам)</string>
+    <string name="extra_796" formatted="false">Тапните</string>
+    <string name="extra_797" formatted="false">Лимит трафика для замеров исчерпан. Новые замеры после %s. Лимит можно увеличить в настройках балансировщика.</string>
+    <string name="extra_798" formatted="false">До 10 узлов · до 6 замеров Mbps за обновление в пределах лимита трафика</string>
+    <string name="extra_799" formatted="false">Нет замера Mbps</string>
+    <string name="extra_800" formatted="false">«%s»: Ошибка (%s недоступен)</string>
+    <string name="extra_801" formatted="false">Восстановлено %d серверов</string>
+    <string name="extra_802" formatted="false">Восстановлено %d предустановленных узлов</string>
+    <string name="extra_803" formatted="false">Киберпанк</string>
+    <string name="extra_804" formatted="false">Тренажёр</string>
+    <string name="extra_805" formatted="false">Подключаться при открытии</string>
+    <string name="extra_806" formatted="false">Автоматически подключать выбранный VPN или Tor при входе в приложение</string>
+    <string name="extra_807" formatted="false">Поддержать проект</string>
+    <string name="extra_808" formatted="false">Добровольный донат помогает развивать SplateVPN. Спасибо за поддержку!</string>
+    <string name="extra_809" formatted="false">Пожертвовать через DonationAlerts</string>
+    <string name="extra_810" formatted="false">Личные серверы</string>
+    <string name="extra_811" formatted="false">Подписка</string>
+    <string name="extra_812" formatted="false">СЕРВЕРЫ (%d)</string>
+    <string name="extra_813" formatted="false">Добавить</string>
+    <string name="extra_814" formatted="false">Стоп</string>
+    <string name="extra_815" formatted="false">Пинг</string>
+    <string name="extra_816" formatted="false">Поиск сервера…</string>
+    <string name="extra_817" formatted="false">Серверы по запросу не найдены</string>
+    <string name="extra_818" formatted="false">Список серверов пока пуст</string>
+    <string name="extra_819" formatted="false">Добавить сервер или подписку</string>
+    <string name="extra_820" formatted="false">Узлы (%d)</string>
+    <string name="extra_821" formatted="false">Проверить пинг подписки</string>
+    <string name="extra_822" formatted="false">Показать ещё (%d)</string>
+    <string name="extra_823" formatted="false">Режим интерфейса</string>
+    <string name="extra_824" formatted="false">Простой</string>
+    <string name="extra_825" formatted="false">Минимум настроек: подключение, выбор сервера и базовая защита.</string>
+    <string name="extra_826" formatted="false">Полный доступ: серверы, маршрутизация, Tor, балансировщик, DNS и диагностика.</string>
+</resources>

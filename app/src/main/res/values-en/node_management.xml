@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="node_limits_unknown">Limits and expiry were not provided</string>
+    <string name="node_enable_all">Enable all nodes</string>
+    <string name="node_disable_all">Disable all nodes</string>
+    <string name="folder_enable">Enable folder</string>
+    <string name="folder_disable">Disable folder</string>
+</resources>

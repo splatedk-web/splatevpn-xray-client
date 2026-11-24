@@ -15,15 +15,153 @@ import javax.inject.Singleton
 class SettingsManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("splate_prefs", Context.MODE_PRIVATE)
+    private val serverSelectionRevision = java.util.concurrent.atomic.AtomicLong()
+    internal fun selectionRevision(): Long = serverSelectionRevision.get()
+    internal fun invalidateServerSelection() { serverSelectionRevision.incrementAndGet() }
+    private val recovery = SettingsRecovery(context)
+    private var prefs: SharedPreferences = recovery.open(context.getSharedPreferences("splate_prefs", Context.MODE_PRIVATE))
+    internal val recoveryNotice = recovery.notice
+    internal val subscriptionHwidStore by lazy { SubscriptionHwidStore(context) }
+    internal fun getSubscriptionHwidOverrides(): Map<String, Boolean> = runCatching {
+        SubscriptionHwidPreferences.decode(prefs.getString("subscription_hwid_v1", "{}").orEmpty())
+    }.getOrDefault(emptyMap())
+    internal fun subscriptionHwidOverridesJson(): String = SubscriptionHwidPreferences.encode(getSubscriptionHwidOverrides())
+    internal fun storeSubscriptionHwidOverrides(json: String, merge: Boolean = false) {
+        val imported = SubscriptionHwidPreferences.decode(json)
+        val overrides = if (merge) getSubscriptionHwidOverrides() + imported else imported
+        check(prefs.edit().putString("subscription_hwid_v1", SubscriptionHwidPreferences.encode(overrides)).commit())
+    }
+    private fun subscriptionUserAgents(): Map<String, SubscriptionUserAgent> {
+        val saved = prefs.getString("subscription_ua_overrides_v1", null)
+        if (saved != null) return runCatching { SubscriptionUserAgent.decodeOverrides(saved) }.getOrDefault(emptyMap())
+        return prefs.all.mapNotNull { (key, value) ->
+            if (!key.startsWith("subscription_ua_")) return@mapNotNull null
+            val agent = SubscriptionUserAgent.fromId(value as? String)
+            agent.takeUnless { it == SubscriptionUserAgent.AUTO }?.let { key.removePrefix("subscription_ua_") to it }
+        }.toMap()
+    }
+
+    fun getSubscriptionUserAgent(url: String): SubscriptionUserAgent? = SubscriptionHwidPolicy.key(url)?.let { key ->
+        if (prefs.contains("subscription_ua_overrides_v1")) subscriptionUserAgents()[key] ?: SubscriptionUserAgent.AUTO
+        else SubscriptionUserAgent.fromId(prefs.getString("subscription_ua_$key", null))
+    }
+
+    @Synchronized fun setSubscriptionUserAgent(url: String, agent: SubscriptionUserAgent) {
+        val key = SubscriptionHwidPolicy.key(url) ?: return
+        val overrides = subscriptionUserAgents()
+        saveSubscriptionUserAgents(if (agent == SubscriptionUserAgent.AUTO) overrides - key else overrides + (key to agent))
+    }
+
+    internal fun subscriptionUserAgentsJson() = SubscriptionUserAgent.encodeOverrides(subscriptionUserAgents())
+
+    @Synchronized internal fun storeSubscriptionUserAgents(json: String, mergedSources: List<SubscriptionEntity>?) {
+        val imported = SubscriptionUserAgent.decodeOverrides(json)
+        val old = mergedSources?.mapNotNull { SubscriptionHwidPolicy.key(it.url) }?.let { keys ->
+            subscriptionUserAgents() - keys.toSet()
+        }.orEmpty()
+        saveSubscriptionUserAgents(old + imported)
+    }
+
+    private fun saveSubscriptionUserAgents(overrides: Map<String, SubscriptionUserAgent>) {
+        val json = SubscriptionUserAgent.encodeOverrides(overrides)
+        SubscriptionUserAgent.decodeOverrides(json)
+        val editor = prefs.edit().putString("subscription_ua_overrides_v1", json)
+        prefs.all.keys.filter { it.startsWith("subscription_ua_") && it != "subscription_ua_overrides_v1" }.forEach(editor::remove)
+        editor.apply()
+    }
+
+    fun isSubscriptionHwidEnabled(url: String): Boolean = SubscriptionHwidPolicy.enabled(url, getSubscriptionHwidOverrides())
+    @Synchronized fun setSubscriptionHwidEnabled(url: String, enabled: Boolean) {
+        val key = SubscriptionHwidPolicy.key(url) ?: return
+        if (!SubscriptionHwidPolicy.canSend(url)) return
+        storeSubscriptionHwidOverrides(SubscriptionHwidPreferences.encode(getSubscriptionHwidOverrides() + (key to enabled)))
+    }
+    internal fun acceptRecoveredDefaults() {
+        prefs.unregisterOnSharedPreferenceChangeListener(networkObserver)
+        prefs = recovery.acceptDefaults()
+        _notificationPreferences.value = getNotificationPreferences()
+        prefs.registerOnSharedPreferenceChangeListener(networkObserver)
+        _networkPreferences.value = NetworkPreferences.capture(preferenceSnapshot())
+        _advancedRouting.value = advancedRoutingJson()
+    }
+    internal fun dismissRecoveryNotice() = recovery.dismissNotice()
+    internal fun canUseNetworkSettings(): Boolean = recoveryNotice.value?.needsDecision != true
+    internal fun connectionProfilesJson(): String = prefs.getString("connection_profiles_v1", "[]") ?: "[]"
+    internal fun connectionProfileUndo(): String? = prefs.getString("connection_profile_undo_v1", null)
+    internal fun storeConnectionProfiles(json: String) { check(prefs.edit().putString("connection_profiles_v1", json).commit()) }
+    fun advancedRoutingJson(): String = prefs.getString("advanced_routes_v1", "[]") ?: "[]"
+    private val _advancedRouting = MutableStateFlow(advancedRoutingJson())
+    val advancedRouting = _advancedRouting.asStateFlow()
+    fun storeAdvancedRouting(json: String) {
+        val validated = AdvancedRoutingRules.validateEncoded(json)
+        check(prefs.edit().putString("advanced_routes_v1", validated).commit())
+        _advancedRouting.value = validated
+    }
 
     init {
+        if (!prefs.contains("regional_settings_version")) {
+            val existing = prefs.all.isNotEmpty()
+            val legacyMode = prefs.getString("routing_mode", "smart_ru")
+            if (!existing) prefs.edit().putString("ai_routing_mode", "vpn").apply()
+            check(prefs.edit()
+                .putString("routing_region", if (existing) "ru" else RoutingRegion.suggested(java.util.Locale.getDefault()).id)
+                .putString("routing_mode", if (!existing || legacyMode != "global") "smart" else "global")
+                .putInt("onboarding_version", if (existing) 1 else 0)
+                .putBoolean("regional_presets_enabled", existing || RoutingRegion.suggested(java.util.Locale.getDefault()) == RoutingRegion.RUSSIA)
+                .putInt("regional_settings_version", 1).commit())
+        }
+        if (prefs.getInt("regional_settings_version", 0) < 2) {
+            val editor = prefs.edit().putInt("regional_settings_version", 2)
+            if (prefs.getInt("onboarding_version", 0) == 0) editor.putString("routing_mode", "smart")
+                .putBoolean("regional_presets_enabled", prefs.getString("routing_region", "") == "ru")
+            check(editor.commit())
+        }
+        if (prefs.getInt("regional_settings_version", 0) < 3) {
+            val editor = prefs.edit().putInt("regional_settings_version", 3)
+            // Subscription sources and the country used for routing are independent choices.
+            if (prefs.getInt("onboarding_version", 0) == 0) editor.putBoolean("regional_presets_enabled", true)
+            check(editor.commit())
+        }
         // Apply the new default once, then retain the user's grouping choice.
         if (!prefs.getBoolean("folders_default_applied", false)) {
             prefs.edit().putBoolean("servers_grouped", true)
                 .putString("servers_view_mode", "ALL").remove("servers_filter_sub_id")
                 .putBoolean("folders_default_applied", true).apply()
         }
+        if (!prefs.getBoolean("balancer_relaxed_defaults_applied", false)) {
+            val editor = prefs.edit()
+            if (prefs.getInt("balancer_health_seconds", 10) <= 2) {
+                editor.putInt("balancer_health_seconds", 10)
+            }
+            if (prefs.getInt("balancer_failures", 3) <= 2) {
+                editor.putInt("balancer_failures", 3)
+            }
+            editor.putBoolean("balancer_relaxed_defaults_applied", true).apply()
+        }
+    }
+
+    init {
+        if (!prefs.contains("folder_controls_version")) prefs.edit().remove("disabled_server_ids")
+            .putInt("folder_controls_version", 1).apply()
+    }
+    fun isPersonalFolderEnabled(disabled: Set<String> = getDisabledServerIds()) = "__personal_folder__" !in disabled
+    fun setPersonalFolderEnabled(enabled: Boolean) = setServersEnabled(setOf("__personal_folder__"), enabled)
+    fun isServerEnabled(node: ServerNode, disabled: Set<String> = getDisabledServerIds(),
+        now: Long = System.currentTimeMillis()) = (!node.isRetained || SubscriptionNodeMerger.canRetain(node, now)) &&
+        node.id !in disabled &&
+        (isPersonalFolderEnabled(disabled) || !QuickServerSelection.isPersonal(node))
+
+    fun getDisabledServerIds(): Set<String> = prefs.getString("disabled_server_ids", "").orEmpty()
+        .lineSequence().filter { it.isNotBlank() }.toSet()
+    private val _disabledServerIds = MutableStateFlow(getDisabledServerIds())
+    val disabledServerIds = _disabledServerIds.asStateFlow()
+    @Synchronized fun setServersEnabled(ids: Set<String>, enabled: Boolean) {
+        val disabled = getDisabledServerIds().let { if (enabled) it - ids else it + ids }
+        storeDisabledServerIds(disabled)
+    }
+    internal fun storeDisabledServerIds(ids: Set<String>) {
+        prefs.edit().putString("disabled_server_ids", ids.sorted().joinToString("\n")).apply()
+        _disabledServerIds.value = ids.toSet()
     }
 
     fun getServersListPreferences() = ServersListPreferences(
@@ -55,13 +193,82 @@ class SettingsManager @Inject constructor(
     val isGlobalAppProxyFlow: StateFlow<Boolean> = _isGlobalAppProxyFlow.asStateFlow()
 
     fun getRoutingMode(): String {
-        return prefs.getString("routing_mode", "smart_ru") ?: "smart_ru"
+        return if (prefs.getString("routing_mode", "global") in setOf("smart", "smart_ru")) "smart" else "global"
     }
 
     fun setRoutingMode(mode: String) {
-        prefs.edit().putString("routing_mode", mode).apply()
-        _routingModeFlow.value = mode
+        require(mode in setOf("smart", "smart_ru", "global"))
+        if (mode == "smart_ru") setRoutingRegion("ru")
+        val normalized = if (mode == "smart_ru") "smart" else mode
+        prefs.edit().putString("routing_mode", normalized).apply()
+        _routingModeFlow.value = normalized
     }
+
+    private val _routingRegion = MutableStateFlow(getRoutingRegion())
+    val routingRegion = _routingRegion.asStateFlow()
+    fun getRoutingRegion(): String = RoutingRegion.fromId(prefs.getString("routing_region", null)).id
+    fun setRoutingRegion(region: String) {
+        require(RoutingRegion.entries.any { it.id == region })
+        prefs.edit().putString("routing_region", region).apply()
+        _routingRegion.value = region
+    }
+    private val _needsOnboarding = MutableStateFlow(prefs.getInt("onboarding_version", 0) < 1)
+    val needsOnboarding = _needsOnboarding.asStateFlow()
+    fun showOnboarding() { _needsOnboarding.value = true }
+    fun completeOnboarding(language: String, region: String, mode: String, presets: Boolean, appMode: AppRoutingMode? = null, packages: Set<String> = emptySet()) {
+        require(language in setOf("system", "ru", "en", "zh-Hans", "fa"))
+        require(RoutingRegion.entries.any { it.id == region } && mode in setOf("smart", "global"))
+        require(appMode == null || appMode.canApply(packages))
+        val editor = prefs.edit().putString("app_language", language).putString("routing_region", region)
+            .putString("routing_mode", mode).putBoolean("regional_presets_enabled", presets)
+            .putInt("onboarding_version", 1)
+        if (prefs.getInt("onboarding_version", 0) == 0 && !prefs.contains("auto_select_server")) {
+            editor.putBoolean("auto_select_server", true)
+        }
+        if (appMode != null) editor.putBoolean("is_global_app_proxy", appMode == AppRoutingMode.ALL)
+            .putString("per_app_mode", if (appMode == AppRoutingMode.EXCLUDE) "exclude" else "include")
+            .putStringSet("per_app_packages", packages.toSet())
+        check(editor.commit())
+        _appLanguageFlow.value = language
+        _routingRegion.value = region
+        _routingModeFlow.value = mode
+        _isAutoSelectFlow.value = isAutoSelectServer()
+        _isGlobalAppProxyFlow.value = isGlobalAppProxy()
+        _perAppModeFlow.value = getPerAppMode()
+        _needsOnboarding.value = false
+    }
+    fun regionalPresetsEnabled(): Boolean = prefs.getBoolean("regional_presets_enabled", false)
+    internal fun setRegionalPresetsEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean("regional_presets_enabled", enabled).apply()
+    }
+    fun isSourceDownloadsViaVpn(): Boolean = prefs.getBoolean("source_downloads_via_vpn", false)
+    private val _sourceDownloadsViaVpnFlow = MutableStateFlow(isSourceDownloadsViaVpn())
+    val sourceDownloadsViaVpnFlow = _sourceDownloadsViaVpnFlow.asStateFlow()
+    fun setSourceDownloadsViaVpn(enabled: Boolean) {
+        prefs.edit().putBoolean("source_downloads_via_vpn", enabled).apply()
+        _sourceDownloadsViaVpnFlow.value = enabled
+    }
+
+    fun isUpdatesWifiOnly(): Boolean = prefs.getBoolean(NetworkAccessPolicy.UPDATES_WIFI_ONLY, false)
+    private val _updatesWifiOnly = MutableStateFlow(isUpdatesWifiOnly())
+    val updatesWifiOnly = _updatesWifiOnly.asStateFlow()
+    fun setUpdatesWifiOnly(enabled: Boolean) {
+        prefs.edit().putBoolean(NetworkAccessPolicy.UPDATES_WIFI_ONLY, enabled).apply()
+        _updatesWifiOnly.value = enabled
+    }
+    fun isChecksWifiOnly(): Boolean = prefs.getBoolean(NetworkAccessPolicy.CHECKS_WIFI_ONLY, false)
+    private val _checksWifiOnly = MutableStateFlow(isChecksWifiOnly())
+    val checksWifiOnly = _checksWifiOnly.asStateFlow()
+    fun setChecksWifiOnly(enabled: Boolean) {
+        prefs.edit().putBoolean(NetworkAccessPolicy.CHECKS_WIFI_ONLY, enabled).apply()
+        _checksWifiOnly.value = enabled
+    }
+    fun areUpdatesAllowed(): Boolean = NetworkAccessPolicy.updatesAllowed(context)
+    fun areChecksAllowed(): Boolean = NetworkAccessPolicy.checksAllowed(context)
+    fun requireUpdatesNetwork() = NetworkAccessPolicy.requireUpdates(context)
+    fun requireChecksNetwork() = NetworkAccessPolicy.requireChecks(context)
+    suspend fun <T> withUpdateNetwork(block: suspend () -> T): T = NetworkAccessPolicy.withUpdates(context, block)
+    suspend fun <T> withCheckNetwork(block: suspend () -> T): T = NetworkAccessPolicy.withChecks(context, block)
 
     fun isGlobalAppProxy(): Boolean {
         return prefs.getBoolean("is_global_app_proxy", true)
@@ -73,6 +280,7 @@ class SettingsManager @Inject constructor(
     }
 
     companion object {
+        internal val APP_LANGUAGES = setOf("system", "ru", "en", "zh-Hans", "fa")
         const val PER_APP_MODE_INCLUDE = "include"
         const val PER_APP_MODE_EXCLUDE = "exclude"
     }
@@ -155,7 +363,7 @@ class SettingsManager @Inject constructor(
     val isFakeDnsFlow: StateFlow<Boolean> = _isFakeDnsFlow.asStateFlow()
 
     fun isFakeDns(): Boolean {
-        return prefs.getBoolean("fake_dns", false)
+        return prefs.getBoolean("fake_dns", true)
     }
 
     fun setFakeDns(enabled: Boolean) {
@@ -181,14 +389,14 @@ class SettingsManager @Inject constructor(
 
     fun getDnsProvider(): String {
         val provider = prefs.getString("dns_provider", "cloudflare") ?: "cloudflare"
-        return if (provider.lowercase() in listOf("xbox", "comss")) "dns_ai" else provider
+        return if (provider.lowercase() in listOf("xbox", "comss", "comss_smart")) "dns_ai" else provider
     }
 
     private val _pingModeFlow = MutableStateFlow(getPingMode())
     val pingModeFlow: StateFlow<String> = _pingModeFlow.asStateFlow()
 
     fun getPingMode(): String {
-        return prefs.getString("ping_mode", "tcp") ?: "tcp"
+        return prefs.getString("ping_mode", "real_delay") ?: "real_delay"
     }
 
     fun setPingMode(mode: String) {
@@ -216,30 +424,40 @@ class SettingsManager @Inject constructor(
     }
 
     fun setAutoSelectServer(enabled: Boolean) {
+        if (!enabled) invalidateServerSelection()
         prefs.edit().putBoolean("auto_select_server", enabled).apply()
         _isAutoSelectFlow.value = enabled
     }
 
     fun getBalancerPreferences(): BalancerPreferences = BalancerPreferences(
         mode = runCatching { BalancerMode.valueOf(prefs.getString("balancer_mode", "BALANCED") ?: "BALANCED") }.getOrDefault(BalancerMode.BALANCED),
-        healthIntervalSeconds = prefs.getInt("balancer_health_seconds", 2),
-        failureConfirmations = prefs.getInt("balancer_failures", 2),
+        healthIntervalSeconds = prefs.getInt("balancer_health_seconds", 10),
+        failureConfirmations = prefs.getInt("balancer_failures", 3),
         optimizationMinutes = prefs.getInt("balancer_optimization_minutes", 5),
         cooldownSeconds = prefs.getInt("balancer_cooldown_seconds", 60),
-        improvementPercent = prefs.getInt("balancer_improvement_percent", 30)
+        improvementPercent = prefs.getInt("balancer_improvement_percent", 30),
+        metric = runCatching { BalancerMetric.valueOf(prefs.getString("balancer_metric", "LATENCY")!!) }.getOrDefault(BalancerMetric.LATENCY),
+        goal = runCatching { BalancerGoal.valueOf(prefs.getString("balancer_goal", "GENERAL")!!) }.getOrDefault(BalancerGoal.GENERAL),
+        warmStandby = prefs.getBoolean("balancer_warm_standby", true),
+        speedBudgetMiB = prefs.getInt("balancer_speed_budget_mib", 64)
     ).validated()
 
     private val _balancerPreferences = MutableStateFlow(getBalancerPreferences())
     val balancerPreferences: StateFlow<BalancerPreferences> = _balancerPreferences.asStateFlow()
 
     fun setBalancerPreferences(value: BalancerPreferences) {
+        invalidateServerSelection()
         val valid = value.validated()
         prefs.edit().putString("balancer_mode", valid.mode.name)
             .putInt("balancer_health_seconds", valid.healthIntervalSeconds)
             .putInt("balancer_failures", valid.failureConfirmations)
             .putInt("balancer_optimization_minutes", valid.optimizationMinutes)
             .putInt("balancer_cooldown_seconds", valid.cooldownSeconds)
-            .putInt("balancer_improvement_percent", valid.improvementPercent).apply()
+            .putInt("balancer_improvement_percent", valid.improvementPercent)
+            .putString("balancer_metric", valid.metric.name)
+            .putString("balancer_goal", valid.goal.name)
+            .putBoolean("balancer_warm_standby", valid.warmStandby)
+            .putInt("balancer_speed_budget_mib", valid.speedBudgetMiB).apply()
         _balancerPreferences.value = valid
     }
 
@@ -247,9 +465,13 @@ class SettingsManager @Inject constructor(
         return prefs.getString("sub_auto_update_interval", "24h") ?: "24h"
     }
 
-    fun setAutoUpdateInterval(interval: String) {
+    private val _autoUpdateInterval = MutableStateFlow(getAutoUpdateInterval())
+    val autoUpdateInterval = _autoUpdateInterval.asStateFlow()
+
+    fun setAutoUpdateInterval(interval: String, reschedule: Boolean = true) {
         prefs.edit().putString("sub_auto_update_interval", interval).apply()
-        SubscriptionUpdateWorker.schedule(context, interval)
+        _autoUpdateInterval.value = interval
+        if (reschedule) SubscriptionUpdateWorker.schedule(context, interval)
     }
 
     fun getLastAutoUpdateTime(): Long {
@@ -276,6 +498,19 @@ class SettingsManager @Inject constructor(
         prefs.edit().putBoolean("route_only_sniffing", routeOnly).apply()
     }
 
+    private val _mtu = MutableStateFlow(getMtu())
+    val mtuFlow = _mtu.asStateFlow()
+
+    fun getMtu(): Int {
+        return prefs.getInt("vpn_mtu", 1400).coerceIn(1280, 1500)
+    }
+
+    fun setMtu(mtu: Int) {
+        val valid = mtu.coerceIn(1280, 1500)
+        prefs.edit().putInt("vpn_mtu", valid).apply()
+        _mtu.value = valid
+    }
+
     private val _appThemeFlow = MutableStateFlow(getAppTheme())
     fun getGlassTransparency(): Float = prefs.getFloat("glass_transparency", 0f).let { if (it.isFinite()) it.coerceIn(0f, 1f) else 0f }
     private val _glassTransparency = MutableStateFlow(getGlassTransparency())
@@ -287,6 +522,38 @@ class SettingsManager @Inject constructor(
         _glassBlurEnabled.value = enabled
         prefs.edit().putBoolean("glass_blur_enabled", enabled).apply()
     }
+    fun getPerformanceSettings(): UiPerformanceSettings = UiPerformanceSettings(
+        animationsEnabled = prefs.getBoolean("ui_animations_enabled", true),
+        decorativeBackgroundEnabled = prefs.getBoolean("ui_decorative_background_enabled", true),
+        glassHighlightsEnabled = prefs.getBoolean("ui_glass_highlights_enabled", true)
+    )
+    private val _performanceSettings = MutableStateFlow(getPerformanceSettings())
+    val performanceSettings: StateFlow<UiPerformanceSettings> = _performanceSettings.asStateFlow()
+
+    fun setPerformanceSettings(value: UiPerformanceSettings) {
+        prefs.edit().putBoolean("ui_animations_enabled", value.animationsEnabled)
+            .putBoolean("ui_decorative_background_enabled", value.decorativeBackgroundEnabled)
+            .putBoolean("ui_glass_highlights_enabled", value.glassHighlightsEnabled).apply()
+        _performanceSettings.value = value
+    }
+    fun setUiAnimationsEnabled(enabled: Boolean) =
+        setPerformanceSettings(performanceSettings.value.copy(animationsEnabled = enabled))
+    fun setDecorativeBackgroundEnabled(enabled: Boolean) =
+        setPerformanceSettings(performanceSettings.value.copy(decorativeBackgroundEnabled = enabled))
+    fun setGlassHighlightsEnabled(enabled: Boolean) =
+        setPerformanceSettings(performanceSettings.value.copy(glassHighlightsEnabled = enabled))
+
+    /** Apply the preset atomically; transparency and the current theme stay unchanged. */
+    fun setLightUiMode() = setUiEffectsPreset(enabled = false)
+    fun restoreFullUiEffects() = setUiEffectsPreset(enabled = true)
+    private fun setUiEffectsPreset(enabled: Boolean) {
+        prefs.edit().putBoolean("ui_animations_enabled", enabled)
+            .putBoolean("ui_decorative_background_enabled", enabled)
+            .putBoolean("ui_glass_highlights_enabled", enabled)
+            .putBoolean("glass_blur_enabled", enabled).apply()
+        _performanceSettings.value = UiPerformanceSettings(enabled, enabled, enabled)
+        _glassBlurEnabled.value = enabled
+    }
     fun setGlassTransparency(value: Float, persist: Boolean = true) {
         val valid = if (value.isFinite()) value.coerceIn(0f, 1f) else 0f
         _glassTransparency.value = valid
@@ -295,12 +562,13 @@ class SettingsManager @Inject constructor(
     val appThemeFlow: StateFlow<String> = _appThemeFlow.asStateFlow()
 
     fun getAppTheme(): String {
-        return prefs.getString("app_theme", "dark") ?: "dark"
+        return com.danieldk.splatevpn.ui.theme.canonicalThemeKey(prefs.getString("app_theme", "dark") ?: "dark")
     }
 
     fun setAppTheme(theme: String) {
-        prefs.edit().putString("app_theme", theme).apply()
-        _appThemeFlow.value = theme
+        val key = com.danieldk.splatevpn.ui.theme.canonicalThemeKey(theme)
+        prefs.edit().putString("app_theme", key).apply()
+        _appThemeFlow.value = key
         com.danieldk.splatevpn.ui.widget.SplateAppWidgetProvider.notifyUpdate(context)
         com.danieldk.splatevpn.ui.widget.SplateQuickWidgetProvider.notifyUpdate(context)
     }
@@ -313,10 +581,21 @@ class SettingsManager @Inject constructor(
     }
 
     fun setAppLanguage(lang: String) {
+        require(lang in APP_LANGUAGES)
         prefs.edit().putString("app_language", lang).apply()
         _appLanguageFlow.value = lang
         com.danieldk.splatevpn.ui.widget.SplateAppWidgetProvider.notifyUpdate(context)
         com.danieldk.splatevpn.ui.widget.SplateQuickWidgetProvider.notifyUpdate(context)
+    }
+
+    private val _uiModeFlow = MutableStateFlow(getUiMode())
+    val uiModeFlow: StateFlow<AppUiMode> = _uiModeFlow.asStateFlow()
+
+    fun getUiMode(): AppUiMode = AppUiMode.fromId(prefs.getString("ui_mode", AppUiMode.SIMPLE.id))
+
+    fun setUiMode(mode: AppUiMode) {
+        prefs.edit().putString("ui_mode", mode.id).apply()
+        _uiModeFlow.value = mode
     }
 
     private val _isBypassAiFlow = MutableStateFlow(isBypassAi())
@@ -334,7 +613,8 @@ class SettingsManager @Inject constructor(
     private val _aiRoutingModeFlow = MutableStateFlow(getAiRoutingMode())
     val aiRoutingModeFlow: StateFlow<String> = _aiRoutingModeFlow.asStateFlow()
 
-    fun getAiRoutingMode(): String = if (prefs.getString("ai_routing_mode", "dns_ai") == "vpn") "vpn" else "dns_ai"
+    fun getAiRoutingMode(): String = prefs.getString("ai_routing_mode", "dns_ai")
+        ?.takeIf { it in setOf("vpn", "dns_ai", "dns_vpn") } ?: "dns_ai"
 
     fun getAiDnsProvider(): String = SmartDnsProviders.forAi(prefs.getString("ai_dns_provider", "dns_ai") ?: "dns_ai").key
     private val _aiDnsProviderFlow = MutableStateFlow(getAiDnsProvider())
@@ -342,6 +622,13 @@ class SettingsManager @Inject constructor(
     fun isAiTlsFragmentEnabled(): Boolean = prefs.getBoolean("ai_tls_fragment", false)
     private val _aiTlsFragmentFlow = MutableStateFlow(isAiTlsFragmentEnabled())
     val aiTlsFragmentFlow: StateFlow<Boolean> = _aiTlsFragmentFlow.asStateFlow()
+    fun isAiDnsAutoSwitchEnabled(): Boolean = prefs.getBoolean("ai_dns_auto_switch", true)
+    private val _aiDnsAutoSwitchFlow = MutableStateFlow(isAiDnsAutoSwitchEnabled())
+    val aiDnsAutoSwitchFlow: StateFlow<Boolean> = _aiDnsAutoSwitchFlow.asStateFlow()
+    fun setAiDnsAutoSwitchEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean("ai_dns_auto_switch", enabled).apply()
+        _aiDnsAutoSwitchFlow.value = enabled
+    }
     fun setAiTlsFragmentEnabled(enabled: Boolean) {
         prefs.edit().putBoolean("ai_tls_fragment", enabled).apply()
         _aiTlsFragmentFlow.value = enabled
@@ -360,9 +647,17 @@ class SettingsManager @Inject constructor(
     }
 
     fun setAiRoutingMode(mode: String) {
-        val normalized = if (mode == "vpn") "vpn" else "dns_ai"
+        val normalized = mode.takeIf { it in setOf("vpn", "dns_ai", "dns_vpn") } ?: "dns_ai"
         prefs.edit().putString("ai_routing_mode", normalized).apply()
         _aiRoutingModeFlow.value = normalized
+    }
+
+    private val _autoConnectOnOpenFlow = MutableStateFlow(isAutoConnectOnOpen())
+    val autoConnectOnOpenFlow = _autoConnectOnOpenFlow.asStateFlow()
+    fun isAutoConnectOnOpen() = prefs.getBoolean("auto_connect_on_open", false)
+    fun setAutoConnectOnOpen(enabled: Boolean) {
+        prefs.edit().putBoolean("auto_connect_on_open", enabled).apply()
+        _autoConnectOnOpenFlow.value = enabled
     }
 
     private val _isAutoConnectOnBootFlow = MutableStateFlow(isAutoConnectOnBoot())
@@ -379,6 +674,16 @@ class SettingsManager @Inject constructor(
 
     private val _isTlsFragmentFlow = MutableStateFlow(isTlsFragmentEnabled())
     val isTlsFragmentFlow: StateFlow<Boolean> = _isTlsFragmentFlow.asStateFlow()
+
+    fun isTlsMixedSniEnabled() = prefs.getBoolean("tls_mixed_sni", false)
+
+    private val _tlsMixedSni = MutableStateFlow(isTlsMixedSniEnabled())
+    val tlsMixedSni = _tlsMixedSni.asStateFlow()
+
+    fun setTlsMixedSniEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean("tls_mixed_sni", enabled).apply()
+        _tlsMixedSni.value = enabled
+    }
 
     fun isTlsFragmentEnabled(): Boolean {
         return prefs.getBoolean("tls_fragment_enabled", false)
@@ -404,6 +709,11 @@ class SettingsManager @Inject constructor(
                 setTlsFragmentLength("100-200")
                 setTlsFragmentInterval("10-20")
                 setTlsFragmentPackets("tlshello")
+            }
+            "two_parts" -> {
+                setTlsFragmentLength("100")
+                setTlsFragmentInterval("10-20")
+                setTlsFragmentPackets(TLS_HELLO_TWO_PARTS)
             }
             "aggressive" -> {
                 setTlsFragmentLength("50-100")
@@ -554,7 +864,73 @@ class SettingsManager @Inject constructor(
         prefs.edit().putBoolean("has_initialized_universal_whitelist_v1", true).apply()
     }
 
+    fun hasInitializedExpandedWhitelists(): Boolean =
+        prefs.getBoolean("has_initialized_expanded_whitelists_v1", false)
+
+    fun setInitializedExpandedWhitelists() {
+        check(prefs.edit().putBoolean("has_initialized_expanded_whitelists_v1", true).commit())
+    }
+
+    fun hasInitializedSponsorSubscription() = prefs.getBoolean("has_initialized_sponsor_subscription_v1", false)
+    fun setInitializedSponsorSubscription() {
+        check(prefs.edit().putBoolean("has_initialized_sponsor_subscription_v1", true).commit())
+    }
+
+    fun hasInitializedRkpSubscriptions() = prefs.getBoolean("has_initialized_rkp_subscriptions", false)
+    fun setInitializedRkpSubscriptions() {
+        prefs.edit().putBoolean("has_initialized_rkp_subscriptions", true).apply()
+    }
+
+    fun hasInitializedBlackLists(): Boolean = prefs.getBoolean("has_initialized_black_lists_v1", false)
+    fun setInitializedBlackLists() {
+        check(prefs.edit().putBoolean("has_initialized_black_lists_v1", true).commit())
+    }
+
     // LAN / Tethering Proxy Sharing (Non-root Hotspot & USB tethering)
+    fun isLocalProxyAuthenticationEnabled(): Boolean = prefs.getBoolean("local_proxy_auth_enabled", true)
+    private val _localProxyAuthentication = MutableStateFlow(isLocalProxyAuthenticationEnabled())
+    val localProxyAuthentication = _localProxyAuthentication.asStateFlow()
+    fun setLocalProxyAuthenticationEnabled(enabled: Boolean) {
+        check(prefs.edit().putBoolean("local_proxy_auth_enabled", enabled).commit())
+        _localProxyAuthentication.value = enabled
+    }
+    @Synchronized fun getLocalProxyCredentials(): com.danieldk.splatevpn.vpn.LocalProxyCredentials {
+        val stored = runCatching {
+            com.danieldk.splatevpn.vpn.LocalProxyCredentials(
+                prefs.getString("local_proxy_username", "").orEmpty(), prefs.getString("local_proxy_password", "").orEmpty())
+        }.getOrNull()
+        if (stored != null) return stored
+        return regenerateLocalProxyCredentials()
+    }
+    @Synchronized fun regenerateLocalProxyCredentials(): com.danieldk.splatevpn.vpn.LocalProxyCredentials =
+        com.danieldk.splatevpn.vpn.LocalProxyCredentials.generate().also { setLocalProxyCredentials(it.username, it.password) }
+    fun setLocalProxyCredentials(username: String, password: String) {
+        val value = com.danieldk.splatevpn.vpn.LocalProxyCredentials(username, password)
+        check(prefs.edit().putString("local_proxy_username", value.username).putString("local_proxy_password", value.password).commit())
+    }
+    fun localProxyAccess(): com.danieldk.splatevpn.vpn.LocalProxyCredentials? =
+        if (isLocalProxyAuthenticationEnabled()) getLocalProxyCredentials() else null
+
+    fun getLanInterface(): String = prefs.getString("lan_interface", "") ?: ""
+    fun setLanInterface(name: String) { prefs.edit().putString("lan_interface", name).apply() }
+    private val _lanAuthentication = MutableStateFlow(isLanAuthenticationEnabled())
+    val lanAuthentication = _lanAuthentication.asStateFlow()
+    fun isLanAuthenticationEnabled() = prefs.getBoolean("lan_auth_enabled", true)
+    fun setLanAuthenticationEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean("lan_auth_enabled", enabled).apply()
+        _lanAuthentication.value = enabled
+    }
+    @Synchronized fun getLanPassword(): String {
+        prefs.getString("lan_password", null)?.takeIf { it.length >= 12 }?.let { return it }
+        val bytes = ByteArray(18).also { java.security.SecureRandom().nextBytes(it) }
+        val value = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+        check(prefs.edit().putString("lan_password", value).commit())
+        return value
+    }
+    fun rotateLanPassword(): String {
+        check(prefs.edit().remove("lan_password").commit())
+        return getLanPassword()
+    }
     private val _isShareLanFlow = MutableStateFlow(isShareLanEnabled())
     val isShareLanFlow: StateFlow<Boolean> = _isShareLanFlow.asStateFlow()
 
@@ -566,10 +942,31 @@ class SettingsManager @Inject constructor(
         prefs.edit().putBoolean("share_lan_enabled", enabled).apply()
         _isShareLanFlow.value = enabled
     }
-    /** Used only to roll back an unsuccessful backup import. Never exported. */
+    /** Snapshot for atomic backup rollback and connection profiles. Never exported as diagnostic data. */
     internal fun preferenceSnapshot(): Map<String, *> = prefs.all.toMap()
 
-    internal fun restorePreferenceSnapshot(snapshot: Map<String, *>) {
+    fun getNotificationPreferences(): NotificationPreferences = NotificationPreferences.read { key, default -> prefs.getBoolean(key, default) }
+    private val _notificationPreferences = MutableStateFlow(getNotificationPreferences())
+    val notificationPreferences = _notificationPreferences.asStateFlow()
+    fun setNotificationPreferences(value: NotificationPreferences) {
+        prefs.edit().also { editor -> value.values().forEach { (key, enabled) -> editor.putBoolean(key, enabled) } }.apply()
+        _notificationPreferences.value = value
+    }
+
+    private val _networkPreferences = MutableStateFlow(NetworkPreferences.capture(preferenceSnapshot()))
+    internal val networkPreferences = _networkPreferences.asStateFlow()
+    private val networkObserver = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == null || key in NotificationPreferences.keys) _notificationPreferences.value = getNotificationPreferences()
+        if (key == null || key in NetworkPreferences.keys) _networkPreferences.value = NetworkPreferences.capture(preferenceSnapshot())
+        if (key == null || key == "local_proxy_auth_enabled") _localProxyAuthentication.value = isLocalProxyAuthenticationEnabled()
+        if (key == null || key == "source_downloads_via_vpn") _sourceDownloadsViaVpnFlow.value = isSourceDownloadsViaVpn()
+        if (key == null || key == NetworkAccessPolicy.UPDATES_WIFI_ONLY) _updatesWifiOnly.value = isUpdatesWifiOnly()
+        if (key == null || key == NetworkAccessPolicy.CHECKS_WIFI_ONLY) _checksWifiOnly.value = isChecksWifiOnly()
+        if (key == null || key == "advanced_routes_v1") _advancedRouting.value = advancedRoutingJson()
+    }
+    init { prefs.registerOnSharedPreferenceChangeListener(networkObserver) }
+
+    internal fun restorePreferenceSnapshot(snapshot: Map<String, *>, rescheduleUpdates: Boolean = true) {
         val editor = prefs.edit().clear()
         snapshot.forEach { (key, value) ->
             when (value) {
@@ -582,7 +979,11 @@ class SettingsManager @Inject constructor(
             }
         }
         check(editor.commit()) { "Could not restore preferences" }
+        _notificationPreferences.value = getNotificationPreferences()
+        _disabledServerIds.value = getDisabledServerIds()
+        _networkPreferences.value = NetworkPreferences.capture(preferenceSnapshot())
         _routingModeFlow.value = getRoutingMode()
+        _routingRegion.value = getRoutingRegion()
         _isGlobalAppProxyFlow.value = isGlobalAppProxy()
         _perAppModeFlow.value = getPerAppMode()
         _isBlockQuicFlow.value = isBlockQuic()
@@ -595,23 +996,36 @@ class SettingsManager @Inject constructor(
         _appThemeFlow.value = getAppTheme()
         _glassTransparency.value = getGlassTransparency()
         _glassBlurEnabled.value = getGlassBlurEnabled()
+        _performanceSettings.value = getPerformanceSettings()
         _appLanguageFlow.value = getAppLanguage()
+        _uiModeFlow.value = getUiMode()
+        _autoUpdateInterval.value = getAutoUpdateInterval()
         _isBypassAiFlow.value = isBypassAi()
         _aiRoutingModeFlow.value = getAiRoutingMode()
         _aiDnsProviderFlow.value = getAiDnsProvider()
         _aiTlsFragmentFlow.value = isAiTlsFragmentEnabled()
+        _aiDnsAutoSwitchFlow.value = isAiDnsAutoSwitchEnabled()
         _isAutoConnectOnBootFlow.value = isAutoConnectOnBoot()
+        _autoConnectOnOpenFlow.value = isAutoConnectOnOpen()
         _isTlsFragmentFlow.value = isTlsFragmentEnabled()
         _tlsFragmentPresetFlow.value = getTlsFragmentPreset()
         _tlsFragmentLengthFlow.value = getTlsFragmentLength()
         _tlsFragmentIntervalFlow.value = getTlsFragmentInterval()
         _tlsFragmentPacketsFlow.value = getTlsFragmentPackets()
+        _tlsMixedSni.value = isTlsMixedSniEnabled()
+        _mtu.value = getMtu()
         _customDohUrlFlow.value = getCustomDohUrl()
         _isMuxFlow.value = isMuxEnabled()
         _muxConcurrencyFlow.value = getMuxConcurrency()
         _customRoutesFlow.value = getCustomRoutes()
         _isShareLanFlow.value = isShareLanEnabled()
-        SubscriptionUpdateWorker.schedule(context, getAutoUpdateInterval())
+        _lanAuthentication.value = isLanAuthenticationEnabled()
+        _localProxyAuthentication.value = isLocalProxyAuthenticationEnabled()
+        _sourceDownloadsViaVpnFlow.value = isSourceDownloadsViaVpn()
+        _updatesWifiOnly.value = isUpdatesWifiOnly()
+        _checksWifiOnly.value = isChecksWifiOnly()
+        _advancedRouting.value = advancedRoutingJson()
+        if (rescheduleUpdates) SubscriptionUpdateWorker.schedule(context, getAutoUpdateInterval())
         com.danieldk.splatevpn.ui.widget.SplateAppWidgetProvider.notifyUpdate(context)
         com.danieldk.splatevpn.ui.widget.SplateQuickWidgetProvider.notifyUpdate(context)
     }

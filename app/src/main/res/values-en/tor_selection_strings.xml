@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tor_metric_title">Bridge selection</string>
+    <string name="tor_metric_latency">Latency</string>
+    <string name="tor_metric_speed">Speed</string>
+    <string name="tor_metric_latency_hint">Quick ranking by TCP connection time. Tor confirms that the bridge works.</string>
+    <string name="tor_metric_speed_hint">Compare downloads through Tor on up to three candidates. The first test takes longer; results stay valid for 10 minutes.</string>
+    <string name="tor_speed_progress">Circuits tested: %1$d/%2$d</string>
+    <string name="tor_metric_probe">Test speed</string>
+    <string name="tor_metric_speed_value">%1$.2f Mbps</string>
+    <string name="tor_metric_saved">Bridge selection saved</string>
+    <string name="tor_speed_unavailable">No speed sample succeeded. Selection will use bridge reachability.</string>
+</resources>

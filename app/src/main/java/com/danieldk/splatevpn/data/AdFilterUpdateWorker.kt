@@ -17,6 +17,7 @@ class AdFilterUpdateWorker(context: Context, params: WorkerParameters) : Corouti
     override suspend fun doWork(): Result {
         val deps = EntryPointAccessors.fromApplication(applicationContext, Dependencies::class.java)
         if (!deps.settings().isAdBlocker()) return Result.success()
+        if (!NetworkAccessPolicy.updatesAllowed(applicationContext)) return Result.retry()
         // A background update does not interrupt the VPN; the next connection loads the new base.
         return if (deps.filters().refresh()) Result.success() else Result.retry()
     }
